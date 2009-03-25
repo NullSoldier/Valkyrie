@@ -5,12 +5,13 @@ using System.Text;
 
 namespace VFramework
 {
-	class Inventory<T> : List<T>
-		where T : Item
+	public abstract class Item
 	{
+		int value;
+		int weight;
+
+
+		
 
 	}
-
-	
-
 }
