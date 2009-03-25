@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C# Express 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VGame", "VGame\VGame.csproj", "{4949D44E-A96D-4AFA-B62C-1D9E46C26859}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4949D44E-A96D-4AFA-B62C-1D9E46C26859}.Debug|x86.ActiveCfg = Debug|x86
+		{4949D44E-A96D-4AFA-B62C-1D9E46C26859}.Debug|x86.Build.0 = Debug|x86
+		{4949D44E-A96D-4AFA-B62C-1D9E46C26859}.Release|x86.ActiveCfg = Release|x86
+		{4949D44E-A96D-4AFA-B62C-1D9E46C26859}.Release|x86.Build.0 = Release|x86
+		{0F38E8C7-ADC4-4869-A747-507DD8B805C2}.Debug|x86.ActiveCfg = Debug|x86
+		{0F38E8C7-ADC4-4869-A747-507DD8B805C2}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
