@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<XnaContent>
+  <Config>
+    <GraphicsRoot>Graphics</GraphicsRoot>
+    <MapRoot>Maps</MapRoot>
+    <DataRoot>Data</DataRoot>
+    <DefaultModule>Menu</DefaultModule>
+    <EntryMap>PokeMap.xml</EntryMap>
+    <EntryPoint></EntryPoint>
+  </Config>
+</XnaContent>
