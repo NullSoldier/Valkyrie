@@ -116,6 +116,14 @@
     </Content>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="Graphics\AllPokeTiles.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\page_save.png" />
+    <None Include="Resources\door_open.png" />
+    <None Include="Resources\page_go.png" />
+    <None Include="Resources\disk.png" />
+    <None Include="Resources\page.png" />
     <None Include="Graphics\TestTileSet.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -5,6 +5,7 @@ using System.Text;
 using ValkyrieLibrary.Player;
 using ValkyrieLibrary.Animation;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace valkyrie.Core
 {
@@ -12,13 +13,14 @@ namespace valkyrie.Core
 	{
 		public bool IsMoving = false;
 		public float MoveDelay = 0.002f;
-		public int Speed = 3;
+		public int Speed = 2;
 		public float LastMoveTime = 0;
 		public Point MovingDestination;
 
 		public PokePlayer()
 		{
 			this.CurrentAnimationName = "South";
+			this.Name = "NullSoldier";
 
 			if (this.Gender == Genders.Male)
 			{
@@ -37,6 +39,7 @@ namespace valkyrie.Core
 
 		public override void Move(Point Destination)
 		{
+
 			if (this.IsMoving)
 				return;
 
@@ -57,8 +60,17 @@ namespace valkyrie.Core
 			this.IsMoving = true;
 		}
 
+		public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
+		{
+			spriteBatch.DrawString(RPGGame.font, this.Name, new Vector2(this.DrawScreenLocation.X - (RPGGame.font.MeasureString(this.Name).X / 4), this.DrawScreenLocation.Y - 15), Color.Black);
+			base.Draw(spriteBatch);
+		}
+
 		public override void Update(GameTime gameTime)
 		{
+			if (!this.IsMoving && this.CurrentAnimationName.Contains("Walk"))
+				this.CurrentAnimationName = this.CurrentAnimationName.Substring(4, this.CurrentAnimationName.Length - 4);
+
 			if (this.IsMoving)
 			{
 				this.LastMoveTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -106,7 +118,6 @@ namespace valkyrie.Core
 				if (this.Location == this.MovingDestination)
 				{
 					this.IsMoving = false;
-					this.CurrentAnimationName = this.CurrentAnimationName.Substring(4, this.CurrentAnimationName.Length - 4);
 					this.MovingDestination = Point.Zero;
 					this.LastMoveTime = 0;
 				}

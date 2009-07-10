@@ -34,14 +34,20 @@ namespace ValkyrieLibrary.Player
 		public string CurrentAnimationName;
 		public bool Animating;
 
+		public Vector2 DrawScreenLocation
+		{
+			get
+			{
+				Vector2 location = new Vector2();
+				location.X = (int)TileEngine.Camera.MapOffset.X + this.Location.X + TileEngine.Map.TileSize.X;
+				location.Y = (int)TileEngine.Camera.MapOffset.Y + this.Location.Y + TileEngine.Map.TileSize.Y;
 
+				return location;
+			}
+		}
 		public virtual void Draw(SpriteBatch spriteBatch)
 		{
-			Vector2 location = new Vector2();
-			location.X = (int)TileEngine.Camera.MapOffset.X + this.Location.X + TileEngine.Map.TileSize.X;
-			location.Y = (int)TileEngine.Camera.MapOffset.Y + this.Location.Y + TileEngine.Map.TileSize.Y;
-
-			spriteBatch.Draw(this.Sprite, location, Animations[this.CurrentAnimationName].FrameRectangle, Color.White);
+			spriteBatch.Draw(this.Sprite, this.DrawScreenLocation, Animations[this.CurrentAnimationName].FrameRectangle, Color.White);
 		}
 
 		public virtual void Update(GameTime gameTime)

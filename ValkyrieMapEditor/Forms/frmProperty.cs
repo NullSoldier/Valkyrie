@@ -37,8 +37,6 @@ namespace ValkyrieMapEditor
 
                 this.inTileWidth.Value = this.Map.TileSize.X;
                 this.inTileHeight.Value = this.Map.TileSize.Y;
-
-                this.inTilesPerRow.Value = this.Map.TilesPerRow;
             }
             else
             {
@@ -60,10 +58,10 @@ namespace ValkyrieMapEditor
         private void btnOk_Click(object sender, EventArgs e)
         {
             this.Map.Name = this.inName.Text;
-            this.Map.TextureName = this.inTileSet.Text;
+			this.Map.TextureName = new FileInfo(this.inTileSet.Text).Name;
             this.Map.MapSize = new Point((int)this.inMapWidth.Value, (int)this.inMapHeight.Value);
             this.Map.TileSize = new Point((int)this.inTileWidth.Value, (int)this.inTileHeight.Value);
-            this.Map.TilesPerRow = (int)this.inTilesPerRow.Value;
+			this.Map.TilesPerRow = (System.Drawing.Image.FromFile(TileEngine.Configuration["GraphicsRoot"] + "\\" + this.Map.TextureName).Width / this.Map.TileSize.X);
 
 			this.DialogResult = DialogResult.OK;
             this.Close();
@@ -72,11 +70,14 @@ namespace ValkyrieMapEditor
         private void btnBrowseTileSet_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.ShowDialog(this);
+            DialogResult result = dialog.ShowDialog(this);
+			
+			if (result == DialogResult.Cancel || result == DialogResult.None)
+				return;
 
             var fileInfo = new FileInfo(dialog.FileName);
 
-            this.inTileSet.Text = fileInfo.Name;
+            this.inTileSet.Text = fileInfo.FullName;
         }
 
     }

@@ -26,6 +26,7 @@ namespace valkyrie
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
 		public Map testMap;
+		public static SpriteFont font;
 
         public RPGGame()
         {
@@ -45,6 +46,8 @@ namespace valkyrie
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+			RPGGame.font = Content.Load<SpriteFont>("GameTextFont");
 
             TileEngine.ModuleManager.AddModule(new MenuModule(), "Menu");
             TileEngine.ModuleManager.AddModule(new GameModule(), "Game");

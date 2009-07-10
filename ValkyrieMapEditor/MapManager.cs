@@ -12,6 +12,7 @@ namespace ValkyrieMapEditor
     {
         public static int CurrentTile = 0;
         public static MapLayer CurrentLayer = MapLayer.BaseLayer;
+		public static FileInfo CurrentMapLocation;
 
         public static void SaveMap(Map map, FileInfo location)
         {
@@ -83,12 +84,16 @@ namespace ValkyrieMapEditor
 			doc.AppendChild(mapElement);
 			doc.Save(location.FullName);
 
+			MapManager.CurrentMapLocation = location;
+
         }
 
         public static Map LoadMap(FileInfo location)
         {
             Map newMap = new Map();
             newMap.LoadMap(location);
+
+			MapManager.CurrentMapLocation = location;
             return newMap;
         }
 

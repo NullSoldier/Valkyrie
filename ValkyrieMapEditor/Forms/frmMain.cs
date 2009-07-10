@@ -14,6 +14,8 @@ namespace ValkyrieMapEditor
 {
 	public partial class frmMain : Form
 	{
+		public bool MapChanged = false;
+
 		public frmMain()
 		{
 			InitializeComponent();
@@ -197,6 +199,43 @@ namespace ValkyrieMapEditor
 
 		private void toolSave_Click(object sender, EventArgs e)
 		{
+			this.SaveMap();
+		}
+
+		private void toolClose_Click(object sender, EventArgs e)
+		{
+			if(this.MapChanged)
+			{
+				DialogResult result = MessageBox.Show("Do you want to save changes to" + Environment.NewLine, "Save Changes", MessageBoxButtons.YesNoCancel);
+
+				if (result == DialogResult.Yes)
+					this.SaveMap();
+				else if (result == DialogResult.Cancel)
+					return;
+			}
+
+			this.Close();
+		}
+
+		private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.SaveMapAs();
+		}
+
+		private void SaveMap()
+		{
+			if (TileEngine.Map == null) return;
+
+			if (!MapManager.CurrentMapLocation.Exists)
+				this.SaveMapAs();
+			else
+				MapManager.SaveMap(TileEngine.Map, MapManager.CurrentMapLocation);
+		}
+
+		private void SaveMapAs()
+		{
+			if (TileEngine.Map == null) return;
+
 			SaveFileDialog dialog = new SaveFileDialog();
 			dialog.ShowDialog();
 
