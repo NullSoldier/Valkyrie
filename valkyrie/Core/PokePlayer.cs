@@ -22,15 +22,15 @@ namespace valkyrie.Core
 
 			if (this.Gender == Genders.Male)
 			{
-				this.Animations.Add("North", new FrameAnimation(new Rectangle(32, 0, 32, 42), 1));
-				this.Animations.Add("South", new FrameAnimation(new Rectangle(32, 92, 32, 42), 1));
-				this.Animations.Add("East", new FrameAnimation(new Rectangle(32, 49, 32, 42), 1));
-				this.Animations.Add("West", new FrameAnimation(new Rectangle(32, 137, 32, 42), 1));
+				this.Animations.Add("North", new FrameAnimation(new Rectangle(64, 0, 32, 44), 1));
+                this.Animations.Add("South", new FrameAnimation(new Rectangle(64, 88, 32, 44), 1));
+                this.Animations.Add("East", new FrameAnimation(new Rectangle(64, 44, 32, 44), 1));
+                this.Animations.Add("West", new FrameAnimation(new Rectangle(64, 132, 32, 44), 1));
 
-				this.Animations.Add("WalkNorth", new FrameAnimation(new Rectangle(0, 0, 32, 42), 3));
-				this.Animations.Add("WalkEast", new FrameAnimation(new Rectangle(0, 49, 32, 42), 3));
-				this.Animations.Add("WalkSouth", new FrameAnimation(new Rectangle(0, 92, 32, 42), 3));
-				this.Animations.Add("WalkWest", new FrameAnimation(new Rectangle(0, 137, 32, 42), 3));
+                this.Animations.Add("WalkNorth", new FrameAnimation(new Rectangle(0, 0, 32, 44), 3));
+                this.Animations.Add("WalkEast", new FrameAnimation(new Rectangle(0, 44, 32, 44), 3));
+                this.Animations.Add("WalkSouth", new FrameAnimation(new Rectangle(0, 88, 32, 44), 3));
+                this.Animations.Add("WalkWest", new FrameAnimation(new Rectangle(0, 132, 32, 44), 3));
 			}
 
 		}
