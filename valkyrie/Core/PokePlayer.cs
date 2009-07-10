@@ -17,6 +17,12 @@ namespace valkyrie.Core
 		public float LastMoveTime = 0;
 		public Point MovingDestination;
 
+
+        public Point TileLocation
+        {
+            get { return new Point(this.Location.X / TileEngine.Map.TileSize.X, this.Location.Y / TileEngine.Map.TileSize.Y); }
+        }
+
 		public PokePlayer()
 		{
 			this.CurrentAnimationName = "South";
@@ -24,15 +30,15 @@ namespace valkyrie.Core
 
 			if (this.Gender == Genders.Male)
 			{
-				this.Animations.Add("North", new FrameAnimation(new Rectangle(64, 0, 32, 44), 1));
-                this.Animations.Add("South", new FrameAnimation(new Rectangle(64, 88, 32, 44), 1));
-                this.Animations.Add("East", new FrameAnimation(new Rectangle(64, 44, 32, 44), 1));
-                this.Animations.Add("West", new FrameAnimation(new Rectangle(64, 132, 32, 44), 1));
+                this.Animations.Add("North", new FrameAnimation(new Rectangle(56, 0, 28, 42), 1));
+                this.Animations.Add("South", new FrameAnimation(new Rectangle(56, 84, 28, 42), 1));
+                this.Animations.Add("East", new FrameAnimation(new Rectangle(56, 42, 28, 42), 1));
+                this.Animations.Add("West", new FrameAnimation(new Rectangle(56, 126, 28, 42), 1));
 
-                this.Animations.Add("WalkNorth", new FrameAnimation(new Rectangle(0, 0, 32, 44), 3));
-                this.Animations.Add("WalkEast", new FrameAnimation(new Rectangle(0, 44, 32, 44), 3));
-                this.Animations.Add("WalkSouth", new FrameAnimation(new Rectangle(0, 88, 32, 44), 3));
-                this.Animations.Add("WalkWest", new FrameAnimation(new Rectangle(0, 132, 32, 44), 3));
+                this.Animations.Add("WalkNorth", new FrameAnimation(new Rectangle(0, 0, 28, 42), 3));
+                this.Animations.Add("WalkEast", new FrameAnimation(new Rectangle(0, 42, 28, 42), 3));
+                this.Animations.Add("WalkSouth", new FrameAnimation(new Rectangle(0, 84, 28, 42), 3));
+                this.Animations.Add("WalkWest", new FrameAnimation(new Rectangle(0, 126, 28, 42), 3));
 			}
 
 		}

@@ -39,8 +39,8 @@ namespace ValkyrieLibrary.Player
 			get
 			{
 				Vector2 location = new Vector2();
-				location.X = (int)TileEngine.Camera.MapOffset.X + this.Location.X + TileEngine.Map.TileSize.X;
-				location.Y = (int)TileEngine.Camera.MapOffset.Y + this.Location.Y + TileEngine.Map.TileSize.Y;
+				location.X = (int)TileEngine.Camera.MapOffset.X + this.Location.X + TileEngine.Map.TileSize.X/2 - this.CurrentAnimation.FrameRectangle.Width/2 ;
+				location.Y = (int)TileEngine.Camera.MapOffset.Y + this.Location.Y + TileEngine.Map.TileSize.Y - this.CurrentAnimation.FrameRectangle.Height;
 
 				return location;
 			}
