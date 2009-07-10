@@ -26,6 +26,7 @@ namespace ValkyrieLibrary.States
         {
             this.KeybindController.Update();
 			TileEngine.Player.Update(gameTime);
+			TileEngine.Map.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)

@@ -8,6 +8,7 @@ using System.Xml;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System.Diagnostics;
+using ValkyrieLibrary.Animation;
 
 namespace valkyrie.Core
 {
@@ -19,6 +20,14 @@ namespace valkyrie.Core
             this.MiddleLayer = new int[0];
             this.TopLayer = new int[0];
             this.CollisionLayer = new int[0];
+
+			this.AnimatedTiles = new Dictionary<int, FrameAnimation>();
+		}
+
+		public void Update(GameTime gameTime)
+		{
+			foreach (FrameAnimation anim in this.AnimatedTiles.Values)
+				anim.Update(gameTime);
 		}
 
 		#region Public Properties
@@ -38,6 +47,8 @@ namespace valkyrie.Core
 		public int[] CollisionLayer { get; set; }
 
 		public int TilesPerRow { get; set; }
+
+		public Dictionary<int, FrameAnimation> AnimatedTiles;
 
 		#endregion
 
@@ -108,10 +119,13 @@ namespace valkyrie.Core
 			if (MiddleLayerValue < 0)
 				return Rectangle.Empty;
 
-			return new Rectangle(
-				(MiddleLayerValue % this.TilesPerRow) * TileSize.X,
-				(MiddleLayerValue / this.TilesPerRow) * TileSize.Y,
-				TileSize.X - 1, TileSize.Y - 1);
+			if (this.AnimatedTiles.ContainsKey(MiddleLayerValue))
+				return this.AnimatedTiles[MiddleLayerValue].FrameRectangle;
+			else
+				return new Rectangle(
+					(MiddleLayerValue % this.TilesPerRow) * TileSize.X,
+					(MiddleLayerValue / this.TilesPerRow) * TileSize.Y,
+					TileSize.X - 1, TileSize.Y - 1);
         }
         #endregion
 
@@ -145,10 +159,13 @@ namespace valkyrie.Core
 			if (baseLayerValue < 0)
 				return Rectangle.Empty;
 
-			return new Rectangle(
-				(baseLayerValue % this.TilesPerRow) * TileSize.X,
-				(baseLayerValue / this.TilesPerRow) * TileSize.Y,
-				TileSize.X - 1, TileSize.Y - 1); // -1 so it doesn't over extend into the next tile
+			if (this.AnimatedTiles.ContainsKey(baseLayerValue))
+				return this.AnimatedTiles[baseLayerValue].FrameRectangle;
+			else
+				return new Rectangle(
+					(baseLayerValue % this.TilesPerRow) * TileSize.X,
+					(baseLayerValue / this.TilesPerRow) * TileSize.Y,
+					TileSize.X - 1, TileSize.Y - 1); // -1 so it doesn't over extend into the next tile
 		}
         #endregion
 
@@ -208,8 +225,43 @@ namespace valkyrie.Core
 
                     this.TopLayer = Array.ConvertAll<string, int>(baseText, new Converter<string, int>(this.ConvertStringToInt));
                 }
+				else if (innerNodes[i].Name == "CollisionLayer")
+				{
+					string[] baseText = innerNodes[i].InnerText.Replace("\r\n", string.Empty).Replace("   ", string.Empty).Trim().Split(' ');
+
+					this.CollisionLayer = Array.ConvertAll<string, int>(baseText, new Converter<string, int>(this.ConvertStringToInt));
+				}
+				else if (innerNodes[i].Name == "AnimatedTiles")
+				{
+					XmlNodeList tiles = innerNodes[i].ChildNodes;
+
+					foreach (XmlNode node in tiles)
+					{
+						int tileID = 0;
+						int frameCount = 0;
+						Rectangle tileRect = Rectangle.Empty;
+
+						foreach(XmlNode subnode in node.ChildNodes)
+						{
+							if (subnode.Name == "TileID")
+								tileID = Convert.ToInt32(subnode.InnerText);
+							else if (subnode.Name == "FrameCount")
+								frameCount = Convert.ToInt32(subnode.InnerText);
+							else if (subnode.Name == "TileRect")
+							{
+								var data = Array.ConvertAll<string, int>(subnode.InnerText.Split(' '), new Converter<string, int>(this.ConvertStringToInt));
+								tileRect = new Rectangle(data[0], data[1], data[2], data[3]);
+							}
+	
+						}
+
+						this.AnimatedTiles.Add(tileID, new FrameAnimation(tileRect, frameCount));
+					}
+				}
 
 			}
+
+			
 			
 		}
 		

@@ -66,7 +66,7 @@ namespace valkyrie
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            TileEngine.ModuleManager.CurrentModule.Tick(gameTime);
+			TileEngine.Update(gameTime);
 
             base.Update(gameTime);
         }

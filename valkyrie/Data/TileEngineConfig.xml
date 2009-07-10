@@ -5,7 +5,7 @@
     <MapRoot>Maps</MapRoot>
     <DataRoot>Data</DataRoot>
     <DefaultModule>Menu</DefaultModule>
-    <EntryMap>PokeMap.xml</EntryMap>
+    <EntryMap>TestMap4.xml</EntryMap>
     <EntryPoint></EntryPoint>
   </Config>
 </XnaContent>

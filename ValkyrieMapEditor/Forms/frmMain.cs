@@ -127,7 +127,7 @@ namespace ValkyrieMapEditor
             int tileX = (e.X / TileEngine.Map.TileSize.X);
             int tileY = (e.Y / TileEngine.Map.TileSize.Y);
 
-           MapManager.CurrentTile = ((16 * tileY) + tileX);
+           MapManager.CurrentTile = ((TileEngine.Map.TilesPerRow * tileY) + tileX);
         }
 
         private void btnMapProperties_Click(object sender, EventArgs e)
