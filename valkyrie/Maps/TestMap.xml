@@ -100,7 +100,11 @@
     1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
   </CollisionLayer>
 
-  <NpcList>
-    
-  </NpcList>
+  <AnimatedTiles>
+    <AnimatedTile>
+      <TileID>16</TileID>
+      <FrameCount>5</FrameCount>
+      <TileRect>511 0 32 32</TileRect>
+    </AnimatedTile>
+  </AnimatedTiles>
 </Map>

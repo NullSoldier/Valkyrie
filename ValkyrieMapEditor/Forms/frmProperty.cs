@@ -57,8 +57,27 @@ namespace ValkyrieMapEditor
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+			// Copy it over
+			FileInfo TileSet = new FileInfo(this.inTileSet.Text);
+			FileInfo tmp = new FileInfo(Path.Combine(Environment.CurrentDirectory, TileEngine.Configuration["GraphicsRoot"]));
+
+			if (!TileSet.Exists)
+			{
+				MessageBox.Show("Tileset graphic does not exist in the local graphic folder" + Environment.NewLine + Path.Combine(Environment.CurrentDirectory, "Graphics/"), "Error", MessageBoxButtons.OK);
+				return;
+			}
+
+			if (TileSet.FullName != (tmp.FullName + TileSet.Name))
+			{
+				var result = MessageBox.Show("Would you like to copy this tile set to the local directory this will override any previous tilesheets with that name?", "Copy Tileset", MessageBoxButtons.YesNo);
+				if (result == DialogResult.Yes)
+					TileSet.CopyTo(Path.Combine(Path.Combine(Environment.CurrentDirectory, TileEngine.Configuration["GraphicsRoot"]), TileSet.Name), true);
+			}
+
+			this.Map.TextureName = TileSet.Name;
+
+			// Other properties
             this.Map.Name = this.inName.Text;
-			this.Map.TextureName = new FileInfo(this.inTileSet.Text).Name;
             this.Map.MapSize = new Point((int)this.inMapWidth.Value, (int)this.inMapHeight.Value);
             this.Map.TileSize = new Point((int)this.inTileWidth.Value, (int)this.inTileHeight.Value);
 			this.Map.TilesPerRow = (System.Drawing.Image.FromFile(TileEngine.Configuration["GraphicsRoot"] + "\\" + this.Map.TextureName).Width / this.Map.TileSize.X);

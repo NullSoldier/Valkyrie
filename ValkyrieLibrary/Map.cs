@@ -169,6 +169,24 @@ namespace valkyrie.Core
 		}
         #endregion
 
+		#region Collision Layer
+		public int GetCollisionLayerValue(Point MapPoint)
+		{
+			if (MapPoint.X < 0 || (MapPoint.X > this.MapSize.X) || MapPoint.Y < 0 || (MapPoint.Y > this.MapSize.Y))
+				throw new ArgumentOutOfRangeException();
+
+			return this.CollisionLayer[MapPoint.Y * this.MapSize.X + MapPoint.X];
+		}
+
+		private void SetCollisionLayerValue(Point MapPoint, int value)
+		{
+			if (MapPoint.X < 0 || (MapPoint.X > this.MapSize.X) || MapPoint.Y < 0 || (MapPoint.Y > this.MapSize.Y))
+				throw new ArgumentOutOfRangeException();
+
+			this.CollisionLayer[MapPoint.Y * this.MapSize.X + MapPoint.X] = value;
+		}
+		#endregion
+
         #region Map Management
 		public void LoadMap(FileInfo MapFile)
 		{
@@ -264,10 +282,6 @@ namespace valkyrie.Core
 			
 			
 		}
-		
-		public void SaveMap(FileInfo MapFile)
-		{
-		}
 
         public void SetData(MapLayer layer, Point location, int value)
         {
@@ -282,6 +296,12 @@ namespace valkyrie.Core
                 case MapLayer.TopLayer:
                     SetTopLayerValue(location, value);
                     break;
+				case MapLayer.CollisionLayer:
+					if(GetCollisionLayerValue(location) != -1)
+						SetCollisionLayerValue(location, -1);
+					else
+						SetCollisionLayerValue(location, 1);
+					break;
                 default:
                     break;
             }

@@ -9,18 +9,39 @@ using System.Windows.Forms;
 using valkyrie.Core;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
+using ValkyrieMapEditor.Properties;
+using System.Threading;
 
 namespace ValkyrieMapEditor
 {
 	public partial class frmMain : Form
 	{
 		public bool MapChanged = false;
+		public event EventHandler<ScreenResizedEventArgs> ScreenResized;
+		public event EventHandler<SurfaceClickedEventArgs> SurfaceClicked;
+		public event EventHandler MapSettingsChanged;
+		public Point TileSelectedPoint;
+		public Thread MouseDataThread;
 
 		public frmMain()
 		{
 			InitializeComponent();
+
+			this.TileSelectedPoint = new Point(0, 0);
+			this.pctTileSurface.Initialize();
+			this.pctTileSurface.SelectionImage = Resources.EditorSelection;
 		}
 
+		private void frmMain_Load(object sender, EventArgs e)
+		{
+			if (this.ScreenResized != null)
+				this.ScreenResized(this, new ScreenResizedEventArgs(this.pctSurface.Size.Width, this.pctSurface.Size.Height));
+		}
+
+		private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			Application.Exit();
+		}
 
 		public IntPtr getDrawSurface()
 		{
@@ -31,11 +52,6 @@ namespace ValkyrieMapEditor
         {
             return pctTileSurface.Handle;
         }
-
-		private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
-		{
-			Application.Exit();
-		}
 
 		private void toolOpen_Click(object sender, EventArgs e)
 		{
@@ -50,15 +66,14 @@ namespace ValkyrieMapEditor
 
         public void LoadMap(FileInfo MapLocation)
         {
-            Map newMap = MapManager.LoadMap(MapLocation);
-            TileEngine.SetMap(newMap);
+            TileEngine.SetMap(MapManager.LoadMap(MapLocation));
 
-            this.LoadMapSettingsToList(newMap);
+            this.RefreshMapProperties(TileEngine.Map);
 
             this.btnMapProperties.Enabled = true;
         }
 
-        private void LoadMapSettingsToList(Map map)
+        private void RefreshMapProperties(Map map)
         {
             this.lstSettings.Items.Clear();
 
@@ -68,54 +83,15 @@ namespace ValkyrieMapEditor
             this.lstSettings.Items.Add(new ListViewItem(new string[] { "Tiles Per Row", map.TilesPerRow.ToString() }));
             this.lstSettings.Items.Add(new ListViewItem(new string[] { "Map Size", map.MapSize.ToString() }));
 
-			this.pctSurface.Size = new Size(map.MapSize.X * map.TileSize.X, map.MapSize.Y * map.TileSize.Y);
-
-			this.pctTileSurface.Image = Image.FromFile(TileEngine.Configuration["GraphicsRoot"] + "\\" + map.TextureName);
+			this.pctTileSurface.OriginalImage = Image.FromFile(TileEngine.Configuration["GraphicsRoot"] + "\\" + map.TextureName);
 			this.pctTileSurface.Size = this.pctTileSurface.Image.Size;
+			this.pctTileSurface.DrawSelection();
         }
 
 		private void pctSurface_Resize(object sender, EventArgs e)
 		{            
 			this.ScreenResized(this, new ScreenResizedEventArgs(this.pctSurface.Size.Width, this.pctSurface.Size.Height));
 		}
-
-        //public delegate void EventHandler(object sender, EventArgs e);
-
-		public event EventHandler<ScreenResizedEventArgs> ScreenResized;
-        public event EventHandler<SurfaceClickedEventArgs> SurfaceClicked;
-        public event EventHandler MapSettingsChanged;
-
-		public class ScreenResizedEventArgs
-            : EventArgs
-		{
-			public ScreenResizedEventArgs(int width, int height)
-			{
-				this.Width = width;
-				this.Height = height;
-			}
-
-			public int Width;
-			public int Height;
-		}
-
-        public class SurfaceClickedEventArgs
-            : EventArgs
-        {
-            public SurfaceClickedEventArgs(MouseButtons button, Point location)
-            {
-                this.Location = location;
-                this.Button = button;
-            }
-
-            public Point Location;
-            public MouseButtons Button;
-        }
-
-        private void frmMain_Load(object sender, EventArgs e)
-        {
-            if( this.ScreenResized != null)
-                this.ScreenResized(this, new ScreenResizedEventArgs(this.pctSurface.Size.Width, this.pctSurface.Size.Height));
-        }
 
         private void pctSurface_MouseClick(object sender, MouseEventArgs e)
         {
@@ -124,23 +100,26 @@ namespace ValkyrieMapEditor
 
         private void pctTileSurface_MouseClick(object sender, MouseEventArgs e)
         {
-            int tileX = (e.X / TileEngine.Map.TileSize.X);
-            int tileY = (e.Y / TileEngine.Map.TileSize.Y);
+			if (TileEngine.IsMapLoaded)
+			{
+				int tileX = (e.X / TileEngine.Map.TileSize.X);
+				int tileY = (e.Y / TileEngine.Map.TileSize.Y);
 
-           MapManager.CurrentTile = ((TileEngine.Map.TilesPerRow * tileY) + tileX);
+				this.TileSelectedPoint = new Point(tileX, tileY);
+
+				MapManager.CurrentTile = ((TileEngine.Map.TilesPerRow * tileY) + tileX);
+			}
         }
 
         private void btnMapProperties_Click(object sender, EventArgs e)
         {
-            if (TileEngine.Map != null)
+            if (TileEngine.IsMapLoaded)
             {
                 frmProperty dialog = new frmProperty(TileEngine.Map, false);
                 dialog.ShowDialog(this);
 
-                this.LoadMapSettingsToList(TileEngine.Map);
+                this.RefreshMapProperties(TileEngine.Map);
 				TileEngine.Map = MapManager.ApplySettings(TileEngine.Map);
-                //var settingsEvent = this.MapSettingsChanged;
-               // settingsEvent(this, EventArgs.Empty);
             }
         }
 
@@ -183,23 +162,20 @@ namespace ValkyrieMapEditor
         private void toolNew_Click(object sender, EventArgs e)
         {
             Map newMap = new Map();
+
             frmProperty dialog = new frmProperty(newMap, true);
             DialogResult result = dialog.ShowDialog(this);
 			if (result == DialogResult.Cancel)
 				return;
 
-            newMap = MapManager.ApplySettings(newMap);
-            this.LoadMapSettingsToList(newMap);
-
-           // var settingsEvent = this.MapSettingsChanged;
-            //settingsEvent(this, EventArgs.Empty);
-
-            TileEngine.Map = newMap;
+            TileEngine.Map = MapManager.ApplySettings(newMap);
+            this.RefreshMapProperties(TileEngine.Map);
         }
 
 		private void toolSave_Click(object sender, EventArgs e)
 		{
-			this.SaveMap();
+			if (TileEngine.IsMapLoaded)
+				this.SaveMap();
 		}
 
 		private void toolClose_Click(object sender, EventArgs e)
@@ -219,14 +195,15 @@ namespace ValkyrieMapEditor
 
 		private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			this.SaveMapAs();
+			if (TileEngine.IsMapLoaded)
+				this.SaveMapAs();
 		}
 
 		private void SaveMap()
 		{
-			if (TileEngine.Map == null) return;
+			if (!TileEngine.IsMapLoaded) return;
 
-			if (!MapManager.CurrentMapLocation.Exists)
+			if (MapManager.CurrentMapLocation == null || !MapManager.CurrentMapLocation.Exists)
 				this.SaveMapAs();
 			else
 				MapManager.SaveMap(TileEngine.Map, MapManager.CurrentMapLocation);
@@ -234,14 +211,58 @@ namespace ValkyrieMapEditor
 
 		private void SaveMapAs()
 		{
-			if (TileEngine.Map == null) return;
+			if (TileEngine.IsMapLoaded)
+			{
+				SaveFileDialog dialog = new SaveFileDialog();
+				var result = dialog.ShowDialog();
 
-			SaveFileDialog dialog = new SaveFileDialog();
-			dialog.ShowDialog();
+				if (result == DialogResult.None || result == DialogResult.Cancel)
+					return;
 
-			FileInfo file = new FileInfo(dialog.FileName);
+				FileInfo file = new FileInfo(dialog.FileName);
 
-			MapManager.SaveMap(TileEngine.Map, file);
+				MapManager.SaveMap(TileEngine.Map, file);
+			}
 		}
+
+		private void btnHelp_Click(object sender, EventArgs e)
+		{
+			foreach (ToolStripItem item in this.toolStripTools.Items)
+			{
+				if (item.DisplayStyle == ToolStripItemDisplayStyle.Image)
+					item.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+				else
+					item.DisplayStyle = ToolStripItemDisplayStyle.Image;
+			}
+		}
+
 	}
+
+	#region EventArgs
+	public class ScreenResizedEventArgs
+			: EventArgs
+	{
+		public ScreenResizedEventArgs(int width, int height)
+		{
+			this.Width = width;
+			this.Height = height;
+		}
+
+		public int Width;
+		public int Height;
+	}
+
+	public class SurfaceClickedEventArgs
+		: EventArgs
+	{
+		public SurfaceClickedEventArgs(MouseButtons button, Point location)
+		{
+			this.Location = location;
+			this.Button = button;
+		}
+
+		public Point Location;
+		public MouseButtons Button;
+	}
+	#endregion
 }

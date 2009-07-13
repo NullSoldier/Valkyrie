@@ -60,6 +60,27 @@ namespace ValkyrieMapEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap EditorCollision {
+            get {
+                object obj = ResourceManager.GetObject("EditorCollision", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap EditorSelection {
+            get {
+                object obj = ResourceManager.GetObject("EditorSelection", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap imgBaseLayer {
+            get {
+                object obj = ResourceManager.GetObject("imgBaseLayer", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap imgCog {
             get {
                 object obj = ResourceManager.GetObject("imgCog", resourceCulture);
@@ -67,9 +88,30 @@ namespace ValkyrieMapEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap imgCollision {
+            get {
+                object obj = ResourceManager.GetObject("imgCollision", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap imgExit {
             get {
                 object obj = ResourceManager.GetObject("imgExit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap imgHelp {
+            get {
+                object obj = ResourceManager.GetObject("imgHelp", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap imgMiddleLayer {
+            get {
+                object obj = ResourceManager.GetObject("imgMiddleLayer", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -98,6 +140,13 @@ namespace ValkyrieMapEditor.Properties {
         internal static System.Drawing.Bitmap imgSaveAs {
             get {
                 object obj = ResourceManager.GetObject("imgSaveAs", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap imgTopLayer {
+            get {
+                object obj = ResourceManager.GetObject("imgTopLayer", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

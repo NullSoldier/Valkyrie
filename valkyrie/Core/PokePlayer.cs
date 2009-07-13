@@ -6,10 +6,11 @@ using ValkyrieLibrary.Player;
 using ValkyrieLibrary.Animation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ValkyrieLibrary;
 
 namespace valkyrie.Core
 {
-	class PokePlayer : Player
+	class PokePlayer : Player, ICollidable
 	{
 		public bool IsMoving = false;
 		public float MoveDelay = 0.002f;
@@ -45,7 +46,6 @@ namespace valkyrie.Core
 
 		public override void Move(Point Destination)
 		{
-
 			if (this.IsMoving)
 				return;
 
@@ -115,24 +115,39 @@ namespace valkyrie.Core
 							y -= this.Speed;
 					}
 
-					
-					this.Location = new Point(x, y);
+
+					if (!TileEngine.CollisionManager.CheckCollision(this, this.MovingDestination))
+						ReachedMoveDestination();
+					else
+						this.Location = new Point(x, y);
 
 					this.LastMoveTime = 0;
 				}
 
 				if (this.Location == this.MovingDestination)
-				{
-					this.IsMoving = false;
-					this.MovingDestination = Point.Zero;
-					this.LastMoveTime = 0;
-				}
+					ReachedMoveDestination();
 			}
 
 			base.Update(gameTime);
 		}
 
-		
+		public void ReachedMoveDestination()
+		{
+			this.IsMoving = false;
+			this.MovingDestination = Point.Zero;
+			this.LastMoveTime = 0;
+		}
+
+
+
+		#region ICollidable Members
+
+		public Point GetLocation()
+		{
+			return this.Location;
+		}
+
+		#endregion
 	}
 
 	public static class Helper

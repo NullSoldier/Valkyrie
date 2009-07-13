@@ -39,6 +39,7 @@ namespace valkyrie
             TileEngine.Initialize(this.Content, this.GraphicsDevice);
             TileEngine.Viewport = this.GraphicsDevice.Viewport;
             TileEngine.Camera = new Camera(0, 0, 800, 600);
+			TileEngine.CollisionManager = new PokeCollisionManager();
 
             base.Initialize();
         }

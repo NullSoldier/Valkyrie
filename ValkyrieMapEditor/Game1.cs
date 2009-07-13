@@ -28,6 +28,8 @@ namespace ValkyrieMapEditor
 		private Map testMap;
 		private IntPtr drawSurface;
         private IntPtr drawTilesSurface;
+		private Texture2D CollisionSprite;
+		private Texture2D SelectionSprite;
 
 		public Game1()
 		{
@@ -86,6 +88,7 @@ namespace ValkyrieMapEditor
 			// TODO: Add your initialization logic here
 
 			base.Initialize();
+			Mouse.WindowHandle = this.drawSurface;
 		}
 
 		/// <summary>
@@ -102,6 +105,9 @@ namespace ValkyrieMapEditor
 			TileEngine.Viewport = this.GraphicsDevice.Viewport;
             TileEngine.Camera = new Camera(0, 0, 800, 600);
             TileEngine.Load(new FileInfo("Data/TileEngineConfig.xml"));
+
+			this.CollisionSprite = Texture2D.FromFile(this.GraphicsDevice, "Graphics/EditorCollision.png");
+			this.SelectionSprite = Texture2D.FromFile(this.GraphicsDevice, "Graphics/EditorSelection.png");
 		}
 
 		/// <summary>
@@ -126,18 +132,21 @@ namespace ValkyrieMapEditor
 			base.Update(gameTime);
 		}
 
-		public void SurfaceSizeChanged(object sender, ValkyrieMapEditor.frmMain.ScreenResizedEventArgs e)
+		public void SurfaceSizeChanged(object sender, ScreenResizedEventArgs e)
 		{
 			graphics.PreferredBackBufferWidth = e.Width;
 			graphics.PreferredBackBufferHeight = e.Height;
 			graphics.IsFullScreen = false;
 			graphics.ApplyChanges();
 
-			TileEngine.Camera.Screen.Width = e.Width;
-			TileEngine.Camera.Screen.Height = e.Height;
+			if (TileEngine.Camera != null)
+			{
+				TileEngine.Camera.Screen.Width = e.Width;
+				TileEngine.Camera.Screen.Height = e.Height;
+			}
 		}
 
-        public void SurfaceClicked(object sender, ValkyrieMapEditor.frmMain.SurfaceClickedEventArgs e)
+        public void SurfaceClicked(object sender, SurfaceClickedEventArgs e)
         {
             if (TileEngine.Map != null)
             {
@@ -167,7 +176,44 @@ namespace ValkyrieMapEditor
                 TileEngine.DrawMiddleLayer(this.spriteBatch);
                 TileEngine.DrawTopLayer(this.spriteBatch);
             }
+
 			// TODO: Add your drawing code here
+			if (TileEngine.IsMapLoaded)
+			{
+				// Draw the current location of the mouse
+				var mouseState = Mouse.GetState();
+				if (mouseState.X > 0 && mouseState.Y > 0)
+				{
+					Point tileLocation = new Point(mouseState.X / 32, mouseState.Y / 32);
+
+					Vector2 currentLocation = new Vector2(tileLocation.X * 32, tileLocation.Y * 32);
+
+
+					this.spriteBatch.Begin();
+					this.spriteBatch.Draw(this.SelectionSprite, currentLocation, Color.White);
+					this.spriteBatch.End();
+				}
+
+				// Render Collision Layer
+				for (int y = 0; y < TileEngine.Map.MapSize.Y; y++)
+				{
+					for (int x = 0; x < TileEngine.Map.MapSize.X; x++)
+					{
+						int value = TileEngine.Map.GetCollisionLayerValue(new Point(x, y));
+
+						if (value == -1)
+							continue;
+
+						Rectangle destRectangle = new Rectangle(0, 0, TileEngine.Map.TileSize.X, TileEngine.Map.TileSize.Y);
+						destRectangle.X = (int)TileEngine.Camera.MapOffset.X + (int)TileEngine.Camera.CameraOffset.X + (x * TileEngine.Map.TileSize.X);
+						destRectangle.Y = (int)TileEngine.Camera.MapOffset.Y + (int)TileEngine.Camera.CameraOffset.Y + (y * TileEngine.Map.TileSize.Y);
+
+						this.spriteBatch.Begin();
+						this.spriteBatch.Draw(this.CollisionSprite, destRectangle, new Rectangle(0, 0, this.CollisionSprite.Width, this.CollisionSprite.Height), Color.White);
+						this.spriteBatch.End();
+					}
+				}
+			}
 
 			base.Draw(gameTime);
 		}

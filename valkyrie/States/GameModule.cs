@@ -38,8 +38,8 @@ namespace ValkyrieLibrary.States
             
             TileEngine.DrawBaseLayer(spriteBatch);
             TileEngine.DrawMiddleLayer(spriteBatch);
-            TileEngine.DrawTopLayer(spriteBatch);
-            TileEngine.DrawCharacters(spriteBatch);
+			TileEngine.DrawCharacters(spriteBatch);
+			TileEngine.DrawTopLayer(spriteBatch);
         }
 
         public void Load()

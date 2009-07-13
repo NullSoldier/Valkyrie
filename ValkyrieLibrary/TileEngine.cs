@@ -11,6 +11,7 @@ using ValkyrieLibrary;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
+using ValkyrieLibrary.Collision;
 
 namespace valkyrie.Core
 {
@@ -19,11 +20,12 @@ namespace valkyrie.Core
 		private static Map map;
 
 		private static Viewport viewport;
-		private static PrimitiveBatch PrimitiveBatch;
+		//private static PrimitiveBatch PrimitiveBatch;
         public static TextureManager TextureManager;
         public static ModuleManager ModuleManager;
         public static Camera Camera;
         public static Dictionary<string, string> Configuration;
+		public static CollisionManager CollisionManager;
 
         public static Player Player;
         
@@ -31,6 +33,11 @@ namespace valkyrie.Core
 		{
 			get { return TileEngine.map; }
 			set { TileEngine.map = value; }
+		}
+
+		public static bool IsMapLoaded
+		{
+			get { return (TileEngine.Map != null); }
 		}
 
 		public static Viewport Viewport
@@ -46,7 +53,7 @@ namespace valkyrie.Core
 		public static void Initialize(ContentManager content, GraphicsDevice device)
 		{
 			TileEngine.TextureManager = new TextureManager(content, device, "Graphics");
-			TileEngine.PrimitiveBatch = new PrimitiveBatch(device);
+			//TileEngine.PrimitiveBatch = new PrimitiveBatch(device);
             TileEngine.Player = new Player();
             TileEngine.ModuleManager = new ModuleManager();
             TileEngine.Configuration = new Dictionary<string, string>();

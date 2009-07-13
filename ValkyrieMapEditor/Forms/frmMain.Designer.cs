@@ -43,10 +43,9 @@
 			this.dimOtherLayersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripDropDownButton3 = new System.Windows.Forms.ToolStripDropDownButton();
 			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-			this.pctTileSurface = new System.Windows.Forms.PictureBox();
+			this.pctTileSurface = new ValkyrieMapEditor.TileBox();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.btnMapProperties = new System.Windows.Forms.Button();
 			this.lstSettings = new System.Windows.Forms.ListView();
@@ -54,10 +53,15 @@
 			this.colValue = new System.Windows.Forms.ColumnHeader();
 			this.pctSurface = new System.Windows.Forms.PictureBox();
 			this.toolStripTools = new System.Windows.Forms.ToolStrip();
+			this.btnNew = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+			this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.btnBaseLayer = new System.Windows.Forms.ToolStripButton();
 			this.btnMiddleLayer = new System.Windows.Forms.ToolStripButton();
 			this.btnTopLayer = new System.Windows.Forms.ToolStripButton();
 			this.btnCollisionLayer = new System.Windows.Forms.ToolStripButton();
+			this.btnHelp = new System.Windows.Forms.ToolStripButton();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.toolStripMenu.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -79,8 +83,7 @@
 			this.toolStripMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolFile,
             this.toolStripDropDownButton2,
-            this.toolStripDropDownButton3,
-            this.toolStripComboBox1});
+            this.toolStripDropDownButton3});
 			this.toolStripMenu.Location = new System.Drawing.Point(0, 0);
 			this.toolStripMenu.Name = "toolStripMenu";
 			this.toolStripMenu.Size = new System.Drawing.Size(1008, 25);
@@ -106,7 +109,7 @@
 			// 
 			this.toolNew.Image = global::ValkyrieMapEditor.Properties.Resources.imgPage;
 			this.toolNew.Name = "toolNew";
-			this.toolNew.Size = new System.Drawing.Size(152, 22);
+			this.toolNew.Size = new System.Drawing.Size(114, 22);
 			this.toolNew.Text = "New";
 			this.toolNew.Click += new System.EventHandler(this.toolNew_Click);
 			// 
@@ -114,7 +117,7 @@
 			// 
 			this.toolOpen.Image = global::ValkyrieMapEditor.Properties.Resources.imgOpen;
 			this.toolOpen.Name = "toolOpen";
-			this.toolOpen.Size = new System.Drawing.Size(152, 22);
+			this.toolOpen.Size = new System.Drawing.Size(114, 22);
 			this.toolOpen.Text = "Open";
 			this.toolOpen.Click += new System.EventHandler(this.toolOpen_Click);
 			// 
@@ -122,7 +125,7 @@
 			// 
 			this.toolSave.Image = global::ValkyrieMapEditor.Properties.Resources.imgSave;
 			this.toolSave.Name = "toolSave";
-			this.toolSave.Size = new System.Drawing.Size(152, 22);
+			this.toolSave.Size = new System.Drawing.Size(114, 22);
 			this.toolSave.Text = "Save";
 			this.toolSave.Click += new System.EventHandler(this.toolSave_Click);
 			// 
@@ -130,7 +133,7 @@
 			// 
 			this.saveAsToolStripMenuItem.Image = global::ValkyrieMapEditor.Properties.Resources.imgSaveAs;
 			this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
 			this.saveAsToolStripMenuItem.Text = "Save As";
 			this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
 			// 
@@ -138,7 +141,7 @@
 			// 
 			this.toolClose.Image = global::ValkyrieMapEditor.Properties.Resources.imgExit;
 			this.toolClose.Name = "toolClose";
-			this.toolClose.Size = new System.Drawing.Size(152, 22);
+			this.toolClose.Size = new System.Drawing.Size(114, 22);
 			this.toolClose.Text = "Exit";
 			this.toolClose.Click += new System.EventHandler(this.toolClose_Click);
 			// 
@@ -193,17 +196,8 @@
 			// optionsToolStripMenuItem
 			// 
 			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
 			this.optionsToolStripMenuItem.Text = "Options";
-			// 
-			// toolStripComboBox1
-			// 
-			this.toolStripComboBox1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-			this.toolStripComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.toolStripComboBox1.DropDownWidth = 121;
-			this.toolStripComboBox1.MaxDropDownItems = 4;
-			this.toolStripComboBox1.Name = "toolStripComboBox1";
-			this.toolStripComboBox1.Size = new System.Drawing.Size(200, 25);
 			// 
 			// splitContainer1
 			// 
@@ -222,6 +216,7 @@
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.AutoScroll = true;
+			this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.ControlDark;
 			this.splitContainer1.Panel2.Controls.Add(this.pctSurface);
 			this.splitContainer1.Size = new System.Drawing.Size(1008, 652);
 			this.splitContainer1.SplitterDistance = 280;
@@ -238,6 +233,7 @@
 			// splitContainer2.Panel1
 			// 
 			this.splitContainer2.Panel1.AutoScroll = true;
+			this.splitContainer2.Panel1.BackColor = System.Drawing.SystemColors.ControlDark;
 			this.splitContainer2.Panel1.Controls.Add(this.pctTileSurface);
 			// 
 			// splitContainer2.Panel2
@@ -252,9 +248,13 @@
 			// 
 			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
 			this.pctTileSurface.Name = "pctTileSurface";
-			this.pctTileSurface.Size = new System.Drawing.Size(226, 170);
+			this.pctTileSurface.OriginalImage = null;
+			this.pctTileSurface.SelectedPoint = new System.Drawing.Point(0, 0);
+			this.pctTileSurface.SelectionImage = null;
+			this.pctTileSurface.Size = new System.Drawing.Size(173, 134);
 			this.pctTileSurface.TabIndex = 0;
 			this.pctTileSurface.TabStop = false;
+			this.pctTileSurface.TileSize = new System.Drawing.Size(0, 0);
 			this.pctTileSurface.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pctTileSurface_MouseClick);
 			// 
 			// splitContainer3
@@ -316,9 +316,12 @@
 			// 
 			// pctSurface
 			// 
+			this.pctSurface.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this.pctSurface.Location = new System.Drawing.Point(0, 1);
 			this.pctSurface.Name = "pctSurface";
-			this.pctSurface.Size = new System.Drawing.Size(10, 10);
+			this.pctSurface.Size = new System.Drawing.Size(716, 644);
 			this.pctSurface.TabIndex = 0;
 			this.pctSurface.TabStop = false;
 			this.pctSurface.Resize += new System.EventHandler(this.pctSurface_Resize);
@@ -327,57 +330,120 @@
 			// toolStripTools
 			// 
 			this.toolStripTools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnNew,
+            this.toolStripButton2,
+            this.toolStripButton3,
+            this.toolStripSeparator2,
             this.btnBaseLayer,
             this.btnMiddleLayer,
             this.btnTopLayer,
-            this.btnCollisionLayer});
+            this.btnCollisionLayer,
+            this.btnHelp});
 			this.toolStripTools.Location = new System.Drawing.Point(0, 25);
 			this.toolStripTools.Name = "toolStripTools";
 			this.toolStripTools.Size = new System.Drawing.Size(1008, 25);
 			this.toolStripTools.TabIndex = 3;
 			this.toolStripTools.Text = "toolStrip1";
 			// 
+			// btnNew
+			// 
+			this.btnNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnNew.Image = global::ValkyrieMapEditor.Properties.Resources.imgPage;
+			this.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.btnNew.Name = "btnNew";
+			this.btnNew.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
+			this.btnNew.Size = new System.Drawing.Size(34, 22);
+			this.btnNew.Text = "New Map";
+			this.btnNew.Click += new System.EventHandler(this.toolNew_Click);
+			// 
+			// toolStripButton2
+			// 
+			this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButton2.Image = global::ValkyrieMapEditor.Properties.Resources.imgOpen;
+			this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton2.Name = "toolStripButton2";
+			this.toolStripButton2.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
+			this.toolStripButton2.Size = new System.Drawing.Size(34, 22);
+			this.toolStripButton2.Text = "Open Map";
+			this.toolStripButton2.Click += new System.EventHandler(this.toolOpen_Click);
+			// 
+			// toolStripButton3
+			// 
+			this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripButton3.Image = global::ValkyrieMapEditor.Properties.Resources.imgSave;
+			this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripButton3.Name = "toolStripButton3";
+			this.toolStripButton3.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
+			this.toolStripButton3.Size = new System.Drawing.Size(34, 22);
+			this.toolStripButton3.Text = "Save Map";
+			this.toolStripButton3.Click += new System.EventHandler(this.toolSave_Click);
+			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Padding = new System.Windows.Forms.Padding(20);
+			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+			// 
 			// btnBaseLayer
 			// 
 			this.btnBaseLayer.Checked = true;
 			this.btnBaseLayer.CheckOnClick = true;
 			this.btnBaseLayer.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.btnBaseLayer.Image = ((System.Drawing.Image)(resources.GetObject("btnBaseLayer.Image")));
+			this.btnBaseLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnBaseLayer.Image = global::ValkyrieMapEditor.Properties.Resources.imgBaseLayer;
 			this.btnBaseLayer.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnBaseLayer.Name = "btnBaseLayer";
-			this.btnBaseLayer.Size = new System.Drawing.Size(82, 22);
+			this.btnBaseLayer.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
+			this.btnBaseLayer.Size = new System.Drawing.Size(34, 22);
 			this.btnBaseLayer.Text = "Base Layer";
 			this.btnBaseLayer.Click += new System.EventHandler(this.btnBaseLayer_Click);
 			// 
 			// btnMiddleLayer
 			// 
 			this.btnMiddleLayer.CheckOnClick = true;
-			this.btnMiddleLayer.Image = ((System.Drawing.Image)(resources.GetObject("btnMiddleLayer.Image")));
+			this.btnMiddleLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnMiddleLayer.Image = global::ValkyrieMapEditor.Properties.Resources.imgMiddleLayer;
 			this.btnMiddleLayer.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnMiddleLayer.Name = "btnMiddleLayer";
-			this.btnMiddleLayer.Size = new System.Drawing.Size(95, 22);
+			this.btnMiddleLayer.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
+			this.btnMiddleLayer.Size = new System.Drawing.Size(34, 22);
 			this.btnMiddleLayer.Text = "Middle Layer";
 			this.btnMiddleLayer.Click += new System.EventHandler(this.btnMiddleLayer_Click);
 			// 
 			// btnTopLayer
 			// 
 			this.btnTopLayer.CheckOnClick = true;
-			this.btnTopLayer.Image = ((System.Drawing.Image)(resources.GetObject("btnTopLayer.Image")));
+			this.btnTopLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnTopLayer.Image = global::ValkyrieMapEditor.Properties.Resources.imgTopLayer;
 			this.btnTopLayer.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnTopLayer.Name = "btnTopLayer";
-			this.btnTopLayer.Size = new System.Drawing.Size(79, 22);
+			this.btnTopLayer.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
+			this.btnTopLayer.Size = new System.Drawing.Size(34, 22);
 			this.btnTopLayer.Text = "Top Layer";
 			this.btnTopLayer.Click += new System.EventHandler(this.btnTopLayer_Click);
 			// 
 			// btnCollisionLayer
 			// 
 			this.btnCollisionLayer.CheckOnClick = true;
-			this.btnCollisionLayer.Image = ((System.Drawing.Image)(resources.GetObject("btnCollisionLayer.Image")));
+			this.btnCollisionLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnCollisionLayer.Image = global::ValkyrieMapEditor.Properties.Resources.imgCollision;
 			this.btnCollisionLayer.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnCollisionLayer.Name = "btnCollisionLayer";
-			this.btnCollisionLayer.Size = new System.Drawing.Size(101, 22);
+			this.btnCollisionLayer.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
+			this.btnCollisionLayer.Size = new System.Drawing.Size(34, 22);
 			this.btnCollisionLayer.Text = "Collison Layer";
 			this.btnCollisionLayer.Click += new System.EventHandler(this.btnCollisionLayer_Click);
+			// 
+			// btnHelp
+			// 
+			this.btnHelp.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+			this.btnHelp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnHelp.Image = global::ValkyrieMapEditor.Properties.Resources.imgHelp;
+			this.btnHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.btnHelp.Name = "btnHelp";
+			this.btnHelp.Size = new System.Drawing.Size(23, 22);
+			this.btnHelp.Text = "Help";
+			this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
 			// 
 			// statusStrip1
 			// 
@@ -435,7 +501,6 @@
 		private System.Windows.Forms.ToolStripMenuItem allLayersToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripMenuItem dimOtherLayersToolStripMenuItem;
-		private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
 		private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton3;
 		private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
 		private System.Windows.Forms.SplitContainer splitContainer1;
@@ -443,7 +508,7 @@
         private System.Windows.Forms.ListView lstSettings;
         private System.Windows.Forms.ColumnHeader colSetting;
         private System.Windows.Forms.ColumnHeader colValue;
-        private System.Windows.Forms.PictureBox pctTileSurface;
+        private TileBox pctTileSurface;
         private System.Windows.Forms.SplitContainer splitContainer3;
 		private System.Windows.Forms.Button btnMapProperties;
         private System.Windows.Forms.ToolStripButton btnBaseLayer;
@@ -453,5 +518,10 @@
 		private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
 		private System.Windows.Forms.ToolStrip toolStripTools;
 		private System.Windows.Forms.StatusStrip statusStrip1;
+		private System.Windows.Forms.ToolStripButton btnHelp;
+		private System.Windows.Forms.ToolStripButton btnNew;
+		private System.Windows.Forms.ToolStripButton toolStripButton2;
+		private System.Windows.Forms.ToolStripButton toolStripButton3;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 	}
 }
