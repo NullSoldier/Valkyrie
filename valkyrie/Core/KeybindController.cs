@@ -8,15 +8,18 @@ using Microsoft.Xna.Framework.Input;
 namespace valkyrie
 {
 
-   public class KeybindController
+    public class KeybindController
     {
 
         private Dictionary<Keys, KeyDef> KeyDefCollection = new Dictionary<Keys, KeyDef>();
 
+        public Keys[] LastKeys;
+        public Keys CrntDir;
+
         //public delegate void KeyPressed(object sender,/*   ???  */);
-       // Note that EventHandler is a build in delegate
-       // To define custom arguments you just create your own and use it instead
-       // Which is what I did
+        // Note that EventHandler is a build in delegate
+        // To define custom arguments you just create your own and use it instead
+        // Which is what I did
 
         public event EventHandler<KeyPressedEventArgs> KeyAction;
 
@@ -41,8 +44,17 @@ namespace valkyrie
             this.KeyDefCollection.Add(key, keyDef);
         }
 
+        public bool IsDir(Keys key)
+        {
+            if (key == Keys.Left || key == Keys.Right || key == Keys.Up || key == Keys.Down)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public void LoadKeys()
-        {     
+        {
             XmlDocument doc = new XmlDocument();
             doc.Load("Data/Keys.xml");
 
@@ -61,7 +73,7 @@ namespace valkyrie
                     if (innerNodes[i].Name == "KeyPressed")
                     {
                         key.Key = (Keys)Convert.ToInt32(innerNodes[i].InnerText);
-                        
+
                     }
                     else if (innerNodes[i].Name == "Action")
                     {
@@ -83,26 +95,58 @@ namespace valkyrie
                 }
                 KeyDefCollection.Add(key.Key, key);
             }
-        
+
         }
 
         public void Update()
         {
             KeyboardState KeyState = Keyboard.GetState();
 
-			Keys[] KeysPressed = KeyState.GetPressedKeys();
-
+            Keys[] KeysPressed = KeyState.GetPressedKeys();
+            Keys NewDir = Keys.Zoom;
+            bool DirFound = false;
 
             foreach (Keys key in KeysPressed)
             {
-                if( KeyDefCollection.ContainsKey(key))
+
+                if (KeyDefCollection.ContainsKey(key))
                 {
-                    //event
-                    KeyAction( this, new KeyPressedEventArgs(key, KeyDefCollection[key].Action ));
-                
+
+                    if (this.IsDir(key))
+                    {
+                        DirFound = true;
+                        if (!LastKeys.Contains<Keys>(key))
+                        {
+                            NewDir = key;
+                        }
+                        else if (!LastKeys.Contains<Keys>(CrntDir))
+                        {
+                            CrntDir = key;
+                        }
+                    }
+                    else
+                    {
+                        //event
+                        KeyAction(this, new KeyPressedEventArgs(key, KeyDefCollection[key].Action));
+                    }
+
                 }
-         
+
             }
+            // Make sure only the last pressed
+            if (DirFound)
+            {
+                if (NewDir != Keys.Zoom)
+                {
+                    CrntDir = NewDir;
+                    KeyAction(this, new KeyPressedEventArgs(NewDir, KeyDefCollection[NewDir].Action));
+                }
+                else
+                {
+                    KeyAction(this, new KeyPressedEventArgs(CrntDir, KeyDefCollection[CrntDir].Action));
+                }
+            }
+            LastKeys = KeysPressed;
         }
 
     }
