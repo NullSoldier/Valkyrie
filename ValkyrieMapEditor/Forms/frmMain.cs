@@ -106,7 +106,7 @@ namespace ValkyrieMapEditor
 
         private void pctSurface_MouseClick(object sender, MouseEventArgs e)
         {
-           // this.SurfaceClicked(this, new SurfaceClickedEventArgs(e.Button, new Point(e.X, e.Y)));
+            this.SurfaceClicked(this, new SurfaceClickedEventArgs(e.Button, new Point(e.X, e.Y)));
         }
 
         private void pctTileSurface_MouseClick(object sender, MouseEventArgs e)

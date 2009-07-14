@@ -129,7 +129,7 @@ namespace ValkyrieMapEditor
 			// TODO: Add your update logic here
 			KeyboardState keyState = Keyboard.GetState();
 
-			if (TileEngine.IsMapLoaded)
+			if (TileEngine.IsMapLoaded && MapManager.CurrentLayer != MapLayer.CollisionLayer)
 			{
 				var mouseState = Mouse.GetState();
 
