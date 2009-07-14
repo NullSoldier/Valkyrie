@@ -127,6 +127,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="Graphics\EditorTools.png" />
+    <None Include="Resources\rectangle.png" />
+    <None Include="Resources\pencil.png" />
+    <None Include="Resources\bucket.png" />
     <None Include="Resources\help.png" />
     <None Include="Resources\layer_top.png" />
     <None Include="Resources\layer_middle.png" />

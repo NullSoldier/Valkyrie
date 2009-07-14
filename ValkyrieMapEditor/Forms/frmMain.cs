@@ -71,6 +71,12 @@ namespace ValkyrieMapEditor
             this.RefreshMapProperties(TileEngine.Map);
 
             this.btnMapProperties.Enabled = true;
+			this.toolSave.Enabled = true;
+			this.toolSaveAs.Enabled = true;
+			this.btnBaseLayer.Enabled = true;
+			this.btnMiddleLayer.Enabled = true;
+			this.btnTopLayer.Enabled = true;
+			this.btnCollisionLayer.Enabled = true;			
         }
 
         private void RefreshMapProperties(Map map)

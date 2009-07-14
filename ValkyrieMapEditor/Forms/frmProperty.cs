@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using valkyrie.Core;
 using Microsoft.Xna.Framework;
 using System.IO;
+using System.Drawing;
 
 namespace ValkyrieMapEditor
 {
@@ -57,15 +58,12 @@ namespace ValkyrieMapEditor
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+			if (!ValidateForm())
+				return;
+
 			// Copy it over
 			FileInfo TileSet = new FileInfo(this.inTileSet.Text);
-			FileInfo tmp = new FileInfo(Path.Combine(Environment.CurrentDirectory, TileEngine.Configuration["GraphicsRoot"]));
-
-			if (!TileSet.Exists)
-			{
-				MessageBox.Show("Tileset graphic does not exist in the local graphic folder" + Environment.NewLine + Path.Combine(Environment.CurrentDirectory, "Graphics/"), "Error", MessageBoxButtons.OK);
-				return;
-			}
+			FileInfo tmp = new FileInfo(Path.Combine(Environment.CurrentDirectory, TileEngine.Configuration["GraphicsRoot"]));			
 
 			if (TileSet.FullName != (tmp.FullName + TileSet.Name))
 			{
@@ -78,13 +76,82 @@ namespace ValkyrieMapEditor
 
 			// Other properties
             this.Map.Name = this.inName.Text;
-            this.Map.MapSize = new Point((int)this.inMapWidth.Value, (int)this.inMapHeight.Value);
-            this.Map.TileSize = new Point((int)this.inTileWidth.Value, (int)this.inTileHeight.Value);
+            this.Map.MapSize = new Microsoft.Xna.Framework.Point((int)this.inMapWidth.Value, (int)this.inMapHeight.Value);
+            this.Map.TileSize = new Microsoft.Xna.Framework.Point((int)this.inTileWidth.Value, (int)this.inTileHeight.Value);
 			this.Map.TilesPerRow = (System.Drawing.Image.FromFile(TileEngine.Configuration["GraphicsRoot"] + "\\" + this.Map.TextureName).Width / this.Map.TileSize.X);
 
 			this.DialogResult = DialogResult.OK;
             this.Close();
         }
+
+		public bool ValidateForm()
+		{
+			bool Error = false;
+
+			this.inTileSet.BackColor = Color.FromKnownColor(KnownColor.Control);
+			this.inName.BackColor = Color.FromKnownColor(KnownColor.Control);
+			this.inMapWidth.BackColor = Color.FromKnownColor(KnownColor.Control);
+			this.inMapHeight.BackColor = Color.FromKnownColor(KnownColor.Control);
+			this.inTileWidth.BackColor = Color.FromKnownColor(KnownColor.Control);
+			this.inTileHeight.BackColor = Color.FromKnownColor(KnownColor.Control);
+
+			/* TileSet */
+			if (string.IsNullOrEmpty(this.inTileSet.Text))
+			{
+				this.inTileSet.BackColor = Color.Red;
+				new ToolTip().Show("Value cannot be null", this,
+					this.inTileSet.Location.X + this.inTileSet.Width,
+					this.inTileSet.Location.Y + this.inTileSet.Height, 3000);
+				Error = true;
+			}
+			else
+			{
+				FileInfo TileSet = new FileInfo(this.inTileSet.Text);
+
+				if (!TileSet.Exists)
+				{
+					this.inTileSet.BackColor = Color.Red;
+					new ToolTip().Show("Tileset does not exist.", this,
+					this.inTileSet.Location.X + this.inTileSet.Width,
+					this.inTileSet.Location.Y + this.inTileSet.Height, 3000);
+					Error = true;
+				}
+			}
+
+			/* Map Properties */
+			if (string.IsNullOrEmpty(this.inName.Text))
+			{
+				this.inName.BackColor = Color.Red;
+
+				Error = true;
+			}
+
+			if (string.IsNullOrEmpty(this.inMapWidth.Text))
+			{
+				this.inMapWidth.BackColor = Color.Red;
+				Error = true;
+			}
+			
+			if (string.IsNullOrEmpty(this.inMapHeight.Text))
+			{
+				this.inMapHeight.BackColor = Color.Red;
+				Error = true;
+			}
+
+			if (string.IsNullOrEmpty(this.inTileWidth.Text))
+			{
+				this.inTileWidth.BackColor = Color.Red;
+				Error = true;
+			}
+
+			if (string.IsNullOrEmpty(this.inTileHeight.Text))
+			{
+				this.inTileHeight.BackColor = Color.Red;
+				Error = true;
+			}
+
+			return !(Error);
+		}
 
         private void btnBrowseTileSet_Click(object sender, EventArgs e)
         {

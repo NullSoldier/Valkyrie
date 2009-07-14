@@ -81,6 +81,13 @@ namespace ValkyrieMapEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap imgBucket {
+            get {
+                object obj = ResourceManager.GetObject("imgBucket", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap imgCog {
             get {
                 object obj = ResourceManager.GetObject("imgCog", resourceCulture);
@@ -126,6 +133,20 @@ namespace ValkyrieMapEditor.Properties {
         internal static System.Drawing.Bitmap imgPage {
             get {
                 object obj = ResourceManager.GetObject("imgPage", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap imgPencil {
+            get {
+                object obj = ResourceManager.GetObject("imgPencil", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap imgRectangle {
+            get {
+                object obj = ResourceManager.GetObject("imgRectangle", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
