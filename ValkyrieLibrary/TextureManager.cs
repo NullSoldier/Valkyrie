@@ -52,6 +52,11 @@ namespace valkyrie.Core
 		{
 			return (this.Resources.ContainsKey(FileName));
 		}
+
+		public void ClearCache()
+		{
+			this.Resources.Clear();
+		}
 		
 
 	}

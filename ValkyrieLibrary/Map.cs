@@ -312,6 +312,12 @@ namespace valkyrie.Core
 		{
 			return Convert.ToInt32(value);
 		}
+
+		public bool TilePointInMap(Point point)
+		{
+			return (point.X < TileEngine.Map.MapSize.X && point.Y < TileEngine.Map.MapSize.Y
+				&& point.X >= 0 && point.Y >= 0);
+		}
 	}
 
 	public enum MapLayer

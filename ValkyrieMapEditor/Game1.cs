@@ -129,6 +129,20 @@ namespace ValkyrieMapEditor
 			// TODO: Add your update logic here
 			KeyboardState keyState = Keyboard.GetState();
 
+			if (TileEngine.IsMapLoaded)
+			{
+				var mouseState = Mouse.GetState();
+
+				if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed &&
+					mouseState.X > 0 && mouseState.Y > 0)
+				{
+					Point tileLocation = new Point(mouseState.X / 32, mouseState.Y / 32);
+
+					if( TileEngine.Map.TilePointInMap(tileLocation) )
+						TileEngine.Map.SetData(MapManager.CurrentLayer, tileLocation, MapManager.CurrentTile);
+				}
+			}
+
 			base.Update(gameTime);
 		}
 
@@ -152,10 +166,10 @@ namespace ValkyrieMapEditor
             {
                 if (e.Button == MouseButtons.Left )
                 {
-                    int tileX = (e.Location.X / 32);
-                    int tileY = (e.Location.Y / 32);
+					Point point = new Point(e.Location.X / 32, e.Location.Y / 32);
 
-                    TileEngine.Map.SetData(MapManager.CurrentLayer, new Point(tileX, tileY), MapManager.CurrentTile);
+					if( TileEngine.Map.TilePointInMap(point) )
+						TileEngine.Map.SetData(MapManager.CurrentLayer, point, MapManager.CurrentTile);
                 }
             }
         }

@@ -54,8 +54,8 @@
 			this.pctSurface = new System.Windows.Forms.PictureBox();
 			this.toolStripTools = new System.Windows.Forms.ToolStrip();
 			this.btnNew = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
-			this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+			this.btnOpen = new System.Windows.Forms.ToolStripButton();
+			this.btnSave = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.btnBaseLayer = new System.Windows.Forms.ToolStripButton();
 			this.btnMiddleLayer = new System.Windows.Forms.ToolStripButton();
@@ -113,7 +113,7 @@
 			// 
 			this.toolNew.Image = global::ValkyrieMapEditor.Properties.Resources.imgPage;
 			this.toolNew.Name = "toolNew";
-			this.toolNew.Size = new System.Drawing.Size(152, 22);
+			this.toolNew.Size = new System.Drawing.Size(114, 22);
 			this.toolNew.Text = "New";
 			this.toolNew.Click += new System.EventHandler(this.toolNew_Click);
 			// 
@@ -121,7 +121,7 @@
 			// 
 			this.toolOpen.Image = global::ValkyrieMapEditor.Properties.Resources.imgOpen;
 			this.toolOpen.Name = "toolOpen";
-			this.toolOpen.Size = new System.Drawing.Size(152, 22);
+			this.toolOpen.Size = new System.Drawing.Size(114, 22);
 			this.toolOpen.Text = "Open";
 			this.toolOpen.Click += new System.EventHandler(this.toolOpen_Click);
 			// 
@@ -130,7 +130,7 @@
 			this.toolSave.Enabled = false;
 			this.toolSave.Image = global::ValkyrieMapEditor.Properties.Resources.imgSave;
 			this.toolSave.Name = "toolSave";
-			this.toolSave.Size = new System.Drawing.Size(152, 22);
+			this.toolSave.Size = new System.Drawing.Size(114, 22);
 			this.toolSave.Text = "Save";
 			this.toolSave.Click += new System.EventHandler(this.toolSave_Click);
 			// 
@@ -139,7 +139,7 @@
 			this.toolSaveAs.Enabled = false;
 			this.toolSaveAs.Image = global::ValkyrieMapEditor.Properties.Resources.imgSaveAs;
 			this.toolSaveAs.Name = "toolSaveAs";
-			this.toolSaveAs.Size = new System.Drawing.Size(152, 22);
+			this.toolSaveAs.Size = new System.Drawing.Size(114, 22);
 			this.toolSaveAs.Text = "Save As";
 			this.toolSaveAs.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
 			// 
@@ -147,7 +147,7 @@
 			// 
 			this.toolClose.Image = global::ValkyrieMapEditor.Properties.Resources.imgExit;
 			this.toolClose.Name = "toolClose";
-			this.toolClose.Size = new System.Drawing.Size(152, 22);
+			this.toolClose.Size = new System.Drawing.Size(114, 22);
 			this.toolClose.Text = "Exit";
 			this.toolClose.Click += new System.EventHandler(this.toolClose_Click);
 			// 
@@ -337,8 +337,8 @@
 			// 
 			this.toolStripTools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnNew,
-            this.toolStripButton2,
-            this.toolStripButton3,
+            this.btnOpen,
+            this.btnSave,
             this.toolStripSeparator2,
             this.btnBaseLayer,
             this.btnMiddleLayer,
@@ -366,28 +366,28 @@
 			this.btnNew.Text = "New Map";
 			this.btnNew.Click += new System.EventHandler(this.toolNew_Click);
 			// 
-			// toolStripButton2
+			// btnOpen
 			// 
-			this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton2.Image = global::ValkyrieMapEditor.Properties.Resources.imgOpen;
-			this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton2.Name = "toolStripButton2";
-			this.toolStripButton2.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.toolStripButton2.Size = new System.Drawing.Size(34, 22);
-			this.toolStripButton2.Text = "Open Map";
-			this.toolStripButton2.Click += new System.EventHandler(this.toolOpen_Click);
+			this.btnOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnOpen.Image = global::ValkyrieMapEditor.Properties.Resources.imgOpen;
+			this.btnOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.btnOpen.Name = "btnOpen";
+			this.btnOpen.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
+			this.btnOpen.Size = new System.Drawing.Size(34, 22);
+			this.btnOpen.Text = "Open Map";
+			this.btnOpen.Click += new System.EventHandler(this.toolOpen_Click);
 			// 
-			// toolStripButton3
+			// btnSave
 			// 
-			this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripButton3.Enabled = false;
-			this.toolStripButton3.Image = global::ValkyrieMapEditor.Properties.Resources.imgSave;
-			this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripButton3.Name = "toolStripButton3";
-			this.toolStripButton3.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.toolStripButton3.Size = new System.Drawing.Size(34, 22);
-			this.toolStripButton3.Text = "Save Map";
-			this.toolStripButton3.Click += new System.EventHandler(this.toolSave_Click);
+			this.btnSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnSave.Enabled = false;
+			this.btnSave.Image = global::ValkyrieMapEditor.Properties.Resources.imgSave;
+			this.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.btnSave.Name = "btnSave";
+			this.btnSave.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
+			this.btnSave.Size = new System.Drawing.Size(34, 22);
+			this.btnSave.Text = "Save Map";
+			this.btnSave.Click += new System.EventHandler(this.toolSave_Click);
 			// 
 			// toolStripSeparator2
 			// 
@@ -467,6 +467,8 @@
 			// 
 			// btnPencil
 			// 
+			this.btnPencil.Checked = true;
+			this.btnPencil.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.btnPencil.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.btnPencil.Enabled = false;
 			this.btnPencil.Image = global::ValkyrieMapEditor.Properties.Resources.imgPencil;
@@ -573,8 +575,8 @@
 		private System.Windows.Forms.StatusStrip statusStrip1;
 		private System.Windows.Forms.ToolStripButton btnHelp;
 		private System.Windows.Forms.ToolStripButton btnNew;
-		private System.Windows.Forms.ToolStripButton toolStripButton2;
-		private System.Windows.Forms.ToolStripButton toolStripButton3;
+		private System.Windows.Forms.ToolStripButton btnOpen;
+		private System.Windows.Forms.ToolStripButton btnSave;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 		private System.Windows.Forms.ToolStripButton btnPencil;

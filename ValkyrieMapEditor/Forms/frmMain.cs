@@ -66,17 +66,10 @@ namespace ValkyrieMapEditor
 
         public void LoadMap(FileInfo MapLocation)
         {
+			TileEngine.TextureManager.ClearCache();
             TileEngine.SetMap(MapManager.LoadMap(MapLocation));
 
             this.RefreshMapProperties(TileEngine.Map);
-
-            this.btnMapProperties.Enabled = true;
-			this.toolSave.Enabled = true;
-			this.toolSaveAs.Enabled = true;
-			this.btnBaseLayer.Enabled = true;
-			this.btnMiddleLayer.Enabled = true;
-			this.btnTopLayer.Enabled = true;
-			this.btnCollisionLayer.Enabled = true;			
         }
 
         private void RefreshMapProperties(Map map)
@@ -92,6 +85,18 @@ namespace ValkyrieMapEditor
 			this.pctTileSurface.OriginalImage = Image.FromFile(TileEngine.Configuration["GraphicsRoot"] + "\\" + map.TextureName);
 			this.pctTileSurface.Size = this.pctTileSurface.Image.Size;
 			this.pctTileSurface.DrawSelection();
+
+			this.btnMapProperties.Enabled = true;
+			this.toolSave.Enabled = true;
+			this.toolSaveAs.Enabled = true;
+			this.btnBaseLayer.Enabled = true;
+			this.btnMiddleLayer.Enabled = true;
+			this.btnTopLayer.Enabled = true;
+			this.btnCollisionLayer.Enabled = true;
+			this.btnSave.Enabled = true;
+			this.btnPencil.Enabled = true;
+			this.btnRect.Enabled = true;
+			this.btnFill.Enabled = true;
         }
 
 		private void pctSurface_Resize(object sender, EventArgs e)
@@ -101,7 +106,7 @@ namespace ValkyrieMapEditor
 
         private void pctSurface_MouseClick(object sender, MouseEventArgs e)
         {
-            this.SurfaceClicked(this, new SurfaceClickedEventArgs(e.Button, new Point(e.X, e.Y)));
+           // this.SurfaceClicked(this, new SurfaceClickedEventArgs(e.Button, new Point(e.X, e.Y)));
         }
 
         private void pctTileSurface_MouseClick(object sender, MouseEventArgs e)

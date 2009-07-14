@@ -118,7 +118,7 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.inMapWidth.Location = new System.Drawing.Point(122, 45);
 			this.inMapWidth.Maximum = new decimal(new int[] {
-            500,
+            99999999,
             0,
             0,
             0});
@@ -143,7 +143,7 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.inMapHeight.Location = new System.Drawing.Point(122, 77);
 			this.inMapHeight.Maximum = new decimal(new int[] {
-            500,
+            99999999,
             0,
             0,
             0});
@@ -271,6 +271,11 @@
 			this.inTileWidth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.inTileWidth.Location = new System.Drawing.Point(122, 142);
+			this.inTileWidth.Maximum = new decimal(new int[] {
+            99999999,
+            0,
+            0,
+            0});
 			this.inTileWidth.Name = "inTileWidth";
 			this.inTileWidth.Size = new System.Drawing.Size(260, 22);
 			this.inTileWidth.TabIndex = 7;
@@ -281,6 +286,11 @@
 			this.inTileHeight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.inTileHeight.Location = new System.Drawing.Point(122, 172);
+			this.inTileHeight.Maximum = new decimal(new int[] {
+            99999999,
+            0,
+            0,
+            0});
 			this.inTileHeight.Name = "inTileHeight";
 			this.inTileHeight.Size = new System.Drawing.Size(260, 22);
 			this.inTileHeight.TabIndex = 8;

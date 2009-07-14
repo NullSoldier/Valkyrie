@@ -207,7 +207,6 @@ namespace valkyrie.Core
 
             spriteBatch.End();
         }
-
 	}
 
 }
