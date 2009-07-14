@@ -18,6 +18,8 @@ namespace ValkyrieLibrary.States
         private bool Loaded = false;
         private KeybindController KeybindController = new KeybindController();
 
+        private Keys CrntDir;
+
         public GameModule() { }
 
         #region IModule Members
@@ -86,7 +88,12 @@ namespace ValkyrieLibrary.States
 
         public void GameModule_KeyPressed(object sender, KeyPressedEventArgs ev)
         {
-            switch (ev.Action)
+            if (this.IsDir(ev.KeyPressed))
+            {
+                UpdateDirection(ev.KeyPressed);
+            }
+
+            switch (this.KeybindController.GetKeyAction(CrntDir))
             {
                 case "MoveUp":
 					TileEngine.Player.Move(new Point(TileEngine.Player.Location.X, TileEngine.Player.Location.Y - 32));
@@ -103,6 +110,24 @@ namespace ValkyrieLibrary.States
                 default:
                     break;
             }
+        }
+
+        public void UpdateDirection(Keys NewDir)
+        {
+            if (!this.KeybindController.LastKeys.Contains<Keys>(NewDir) || !this.KeybindController.CrntKeys.Contains<Keys>(CrntDir))
+            {
+                CrntDir = NewDir;
+            }
+
+        }
+
+        public bool IsDir(Keys key)
+        {
+            if (key == Keys.Left || key == Keys.Right || key == Keys.Up || key == Keys.Down)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
