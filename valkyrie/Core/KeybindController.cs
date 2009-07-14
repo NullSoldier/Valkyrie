@@ -14,7 +14,7 @@ namespace valkyrie
         private Dictionary<Keys, KeyDef> KeyDefCollection = new Dictionary<Keys, KeyDef>();
 
         public Keys[] LastKeys;
-        public Keys CrntDir;
+        public Keys[] CrntKeys;
 
         //public delegate void KeyPressed(object sender,/*   ???  */);
         // Note that EventHandler is a build in delegate
@@ -22,6 +22,15 @@ namespace valkyrie
         // Which is what I did
 
         public event EventHandler<KeyPressedEventArgs> KeyAction;
+
+        public string GetKeyAction(Keys key)
+        {
+            if (KeyDefCollection.ContainsKey(key))
+            {
+                return KeyDefCollection[key].Action;
+            }
+            return "";
+        }
 
         public void AddKey(Keys key, string Action)
         {
@@ -102,51 +111,19 @@ namespace valkyrie
         {
             KeyboardState KeyState = Keyboard.GetState();
 
-            Keys[] KeysPressed = KeyState.GetPressedKeys();
-            Keys NewDir = Keys.Zoom;
-            bool DirFound = false;
+            CrntKeys = KeyState.GetPressedKeys();
 
-            foreach (Keys key in KeysPressed)
+            foreach (Keys key in CrntKeys)
             {
 
                 if (KeyDefCollection.ContainsKey(key))
                 {
-
-                    if (this.IsDir(key))
-                    {
-                        DirFound = true;
-                        if (!LastKeys.Contains<Keys>(key))
-                        {
-                            NewDir = key;
-                        }
-                        else if (!LastKeys.Contains<Keys>(CrntDir))
-                        {
-                            CrntDir = key;
-                        }
-                    }
-                    else
-                    {
                         //event
                         KeyAction(this, new KeyPressedEventArgs(key, KeyDefCollection[key].Action));
-                    }
-
                 }
 
             }
-            // Make sure only the last pressed
-            if (DirFound)
-            {
-                if (NewDir != Keys.Zoom)
-                {
-                    CrntDir = NewDir;
-                    KeyAction(this, new KeyPressedEventArgs(NewDir, KeyDefCollection[NewDir].Action));
-                }
-                else
-                {
-                    KeyAction(this, new KeyPressedEventArgs(CrntDir, KeyDefCollection[CrntDir].Action));
-                }
-            }
-            LastKeys = KeysPressed;
+            LastKeys = CrntKeys;
         }
 
     }
