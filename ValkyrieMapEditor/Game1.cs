@@ -175,16 +175,16 @@ namespace ValkyrieMapEditor
 
         public void SurfaceClicked(object sender, SurfaceClickedEventArgs e)
         {
-            /*if (TileEngine.Map != null)
+           if (TileEngine.Map != null)
             {
                 if (e.Button == MouseButtons.Left )
                 {
 					Point point = new Point(e.Location.X / 32, e.Location.Y / 32);
 
 					if( TileEngine.Map.TilePointInMap(point) )
-						TileEngine.Map.SetData(MapManager.CurrentLayer, point, MapManager.CurrentTile);
+						TileEngine.Map.SetData(MapManager.CurrentLayer, point, 1);
                 }
-            }*/
+            }
         }
 
         public bool MapChanged { get; set; }
