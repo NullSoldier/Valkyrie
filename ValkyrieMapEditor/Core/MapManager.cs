@@ -44,11 +44,12 @@ namespace ValkyrieMapEditor
 			var tileset = doc.CreateElement("TileSet");
 			tileset.InnerText = map.TextureName;
 
-			var tilesetsize = doc.CreateElement("TileSetSize");
-			tilesetsize.InnerText = String.Format("{0} {1}", map.TileSize.X, map.TileSize.Y);
-
 			var mapsize = doc.CreateElement("MapSize");
-			mapsize.InnerText = String.Format("{0} {1}", map.MapSize.X, map.MapSize.Y);
+
+			var mapsizex = doc.CreateElement("X");
+			mapsizex.InnerText = map.MapSize.X.ToString();
+			var mapsizey = doc.CreateElement("Y");
+			mapsizey.InnerText = map.MapSize.Y.ToString();
 
 			var tilepixelsize = doc.CreateElement("TilePixelSize");
 			tilepixelsize.InnerText = map.TileSize.X.ToString();
@@ -102,9 +103,11 @@ namespace ValkyrieMapEditor
 			collisionLayer.InnerText = collisionlayerbuilder.ToString();
 
 			// Append children and save
+			mapsize.AppendChild(mapsizex);
+			mapsize.AppendChild(mapsizey);
+
 			mapElement.AppendChild(name);
 			mapElement.AppendChild(tileset);
-			mapElement.AppendChild(tilesetsize);
 			mapElement.AppendChild(mapsize);
 			mapElement.AppendChild(tilepixelsize);
 			mapElement.AppendChild(baselayer);
@@ -135,7 +138,6 @@ namespace ValkyrieMapEditor
             newMap.Name = oldMap.Name;
             newMap.MapSize = oldMap.MapSize;
             newMap.TileSize = oldMap.TileSize;
-            newMap.TilesPerRow = oldMap.TilesPerRow;
             newMap.TextureName = oldMap.TextureName;
             newMap.Texture = TileEngine.TextureManager.GetTexture(newMap.TextureName);
 

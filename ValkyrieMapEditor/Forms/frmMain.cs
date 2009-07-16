@@ -84,7 +84,7 @@ namespace ValkyrieMapEditor
 
 			this.pctTileSurface.OriginalImage = Image.FromFile(TileEngine.Configuration["GraphicsRoot"] + "\\" + map.TextureName);
 			this.pctTileSurface.Size = this.pctTileSurface.Image.Size;
-			this.pctTileSurface.DrawSelection();
+			this.pctTileSurface.Invalidate();
 
 			this.btnMapProperties.Enabled = true;
 			this.toolSave.Enabled = true;
@@ -245,6 +245,12 @@ namespace ValkyrieMapEditor
 				else
 					item.DisplayStyle = ToolStripItemDisplayStyle.Image;
 			}
+		}
+
+		private void btnViewSelected_Click(object sender, EventArgs e)
+		{
+			this.btnViewSelected.Checked = !this.btnViewSelected.Checked;
+			this.pctTileSurface.DisplayTileSelection = this.btnViewSelected.Checked;
 		}
 
 	}

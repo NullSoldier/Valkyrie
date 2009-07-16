@@ -42,6 +42,7 @@
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.dimOtherLayersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripDropDownButton3 = new System.Windows.Forms.ToolStripDropDownButton();
+			this.btnViewSelected = new System.Windows.Forms.ToolStripMenuItem();
 			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -66,6 +67,7 @@
 			this.btnPencil = new System.Windows.Forms.ToolStripButton();
 			this.btnRect = new System.Windows.Forms.ToolStripButton();
 			this.btnFill = new System.Windows.Forms.ToolStripButton();
+			this.btnSelection = new System.Windows.Forms.ToolStripButton();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.toolStripMenu.SuspendLayout();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -192,6 +194,7 @@
 			// 
 			this.toolStripDropDownButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
 			this.toolStripDropDownButton3.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnViewSelected,
             this.optionsToolStripMenuItem});
 			this.toolStripDropDownButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton3.Image")));
 			this.toolStripDropDownButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -199,10 +202,17 @@
 			this.toolStripDropDownButton3.Size = new System.Drawing.Size(49, 22);
 			this.toolStripDropDownButton3.Text = "Tools";
 			// 
+			// btnViewSelected
+			// 
+			this.btnViewSelected.Name = "btnViewSelected";
+			this.btnViewSelected.Size = new System.Drawing.Size(190, 22);
+			this.btnViewSelected.Text = "View Selected Graphic";
+			this.btnViewSelected.Click += new System.EventHandler(this.btnViewSelected_Click);
+			// 
 			// optionsToolStripMenuItem
 			// 
 			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
 			this.optionsToolStripMenuItem.Text = "Options";
 			// 
 			// splitContainer1
@@ -252,6 +262,7 @@
 			// 
 			// pctTileSurface
 			// 
+			this.pctTileSurface.DisplayTileSelection = false;
 			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
 			this.pctTileSurface.Name = "pctTileSurface";
 			this.pctTileSurface.OriginalImage = null;
@@ -348,7 +359,8 @@
             this.toolStripSeparator3,
             this.btnPencil,
             this.btnRect,
-            this.btnFill});
+            this.btnFill,
+            this.btnSelection});
 			this.toolStripTools.Location = new System.Drawing.Point(0, 25);
 			this.toolStripTools.Name = "toolStripTools";
 			this.toolStripTools.Size = new System.Drawing.Size(1008, 25);
@@ -500,6 +512,17 @@
 			this.btnFill.Size = new System.Drawing.Size(34, 22);
 			this.btnFill.Text = "Fill";
 			// 
+			// btnSelection
+			// 
+			this.btnSelection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnSelection.Enabled = false;
+			this.btnSelection.Image = ((System.Drawing.Image)(resources.GetObject("btnSelection.Image")));
+			this.btnSelection.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.btnSelection.Name = "btnSelection";
+			this.btnSelection.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
+			this.btnSelection.Size = new System.Drawing.Size(34, 22);
+			this.btnSelection.Text = "Selection";
+			// 
 			// statusStrip1
 			// 
 			this.statusStrip1.Location = new System.Drawing.Point(0, 708);
@@ -582,5 +605,7 @@
 		private System.Windows.Forms.ToolStripButton btnPencil;
 		private System.Windows.Forms.ToolStripButton btnRect;
 		private System.Windows.Forms.ToolStripButton btnFill;
+		private System.Windows.Forms.ToolStripButton btnSelection;
+		private System.Windows.Forms.ToolStripMenuItem btnViewSelected;
 	}
 }

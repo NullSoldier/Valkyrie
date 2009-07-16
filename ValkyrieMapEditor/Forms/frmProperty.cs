@@ -78,7 +78,6 @@ namespace ValkyrieMapEditor
             this.Map.Name = this.inName.Text;
             this.Map.MapSize = new Microsoft.Xna.Framework.Point((int)this.inMapWidth.Value, (int)this.inMapHeight.Value);
             this.Map.TileSize = new Microsoft.Xna.Framework.Point((int)this.inTileWidth.Value, (int)this.inTileHeight.Value);
-			this.Map.TilesPerRow = (System.Drawing.Image.FromFile(TileEngine.Configuration["GraphicsRoot"] + "\\" + this.Map.TextureName).Width / this.Map.TileSize.X);
 
 			this.DialogResult = DialogResult.OK;
             this.Close();

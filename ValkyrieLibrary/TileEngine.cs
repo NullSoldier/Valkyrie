@@ -115,9 +115,6 @@ namespace valkyrie.Core
 			{
 				for (int x = 0; x < TileEngine.map.MapSize.X; x++)
 				{
-					//if (x == 0 && y == 0)
-						//Debugger.Break();
-
 					Rectangle destRectangle = new Rectangle(0, 0, map.TileSize.X, map.TileSize.Y);
 					destRectangle.X = (int)TileEngine.Camera.MapOffset.X + (int)TileEngine.Camera.CameraOffset.X + (x * TileEngine.map.TileSize.X);
 					destRectangle.Y = (int)TileEngine.Camera.MapOffset.Y + (int)TileEngine.Camera.CameraOffset.Y + (y * TileEngine.map.TileSize.Y);

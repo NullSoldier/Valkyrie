@@ -38,7 +38,6 @@ namespace valkyrie.Core
 		public string TextureName { get; set; }
 
 		public Point MapSize { get; set; }
-        //public Point TileSetSize { get; set; }
 		public Point TileSize { get; set; }
 
 		public int[] BaseLayer { get; set; }
@@ -46,7 +45,10 @@ namespace valkyrie.Core
         public int[] TopLayer { get; set; }
 		public int[] CollisionLayer { get; set; }
 
-		public int TilesPerRow { get; set; }
+		public int TilesPerRow
+		{
+			get { return ((this.Texture != null) ? (this.Texture.Width / this.MapSize.X) : 0); }
+		}
 
 		public Dictionary<int, FrameAnimation> AnimatedTiles;
 
@@ -206,22 +208,22 @@ namespace valkyrie.Core
 
 				else if (innerNodes[i].Name == "MapSize")
 				{
-					int[] size = Array.ConvertAll<string, int>(innerNodes[i].InnerText.Split(' '), new Converter<string, int>(this.ConvertStringToInt));
+					int x=0, y=0;
 
-					this.MapSize = new Point(size[0], size[1]);
+					foreach (XmlNode node in innerNodes[i].ChildNodes)
+					{
+						if (node.Name == "X")
+							x = Convert.ToInt32(node.InnerText);
+						else if (node.Name == "Y")
+							y = Convert.ToInt32(node.InnerText);
+					}
+					this.MapSize = new Point(x, y);
 				}
 				else if (innerNodes[i].Name == "TilePixelSize")
 				{
 					int size = Convert.ToInt32(innerNodes[i].InnerText);
-					this.TileSize = new Point(size, size);
+					this.TileSize = new Point(size, size); // Tiles are always square
 				}
-                else if (innerNodes[i].Name == "TileSetSize")
-                {
-                    var size = Array.ConvertAll<string, int>(innerNodes[i].InnerText.Split(' '), new Converter<string, int>(this.ConvertStringToInt));
-                    this.TilesPerRow = size[0];
-
-                    //this.TileSetSize = new Point(size[0], size[1]);
-                }
 
                 else if (innerNodes[i].Name == "BaseLayer")
                 {
