@@ -126,27 +126,31 @@ namespace ValkyrieMapEditor
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
 		{
-			// TODO: Add your update logic here
-			KeyboardState keyState = Keyboard.GetState();
-
-			if (TileEngine.IsMapLoaded && MapManager.CurrentLayer != MapLayer.CollisionLayer)
+			if (!MapManager.IgnoreInput)
 			{
-				var mouseState = Mouse.GetState();
 
-				if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed &&
-					mouseState.X > 0 && mouseState.Y > 0)
+				// TODO: Add your update logic here
+				KeyboardState keyState = Keyboard.GetState();
+
+				if (TileEngine.IsMapLoaded && MapManager.CurrentLayer != MapLayer.CollisionLayer)
 				{
-					Point tileLocation = new Point(mouseState.X / 32, mouseState.Y / 32);
+					var mouseState = Mouse.GetState();
 
-					for (int y = 0; y <= MapManager.SelectedTilesRect.Height; y++)
+					if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed &&
+						mouseState.X > 0 && mouseState.Y > 0)
 					{
-						for (int x = 0; x <= MapManager.SelectedTilesRect.Width; x++)
-						{
-							Point tilesheetPoint = new Point(MapManager.SelectedTilesRect.X + x, MapManager.SelectedTilesRect.Y + y);
-							Point point = new Point(tileLocation.X + x, tileLocation.Y + y);
+						Point tileLocation = new Point(mouseState.X / 32, mouseState.Y / 32);
 
-							if (TileEngine.Map.TilePointInMap(point))
-								TileEngine.Map.SetData(MapManager.CurrentLayer, point, TileEngine.Map.GetTileSetValue(tilesheetPoint));
+						for (int y = 0; y <= MapManager.SelectedTilesRect.Height; y++)
+						{
+							for (int x = 0; x <= MapManager.SelectedTilesRect.Width; x++)
+							{
+								Point tilesheetPoint = new Point(MapManager.SelectedTilesRect.X + x, MapManager.SelectedTilesRect.Y + y);
+								Point point = new Point(tileLocation.X + x, tileLocation.Y + y);
+
+								if (TileEngine.Map.TilePointInMap(point))
+									TileEngine.Map.SetData(MapManager.CurrentLayer, point, TileEngine.Map.GetTileSetValue(tilesheetPoint));
+							}
 						}
 					}
 				}

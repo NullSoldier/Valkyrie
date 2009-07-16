@@ -246,6 +246,21 @@ namespace ValkyrieMapEditor
 				ev.Selection.Height);
 		}
 
+		private void pctTileSurface_MouseClick(object sender, MouseEventArgs e)
+		{
+
+		}
+
+		private void frmMain_Activated(object sender, EventArgs e)
+		{
+			MapManager.IgnoreInput = false;
+		}
+
+		private void frmMain_Deactivate(object sender, EventArgs e)
+		{
+			MapManager.IgnoreInput = true;
+		}
+
 	}
 
 	#region EventArgs

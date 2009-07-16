@@ -263,6 +263,7 @@
 			// pctTileSurface
 			// 
 			this.pctTileSurface.DisplayTileSelection = false;
+			this.pctTileSurface.EndSelectedPoint = new System.Drawing.Point(0, 0);
 			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
 			this.pctTileSurface.Name = "pctTileSurface";
 			this.pctTileSurface.SelectedPoint = new System.Drawing.Point(0, 0);
@@ -540,7 +541,9 @@
 			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Name = "frmMain";
 			this.Text = "Valkryie Map Editor";
+			this.Deactivate += new System.EventHandler(this.frmMain_Deactivate);
 			this.Load += new System.EventHandler(this.frmMain_Load);
+			this.Activated += new System.EventHandler(this.frmMain_Activated);
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
 			this.toolStripMenu.ResumeLayout(false);
 			this.toolStripMenu.PerformLayout();
