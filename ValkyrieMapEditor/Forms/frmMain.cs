@@ -19,17 +19,13 @@ namespace ValkyrieMapEditor
 		public bool MapChanged = false;
 		public event EventHandler<ScreenResizedEventArgs> ScreenResized;
 		public event EventHandler<SurfaceClickedEventArgs> SurfaceClicked;
-		public event EventHandler MapSettingsChanged;
-		public Point TileSelectedPoint;
-		public Thread MouseDataThread;
 
 		public frmMain()
 		{
 			InitializeComponent();
 
-			this.TileSelectedPoint = new Point(0, 0);
 			this.pctTileSurface.Initialize();
-			this.pctTileSurface.SelectionImage = Resources.EditorSelection;
+			this.pctTileSurface.TileSelectionChanged += this.SelectionChanged;
 		}
 
 		private void frmMain_Load(object sender, EventArgs e)
@@ -82,8 +78,9 @@ namespace ValkyrieMapEditor
             this.lstSettings.Items.Add(new ListViewItem(new string[] { "Tiles Per Row", map.TilesPerRow.ToString() }));
             this.lstSettings.Items.Add(new ListViewItem(new string[] { "Map Size", map.MapSize.ToString() }));
 
-			this.pctTileSurface.OriginalImage = Image.FromFile(TileEngine.Configuration["GraphicsRoot"] + "\\" + map.TextureName);
+			this.pctTileSurface.Image = Image.FromFile(TileEngine.Configuration["GraphicsRoot"] + "\\" + map.TextureName);
 			this.pctTileSurface.Size = this.pctTileSurface.Image.Size;
+			this.pctTileSurface.TileSize = new Point(TileEngine.Map.TileSize.X, TileEngine.Map.TileSize.Y);
 			this.pctTileSurface.Invalidate();
 
 			this.btnMapProperties.Enabled = true;
@@ -107,19 +104,6 @@ namespace ValkyrieMapEditor
         private void pctSurface_MouseClick(object sender, MouseEventArgs e)
         {
             this.SurfaceClicked(this, new SurfaceClickedEventArgs(e.Button, new Point(e.X, e.Y)));
-        }
-
-        private void pctTileSurface_MouseClick(object sender, MouseEventArgs e)
-        {
-			if (TileEngine.IsMapLoaded)
-			{
-				int tileX = (e.X / TileEngine.Map.TileSize.X);
-				int tileY = (e.Y / TileEngine.Map.TileSize.Y);
-
-				this.TileSelectedPoint = new Point(tileX, tileY);
-
-				MapManager.CurrentTile = ((TileEngine.Map.TilesPerRow * tileY) + tileX);
-			}
         }
 
         private void btnMapProperties_Click(object sender, EventArgs e)
@@ -251,6 +235,15 @@ namespace ValkyrieMapEditor
 		{
 			this.btnViewSelected.Checked = !this.btnViewSelected.Checked;
 			this.pctTileSurface.DisplayTileSelection = this.btnViewSelected.Checked;
+		}
+
+		public void SelectionChanged(object sender, TileSelectionChangedEventArgs ev)
+		{
+			MapManager.SelectedTilesRect = new Microsoft.Xna.Framework.Rectangle(
+				ev.Selection.X,
+				ev.Selection.Y,
+				ev.Selection.Width,
+				ev.Selection.Height);
 		}
 
 	}

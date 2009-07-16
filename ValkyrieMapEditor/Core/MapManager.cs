@@ -11,7 +11,7 @@ namespace ValkyrieMapEditor
 {
     public static class MapManager
     {
-        public static int CurrentTile = 0;
+		public static Rectangle SelectedTilesRect = new Rectangle(0, 0, 1, 1);
         public static MapLayer CurrentLayer = MapLayer.BaseLayer;
 		public static FileInfo CurrentMapLocation;
 

@@ -47,7 +47,7 @@ namespace valkyrie.Core
 
 		public int TilesPerRow
 		{
-			get { return ((this.Texture != null) ? (this.Texture.Width / this.MapSize.X) : 0); }
+			get { return ((this.Texture != null) ? (this.Texture.Width / this.TileSize.X) : 0); }
 		}
 
 		public Dictionary<int, FrameAnimation> AnimatedTiles;
@@ -309,6 +309,11 @@ namespace valkyrie.Core
             }
         }
         #endregion
+
+		public int GetTileSetValue(Point point)
+		{
+			return (point.Y * this.TilesPerRow + point.X);
+		}
 
 		private int ConvertStringToInt(string value)
 		{

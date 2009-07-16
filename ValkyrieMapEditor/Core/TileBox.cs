@@ -11,9 +11,32 @@ namespace ValkyrieMapEditor
 	public class TileBox
 		: PictureBox
 	{
-		public Size TileSize { get; set; }
-		public Image SelectionImage { get; set; }
-		public Point SelectedPoint { get; set; }
+		public event EventHandler<TileSelectionChangedEventArgs> TileSelectionChanged;
+		public Point TileSize
+		{
+			get { return this.tilesize; }
+			set { this.tilesize = value; }
+		}
+
+		public Point SelectedPoint
+		{
+			get { return this.selectionpoint; }
+			set
+			{
+				this.selectionpoint = value;
+				this.Invalidate();
+			}
+		}
+
+		public Point EndSelectedPoint
+		{
+			get { return this.endselectionpoint; }
+			set
+			{
+				this.endselectionpoint = value;
+				this.Invalidate();
+			}
+		}
 
 		public bool DisplayTileSelection
 		{
@@ -21,142 +44,64 @@ namespace ValkyrieMapEditor
 			set
 			{
 				this.displaytileselection = value;
-				this.DrawSelection();
+				this.Invalidate();
 			}
 		}
 
-		public Image OriginalImage
-		{
-			get { return this.originalimage; }
-			set
-			{
-				this.Image = value;
-				this.originalimage = value;
-			}
-		}
-
-		private Image originalimage;
+		private Point tilesize;
 		private Point selectionpoint;
+		private Point endselectionpoint;
 		private bool displaytileselection;
-
-		public void Initialize()
-		{
-			this.SelectedPoint = new Point(0, 0);
-			this.MouseClick += this.MouseClicked;
-		}
-
-		public void MouseClicked(object sender, MouseEventArgs ev)
-		{
-			if (this.Image == null)
-				return;
-
-			this.SelectedPoint = new Point(ev.X / 32, ev.Y / 32);
-
-			this.DrawSelection();
-		}
-
-		public void DrawSelection()
-		{
-			this.Image = this.OriginalImage;
-
-			if (this.DisplayTileSelection)
-			{
-				this.DrawTo(new Bitmap(this.SelectionImage),
-					new Rectangle(this.SelectedPoint.X, this.SelectedPoint.Y, 32, 32));
-			}
-		}
-
-		public void DrawTo(Bitmap bitmap, Rectangle dest)
-		{
-			Bitmap newBitmap = new Bitmap(this.Image);
-
-			for (int x = 0; x < bitmap.Size.Width; x++)
-			{
-				for (int y = 0; y < bitmap.Size.Height; y++)
-				{
-					int argb = bitmap.GetPixel(x, y).ToArgb();
-
-					if (argb == 0)
-						continue;
-					else
-						newBitmap.SetPixel(x + (dest.X * dest.Width), y + (dest.Y * dest.Height),
-							Color.FromArgb(argb));
-				}
-			}
-
-			this.Image = Image.FromHbitmap(newBitmap.GetHbitmap());
-			this.Update();
-		}
-
-
-	}
-}
-
-
-
-
-
-#region Correct
-/*
- * using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Drawing;
-using ValkyrieMapEditor.Properties;
-
-namespace ValkyrieMapEditor
-{
-	public class TileBox
-		: PictureBox
-	{
-		public Size TileSize { get; set; }
-		public Image SelectionImage { get; set; }
 		
-		public Point SelectedPoint
-		{
-			get { return this.selectionpoint; }
-			set { this.selectionpoint = value; }
-		}
-
-		public bool DisplayTileSelection
-		{
-			get
-			{
-				return this.displaytileselection;
-			}
-			set
-			{
-				this.displaytileselection = value;
-				this.Invalidate();				
-			}
-		}
-
-		public Image OriginalImage
-		{
-			get { return this.originalimage; }
-			set
-			{
-				this.Image = value;
-				this.originalimage = value;
-			}
-		}
-
-		private Image originalimage;
-		private Point selectionpoint;
-		private bool displaytileselection;
 
 		public void Initialize()
 		{
 			this.SelectedPoint = new Point(0, 0);
-			this.MouseClick += this.MouseClicked;
+			this.EndSelectedPoint = new Point(0, 0);
+
+			this.MouseDown += this.Tile_MouseDown;
+			this.MouseMove += this.Tile_MouseMove;
+			this.MouseUp += this.Tile_MouseUp;
+
+			//this.MouseClick += this.MouseClicked;
+		}
+
+		public void Tile_MouseDown(object sender, MouseEventArgs ev)
+		{
+			if (this.Image == null) return;
+			this.SelectedPoint = new Point(ev.X / 32, ev.Y / 32);
+			this.EndSelectedPoint = new Point(ev.X / 32, ev.Y / 32);
+		}
+
+		public void Tile_MouseMove(object sender, MouseEventArgs ev)
+		{
+			if (this.Image == null) return;
+
+			if( ev.Button == MouseButtons.Left)
+				this.EndSelectedPoint = new Point(ev.X / 32, ev.Y / 32);
+		}
+
+		public void Tile_MouseUp(object sender, MouseEventArgs ev)
+		{
+			if (this.Image == null) return;
+
+			this.EndSelectedPoint = new Point(ev.X / 32, ev.Y / 32);
+
+			// Call the event to say tile selection has changed
+			Rectangle tileSelection = new Rectangle(this.SelectedPoint.X,
+				this.SelectedPoint.Y,
+				this.EndSelectedPoint.X - this.SelectedPoint.X,
+				this.EndSelectedPoint.Y - this.SelectedPoint.Y);
+
+			var handler = this.TileSelectionChanged;
+			
+			if(handler != null)
+				handler(this, new TileSelectionChangedEventArgs(tileSelection));
 		}
 
 		public void MouseClicked(object sender, MouseEventArgs ev)
 		{
-			if (this.Image == null)
-				return;
+			if (this.Image == null) return;
 
 			this.SelectedPoint = new Point(ev.X / 32, ev.Y / 32);
 
@@ -165,51 +110,44 @@ namespace ValkyrieMapEditor
 
 		protected override void OnPaint(PaintEventArgs pe)
 		{
-			if (this.Image != null)
+			if (this.Image == null)
+				return;
+
+			pe.Graphics.DrawImage(this.Image, new Rectangle(0, 0, this.Image.Size.Width, this.Image.Size.Height));
+
+			Brush currentBrush = Brushes.Black;
+			int limit = 4;
+
+			for (int i = 0; i <= limit; i++)
 			{
-				this.Image = this.OriginalImage;
+				// Filled rectangle using primtiives
+				currentBrush = ((i == 0 || i == limit) ? Brushes.Black : Brushes.White);
 
-				if (this.DisplayTileSelection)
-				{
-					this.Image = this.Image.DrawTo(this.SelectionImage,
-						new Rectangle(this.SelectedPoint.X, this.SelectedPoint.Y, 32, 32));
-				}
+				pe.Graphics.DrawRectangle(new Pen(currentBrush, 1),
+					new Rectangle(
+						(this.SelectedPoint.X * this.TileSize.X) + i,
+						(this.SelectedPoint.Y * this.TileSize.Y) + i,
+						(((this.EndSelectedPoint.X * this.TileSize.X) - (this.SelectedPoint.X * this.TileSize.X)) - (i * 2)) + this.TileSize.X,
+						(((this.EndSelectedPoint.Y * this.TileSize.Y) - (this.SelectedPoint.Y * this.TileSize.Y)) - (i * 2)) + this.TileSize.Y
+						));
 			}
-
-			base.OnPaint(pe);
 		}
-
 	}
 
-	public static class Helper
+	public class TileSelectionChangedEventArgs
+		: EventArgs
 	{
-		public static Image DrawTo(this Image value, Image image, Rectangle dest)
+		public TileSelectionChangedEventArgs(Rectangle TileSelection)
 		{
-			return Helper.DrawTo(value, new Bitmap(image), dest);
+			this.Selection = TileSelection;
 		}
 
-		public static Image DrawTo(this Image value, Bitmap bitmap, Rectangle dest)
+		public Rectangle Selection
 		{
-			Bitmap newBitmap = new Bitmap(value);
-
-			for (int x = 0; x < bitmap.Size.Width; x++)
-			{
-				for (int y = 0; y < bitmap.Size.Height; y++)
-				{
-					int argb = bitmap.GetPixel(x, y).ToArgb();
-
-					if (argb == 0)
-						continue;
-					else
-						newBitmap.SetPixel(x + (dest.X * dest.Width), y + (dest.Y * dest.Height),
-							Color.FromArgb(argb));
-				}
-			}
-
-			return Image.FromHbitmap(newBitmap.GetHbitmap());
+			get { return this.selection; }
+			set { this.selection = value; }
 		}
+
+		private Rectangle selection;
 	}
 }
-
- */
-#endregion

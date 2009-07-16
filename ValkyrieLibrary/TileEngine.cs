@@ -32,7 +32,7 @@ namespace valkyrie.Core
 		public static Map Map
 		{
 			get { return TileEngine.map; }
-			set { TileEngine.map = value; }
+			set { TileEngine.SetMap(value); }
 		}
 
 		public static bool IsMapLoaded

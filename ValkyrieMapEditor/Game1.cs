@@ -138,8 +138,17 @@ namespace ValkyrieMapEditor
 				{
 					Point tileLocation = new Point(mouseState.X / 32, mouseState.Y / 32);
 
-					if( TileEngine.Map.TilePointInMap(tileLocation) )
-						TileEngine.Map.SetData(MapManager.CurrentLayer, tileLocation, MapManager.CurrentTile);
+					for (int y = 0; y <= MapManager.SelectedTilesRect.Height; y++)
+					{
+						for (int x = 0; x <= MapManager.SelectedTilesRect.Width; x++)
+						{
+							Point tilesheetPoint = new Point(MapManager.SelectedTilesRect.X + x, MapManager.SelectedTilesRect.Y + y);
+							Point point = new Point(tileLocation.X + x, tileLocation.Y + y);
+
+							if (TileEngine.Map.TilePointInMap(point))
+								TileEngine.Map.SetData(MapManager.CurrentLayer, point, TileEngine.Map.GetTileSetValue(tilesheetPoint));
+						}
+					}
 				}
 			}
 
@@ -162,7 +171,7 @@ namespace ValkyrieMapEditor
 
         public void SurfaceClicked(object sender, SurfaceClickedEventArgs e)
         {
-            if (TileEngine.Map != null)
+            /*if (TileEngine.Map != null)
             {
                 if (e.Button == MouseButtons.Left )
                 {
@@ -171,7 +180,7 @@ namespace ValkyrieMapEditor
 					if( TileEngine.Map.TilePointInMap(point) )
 						TileEngine.Map.SetData(MapManager.CurrentLayer, point, MapManager.CurrentTile);
                 }
-            }
+            }*/
         }
 
         public bool MapChanged { get; set; }

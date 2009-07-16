@@ -265,14 +265,11 @@
 			this.pctTileSurface.DisplayTileSelection = false;
 			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
 			this.pctTileSurface.Name = "pctTileSurface";
-			this.pctTileSurface.OriginalImage = null;
 			this.pctTileSurface.SelectedPoint = new System.Drawing.Point(0, 0);
-			this.pctTileSurface.SelectionImage = null;
 			this.pctTileSurface.Size = new System.Drawing.Size(173, 134);
 			this.pctTileSurface.TabIndex = 0;
 			this.pctTileSurface.TabStop = false;
-			this.pctTileSurface.TileSize = new System.Drawing.Size(0, 0);
-			this.pctTileSurface.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pctTileSurface_MouseClick);
+			this.pctTileSurface.TileSize = new System.Drawing.Point(0, 0);
 			// 
 			// splitContainer3
 			// 
