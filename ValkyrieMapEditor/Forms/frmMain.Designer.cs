@@ -29,31 +29,30 @@
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-			this.toolStripMenu = new System.Windows.Forms.ToolStrip();
-			this.toolFile = new System.Windows.Forms.ToolStripDropDownButton();
+			this.toolProject = new System.Windows.Forms.ToolStripDropDownButton();
 			this.toolNew = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolOpen = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolSave = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolSaveAs = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolClose = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripDropDownButton2 = new System.Windows.Forms.ToolStripDropDownButton();
+			this.toolView = new System.Windows.Forms.ToolStripDropDownButton();
 			this.currentLayerAndBelowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.allLayersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.dimOtherLayersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripDropDownButton3 = new System.Windows.Forms.ToolStripDropDownButton();
+			this.toolTool = new System.Windows.Forms.ToolStripDropDownButton();
 			this.btnViewSelected = new System.Windows.Forms.ToolStripMenuItem();
 			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-			this.pctTileSurface = new ValkyrieMapEditor.TileBox();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.btnMapProperties = new System.Windows.Forms.Button();
 			this.lstSettings = new System.Windows.Forms.ListView();
 			this.colSetting = new System.Windows.Forms.ColumnHeader();
 			this.colValue = new System.Windows.Forms.ColumnHeader();
+			this.VerticalScroll = new System.Windows.Forms.VScrollBar();
+			this.HorizontalScroll = new System.Windows.Forms.HScrollBar();
 			this.pctSurface = new System.Windows.Forms.PictureBox();
-			this.toolStripTools = new System.Windows.Forms.ToolStrip();
 			this.btnNew = new System.Windows.Forms.ToolStripButton();
 			this.btnOpen = new System.Windows.Forms.ToolStripButton();
 			this.btnSave = new System.Windows.Forms.ToolStripButton();
@@ -69,47 +68,39 @@
 			this.btnFill = new System.Windows.Forms.ToolStripButton();
 			this.btnSelection = new System.Windows.Forms.ToolStripButton();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-			this.toolStripMenu.SuspendLayout();
+			this.menuStrip = new System.Windows.Forms.MenuStrip();
+			this.toolStripTools = new System.Windows.Forms.ToolStrip();
+			this.pctTileSurface = new ValkyrieMapEditor.TileBox();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
 			this.splitContainer2.Panel1.SuspendLayout();
 			this.splitContainer2.Panel2.SuspendLayout();
 			this.splitContainer2.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).BeginInit();
 			this.splitContainer3.Panel1.SuspendLayout();
 			this.splitContainer3.Panel2.SuspendLayout();
 			this.splitContainer3.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pctSurface)).BeginInit();
+			this.menuStrip.SuspendLayout();
 			this.toolStripTools.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).BeginInit();
 			this.SuspendLayout();
 			// 
-			// toolStripMenu
+			// toolProject
 			// 
-			this.toolStripMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolFile,
-            this.toolStripDropDownButton2,
-            this.toolStripDropDownButton3});
-			this.toolStripMenu.Location = new System.Drawing.Point(0, 0);
-			this.toolStripMenu.Name = "toolStripMenu";
-			this.toolStripMenu.Size = new System.Drawing.Size(1008, 25);
-			this.toolStripMenu.TabIndex = 1;
-			this.toolStripMenu.Text = "toolStrip1";
-			// 
-			// toolFile
-			// 
-			this.toolFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.toolProject.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolProject.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolNew,
             this.toolOpen,
             this.toolSave,
             this.toolSaveAs,
             this.toolClose});
-			this.toolFile.Image = ((System.Drawing.Image)(resources.GetObject("toolFile.Image")));
-			this.toolFile.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolFile.Name = "toolFile";
-			this.toolFile.Size = new System.Drawing.Size(57, 22);
-			this.toolFile.Text = "Project";
+			this.toolProject.Image = ((System.Drawing.Image)(resources.GetObject("toolProject.Image")));
+			this.toolProject.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolProject.Name = "toolProject";
+			this.toolProject.ShowDropDownArrow = false;
+			this.toolProject.Size = new System.Drawing.Size(48, 19);
+			this.toolProject.Text = "Project";
 			// 
 			// toolNew
 			// 
@@ -153,19 +144,19 @@
 			this.toolClose.Text = "Exit";
 			this.toolClose.Click += new System.EventHandler(this.toolClose_Click);
 			// 
-			// toolStripDropDownButton2
+			// toolView
 			// 
-			this.toolStripDropDownButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolStripDropDownButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.toolView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.currentLayerAndBelowToolStripMenuItem,
             this.allLayersToolStripMenuItem,
             this.toolStripSeparator1,
             this.dimOtherLayersToolStripMenuItem});
-			this.toolStripDropDownButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton2.Image")));
-			this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
-			this.toolStripDropDownButton2.Size = new System.Drawing.Size(45, 22);
-			this.toolStripDropDownButton2.Text = "View";
+			this.toolView.Image = ((System.Drawing.Image)(resources.GetObject("toolView.Image")));
+			this.toolView.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolView.Name = "toolView";
+			this.toolView.Size = new System.Drawing.Size(45, 19);
+			this.toolView.Text = "View";
 			// 
 			// currentLayerAndBelowToolStripMenuItem
 			// 
@@ -190,17 +181,17 @@
 			this.dimOtherLayersToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
 			this.dimOtherLayersToolStripMenuItem.Text = "Dim Other Layers";
 			// 
-			// toolStripDropDownButton3
+			// toolTool
 			// 
-			this.toolStripDropDownButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolStripDropDownButton3.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.toolTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolTool.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnViewSelected,
             this.optionsToolStripMenuItem});
-			this.toolStripDropDownButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton3.Image")));
-			this.toolStripDropDownButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripDropDownButton3.Name = "toolStripDropDownButton3";
-			this.toolStripDropDownButton3.Size = new System.Drawing.Size(49, 22);
-			this.toolStripDropDownButton3.Text = "Tools";
+			this.toolTool.Image = ((System.Drawing.Image)(resources.GetObject("toolTool.Image")));
+			this.toolTool.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolTool.Name = "toolTool";
+			this.toolTool.Size = new System.Drawing.Size(49, 19);
+			this.toolTool.Text = "Tools";
 			// 
 			// btnViewSelected
 			// 
@@ -233,6 +224,8 @@
 			// 
 			this.splitContainer1.Panel2.AutoScroll = true;
 			this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.ControlDark;
+			this.splitContainer1.Panel2.Controls.Add(this.VerticalScroll);
+			this.splitContainer1.Panel2.Controls.Add(this.HorizontalScroll);
 			this.splitContainer1.Panel2.Controls.Add(this.pctSurface);
 			this.splitContainer1.Size = new System.Drawing.Size(1008, 652);
 			this.splitContainer1.SplitterDistance = 280;
@@ -259,18 +252,6 @@
 			this.splitContainer2.SplitterDistance = 395;
 			this.splitContainer2.SplitterWidth = 5;
 			this.splitContainer2.TabIndex = 0;
-			// 
-			// pctTileSurface
-			// 
-			this.pctTileSurface.DisplayTileSelection = false;
-			this.pctTileSurface.EndSelectedPoint = new System.Drawing.Point(0, 0);
-			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
-			this.pctTileSurface.Name = "pctTileSurface";
-			this.pctTileSurface.SelectedPoint = new System.Drawing.Point(0, 0);
-			this.pctTileSurface.Size = new System.Drawing.Size(173, 134);
-			this.pctTileSurface.TabIndex = 0;
-			this.pctTileSurface.TabStop = false;
-			this.pctTileSurface.TileSize = new System.Drawing.Point(0, 0);
 			// 
 			// splitContainer3
 			// 
@@ -329,6 +310,26 @@
 			this.colValue.Text = "Value";
 			this.colValue.Width = 155;
 			// 
+			// VerticalScroll
+			// 
+			this.VerticalScroll.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.VerticalScroll.Location = new System.Drawing.Point(702, -2);
+			this.VerticalScroll.Name = "VerticalScroll";
+			this.VerticalScroll.Size = new System.Drawing.Size(17, 633);
+			this.VerticalScroll.TabIndex = 2;
+			this.VerticalScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TileMap_Scroll);
+			// 
+			// HorizontalScroll
+			// 
+			this.HorizontalScroll.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.HorizontalScroll.Location = new System.Drawing.Point(0, 631);
+			this.HorizontalScroll.Name = "HorizontalScroll";
+			this.HorizontalScroll.Size = new System.Drawing.Size(719, 17);
+			this.HorizontalScroll.TabIndex = 1;
+			this.HorizontalScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TileMap_Scroll);
+			// 
 			// pctSurface
 			// 
 			this.pctSurface.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -336,34 +337,11 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.pctSurface.Location = new System.Drawing.Point(0, 1);
 			this.pctSurface.Name = "pctSurface";
-			this.pctSurface.Size = new System.Drawing.Size(716, 644);
+			this.pctSurface.Size = new System.Drawing.Size(701, 630);
 			this.pctSurface.TabIndex = 0;
 			this.pctSurface.TabStop = false;
 			this.pctSurface.Resize += new System.EventHandler(this.pctSurface_Resize);
 			this.pctSurface.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pctSurface_MouseClick);
-			// 
-			// toolStripTools
-			// 
-			this.toolStripTools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnNew,
-            this.btnOpen,
-            this.btnSave,
-            this.toolStripSeparator2,
-            this.btnBaseLayer,
-            this.btnMiddleLayer,
-            this.btnTopLayer,
-            this.btnCollisionLayer,
-            this.btnHelp,
-            this.toolStripSeparator3,
-            this.btnPencil,
-            this.btnRect,
-            this.btnFill,
-            this.btnSelection});
-			this.toolStripTools.Location = new System.Drawing.Point(0, 25);
-			this.toolStripTools.Name = "toolStripTools";
-			this.toolStripTools.Size = new System.Drawing.Size(1008, 25);
-			this.toolStripTools.TabIndex = 3;
-			this.toolStripTools.Text = "toolStrip1";
 			// 
 			// btnNew
 			// 
@@ -529,6 +507,53 @@
 			this.statusStrip1.TabIndex = 4;
 			this.statusStrip1.Text = "statusStrip1";
 			// 
+			// menuStrip
+			// 
+			this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolProject,
+            this.toolView,
+            this.toolTool});
+			this.menuStrip.Location = new System.Drawing.Point(0, 0);
+			this.menuStrip.Name = "menuStrip";
+			this.menuStrip.Size = new System.Drawing.Size(1008, 26);
+			this.menuStrip.TabIndex = 5;
+			this.menuStrip.Text = "menuStrip1";
+			// 
+			// toolStripTools
+			// 
+			this.toolStripTools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnNew,
+            this.btnOpen,
+            this.btnSave,
+            this.toolStripSeparator2,
+            this.btnBaseLayer,
+            this.btnMiddleLayer,
+            this.btnTopLayer,
+            this.btnCollisionLayer,
+            this.btnHelp,
+            this.toolStripSeparator3,
+            this.btnPencil,
+            this.btnRect,
+            this.btnFill,
+            this.btnSelection});
+			this.toolStripTools.Location = new System.Drawing.Point(0, 26);
+			this.toolStripTools.Name = "toolStripTools";
+			this.toolStripTools.Size = new System.Drawing.Size(1008, 25);
+			this.toolStripTools.TabIndex = 3;
+			this.toolStripTools.Text = "toolStrip1";
+			// 
+			// pctTileSurface
+			// 
+			this.pctTileSurface.DisplayTileSelection = false;
+			this.pctTileSurface.EndSelectedPoint = new System.Drawing.Point(0, 0);
+			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
+			this.pctTileSurface.Name = "pctTileSurface";
+			this.pctTileSurface.SelectedPoint = new System.Drawing.Point(0, 0);
+			this.pctTileSurface.Size = new System.Drawing.Size(173, 134);
+			this.pctTileSurface.TabIndex = 0;
+			this.pctTileSurface.TabStop = false;
+			this.pctTileSurface.TileSize = new System.Drawing.Point(0, 0);
+			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -537,29 +562,30 @@
 			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.toolStripTools);
 			this.Controls.Add(this.splitContainer1);
-			this.Controls.Add(this.toolStripMenu);
+			this.Controls.Add(this.menuStrip);
 			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.MainMenuStrip = this.menuStrip;
 			this.Name = "frmMain";
 			this.Text = "Valkryie Map Editor";
 			this.Deactivate += new System.EventHandler(this.frmMain_Deactivate);
 			this.Load += new System.EventHandler(this.frmMain_Load);
 			this.Activated += new System.EventHandler(this.frmMain_Activated);
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
-			this.toolStripMenu.ResumeLayout(false);
-			this.toolStripMenu.PerformLayout();
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			this.splitContainer1.ResumeLayout(false);
 			this.splitContainer2.Panel1.ResumeLayout(false);
 			this.splitContainer2.Panel2.ResumeLayout(false);
 			this.splitContainer2.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).EndInit();
 			this.splitContainer3.Panel1.ResumeLayout(false);
 			this.splitContainer3.Panel2.ResumeLayout(false);
 			this.splitContainer3.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.pctSurface)).EndInit();
+			this.menuStrip.ResumeLayout(false);
+			this.menuStrip.PerformLayout();
 			this.toolStripTools.ResumeLayout(false);
 			this.toolStripTools.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -568,18 +594,17 @@
 		#endregion
 
 		private System.Windows.Forms.PictureBox pctSurface;
-		private System.Windows.Forms.ToolStrip toolStripMenu;
-		private System.Windows.Forms.ToolStripDropDownButton toolFile;
+		private System.Windows.Forms.ToolStripDropDownButton toolProject;
 		private System.Windows.Forms.ToolStripMenuItem toolNew;
 		private System.Windows.Forms.ToolStripMenuItem toolOpen;
 		private System.Windows.Forms.ToolStripMenuItem toolClose;
 		private System.Windows.Forms.ToolStripMenuItem toolSave;
-		private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton2;
+		private System.Windows.Forms.ToolStripDropDownButton toolView;
 		private System.Windows.Forms.ToolStripMenuItem currentLayerAndBelowToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem allLayersToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
 		private System.Windows.Forms.ToolStripMenuItem dimOtherLayersToolStripMenuItem;
-		private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton3;
+		private System.Windows.Forms.ToolStripDropDownButton toolTool;
 		private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
 		private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
@@ -594,7 +619,6 @@
         private System.Windows.Forms.ToolStripButton btnTopLayer;
         private System.Windows.Forms.ToolStripButton btnCollisionLayer;
 		private System.Windows.Forms.ToolStripMenuItem toolSaveAs;
-		private System.Windows.Forms.ToolStrip toolStripTools;
 		private System.Windows.Forms.StatusStrip statusStrip1;
 		private System.Windows.Forms.ToolStripButton btnHelp;
 		private System.Windows.Forms.ToolStripButton btnNew;
@@ -607,5 +631,9 @@
 		private System.Windows.Forms.ToolStripButton btnFill;
 		private System.Windows.Forms.ToolStripButton btnSelection;
 		private System.Windows.Forms.ToolStripMenuItem btnViewSelected;
+		private System.Windows.Forms.MenuStrip menuStrip;
+		private System.Windows.Forms.ToolStrip toolStripTools;
+		private System.Windows.Forms.VScrollBar VerticalScroll;
+		private System.Windows.Forms.HScrollBar HorizontalScroll;
 	}
 }

@@ -85,7 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation\FrameAnimation.cs" />
-    <Compile Include="Camera.cs" />
+    <Compile Include="BaseCamera.cs" />
     <Compile Include="Collision\ICollidable.cs" />
     <Compile Include="Collision\ICollisionManager.cs" />
     <Compile Include="Modules\ModuleManager.cs" />

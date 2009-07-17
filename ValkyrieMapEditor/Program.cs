@@ -18,6 +18,7 @@ namespace ValkyrieMapEditor
 			{
 				form.ScreenResized += game.SurfaceSizeChanged;
                 form.SurfaceClicked += game.SurfaceClicked;
+				form.ScrolledMap += game.ScrolledMap;
                 form.Show();
 				game.Run();
 			}

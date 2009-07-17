@@ -19,6 +19,7 @@ namespace ValkyrieMapEditor
 		public bool MapChanged = false;
 		public event EventHandler<ScreenResizedEventArgs> ScreenResized;
 		public event EventHandler<SurfaceClickedEventArgs> SurfaceClicked;
+		public event EventHandler<ScrollEventArgs> ScrolledMap;
 
 		public frmMain()
 		{
@@ -259,6 +260,14 @@ namespace ValkyrieMapEditor
 		private void frmMain_Deactivate(object sender, EventArgs e)
 		{
 			MapManager.IgnoreInput = true;
+		}
+
+		private void TileMap_Scroll(object sender, ScrollEventArgs e)
+		{
+			var handler = this.ScrolledMap;
+			
+			if( handler != null)
+				this.ScrolledMap(sender, e);
 		}
 
 	}

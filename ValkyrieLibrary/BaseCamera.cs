@@ -5,24 +5,25 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using ValkyrieLibrary.Player;
 using Microsoft.Xna.Framework.Graphics;
+using valkyrie.Core;
 
 namespace ValkyrieLibrary
 {
-	public class Camera
+	public class BaseCamera
 	{
 		public Rectangle Screen;
 		public Vector2 MapOffset;
 		public Vector2 CameraOffset;
 		public Viewport Viewport;
 
-		public Camera()
+		public BaseCamera()
 		{
 			this.Screen = new Rectangle(0, 0, 0, 0);
 			this.MapOffset = new Vector2(0, 0);
 			this.CameraOffset = new Vector2(0, 0);
 		}
 
-		public Camera(int X, int Y, int Width, int Height)
+		public BaseCamera(int X, int Y, int Width, int Height)
 		{
 			this.Screen = new Rectangle(X, Y, Width, Height);
 			this.MapOffset = new Vector2(0, 0);
@@ -51,12 +52,12 @@ namespace ValkyrieLibrary
 			return false;
 		}
 
-		public void CenterOnCharacter(BaseCharacter Char)
+		public virtual void CenterOnCharacter(BaseCharacter Char)
 		{
-
+			this.CenterOnPoint(Char.Location);
 		}
 
-		public void CenterOnPoint(Vector2 Point)
+		public void CenterOnPoint(Point Point)
 		{
             this.MapOffset.X = Point.X * -1;
 			this.MapOffset.X += (this.Screen.Width / 2);
@@ -67,13 +68,13 @@ namespace ValkyrieLibrary
 
 		public void Tween(Point startPoint, Point endPoint, float Milliseconds)
 		{
+			throw new NotSupportedException();
 		}
 
 		public void Quake(int Magnitude)
 		{
+			throw new NotSupportedException();
 		}
 		#endregion
-
-
 	}
 }

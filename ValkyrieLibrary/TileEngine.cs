@@ -23,7 +23,7 @@ namespace valkyrie.Core
 		//private static PrimitiveBatch PrimitiveBatch;
         public static TextureManager TextureManager;
         public static ModuleManager ModuleManager;
-        public static Camera Camera;
+        public static BaseCamera Camera;
         public static Dictionary<string, string> Configuration;
 		public static CollisionManager CollisionManager;
 
@@ -200,7 +200,7 @@ namespace valkyrie.Core
             spriteBatch.Begin();
 
 			TileEngine.Player.Draw(spriteBatch);
-			TileEngine.Camera.CenterOnPoint( new Vector2(Player.Location.X + (Player.CurrentAnimation.FrameRectangle.Width / 2), Player.Location.Y + (Player.CurrentAnimation.FrameRectangle.Height / 2)) );
+			TileEngine.Camera.CenterOnPoint( new Point(Player.Location.X + (Player.CurrentAnimation.FrameRectangle.Width / 2), Player.Location.Y + (Player.CurrentAnimation.FrameRectangle.Height / 2)) );
 
             spriteBatch.End();
         }

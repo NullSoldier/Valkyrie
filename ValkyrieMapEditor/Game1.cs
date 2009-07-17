@@ -103,7 +103,7 @@ namespace ValkyrieMapEditor
 			// Custom loading
 			TileEngine.Initialize(this.Content, this.GraphicsDevice);
 			TileEngine.Viewport = this.GraphicsDevice.Viewport;
-            TileEngine.Camera = new Camera(0, 0, 800, 600);
+            TileEngine.Camera = new BaseCamera(0, 0, 800, 600);
             TileEngine.Load(new FileInfo("Data/TileEngineConfig.xml"));
 
 			this.CollisionSprite = Texture2D.FromFile(this.GraphicsDevice, "Graphics/EditorCollision.png");
@@ -170,6 +170,25 @@ namespace ValkyrieMapEditor
 			{
 				TileEngine.Camera.Screen.Width = e.Width;
 				TileEngine.Camera.Screen.Height = e.Height;
+			}
+		}
+
+		public void ScrolledMap(object sender, ScrollEventArgs e)
+		{
+			if(e.ScrollOrientation == ScrollOrientation.VerticalScroll)
+			{
+				if (e.Type == ScrollEventType.SmallIncrement)
+				{
+					int x = (int)(TileEngine.Camera.CameraOffset.X);
+					int y = (int)(TileEngine.Camera.CameraOffset.Y + TileEngine.Map.TileSize.Y);
+
+					TileEngine.Camera.CenterOnPoint(new Point(x, y));
+				}
+				//else
+					//TileEngine.Camera.CenterOnPoint();
+			}
+			else
+			{
 			}
 		}
 
