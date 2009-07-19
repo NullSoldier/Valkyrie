@@ -210,7 +210,7 @@ namespace ValkyrieMapEditor
             {
                 if (e.Button == MouseButtons.Left )
                 {
-					Point point = new Point(e.Location.X / 32, e.Location.Y / 32);
+					Point point = new Point((e.Location.X - (int)TileEngine.Camera.MapOffset.X) / 32, (e.Location.Y - (int)TileEngine.Camera.MapOffset.Y) / 32);
 
 					if( TileEngine.CurrentMapChunk.TilePointInMapGlobal(point) )
 						TileEngine.CurrentMapChunk.SetData(MapEditorManager.CurrentLayer, point, 1);
