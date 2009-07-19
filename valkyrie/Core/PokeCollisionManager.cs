@@ -6,7 +6,7 @@ using ValkyrieLibrary.Collision;
 using ValkyrieLibrary;
 using Microsoft.Xna.Framework;
 
-namespace valkyrie.Core
+namespace ValkyrieLibrary.Core
 {
 	class PokeCollisionManager
 		: CollisionManager
@@ -14,12 +14,13 @@ namespace valkyrie.Core
 
 		public override bool CheckCollision(ICollidable Source, Point Destination)
 		{
-			Point tilePoint = new Point(Destination.X / TileEngine.Map.TileSize.X, Destination.Y / TileEngine.Map.TileSize.Y);
+			Point tilePoint = TileEngine.GlobalTilePointToLocal(new Point(Destination.X / TileEngine.CurrentMapChunk.TileSize.X, Destination.Y / TileEngine.CurrentMapChunk.TileSize.Y));
 
-			if (TileEngine.Map.GetCollisionLayerValue(tilePoint) != -1)
+			if (!TileEngine.CurrentMapChunk.TilePointInMapLocal(tilePoint))
+				return true;
+
+			if (TileEngine.CurrentMapChunk.GetCollisionLayerValue(tilePoint) != -1)
 				return false;
-
-
 
 			return true;
 		}

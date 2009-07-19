@@ -3,30 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using valkyrie.Core;
+using ValkyrieLibrary.Core;
 using System.Xml;
 using Microsoft.Xna.Framework;
+using ValkyrieLibrary.Maps;
 
 namespace ValkyrieMapEditor
 {
-    public static class MapManager
+    public static class MapEditorManager
     {
 		public static Rectangle SelectedTilesRect = new Rectangle(0, 0, 1, 1);
         public static MapLayer CurrentLayer = MapLayer.BaseLayer;
 		public static FileInfo CurrentMapLocation;
 		public static bool IgnoreInput = false;
+		public static Tools CurrentTool = Tools.Pencil;
 
 		public static Point MouseLocation
 		{
 			get
 			{
-				lock(MapManager.MouseLock)
-					return MapManager.mouselocation;
+				lock(MapEditorManager.MouseLock)
+					return MapEditorManager.mouselocation;
 			}
 			set
 			{
-				lock(MapManager.MouseLock)
-					MapManager.mouselocation = value;
+				lock(MapEditorManager.MouseLock)
+					MapEditorManager.mouselocation = value;
 			}
 		}
 
@@ -119,7 +121,7 @@ namespace ValkyrieMapEditor
 			doc.AppendChild(mapElement);
 			doc.Save(location.FullName);
 
-			MapManager.CurrentMapLocation = location;
+			MapEditorManager.CurrentMapLocation = location;
 
         }
 
@@ -128,7 +130,7 @@ namespace ValkyrieMapEditor
             Map newMap = new Map();
             newMap.LoadMap(location);
 
-			MapManager.CurrentMapLocation = location;
+			MapEditorManager.CurrentMapLocation = location;
             return newMap;
         }
 
@@ -159,5 +161,27 @@ namespace ValkyrieMapEditor
             return newMap;
 
         }
+
+		public static void SetWorldMap(Map map)
+		{
+			foreach (MapHeader tmpHeader in TileEngine.World.Values)
+				tmpHeader.Unload();
+
+			TileEngine.World.Clear();
+
+			MapHeader header = new MapHeader(map.Name, string.Empty);
+			header.Map = map;
+			header.MapLocation = new Point(0, 0);
+
+			TileEngine.World.Add(map.Name, header);
+				
+		}
     }
+
+	public enum Tools
+	{
+		Pencil,
+		Rectangle,
+		Bucket,
+	}
 }

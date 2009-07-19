@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using Microsoft.Xna.Framework.Content;
 
-namespace valkyrie.Core
+namespace ValkyrieLibrary.Core
 {
 	public class TextureManager
 	{
@@ -55,7 +55,19 @@ namespace valkyrie.Core
 
 		public void ClearCache()
 		{
-			this.Resources.Clear();
+			foreach (var resource in this.Resources.Values)
+				this.ClearFromCache(resource.Name);	
+		}
+
+		public void ClearFromCache(string resourcename)
+		{
+			if (this.Resources.Keys.Contains(resourcename))
+			{
+				this.Resources[resourcename].Dispose();
+				this.Resources.Remove(resourcename);
+			}
+			else
+				throw new ArgumentException("Resource does not exist in the cache"); // uneccessary?
 		}
 		
 

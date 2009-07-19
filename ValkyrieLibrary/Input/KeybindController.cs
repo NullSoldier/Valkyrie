@@ -5,7 +5,7 @@ using System.Text;
 using System.Xml;
 using Microsoft.Xna.Framework.Input;
 
-namespace valkyrie
+namespace ValkyrieLibrary.Input
 {
 
     public class KeybindController

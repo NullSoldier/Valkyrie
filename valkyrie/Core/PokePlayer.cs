@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ValkyrieLibrary.Player;
 using ValkyrieLibrary.Animation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ValkyrieLibrary;
+using ValkyrieLibrary.Collision;
+using ValkyrieLibrary.Characters;
 
-namespace valkyrie.Core
+namespace ValkyrieLibrary.Core
 {
 	class PokePlayer : Player, ICollidable
 	{
@@ -18,10 +19,9 @@ namespace valkyrie.Core
 		public float LastMoveTime = 0;
 		public Point MovingDestination;
 
-
         public Point TileLocation
         {
-            get { return new Point(this.Location.X / TileEngine.Map.TileSize.X, this.Location.Y / TileEngine.Map.TileSize.Y); }
+            get { return new Point(this.Location.X / TileEngine.CurrentMapChunk.TileSize.X, this.Location.Y / TileEngine.CurrentMapChunk.TileSize.Y); }
         }
 
 		public PokePlayer()
@@ -41,7 +41,6 @@ namespace valkyrie.Core
                 this.Animations.Add("WalkSouth", new FrameAnimation(new Rectangle(0, 84, 28, 42), 3));
                 this.Animations.Add("WalkWest", new FrameAnimation(new Rectangle(0, 126, 28, 42), 3));
 			}
-
 		}
 
 		public override void Move(Point Destination)
@@ -51,7 +50,7 @@ namespace valkyrie.Core
 
 			Directions tmpDirection = this.Location.RelativeDirection(Destination);
 
-			Point point = new Point(Destination.X / TileEngine.Map.TileSize.X, Destination.Y / TileEngine.Map.TileSize.Y);
+			Point point = new Point(Destination.X / TileEngine.CurrentMapChunk.TileSize.X, Destination.Y / TileEngine.CurrentMapChunk.TileSize.Y);
 
 			if (tmpDirection == Directions.North)
 				this.CurrentAnimationName = "WalkNorth";
@@ -62,13 +61,18 @@ namespace valkyrie.Core
 			else if (tmpDirection == Directions.West)
 				this.CurrentAnimationName = "WalkWest";
 
-			this.MovingDestination = new Point(point.X * TileEngine.Map.TileSize.X, point.Y * TileEngine.Map.TileSize.Y);
+			this.MovingDestination = new Point(point.X * TileEngine.CurrentMapChunk.TileSize.X, point.Y * TileEngine.CurrentMapChunk.TileSize.Y);
+			
+			// Clear the chunk when moving across boundries
+			if( !TileEngine.CurrentMapChunk.TilePointInMapGlobal(new Point(point.X, point.Y)))
+				TileEngine.ClearCurrentMapChunk();
+
 			this.IsMoving = true;
 		}
 
 		public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
 		{
-			spriteBatch.DrawString(RPGGame.font, this.Name, new Vector2(this.DrawScreenLocation.X - (RPGGame.font.MeasureString(this.Name).X / 4), this.DrawScreenLocation.Y - 15), Color.Black);
+			spriteBatch.DrawString(PokeGame.font, this.Name, new Vector2(this.DrawScreenLocation.X - (PokeGame.font.MeasureString(this.Name).X / 4), this.DrawScreenLocation.Y - 15), Color.Black);
 			base.Draw(spriteBatch);
 		}
 
@@ -148,25 +152,5 @@ namespace valkyrie.Core
 		}
 
 		#endregion
-	}
-
-	public static class Helper
-	{
-		public static Directions RelativeDirection(this Point Source, Point Destination)
-		{
-			Directions direction = new Directions();
-
-			if (Destination.X < Source.X)
-				direction |= Directions.West;
-			else if (Destination.X > Source.X)
-				direction |= Directions.East;
-
-			if (Destination.Y < Source.Y)
-				direction |= Directions.North;
-			else if (Destination.Y > Source.Y)
-				direction |= Directions.South;
-
-			return direction;
-		}
 	}
 }

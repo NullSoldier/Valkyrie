@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ValkyrieLibrary.Player;
 using Microsoft.Xna.Framework;
 using ValkyrieLibrary.Animation;
 
-namespace ValkyrieLibrary.Player
+namespace ValkyrieLibrary.Characters
 {
 	public class Player : BaseCharacter
 	{

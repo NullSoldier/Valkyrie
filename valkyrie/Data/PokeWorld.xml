@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<XnaContent>
+  <World>
+
+    <MapLoc>
+      <Name>PalletTown</Name>
+      <FilePath>PalletTown.xml</FilePath>
+      <X>1</X>
+      <Y>1</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>PalletClone</Name>
+      <FilePath>PalletTown.xml</FilePath>
+      <X>25</X>
+      <Y>0</Y>
+    </MapLoc>
+
+  </World>
+</XnaContent>

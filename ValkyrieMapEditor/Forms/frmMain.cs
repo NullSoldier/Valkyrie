@@ -6,11 +6,12 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using valkyrie.Core;
+using ValkyrieLibrary.Core;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using ValkyrieMapEditor.Properties;
 using System.Threading;
+using ValkyrieLibrary.Maps;
 
 namespace ValkyrieMapEditor
 {
@@ -64,9 +65,10 @@ namespace ValkyrieMapEditor
         public void LoadMap(FileInfo MapLocation)
         {
 			TileEngine.TextureManager.ClearCache();
-            TileEngine.SetMap(MapManager.LoadMap(MapLocation));
 
-            this.RefreshMapProperties(TileEngine.Map);
+			var map = MapEditorManager.LoadMap(MapLocation);
+			MapEditorManager.SetWorldMap(MapEditorManager.LoadMap(MapLocation));
+			this.RefreshMapProperties(map);
         }
 
         private void RefreshMapProperties(Map map)
@@ -81,7 +83,7 @@ namespace ValkyrieMapEditor
 
 			this.pctTileSurface.Image = Image.FromFile(TileEngine.Configuration["GraphicsRoot"] + "\\" + map.TextureName);
 			this.pctTileSurface.Size = this.pctTileSurface.Image.Size;
-			this.pctTileSurface.TileSize = new Point(TileEngine.Map.TileSize.X, TileEngine.Map.TileSize.Y);
+			this.pctTileSurface.TileSize = new Point(TileEngine.CurrentMapChunk.TileSize.X, TileEngine.CurrentMapChunk.TileSize.Y);
 			this.pctTileSurface.Invalidate();
 
 			this.btnMapProperties.Enabled = true;
@@ -111,11 +113,11 @@ namespace ValkyrieMapEditor
         {
             if (TileEngine.IsMapLoaded)
             {
-                frmProperty dialog = new frmProperty(TileEngine.Map, false);
+				frmProperty dialog = new frmProperty(TileEngine.CurrentMapChunk, false);
                 dialog.ShowDialog(this);
 
-                this.RefreshMapProperties(TileEngine.Map);
-				TileEngine.Map = MapManager.ApplySettings(TileEngine.Map);
+                this.RefreshMapProperties(TileEngine.CurrentMapChunk);
+				//TileEngine.CurrentMapChunk = MapEditorManager.ApplySettings(TileEngine.CurrentMapChunk);
             }
         }
 
@@ -125,7 +127,7 @@ namespace ValkyrieMapEditor
             this.btnTopLayer.Checked = false;
             this.btnCollisionLayer.Checked = false;
 
-            MapManager.CurrentLayer = MapLayer.BaseLayer;
+            MapEditorManager.CurrentLayer = MapLayer.BaseLayer;
         }
 
         private void btnMiddleLayer_Click(object sender, EventArgs e)
@@ -134,7 +136,7 @@ namespace ValkyrieMapEditor
             this.btnTopLayer.Checked = false;
             this.btnCollisionLayer.Checked = false;
 
-            MapManager.CurrentLayer = MapLayer.MiddleLayer;
+            MapEditorManager.CurrentLayer = MapLayer.MiddleLayer;
         }
 
         private void btnTopLayer_Click(object sender, EventArgs e)
@@ -143,7 +145,7 @@ namespace ValkyrieMapEditor
             this.btnMiddleLayer.Checked = false;
             this.btnCollisionLayer.Checked = false;
 
-            MapManager.CurrentLayer = MapLayer.TopLayer;
+            MapEditorManager.CurrentLayer = MapLayer.TopLayer;
         }
 
         private void btnCollisionLayer_Click(object sender, EventArgs e)
@@ -152,7 +154,7 @@ namespace ValkyrieMapEditor
             this.btnMiddleLayer.Checked = false;
             this.btnTopLayer.Checked = false;
 
-            MapManager.CurrentLayer = MapLayer.CollisionLayer;
+            MapEditorManager.CurrentLayer = MapLayer.CollisionLayer;
         }
 
         private void toolNew_Click(object sender, EventArgs e)
@@ -164,8 +166,8 @@ namespace ValkyrieMapEditor
 			if (result == DialogResult.Cancel)
 				return;
 
-            TileEngine.Map = MapManager.ApplySettings(newMap);
-            this.RefreshMapProperties(TileEngine.Map);
+           // TileEngine.Map = MapEditorManager.ApplySettings(newMap);
+			this.RefreshMapProperties(TileEngine.CurrentMapChunk);
         }
 
 		private void toolSave_Click(object sender, EventArgs e)
@@ -199,10 +201,10 @@ namespace ValkyrieMapEditor
 		{
 			if (!TileEngine.IsMapLoaded) return;
 
-			if (MapManager.CurrentMapLocation == null || !MapManager.CurrentMapLocation.Exists)
+			if (MapEditorManager.CurrentMapLocation == null || !MapEditorManager.CurrentMapLocation.Exists)
 				this.SaveMapAs();
 			else
-				MapManager.SaveMap(TileEngine.Map, MapManager.CurrentMapLocation);
+				MapEditorManager.SaveMap(TileEngine.CurrentMapChunk, MapEditorManager.CurrentMapLocation);
 		}
 
 		private void SaveMapAs()
@@ -217,7 +219,7 @@ namespace ValkyrieMapEditor
 
 				FileInfo file = new FileInfo(dialog.FileName);
 
-				MapManager.SaveMap(TileEngine.Map, file);
+				MapEditorManager.SaveMap(TileEngine.CurrentMapChunk, file);
 			}
 		}
 
@@ -240,7 +242,7 @@ namespace ValkyrieMapEditor
 
 		public void SelectionChanged(object sender, TileSelectionChangedEventArgs ev)
 		{
-			MapManager.SelectedTilesRect = new Microsoft.Xna.Framework.Rectangle(
+			MapEditorManager.SelectedTilesRect = new Microsoft.Xna.Framework.Rectangle(
 				ev.Selection.X,
 				ev.Selection.Y,
 				ev.Selection.Width,
@@ -254,12 +256,12 @@ namespace ValkyrieMapEditor
 
 		private void frmMain_Activated(object sender, EventArgs e)
 		{
-			MapManager.IgnoreInput = false;
+			MapEditorManager.IgnoreInput = false;
 		}
 
 		private void frmMain_Deactivate(object sender, EventArgs e)
 		{
-			MapManager.IgnoreInput = true;
+			MapEditorManager.IgnoreInput = true;
 		}
 
 		private void TileMap_Scroll(object sender, ScrollEventArgs e)

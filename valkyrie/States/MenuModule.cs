@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using valkyrie;
+using ValkyrieLibrary;
 using Microsoft.Xna.Framework.Input;
-using valkyrie.Core;
+using ValkyrieLibrary.Core;
 
 namespace ValkyrieLibrary.States
 {

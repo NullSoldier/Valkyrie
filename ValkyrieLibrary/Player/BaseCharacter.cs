@@ -5,9 +5,9 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ValkyrieLibrary.Animation;
-using valkyrie.Core;
+using ValkyrieLibrary.Core;
 
-namespace ValkyrieLibrary.Player
+namespace ValkyrieLibrary.Characters
 {
     public abstract class BaseCharacter
     {
@@ -39,8 +39,8 @@ namespace ValkyrieLibrary.Player
 			get
 			{
 				Vector2 location = new Vector2();
-				location.X = (int)TileEngine.Camera.MapOffset.X + this.Location.X + TileEngine.Map.TileSize.X/2 - this.CurrentAnimation.FrameRectangle.Width/2 ;
-				location.Y = (int)TileEngine.Camera.MapOffset.Y + this.Location.Y + TileEngine.Map.TileSize.Y - this.CurrentAnimation.FrameRectangle.Height;
+				location.X = (int)TileEngine.Camera.MapOffset.X + this.Location.X + TileEngine.CurrentMapChunk.TileSize.X/2 - this.CurrentAnimation.FrameRectangle.Width/2 ;
+				location.Y = (int)TileEngine.Camera.MapOffset.Y + this.Location.Y + TileEngine.CurrentMapChunk.TileSize.Y - this.CurrentAnimation.FrameRectangle.Height;
 
 				return location;
 			}

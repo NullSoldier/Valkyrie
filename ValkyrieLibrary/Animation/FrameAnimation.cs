@@ -29,35 +29,11 @@ namespace ValkyrieLibrary.Animation
 		}
 		#endregion
 
-		public int FrameCount
-		{
-			get;
-			set;
-		}
-
-		public int CurrentFrame
-		{
-			get;
-			set;
-		}
-
-		public float FrameLength
-		{
-			get;
-			set;
-		}
-
-		public float SinceLastFrame
-		{
-			get;
-			set;
-		}
-
-		public Rectangle InitialFrameRect
-		{
-			get;
-			set;
-		}
+		public int FrameCount { get; set; }
+		public int CurrentFrame { get; set; }
+		public float FrameLength { get; set; }
+		public float SinceLastFrame{ get; set; }
+		public Rectangle InitialFrameRect { get; set;}
 
 		public Rectangle FrameRectangle
 		{

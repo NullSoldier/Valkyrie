@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using valkyrie.Core;
+using ValkyrieLibrary.Core;
 using System.Xml;
 using System.IO;
-using valkyrie;
+using ValkyrieLibrary;
 using Microsoft.Xna.Framework.Input;
-using ValkyrieLibrary.Player;
+using ValkyrieLibrary.Maps;
+using ValkyrieLibrary.Characters;
 
 namespace ValkyrieLibrary.States
 {
@@ -28,20 +29,15 @@ namespace ValkyrieLibrary.States
         {
             this.KeybindController.Update();
 			TileEngine.Player.Update(gameTime);
-			TileEngine.Map.Update(gameTime);
+			TileEngine.CurrentMapChunk.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            //SpriteBatch spriteBatch, bool DrawBaseLayer, bool DrawMiddleLayer, bool DrawTopLayer, bool DrawCharacters)
-
             spriteBatch.GraphicsDevice.Viewport = TileEngine.Camera.Viewport;
             spriteBatch.GraphicsDevice.Clear(Color.Black);
-            
-            TileEngine.DrawBaseLayer(spriteBatch);
-            TileEngine.DrawMiddleLayer(spriteBatch);
-			TileEngine.DrawCharacters(spriteBatch);
-			TileEngine.DrawTopLayer(spriteBatch);
+
+			TileEngine.DrawAllLayers(spriteBatch, true);
         }
 
         public void Load()
@@ -59,7 +55,7 @@ namespace ValkyrieLibrary.States
             Map map = new Map();
             map.LoadMap(new FileInfo(TileEngine.Configuration["MapRoot"] + "\\" + TileEngine.Configuration["EntryMap"]));
 
-            TileEngine.SetMap(map);
+            //TileEngine.SetMap(map);
 
             this.KeybindController.AddKey(Keys.Left, "MoveLeft");
             this.KeybindController.AddKey(Keys.Up, "MoveUp");
@@ -118,16 +114,11 @@ namespace ValkyrieLibrary.States
             {
                 CrntDir = NewDir;
             }
-
         }
 
         public bool IsDir(Keys key)
         {
-            if (key == Keys.Left || key == Keys.Right || key == Keys.Up || key == Keys.Down)
-            {
-                return true;
-            }
-            return false;
+            return (key == Keys.Left || key == Keys.Right || key == Keys.Up || key == Keys.Down);
         }
     }
 }

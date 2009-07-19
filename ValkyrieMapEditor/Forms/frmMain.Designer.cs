@@ -45,6 +45,7 @@
 			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.pctTileSurface = new ValkyrieMapEditor.TileBox();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.btnMapProperties = new System.Windows.Forms.Button();
 			this.lstSettings = new System.Windows.Forms.ListView();
@@ -70,20 +71,21 @@
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.menuStrip = new System.Windows.Forms.MenuStrip();
 			this.toolStripTools = new System.Windows.Forms.ToolStrip();
-			this.pctTileSurface = new ValkyrieMapEditor.TileBox();
+			this.panel1 = new System.Windows.Forms.Panel();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
 			this.splitContainer2.Panel1.SuspendLayout();
 			this.splitContainer2.Panel2.SuspendLayout();
 			this.splitContainer2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).BeginInit();
 			this.splitContainer3.Panel1.SuspendLayout();
 			this.splitContainer3.Panel2.SuspendLayout();
 			this.splitContainer3.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pctSurface)).BeginInit();
 			this.menuStrip.SuspendLayout();
 			this.toolStripTools.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).BeginInit();
+			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// toolProject
@@ -224,9 +226,7 @@
 			// 
 			this.splitContainer1.Panel2.AutoScroll = true;
 			this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.ControlDark;
-			this.splitContainer1.Panel2.Controls.Add(this.VerticalScroll);
-			this.splitContainer1.Panel2.Controls.Add(this.HorizontalScroll);
-			this.splitContainer1.Panel2.Controls.Add(this.pctSurface);
+			this.splitContainer1.Panel2.Controls.Add(this.panel1);
 			this.splitContainer1.Size = new System.Drawing.Size(1008, 652);
 			this.splitContainer1.SplitterDistance = 280;
 			this.splitContainer1.SplitterWidth = 5;
@@ -252,6 +252,18 @@
 			this.splitContainer2.SplitterDistance = 395;
 			this.splitContainer2.SplitterWidth = 5;
 			this.splitContainer2.TabIndex = 0;
+			// 
+			// pctTileSurface
+			// 
+			this.pctTileSurface.DisplayTileSelection = false;
+			this.pctTileSurface.EndSelectedPoint = new System.Drawing.Point(0, 0);
+			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
+			this.pctTileSurface.Name = "pctTileSurface";
+			this.pctTileSurface.SelectedPoint = new System.Drawing.Point(0, 0);
+			this.pctTileSurface.Size = new System.Drawing.Size(173, 134);
+			this.pctTileSurface.TabIndex = 0;
+			this.pctTileSurface.TabStop = false;
+			this.pctTileSurface.TileSize = new System.Drawing.Point(0, 0);
 			// 
 			// splitContainer3
 			// 
@@ -326,7 +338,7 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.HorizontalScroll.Location = new System.Drawing.Point(0, 631);
 			this.HorizontalScroll.Name = "HorizontalScroll";
-			this.HorizontalScroll.Size = new System.Drawing.Size(719, 17);
+			this.HorizontalScroll.Size = new System.Drawing.Size(702, 17);
 			this.HorizontalScroll.TabIndex = 1;
 			this.HorizontalScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TileMap_Scroll);
 			// 
@@ -335,9 +347,9 @@
 			this.pctSurface.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.pctSurface.Location = new System.Drawing.Point(0, 1);
+			this.pctSurface.Location = new System.Drawing.Point(0, -2);
 			this.pctSurface.Name = "pctSurface";
-			this.pctSurface.Size = new System.Drawing.Size(701, 630);
+			this.pctSurface.Size = new System.Drawing.Size(699, 633);
 			this.pctSurface.TabIndex = 0;
 			this.pctSurface.TabStop = false;
 			this.pctSurface.Resize += new System.EventHandler(this.pctSurface_Resize);
@@ -542,17 +554,17 @@
 			this.toolStripTools.TabIndex = 3;
 			this.toolStripTools.Text = "toolStrip1";
 			// 
-			// pctTileSurface
+			// panel1
 			// 
-			this.pctTileSurface.DisplayTileSelection = false;
-			this.pctTileSurface.EndSelectedPoint = new System.Drawing.Point(0, 0);
-			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
-			this.pctTileSurface.Name = "pctTileSurface";
-			this.pctTileSurface.SelectedPoint = new System.Drawing.Point(0, 0);
-			this.pctTileSurface.Size = new System.Drawing.Size(173, 134);
-			this.pctTileSurface.TabIndex = 0;
-			this.pctTileSurface.TabStop = false;
-			this.pctTileSurface.TileSize = new System.Drawing.Point(0, 0);
+			this.panel1.BackColor = System.Drawing.SystemColors.Control;
+			this.panel1.Controls.Add(this.pctSurface);
+			this.panel1.Controls.Add(this.VerticalScroll);
+			this.panel1.Controls.Add(this.HorizontalScroll);
+			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panel1.Location = new System.Drawing.Point(0, 0);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(719, 648);
+			this.panel1.TabIndex = 3;
 			// 
 			// frmMain
 			// 
@@ -577,6 +589,7 @@
 			this.splitContainer2.Panel1.ResumeLayout(false);
 			this.splitContainer2.Panel2.ResumeLayout(false);
 			this.splitContainer2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).EndInit();
 			this.splitContainer3.Panel1.ResumeLayout(false);
 			this.splitContainer3.Panel2.ResumeLayout(false);
 			this.splitContainer3.ResumeLayout(false);
@@ -585,7 +598,7 @@
 			this.menuStrip.PerformLayout();
 			this.toolStripTools.ResumeLayout(false);
 			this.toolStripTools.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).EndInit();
+			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -635,5 +648,6 @@
 		private System.Windows.Forms.ToolStrip toolStripTools;
 		private System.Windows.Forms.VScrollBar VerticalScroll;
 		private System.Windows.Forms.HScrollBar HorizontalScroll;
+		private System.Windows.Forms.Panel panel1;
 	}
 }

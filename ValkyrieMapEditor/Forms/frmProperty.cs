@@ -5,39 +5,46 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using valkyrie.Core;
+using ValkyrieLibrary.Core;
 using Microsoft.Xna.Framework;
 using System.IO;
 using System.Drawing;
+using ValkyrieLibrary.Maps;
 
 namespace ValkyrieMapEditor
 {
     public partial class frmProperty : Form
     {
-        private Map Map;
-        private bool NewMap;
+		public Map Map
+		{
+			get { return this.map; }
+			set { this.map = value; } 
+		}
+
+        private Map map;
+        private bool IsNewMap;
 
         public frmProperty(Map map, bool newMap)
         {
             InitializeComponent();
             this.Map = map;
-            this.NewMap = newMap;
+            this.IsNewMap = newMap;
 
-            this.LoadPropertes(newMap);            
+			this.LoadPropertes(newMap);            
         }
 
         public void LoadPropertes(bool newMap)
         {
             if (!newMap)
             {
-                this.inName.Text = this.Map.Name;
-                this.inTileSet.Text = this.Map.TextureName;
+                this.inName.Text = this.map.Name;
+                this.inTileSet.Text = this.map.TextureName;
 
-                this.inMapWidth.Value = this.Map.MapSize.X;
-                this.inMapHeight.Value = this.Map.MapSize.Y;
+                this.inMapWidth.Value = this.map.MapSize.X;
+                this.inMapHeight.Value = this.map.MapSize.Y;
 
-                this.inTileWidth.Value = this.Map.TileSize.X;
-                this.inTileHeight.Value = this.Map.TileSize.Y;
+                this.inTileWidth.Value = this.map.TileSize.X;
+                this.inTileHeight.Value = this.map.TileSize.Y;
             }
             else
             {
@@ -72,12 +79,12 @@ namespace ValkyrieMapEditor
 					TileSet.CopyTo(Path.Combine(Path.Combine(Environment.CurrentDirectory, TileEngine.Configuration["GraphicsRoot"]), TileSet.Name), true);
 			}
 
-			this.Map.TextureName = TileSet.Name;
+			this.map.TextureName = TileSet.Name;
 
 			// Other properties
-            this.Map.Name = this.inName.Text;
-            this.Map.MapSize = new Microsoft.Xna.Framework.Point((int)this.inMapWidth.Value, (int)this.inMapHeight.Value);
-            this.Map.TileSize = new Microsoft.Xna.Framework.Point((int)this.inTileWidth.Value, (int)this.inTileHeight.Value);
+            this.map.Name = this.inName.Text;
+            this.map.MapSize = new Microsoft.Xna.Framework.Point((int)this.inMapWidth.Value, (int)this.inMapHeight.Value);
+            this.map.TileSize = new Microsoft.Xna.Framework.Point((int)this.inTileWidth.Value, (int)this.inTileHeight.Value);
 
 			this.DialogResult = DialogResult.OK;
             this.Close();

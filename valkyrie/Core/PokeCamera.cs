@@ -5,7 +5,7 @@ using System.Text;
 using ValkyrieLibrary;
 using Microsoft.Xna.Framework;
 
-namespace valkyrie.Core
+namespace ValkyrieLibrary.Core
 {
 	public class PokeCamera
 		: BaseCamera
@@ -20,14 +20,14 @@ namespace valkyrie.Core
 		{
 			get
 			{
-				int x = (int)(this.CameraOffset.X / TileEngine.Map.TileSize.X);
-				int y = (int)(this.CameraOffset.Y / TileEngine.Map.TileSize.Y);
+				int x = (int)(this.CameraOffset.X / TileEngine.CurrentMapChunk.TileSize.X);
+				int y = (int)(this.CameraOffset.Y / TileEngine.CurrentMapChunk.TileSize.Y);
 
 				return new Point(x, y);
 			}
 			set
 			{
-				this.CenterOnPoint(new Point(value.X * TileEngine.Map.TileSize.X, value.Y * TileEngine.Map.TileSize.Y));
+				this.CenterOnPoint(new Point(value.X * TileEngine.CurrentMapChunk.TileSize.X, value.Y * TileEngine.CurrentMapChunk.TileSize.Y));
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 using System;
 
-namespace valkyrie
+namespace ValkyrieLibrary
 {
     static class Program
     {
@@ -9,7 +9,7 @@ namespace valkyrie
         /// </summary>
         static void Main(string[] args)
         {
-            using (RPGGame game = new RPGGame())
+            using (PokeGame game = new PokeGame())
             {
                 game.Run();
             }

@@ -10,25 +10,24 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
-using valkyrie.Core;
+using ValkyrieLibrary.Core;
 using System.IO;
-using ValkyrieLibrary.Player;
-using ValkyrieLibrary;
 using ValkyrieLibrary.States;
+using ValkyrieLibrary.Maps;
 
-namespace valkyrie
+namespace ValkyrieLibrary
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class RPGGame : Microsoft.Xna.Framework.Game
+    public class PokeGame : Microsoft.Xna.Framework.Game
     {
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
 		public Map testMap;
 		public static SpriteFont font;
 
-        public RPGGame()
+        public PokeGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -48,12 +47,13 @@ namespace valkyrie
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			RPGGame.font = Content.Load<SpriteFont>("GameTextFont");
+			PokeGame.font = Content.Load<SpriteFont>("GameTextFont");
 
             TileEngine.ModuleManager.AddModule(new MenuModule(), "Menu");
             TileEngine.ModuleManager.AddModule(new GameModule(), "Game");
 
             TileEngine.Load(new FileInfo("Data/TileEngineConfig.xml"));
+			TileEngine.LoadWorld(new FileInfo("Data/PokeWorld.xml"));
         }
 
         protected override void UnloadContent()
@@ -74,7 +74,7 @@ namespace valkyrie
 
         protected override void Draw(GameTime gameTime)
         {
-			TileEngine.DrawScreen(spriteBatch, gameTime);
+			TileEngine.Draw(spriteBatch, gameTime);
 			 
             base.Draw(gameTime);
         }

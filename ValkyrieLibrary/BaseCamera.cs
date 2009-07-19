@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using ValkyrieLibrary.Player;
 using Microsoft.Xna.Framework.Graphics;
-using valkyrie.Core;
+using ValkyrieLibrary.Core;
+using ValkyrieLibrary.Characters;
 
 namespace ValkyrieLibrary
 {
@@ -20,7 +20,6 @@ namespace ValkyrieLibrary
 		{
 			this.Screen = new Rectangle(0, 0, 0, 0);
 			this.MapOffset = new Vector2(0, 0);
-			this.CameraOffset = new Vector2(0, 0);
 		}
 
 		public BaseCamera(int X, int Y, int Width, int Height)
@@ -50,6 +49,12 @@ namespace ValkyrieLibrary
 			}	}
 
 			return false;
+		}
+
+		public void CenterOriginOnPoint(Point Point)
+		{
+			this.MapOffset.X = Point.X * -1;
+			this.MapOffset.Y = Point.Y * -1;
 		}
 
 		public virtual void CenterOnCharacter(BaseCharacter Char)

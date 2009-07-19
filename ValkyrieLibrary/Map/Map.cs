@@ -9,8 +9,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System.Diagnostics;
 using ValkyrieLibrary.Animation;
+using ValkyrieLibrary.Core;
 
-namespace valkyrie.Core
+namespace ValkyrieLibrary.Maps
 {
 	public class Map
 	{
@@ -34,7 +35,17 @@ namespace valkyrie.Core
 
 		public string Name { get; set; }
 
-		public Texture2D Texture { get; set; }
+		public Texture2D Texture
+		{
+			get
+			{
+				// Lazy texture loading
+				this.texture = TileEngine.TextureManager.GetTexture(this.TextureName);
+
+				return this.texture;
+			}
+			set { this.texture = value; }
+		}
 		public string TextureName { get; set; }
 
 		public Point MapSize { get; set; }
@@ -44,6 +55,8 @@ namespace valkyrie.Core
 		public int[] MiddleLayer { get; set; }
         public int[] TopLayer { get; set; }
 		public int[] CollisionLayer { get; set; }
+
+		private Texture2D texture;
 
 		public int TilesPerRow
 		{
@@ -320,10 +333,20 @@ namespace valkyrie.Core
 			return Convert.ToInt32(value);
 		}
 
-		public bool TilePointInMap(Point point)
+		public bool TilePointInMapLocal(Point point)
 		{
-			return (point.X < TileEngine.Map.MapSize.X && point.Y < TileEngine.Map.MapSize.Y
-				&& point.X >= 0 && point.Y >= 0);
+			return (point.X < TileEngine.CurrentMapChunk.MapSize.X
+				&& point.Y < TileEngine.CurrentMapChunk.MapSize.Y
+				&& point.X >= 0
+				&& point.Y >= 0);
+		}
+
+		public bool TilePointInMapGlobal(Point point)
+		{
+			return (point.X < (TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.X + TileEngine.CurrentMapChunk.MapSize.X)
+				&& point.Y < (TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.Y + TileEngine.CurrentMapChunk.MapSize.Y)
+				&& point.X >= TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.X
+				&& point.Y >= TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.Y);
 		}
 	}
 

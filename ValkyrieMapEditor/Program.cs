@@ -14,7 +14,7 @@ namespace ValkyrieMapEditor
 			frmMain form = new frmMain();
 			
 
-			using (Game1 game = new Game1(form.getDrawSurface(), form.getDrawTilesSurface()))
+			using (EditorXNA game = new EditorXNA(form.getDrawSurface(), form.getDrawTilesSurface()))
 			{
 				form.ScreenResized += game.SurfaceSizeChanged;
                 form.SurfaceClicked += game.SurfaceClicked;

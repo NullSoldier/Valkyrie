@@ -7,14 +7,5 @@
     <DefaultModule>Menu</DefaultModule>
     <EntryMap>Pallet.xml</EntryMap>
     <EntryPoint></EntryPoint>
-    <World>
-      
-      <MapLoc>
-        <Name>TestMap</Name>
-        <X>0</X>
-        <Y>0</Y>
-      </MapLoc>
-      
-    </World>
   </Config>
 </XnaContent>
