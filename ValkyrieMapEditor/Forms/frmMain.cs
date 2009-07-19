@@ -117,6 +117,8 @@ namespace ValkyrieMapEditor
                 dialog.ShowDialog(this);
 
                 this.RefreshMapProperties(TileEngine.CurrentMapChunk);
+                
+                MapEditorManager.SetWorldMap(MapEditorManager.ApplySettings(TileEngine.CurrentMapChunk));
 				//TileEngine.CurrentMapChunk = MapEditorManager.ApplySettings(TileEngine.CurrentMapChunk);
             }
         }

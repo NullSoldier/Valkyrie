@@ -6,14 +6,14 @@
     <MapLoc>
       <Name>PalletTown</Name>
       <FilePath>PalletTown.xml</FilePath>
-      <X>1</X>
-      <Y>1</Y>
+      <X>0</X>
+      <Y>40</Y>
     </MapLoc>
 
     <MapLoc>
-      <Name>PalletClone</Name>
-      <FilePath>PalletTown.xml</FilePath>
-      <X>25</X>
+      <Name>Route22</Name>
+      <FilePath>Route22.xml</FilePath>
+      <X>0</X>
       <Y>0</Y>
     </MapLoc>
 

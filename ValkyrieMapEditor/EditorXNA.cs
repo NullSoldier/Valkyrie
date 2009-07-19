@@ -150,7 +150,7 @@ namespace ValkyrieMapEditor
 								Point tilesheetPoint = new Point(MapEditorManager.SelectedTilesRect.X + x, MapEditorManager.SelectedTilesRect.Y + y);
 								Point point = new Point(tileLocation.X + x, tileLocation.Y + y);
 
-								if (TileEngine.CurrentMapChunk.TilePointInMapGlobal(point))
+								if (TileEngine.CurrentMapChunk.TilePointInMapLocal(point))
 									TileEngine.CurrentMapChunk.SetData(MapEditorManager.CurrentLayer, point, TileEngine.CurrentMapChunk.GetTileSetValue(tilesheetPoint));
 							}
 						}
