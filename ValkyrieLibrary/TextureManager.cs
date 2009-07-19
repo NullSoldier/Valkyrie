@@ -55,8 +55,8 @@ namespace ValkyrieLibrary.Core
 
 		public void ClearCache()
 		{
-			foreach (var resource in this.Resources.Values)
-				this.ClearFromCache(resource.Name);	
+			foreach (var resource in this.Resources)
+				this.ClearFromCache(resource.Key);
 		}
 
 		public void ClearFromCache(string resourcename)
