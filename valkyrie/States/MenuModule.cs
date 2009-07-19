@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ValkyrieLibrary;
 using Microsoft.Xna.Framework.Input;
 using ValkyrieLibrary.Core;
+using ValkyrieLibrary.Input;
 
 namespace ValkyrieLibrary.States
 {

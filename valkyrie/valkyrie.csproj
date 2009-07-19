@@ -84,8 +84,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\KeybindController.cs" />
-    <Compile Include="Core\KeyDef.cs" />
     <Compile Include="Core\PokeCamera.cs" />
     <Compile Include="Core\PokeCollisionManager.cs" />
     <Compile Include="Core\PokePlayer.cs" />

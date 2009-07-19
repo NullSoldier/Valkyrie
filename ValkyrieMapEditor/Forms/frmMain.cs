@@ -83,7 +83,7 @@ namespace ValkyrieMapEditor
 
 			this.pctTileSurface.Image = Image.FromFile(TileEngine.Configuration["GraphicsRoot"] + "\\" + map.TextureName);
 			this.pctTileSurface.Size = this.pctTileSurface.Image.Size;
-			this.pctTileSurface.TileSize = new Point(TileEngine.CurrentMapChunk.TileSize.X, TileEngine.CurrentMapChunk.TileSize.Y);
+			this.pctTileSurface.TileSize = new Point(map.TileSize.X, map.TileSize.Y);
 			this.pctTileSurface.Invalidate();
 
 			this.btnMapProperties.Enabled = true;
@@ -166,8 +166,11 @@ namespace ValkyrieMapEditor
 			if (result == DialogResult.Cancel)
 				return;
 
-           // TileEngine.Map = MapEditorManager.ApplySettings(newMap);
-			this.RefreshMapProperties(TileEngine.CurrentMapChunk);
+			newMap = MapEditorManager.ApplySettings(dialog.Map);
+
+			this.RefreshMapProperties(newMap);
+
+			MapEditorManager.SetWorldMap(newMap);		
         }
 
 		private void toolSave_Click(object sender, EventArgs e)

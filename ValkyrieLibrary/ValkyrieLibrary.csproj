@@ -88,6 +88,8 @@
     <Compile Include="BaseCamera.cs" />
     <Compile Include="Collision\ICollidable.cs" />
     <Compile Include="Collision\ICollisionManager.cs" />
+    <Compile Include="Input\KeybindController.cs" />
+    <Compile Include="Input\KeyDef.cs" />
     <Compile Include="Map\MapHandler.cs" />
     <Compile Include="Map\MapHeader.cs" />
     <Compile Include="Modules\ModuleManager.cs" />
