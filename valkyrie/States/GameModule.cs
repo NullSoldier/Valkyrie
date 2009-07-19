@@ -28,6 +28,8 @@ namespace ValkyrieLibrary.States
 
         public void Tick(GameTime gameTime)
         {
+			TileEngine.Camera.CenterOnPoint(new Point(TileEngine.Player.Location.X + (TileEngine.Player.CurrentAnimation.FrameRectangle.Width / 2), TileEngine.Player.Location.Y + (TileEngine.Player.CurrentAnimation.FrameRectangle.Height / 2)));
+
             this.KeybindController.Update();
 			TileEngine.Player.Update(gameTime);
 			TileEngine.CurrentMapChunk.Update(gameTime);
@@ -38,19 +40,20 @@ namespace ValkyrieLibrary.States
             spriteBatch.GraphicsDevice.Viewport = TileEngine.Camera.Viewport;
             spriteBatch.GraphicsDevice.Clear(Color.Black);
 
-			TileEngine.DrawAllLayers(spriteBatch, true);
+			TileEngine.DrawBaseLayer(spriteBatch);
+			TileEngine.DrawMiddleLayer(spriteBatch);
+			TileEngine.DrawCharacters(spriteBatch);
+			TileEngine.DrawTopLayer(spriteBatch);
+			//TileEngine.DrawAllLayers(spriteBatch, true);
         }
 
         public void Load()
         {
-            // Load Textures
-            TileEngine.TextureManager.AddTexture("PokemonTiles.png");
-
             // Player
             TileEngine.Player = new PokePlayer();
 			TileEngine.Player.Gender = Genders.Male;
             TileEngine.Player.Sprite = TileEngine.TextureManager.GetTexture("MaleSprite.png");
-            TileEngine.Player.Location = new Point(480, 1440);
+            TileEngine.Player.Location = new Point(480, 1537);
 
 
             this.KeybindController.AddKey(Keys.Left, "MoveLeft");

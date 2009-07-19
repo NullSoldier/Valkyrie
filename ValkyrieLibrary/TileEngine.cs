@@ -168,16 +168,21 @@ namespace ValkyrieLibrary.Core
 
 		public static void DrawAllLayers(SpriteBatch spriteBatch, bool drawcharacters)
 		{
+			bool charsDrawn = false;
+
 			foreach (var header in TileEngine.World.Values)
 			{
 				TileEngine.DrawBaseLayerMap(spriteBatch, header);
 				TileEngine.DrawMiddleLayerMap(spriteBatch, header);
-			}
 
-			if (drawcharacters) TileEngine.DrawCharacters(spriteBatch);
+				if (drawcharacters && !charsDrawn)
+				{
+					TileEngine.DrawCharacters(spriteBatch);
+					charsDrawn = true;
+				}
 
-			foreach (var header in TileEngine.World.Values)
 				TileEngine.DrawTopLayerMap(spriteBatch, header);
+			}
 		}
 
 		public static void DrawBaseLayer(SpriteBatch spriteBatch)
@@ -303,7 +308,6 @@ namespace ValkyrieLibrary.Core
             spriteBatch.Begin();
 
 			TileEngine.Player.Draw(spriteBatch);
-			TileEngine.Camera.CenterOnPoint( new Point(Player.Location.X + (Player.CurrentAnimation.FrameRectangle.Width / 2), Player.Location.Y + (Player.CurrentAnimation.FrameRectangle.Height / 2)) );
 
             spriteBatch.End();
         }

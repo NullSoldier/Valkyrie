@@ -182,24 +182,24 @@ namespace ValkyrieMapEditor
 			int x = (int)(TileEngine.Camera.MapOffset.X);
 			int y = (int)(TileEngine.Camera.MapOffset.Y);
 
-			if (e.Type == ScrollEventType.SmallIncrement)
+			if (e.ScrollOrientation == ScrollOrientation.VerticalScroll)
 			{
-				// Scroll based on direction
-				if (e.ScrollOrientation == ScrollOrientation.VerticalScroll)
-					y = (int)((TileEngine.Camera.MapOffset.Y * -1) + TileEngine.CurrentMapChunk.TileSize.Y);
+				if (e.Type == ScrollEventType.SmallIncrement)
+					y = (Math.Abs(y) + TileEngine.CurrentMapChunk.TileSize.Y) * -1;
 				else
-					x = (int)((TileEngine.Camera.MapOffset.X * -1) + TileEngine.CurrentMapChunk.TileSize.X);
-			}
-			else if (e.Type == ScrollEventType.SmallDecrement)
-			{
-				if (e.ScrollOrientation == ScrollOrientation.VerticalScroll)
-					y = (int)((TileEngine.Camera.MapOffset.Y * -1) - TileEngine.CurrentMapChunk.TileSize.Y);
-				else
-					x = (int)((TileEngine.Camera.MapOffset.X * -1) - TileEngine.CurrentMapChunk.TileSize.X);
-			}
+					y = (Math.Abs(y) - TileEngine.CurrentMapChunk.TileSize.Y) * -1;
 
-			if (x < 0) x = 0;
-			if (y < 0) y = 0;
+				x = x * -1;
+			}
+			else
+			{
+				if (e.Type == ScrollEventType.SmallIncrement)
+					x = (Math.Abs(x) + TileEngine.CurrentMapChunk.TileSize.X) * -1;
+				else
+					x = (Math.Abs(x) - TileEngine.CurrentMapChunk.TileSize.X) * -1;
+
+				y = y * -1;
+			}
 
 			TileEngine.Camera.CenterOriginOnPoint(new Point(x, y));
 		}
