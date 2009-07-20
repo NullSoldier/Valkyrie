@@ -15,6 +15,7 @@ using System.IO;
 using ValkyrieLibrary;
 using System.Windows.Forms;
 using ValkyrieLibrary.Maps;
+using System.Diagnostics;
 
 namespace ValkyrieMapEditor
 {
@@ -172,33 +173,50 @@ namespace ValkyrieMapEditor
 			{
 				TileEngine.Camera.Screen.Width = e.Width;
 				TileEngine.Camera.Screen.Height = e.Height;
+
+				// Move the X origin
+				int DisplayedWidth = (TileEngine.CurrentMapChunk.MapSize.X * TileEngine.CurrentMapChunk.TileSize.X) + (int)TileEngine.Camera.MapOffset.X;
+				if (DisplayedWidth < e.Width)
+				{
+					if (TileEngine.CurrentMapChunk.MapSize.X * TileEngine.CurrentMapChunk.TileSize.X < e.Width)
+						TileEngine.Camera.CenterOriginOnPoint(0, (int)(TileEngine.Camera.MapOffset.Y * -1));
+					else
+					{
+						int newOffset = (e.Width - DisplayedWidth);
+						TileEngine.Camera.CenterOriginOnPoint((int)(TileEngine.Camera.MapOffset.X * -1) - newOffset, (int)(TileEngine.Camera.MapOffset.Y * -1));
+					}
+				}
+
+				// Move the Y origin
+				int DisplayedHeight = (TileEngine.CurrentMapChunk.MapSize.Y * TileEngine.CurrentMapChunk.TileSize.Y) + (int)TileEngine.Camera.MapOffset.Y;
+				if (DisplayedHeight < e.Height)
+				{
+					if (TileEngine.CurrentMapChunk.MapSize.Y * TileEngine.CurrentMapChunk.TileSize.Y < e.Height)
+						TileEngine.Camera.CenterOriginOnPoint((int)(TileEngine.Camera.MapOffset.X * -1), 0);
+					else
+					{
+						int newOffset = (e.Height - DisplayedHeight);
+						TileEngine.Camera.CenterOriginOnPoint((int)(TileEngine.Camera.MapOffset.X * -1), (int)(TileEngine.Camera.MapOffset.Y * -1) - newOffset);
+					}
+				}
+
 			}
+
+			
 		}
 
 		public void ScrolledMap(object sender, ScrollEventArgs e)
 		{
-			if (e.Type == ScrollEventType.EndScroll) return;
-
-			int x = (int)(TileEngine.Camera.MapOffset.X);
-			int y = (int)(TileEngine.Camera.MapOffset.Y);
+			int x = (int)(TileEngine.Camera.MapOffset.X) * -1;
+			int y = (int)(TileEngine.Camera.MapOffset.Y) * -1;
 
 			if (e.ScrollOrientation == ScrollOrientation.VerticalScroll)
 			{
-				if (e.Type == ScrollEventType.SmallIncrement)
-					y = (Math.Abs(y) + TileEngine.CurrentMapChunk.TileSize.Y) * -1;
-				else
-					y = (Math.Abs(y) - TileEngine.CurrentMapChunk.TileSize.Y) * -1;
-
-				x = x * -1;
+				y = e.NewValue * TileEngine.CurrentMapChunk.TileSize.Y;
 			}
 			else
 			{
-				if (e.Type == ScrollEventType.SmallIncrement)
-					x = (Math.Abs(x) + TileEngine.CurrentMapChunk.TileSize.X) * -1;
-				else
-					x = (Math.Abs(x) - TileEngine.CurrentMapChunk.TileSize.X) * -1;
-
-				y = y * -1;
+				x = e.NewValue * TileEngine.CurrentMapChunk.TileSize.X;
 			}
 
 			TileEngine.Camera.CenterOriginOnPoint(new Point(x, y));

@@ -51,9 +51,10 @@
 			this.lstSettings = new System.Windows.Forms.ListView();
 			this.colSetting = new System.Windows.Forms.ColumnHeader();
 			this.colValue = new System.Windows.Forms.ColumnHeader();
+			this.panel1 = new System.Windows.Forms.Panel();
+			this.pctSurface = new System.Windows.Forms.PictureBox();
 			this.VerticalScroll = new System.Windows.Forms.VScrollBar();
 			this.HorizontalScroll = new System.Windows.Forms.HScrollBar();
-			this.pctSurface = new System.Windows.Forms.PictureBox();
 			this.btnNew = new System.Windows.Forms.ToolStripButton();
 			this.btnOpen = new System.Windows.Forms.ToolStripButton();
 			this.btnSave = new System.Windows.Forms.ToolStripButton();
@@ -71,7 +72,6 @@
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.menuStrip = new System.Windows.Forms.MenuStrip();
 			this.toolStripTools = new System.Windows.Forms.ToolStrip();
-			this.panel1 = new System.Windows.Forms.Panel();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -82,10 +82,10 @@
 			this.splitContainer3.Panel1.SuspendLayout();
 			this.splitContainer3.Panel2.SuspendLayout();
 			this.splitContainer3.SuspendLayout();
+			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pctSurface)).BeginInit();
 			this.menuStrip.SuspendLayout();
 			this.toolStripTools.SuspendLayout();
-			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// toolProject
@@ -322,25 +322,17 @@
 			this.colValue.Text = "Value";
 			this.colValue.Width = 155;
 			// 
-			// VerticalScroll
+			// panel1
 			// 
-			this.VerticalScroll.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.VerticalScroll.Location = new System.Drawing.Point(702, -2);
-			this.VerticalScroll.Name = "VerticalScroll";
-			this.VerticalScroll.Size = new System.Drawing.Size(17, 633);
-			this.VerticalScroll.TabIndex = 2;
-			this.VerticalScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TileMap_Scroll);
-			// 
-			// HorizontalScroll
-			// 
-			this.HorizontalScroll.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.HorizontalScroll.Location = new System.Drawing.Point(0, 631);
-			this.HorizontalScroll.Name = "HorizontalScroll";
-			this.HorizontalScroll.Size = new System.Drawing.Size(702, 17);
-			this.HorizontalScroll.TabIndex = 1;
-			this.HorizontalScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TileMap_Scroll);
+			this.panel1.BackColor = System.Drawing.SystemColors.Control;
+			this.panel1.Controls.Add(this.pctSurface);
+			this.panel1.Controls.Add(this.VerticalScroll);
+			this.panel1.Controls.Add(this.HorizontalScroll);
+			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panel1.Location = new System.Drawing.Point(0, 0);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(719, 648);
+			this.panel1.TabIndex = 3;
 			// 
 			// pctSurface
 			// 
@@ -354,6 +346,28 @@
 			this.pctSurface.TabStop = false;
 			this.pctSurface.Resize += new System.EventHandler(this.pctSurface_Resize);
 			this.pctSurface.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pctSurface_MouseClick);
+			// 
+			// VerticalScroll
+			// 
+			this.VerticalScroll.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.VerticalScroll.Location = new System.Drawing.Point(702, -2);
+			this.VerticalScroll.Name = "VerticalScroll";
+			this.VerticalScroll.Size = new System.Drawing.Size(17, 633);
+			this.VerticalScroll.TabIndex = 2;
+			this.VerticalScroll.Visible = false;
+			this.VerticalScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TileMap_Scroll);
+			// 
+			// HorizontalScroll
+			// 
+			this.HorizontalScroll.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.HorizontalScroll.Location = new System.Drawing.Point(0, 631);
+			this.HorizontalScroll.Name = "HorizontalScroll";
+			this.HorizontalScroll.Size = new System.Drawing.Size(702, 17);
+			this.HorizontalScroll.TabIndex = 1;
+			this.HorizontalScroll.Visible = false;
+			this.HorizontalScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TileMap_Scroll);
 			// 
 			// btnNew
 			// 
@@ -503,13 +517,13 @@
 			// btnSelection
 			// 
 			this.btnSelection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.btnSelection.Enabled = false;
 			this.btnSelection.Image = ((System.Drawing.Image)(resources.GetObject("btnSelection.Image")));
 			this.btnSelection.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnSelection.Name = "btnSelection";
 			this.btnSelection.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
 			this.btnSelection.Size = new System.Drawing.Size(34, 22);
 			this.btnSelection.Text = "Selection";
+			this.btnSelection.Click += new System.EventHandler(this.btnSelection_Click);
 			// 
 			// statusStrip1
 			// 
@@ -554,18 +568,6 @@
 			this.toolStripTools.TabIndex = 3;
 			this.toolStripTools.Text = "toolStrip1";
 			// 
-			// panel1
-			// 
-			this.panel1.BackColor = System.Drawing.SystemColors.Control;
-			this.panel1.Controls.Add(this.pctSurface);
-			this.panel1.Controls.Add(this.VerticalScroll);
-			this.panel1.Controls.Add(this.HorizontalScroll);
-			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel1.Location = new System.Drawing.Point(0, 0);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(719, 648);
-			this.panel1.TabIndex = 3;
-			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -593,12 +595,12 @@
 			this.splitContainer3.Panel1.ResumeLayout(false);
 			this.splitContainer3.Panel2.ResumeLayout(false);
 			this.splitContainer3.ResumeLayout(false);
+			this.panel1.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.pctSurface)).EndInit();
 			this.menuStrip.ResumeLayout(false);
 			this.menuStrip.PerformLayout();
 			this.toolStripTools.ResumeLayout(false);
 			this.toolStripTools.PerformLayout();
-			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

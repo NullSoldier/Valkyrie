@@ -41,9 +41,9 @@ namespace ValkyrieLibrary
 			{
 				if(	destRect.Y >= this.MapOffset.Y - destRect.Height )
 				{
-					if (destRect.X <= this.Screen.Width )
+					if (destRect.X <= this.Screen.Width + destRect.Width)
 					{
-						if( destRect.Y <= this.Screen.Height)
+						if( destRect.Y <= this.Screen.Height + destRect.Height)
 							return true;
 					}
 			}	}
@@ -51,10 +51,16 @@ namespace ValkyrieLibrary
 			return false;
 		}
 
+
 		public void CenterOriginOnPoint(Point Point)
 		{
 			this.MapOffset.X = Point.X * -1;
 			this.MapOffset.Y = Point.Y * -1;
+		}
+
+		public void CenterOriginOnPoint(int x, int y)
+		{
+			this.CenterOriginOnPoint(new Point(x, y));
 		}
 
 		public virtual void CenterOnCharacter(BaseCharacter Char)

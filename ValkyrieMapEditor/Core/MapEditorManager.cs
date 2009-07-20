@@ -12,7 +12,7 @@ namespace ValkyrieMapEditor
 {
     public static class MapEditorManager
     {
-		public static Rectangle SelectedTilesRect = new Rectangle(0, 0, 1, 1);
+		public static Rectangle SelectedTilesRect = new Rectangle(0, 0, 0, 0);
         public static MapLayer CurrentLayer = MapLayer.BaseLayer;
 		public static FileInfo CurrentMapLocation;
 		public static bool IgnoreInput = false;
@@ -174,6 +174,7 @@ namespace ValkyrieMapEditor
 			header.MapLocation = new Point(0, 0);
 
 			TileEngine.World.Add(map.Name, header);
+			TileEngine.Camera.CenterOriginOnPoint(0, 0);
 				
 		}
     }

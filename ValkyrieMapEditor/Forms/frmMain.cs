@@ -69,6 +69,8 @@ namespace ValkyrieMapEditor
 			var map = MapEditorManager.LoadMap(MapLocation);
 			MapEditorManager.SetWorldMap(MapEditorManager.LoadMap(MapLocation));
 			this.RefreshMapProperties(map);
+
+			this.UpdateScrollBars();
         }
 
         private void RefreshMapProperties(Map map)
@@ -86,6 +88,10 @@ namespace ValkyrieMapEditor
 			this.pctTileSurface.TileSize = new Point(map.TileSize.X, map.TileSize.Y);
 			this.pctTileSurface.Invalidate();
 
+			this.UpdateScrollBars();
+			this.HorizontalScroll.Value = 0;
+			this.VerticalScroll.Value = 0;
+
 			this.btnMapProperties.Enabled = true;
 			this.toolSave.Enabled = true;
 			this.toolSaveAs.Enabled = true;
@@ -100,8 +106,26 @@ namespace ValkyrieMapEditor
         }
 
 		private void pctSurface_Resize(object sender, EventArgs e)
-		{            
+		{
 			this.ScreenResized(this, new ScreenResizedEventArgs(this.pctSurface.Size.Width, this.pctSurface.Size.Height));
+
+			this.UpdateScrollBars();
+		}
+
+		private void UpdateScrollBars()
+		{
+			if (!TileEngine.IsMapLoaded) return;
+
+			this.HorizontalScroll.Visible = (TileEngine.CurrentMapChunk.MapSize.X * TileEngine.CurrentMapChunk.TileSize.X > this.pctSurface.Size.Width);
+			this.VerticalScroll.Visible = (TileEngine.CurrentMapChunk.MapSize.Y * TileEngine.CurrentMapChunk.TileSize.Y > this.pctSurface.Size.Height);
+
+			int xTilesInView = ((this.pctSurface.Width + this.VerticalScroll.Width) / TileEngine.CurrentMapChunk.TileSize.X);
+			int xUnseenAmount = TileEngine.CurrentMapChunk.MapSize.X - xTilesInView;
+			this.HorizontalScroll.Maximum = xUnseenAmount + this.HorizontalScroll.LargeChange - 1;
+
+			int yTilesInView = ((this.pctSurface.Height + this.HorizontalScroll.Height) / TileEngine.CurrentMapChunk.TileSize.Y);
+			int yUnseenAmount = TileEngine.CurrentMapChunk.MapSize.Y - yTilesInView;
+			this.VerticalScroll.Maximum = yUnseenAmount + this.VerticalScroll.LargeChange - 1;
 		}
 
         private void pctSurface_MouseClick(object sender, MouseEventArgs e)
@@ -119,7 +143,8 @@ namespace ValkyrieMapEditor
                 this.RefreshMapProperties(TileEngine.CurrentMapChunk);
                 
                 MapEditorManager.SetWorldMap(MapEditorManager.ApplySettings(TileEngine.CurrentMapChunk));
-				//TileEngine.CurrentMapChunk = MapEditorManager.ApplySettings(TileEngine.CurrentMapChunk);
+
+				this.UpdateScrollBars();
             }
         }
 
@@ -275,6 +300,11 @@ namespace ValkyrieMapEditor
 			
 			if( handler != null)
 				this.ScrolledMap(sender, e);
+		}
+
+		private void btnSelection_Click(object sender, EventArgs e)
+		{
+			this.UpdateScrollBars();
 		}
 
 	}
