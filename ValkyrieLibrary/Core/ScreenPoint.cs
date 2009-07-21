@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using Microsoft.Xna.Framework;
-using System.Xml;
 
 namespace ValkyrieLibrary.Core
 {

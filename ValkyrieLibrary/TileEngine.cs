@@ -22,12 +22,12 @@ namespace ValkyrieLibrary.Core
 		{
 			get
 			{
-                if (TileEngine.Player == null)
+                if (TileEngine.Player == null || TileEngine.WorldManager.CurrentWorld == null)
                     return null;
 
 				if( TileEngine.currentmapchunk == null)
 				{
-					foreach (var map in TileEngine.World.Values)
+                    foreach (var map in TileEngine.WorldManager.CurrentWorld.WorldList.Values)
 					{
                         MapPoint playerLoc = TileEngine.Player.Location.ToMapPoint();
                         Rectangle mapSize = map.MapLocation.ToRect(map.Map.MapSize.ToPoint());
@@ -40,7 +40,6 @@ namespace ValkyrieLibrary.Core
 						
 					}
 				}
-
 				return TileEngine.currentmapchunk;
 			}			
 		}
@@ -48,16 +47,26 @@ namespace ValkyrieLibrary.Core
 		private static Map currentmapchunk;
 		private static Viewport viewport;
 
-        public static TextureManager TextureManager;
-        public static ModuleManager ModuleManager;
         public static BaseCamera Camera;
         public static Dictionary<string, string> Configuration;
-		public static CollisionManager CollisionManager;
-		public static Dictionary<string, MapHeader> World;
         public static Player Player = null;
-        public static EventManager EventSystem;
+
+        public static TextureManager TextureManager;
+        public static ModuleManager ModuleManager;
+        public static CollisionManager CollisionManager;
+        public static WorldManager WorldManager;
+        public static EventManager EventManager;
+
 		public static int TileSize = 32;
-        
+
+        public static Dictionary<string,MapHeader> CurWorld
+        {
+            get
+            {
+                return TileEngine.WorldManager.CurrentWorld.WorldList;
+            }
+        }
+
 		/*public static Map Map
 		{
 			get { return TileEngine.CurrentMapChunk; }
@@ -85,8 +94,8 @@ namespace ValkyrieLibrary.Core
             TileEngine.Player = new Player();
             TileEngine.ModuleManager = new ModuleManager();
             TileEngine.Configuration = new Dictionary<string, string>();
-			TileEngine.World = new Dictionary<string, MapHeader>();
-            TileEngine.EventSystem = new EventManager();
+            TileEngine.WorldManager = new WorldManager();
+            TileEngine.EventManager = new EventManager();
 		}
 
         public static void Load(FileInfo Configuration)
@@ -109,34 +118,7 @@ namespace ValkyrieLibrary.Core
                 TileEngine.ModuleManager.PushModuleToScreen(TileEngine.Configuration["DefaultModule"]);
         }
 
-		public static void LoadWorld(FileInfo WorldConfiguration)
-		{
-			XmlDocument doc = new XmlDocument();
-			doc.Load(WorldConfiguration.FullName);
 
-			XmlNodeList nodes = doc.GetElementsByTagName("World");
-			foreach (XmlNode node in nodes[0].ChildNodes)
-			{
-				string name = string.Empty;
-				string path = string.Empty;
-				int x = 0, y = 0;
-
-				foreach (XmlNode subnode in node.ChildNodes)
-				{
-					if (subnode.Name == "Name")
-						name = subnode.InnerText;
-					else if (subnode.Name == "FilePath")
-						path = subnode.InnerText;
-					else if (subnode.Name == "X")
-						x = Convert.ToInt32(subnode.InnerText);
-					else if (subnode.Name == "Y")
-						y = Convert.ToInt32(subnode.InnerText);
-				}
-
-				MapHeader header = new MapHeader(name, path, new MapPoint(x, y));
-				TileEngine.World.Add(header.MapName, header);
-			}
-		}
 
 		public static void ClearCurrentMapChunk()
 		{
@@ -145,15 +127,15 @@ namespace ValkyrieLibrary.Core
 
 		public static Point GlobalPixelPointToLocal(MapPoint localpoint)
 		{
-			int x = localpoint.X - (TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.X - TileEngine.CurrentMapChunk.TileSize.X);
-			int y = localpoint.Y - (TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.Y - TileEngine.CurrentMapChunk.TileSize.Y);
+			int x = localpoint.X - (TileEngine.CurWorld[TileEngine.CurrentMapChunk.Name].MapLocation.X - TileEngine.CurrentMapChunk.TileSize.X);
+			int y = localpoint.Y - (TileEngine.CurWorld[TileEngine.CurrentMapChunk.Name].MapLocation.Y - TileEngine.CurrentMapChunk.TileSize.Y);
 
 			return new Point(x, y);
 		}
 
 		public static MapPoint GlobalTilePointToLocal(MapPoint localpoint)
 		{
-            MapPoint temp = localpoint - TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation;
+            MapPoint temp = localpoint - TileEngine.CurWorld[TileEngine.CurrentMapChunk.Name].MapLocation;
             return temp;
 
 		}
@@ -163,7 +145,7 @@ namespace ValkyrieLibrary.Core
 			// Run tile engine logic here
             ModuleManager.CurrentModule.Tick(time);
 
-            foreach (var header in TileEngine.World.Values)
+            foreach (var header in TileEngine.CurWorld.Values)
             {
                 if (header.Map.IsVisableToPlayer())
                     header.Map.Update(time);
@@ -180,7 +162,7 @@ namespace ValkyrieLibrary.Core
 		{
 			bool charsDrawn = false;
 
-			foreach (var header in TileEngine.World.Values)
+			foreach (var header in TileEngine.CurWorld.Values)
 			{
                 if (!header.Map.IsVisableToPlayer())
                     continue;
@@ -202,7 +184,7 @@ namespace ValkyrieLibrary.Core
 		{
             spriteBatch.Begin();
 
-            foreach (var header in TileEngine.World.Values)
+            foreach (var header in TileEngine.CurWorld.Values)
             {
                 if (header.Map.IsVisableToPlayer())
                     TileEngine.DrawBaseLayerMap(spriteBatch, header);
@@ -241,7 +223,7 @@ namespace ValkyrieLibrary.Core
 		{
             spriteBatch.Begin();
 
-            foreach (var header in TileEngine.World.Values)
+            foreach (var header in TileEngine.CurWorld.Values)
             {
                 if (header.Map.IsVisableToPlayer())
                     TileEngine.DrawMiddleLayerMap(spriteBatch, header);
@@ -279,7 +261,7 @@ namespace ValkyrieLibrary.Core
 		public static void DrawTopLayer(SpriteBatch spriteBatch)
 		{
             spriteBatch.Begin();
-            foreach (var header in TileEngine.World.Values)
+            foreach (var header in TileEngine.CurWorld.Values)
             {
                 if (header.Map.IsVisableToPlayer())
                     DrawTopLayerMap(spriteBatch, header);

@@ -186,18 +186,27 @@ namespace ValkyrieMapEditor
 
 		public static void SetWorldMap(Map map)
 		{
-			foreach (MapHeader tmpHeader in TileEngine.World.Values)
-				tmpHeader.Unload();
+            if (TileEngine.WorldManager.CurrentWorld != null)
+            {
+                foreach (MapHeader tmpHeader in TileEngine.CurWorld.Values)
+                    tmpHeader.Unload();
 
-			TileEngine.World.Clear();
+                TileEngine.CurWorld.Clear();
+    
+            }
+
+            TileEngine.WorldManager.WorldsList.Clear();
 
 			MapHeader header = new MapHeader(map.Name, string.Empty);
 			header.Map = map;
 			header.MapLocation = new MapPoint(0, 0);
 
-			TileEngine.World.Add(map.Name, header);
-			TileEngine.Camera.CenterOriginOnPoint(0, 0);
-				
+            World w = new World();
+            w.WorldList.Add(map.Name, header);
+
+            TileEngine.WorldManager.WorldsList.Add(map.Name, w);
+            TileEngine.WorldManager.SetWorld(map.Name, null);
+            TileEngine.Camera.CenterOriginOnPoint(0, 0);
 		}
     }
 

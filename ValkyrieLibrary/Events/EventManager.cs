@@ -18,7 +18,8 @@ namespace ValkyrieLibrary.Events
         public EventManager()
         {
             EventHandlerList = new List<IEventHandler>();
-            
+
+            this.EventHandlerList.Add(new LoadEvent());
         }
 
         //A button pressed

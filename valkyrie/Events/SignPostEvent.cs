@@ -12,7 +12,11 @@ namespace ValkyrieLibrary.Events
         public SignPostEvent()
         {
             Type = "SignPost";
-            ActivationType = ActivationTypes.Activate;
+        }
+
+        public override bool MeetsCriteria(ActivationTypes activationType)
+        {
+            return (activationType == ActivationTypes.Activate || activationType == ActivationTypes.LookActivate);
         }
 
         public override void Trigger(Player player, Event e)

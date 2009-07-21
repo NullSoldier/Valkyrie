@@ -55,10 +55,11 @@ namespace ValkyrieLibrary
             TileEngine.ModuleManager.AddModule(new GameModule(), "Game");
 
             TileEngine.Load(new FileInfo("Data/TileEngineConfig.xml"));
-			TileEngine.LoadWorld(new FileInfo("Data/PokeWorld.xml"));
+			TileEngine.WorldManager.Load(new FileInfo("Data/PokeWorld.xml"));
 
-            TileEngine.EventSystem.EventHandlerList.Add(new SignPostEvent());
-            TileEngine.EventSystem.EventHandlerList.Add(new JumpEvent());
+            TileEngine.EventManager.EventHandlerList.Add(new SignPostEvent());
+            TileEngine.EventManager.EventHandlerList.Add(new JumpEvent());
+            TileEngine.EventManager.EventHandlerList.Add(new LoadEvent());
         }
 
         protected override void UnloadContent()

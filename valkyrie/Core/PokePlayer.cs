@@ -15,9 +15,6 @@ namespace ValkyrieLibrary.Characters
 {
 	class PokePlayer : Player, ICollidable
 	{
-		public bool IsMoving = false;
-        public bool IsJumping = false;
-
 		public float MoveDelay = 0.002f;
 		public int Speed = 2;
 		public float LastMoveTime = 0;
@@ -52,7 +49,7 @@ namespace ValkyrieLibrary.Characters
 
         public void AButton()
         {
-            if (TileEngine.EventSystem.Action(this))
+            if (TileEngine.EventManager.Action(this))
                 return;
 
             if (pokeMessage != null)
@@ -82,7 +79,7 @@ namespace ValkyrieLibrary.Characters
 			if (this.IsMoving)
 				return;
 
-            TileEngine.EventSystem.Movement(this);
+            TileEngine.EventManager.Movement(this);
                 
 			Directions tmpDirection = this.Location.ToPoint().RelativeDirection(Destination.ToPoint());
 
@@ -176,7 +173,7 @@ namespace ValkyrieLibrary.Characters
 
                     if (!this.IsJumping && !TileEngine.CollisionManager.CheckCollision(this, this.MovingDestination))
                     {
-                        if (!TileEngine.EventSystem.Collision(this))
+                        if (!TileEngine.EventManager.Collision(this))
                             ReachedMoveDestination();
                     }
                     else
@@ -203,12 +200,12 @@ namespace ValkyrieLibrary.Characters
             this.MovingDestination = newDest;
         }
 
-		public void ReachedMoveDestination()
+		public override void ReachedMoveDestination()
 		{
-			this.IsMoving = false;
 			this.MovingDestination = new ScreenPoint(0, 0); // eh?
 			this.LastMoveTime = 0;
-            this.IsJumping = false;
+
+            base.ReachedMoveDestination();
 		}
 
 

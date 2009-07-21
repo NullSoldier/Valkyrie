@@ -28,6 +28,8 @@ namespace ValkyrieLibrary.Events
 
         public Event(XmlNode node)
         {
+            Parms = new Dictionary<String, String>();
+
 			foreach (XmlNode cnode in node.ChildNodes)
 			{
                 switch (cnode.Name)
@@ -43,19 +45,22 @@ namespace ValkyrieLibrary.Events
 
         public void LoadParms(XmlNode root)
         {
-            foreach (XmlNode child in root.ChildNodes)
+            foreach (XmlNode parameter in root.ChildNodes)
             {
                 String name = "";
                 String type = "";
 
-                switch (child.Name)
+                foreach (XmlNode child in parameter.ChildNodes)
                 {
-                    case "Name": name = child.InnerText; break;
-                    case "Type": type = child.InnerText; break;
+                    switch (child.Name)
+                    {
+                        case "Name": name = child.InnerText; break;
+                        case "Type": type = child.InnerText; break;
+                    }
                 }
 
                 if (name != "" && type != "")
-                    Parms.Add(name, type); 
+                    Parms.Add(name, type);
             }
         }
 

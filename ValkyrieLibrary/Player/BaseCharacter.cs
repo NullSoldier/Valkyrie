@@ -11,6 +11,18 @@ namespace ValkyrieLibrary.Characters
 {
     public abstract class BaseCharacter
     {
+        public bool IsMoving = false;
+        public bool IsJumping = false;
+        public string Name;
+
+        public Texture2D Sprite;
+        public ScreenPoint Location;
+        public Directions Direction;
+
+        public Dictionary<string, FrameAnimation> Animations;
+        public string CurrentAnimationName;
+        public bool Animating;
+
 		public BaseCharacter()
 		{
 			this.Animations = new Dictionary<string, FrameAnimation>();
@@ -22,20 +34,17 @@ namespace ValkyrieLibrary.Characters
             this.Sprite = null;
 		}
 
-        public string Name;
-
-        public Texture2D Sprite;
-		public ScreenPoint Location;
-		public Directions Direction;
-		
-		public Dictionary<string, FrameAnimation> Animations;
-		public string CurrentAnimationName;
-		public bool Animating;
 
 		public FrameAnimation CurrentAnimation
 		{
 			get { return this.Animations[this.CurrentAnimationName]; }
 		}
+
+        public virtual void ReachedMoveDestination()
+        {
+            this.IsMoving = false;
+            this.IsJumping = false;
+        }
 
 		public Vector2 DrawScreenLocation
 		{

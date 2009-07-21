@@ -29,10 +29,10 @@ namespace ValkyrieMapEditor
         public static SpriteFont font;
 
 		GraphicsDeviceManager graphics;
-        GraphicsDeviceManager graphics2;
+        //GraphicsDeviceManager graphics2;
         SpriteBatch spriteBatch;
 
-		private Map testMap;
+		//private Map testMap;
 		private IntPtr drawSurface;
         private IntPtr drawTilesSurface;
 		private Texture2D CollisionSprite;

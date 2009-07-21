@@ -82,7 +82,7 @@ namespace ValkyrieMapEditor.Core
             MapPoint size = new MapPoint(this.EndSelectedPoint.X - this.SelectedPoint.X, this.EndSelectedPoint.Y - this.SelectedPoint.Y);
 
 
-            Event e = TileEngine.EventSystem.GetEventInRect(point, size);
+            Event e = TileEngine.EventManager.GetEventInRect(point, size);
 
             frmMapEvent frm = new frmMapEvent();
 
@@ -107,11 +107,11 @@ namespace ValkyrieMapEditor.Core
                 //e.ParmOne = frm.tbArgOne.Text;
                 //e.ParmTwo = frm.tbArgTwo.Text;
                 e.Dir = frm.cbDir.Text;
-                TileEngine.EventSystem.SetEvent(e);
+                TileEngine.EventManager.SetEvent(e);
             }
             else if (res == DialogResult.Abort)
             {
-                TileEngine.EventSystem.DelEvent(e);
+                TileEngine.EventManager.DelEvent(e);
             }
         }
 

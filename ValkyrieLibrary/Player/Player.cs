@@ -39,5 +39,5 @@ namespace ValkyrieLibrary.Characters
 		{
 			throw new NotImplementedException();
 		}
-	}
+    }
 }

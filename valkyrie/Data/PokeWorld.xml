@@ -1,28 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <XnaContent>
-  <World>
-    
-    <MapLoc>
-      <Name>PalletTown</Name>
-      <FilePath>PalletTown.xml</FilePath>
-      <X>12</X>
-      <Y>80</Y>
-    </MapLoc>
+  <Worlds>
+    <World Name="Main">
+      <MapLoc>
+        <Name>PalletTown</Name>
+        <FilePath>PalletTown.xml</FilePath>
+        <X>12</X>
+        <Y>80</Y>
+      </MapLoc>
 
-    <MapLoc>
-      <Name>Route1</Name>
-      <FilePath>Route1.xml</FilePath>
-      <X>12</X>
-      <Y>40</Y>
-    </MapLoc>
+      <MapLoc>
+        <Name>Route1</Name>
+        <FilePath>Route1.xml</FilePath>
+        <X>12</X>
+        <Y>40</Y>
+      </MapLoc>
 
-    <MapLoc>
-      <Name>ViridianCity</Name>
-      <FilePath>ViridianCity.xml</FilePath>
-      <X>0</X>
-      <Y>0</Y>
-    </MapLoc>
+      <MapLoc>
+        <Name>ViridianCity</Name>
+        <FilePath>ViridianCity.xml</FilePath>
+        <X>0</X>
+        <Y>0</Y>
+      </MapLoc>
+    </World>
+    <World Name="PalletTown_HouseOne">
+      <MapLoc>
+        <Name>MyHome</Name>
+        <FilePath>PalletTown_HouseOne.xml</FilePath>
+        <X>0</X>
+        <Y>0</Y>
+      </MapLoc>
+    </World>
+  </Worlds>
 
-  </World>
 </XnaContent>

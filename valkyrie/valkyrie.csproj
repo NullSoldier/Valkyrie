@@ -127,6 +127,7 @@
     <Content Include="Maps\PalletTown.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Maps\PalletTown_HouseOne.xml" />
     <Content Include="Maps\Route1.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
