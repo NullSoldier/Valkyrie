@@ -12,7 +12,7 @@ namespace ValkyrieLibrary.Events
         String Type { get; set; }
 
         bool MeetsCriteria(ActivationTypes activationType);
-        void Trigger(Player player, Event e);
+        void Trigger(BaseCharacter player, Event e);
     }
 
     public enum ActivationTypes

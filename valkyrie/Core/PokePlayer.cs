@@ -13,21 +13,10 @@ using ValkyrieLibrary.Core;
 
 namespace ValkyrieLibrary.Characters
 {
-	class PokePlayer : Player, ICollidable
+	class PokePlayer : Player
 	{
-		public float MoveDelay = 0.002f;
-		public int Speed = 2;
-		public float LastMoveTime = 0;
-		public ScreenPoint MovingDestination;
-
-        private PokeMessage pokeMessage;
-
-
 		public PokePlayer()
 		{
-			this.CurrentAnimationName = "South";
-			this.Name = "NullSoldier";
-
 			if (this.Gender == Genders.Male)
 			{
                 this.Animations.Add("North", new FrameAnimation(new Rectangle(56, 0, 28, 42), 1));
@@ -42,23 +31,14 @@ namespace ValkyrieLibrary.Characters
 			}
 		}
 
-        public void DisplayMessage(String title, String msg)
+        public override void DisplayMessage(String title, String msg)
         {
-            pokeMessage = new PokeMessage(title, msg);
         }
 
         public void AButton()
         {
             if (TileEngine.EventManager.Action(this))
                 return;
-
-            if (pokeMessage != null)
-            {
-                if (!pokeMessage.Page())
-                    pokeMessage = null;
-
-                return;
-            }
         }
 
         public override void Action(String type)
@@ -71,152 +51,10 @@ namespace ValkyrieLibrary.Characters
             }
         }
 
-		public override void Move(ScreenPoint Destination)
-		{
-            if (this.pokeMessage != null)
-                return;
-
-			if (this.IsMoving)
-				return;
-
-            TileEngine.EventManager.Movement(this);
-                
-			Directions tmpDirection = this.Location.ToPoint().RelativeDirection(Destination.ToPoint());
-
-			MapPoint point = Destination.ToMapPoint();
-
-            if (tmpDirection == Directions.North)
-            {
-                this.CurrentAnimationName = "WalkNorth";
-                Direction = Directions.North;
-            }
-            else if (tmpDirection == Directions.East)
-            {
-                this.CurrentAnimationName = "WalkEast";
-                Direction = Directions.East;
-            }
-            else if (tmpDirection == Directions.South)
-            {
-                this.CurrentAnimationName = "WalkSouth";
-                Direction = Directions.South;
-            }
-            else if (tmpDirection == Directions.West)
-            {
-                this.CurrentAnimationName = "WalkWest";
-                Direction = Directions.West;
-            }
-
-			this.MovingDestination = new ScreenPoint(point.X * TileEngine.CurrentMapChunk.TileSize.X, point.Y * TileEngine.CurrentMapChunk.TileSize.Y);
-			
-			// Clear the chunk when moving across boundries
-			if( !TileEngine.CurrentMapChunk.TilePointInMapGlobal(new MapPoint(point.X, point.Y)))
-				TileEngine.ClearCurrentMapChunk();
-
-			this.IsMoving = true;
-		}
-
 		public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
 		{
 			spriteBatch.DrawString(PokeGame.font, this.Name, new Vector2(this.DrawScreenLocation.X - (PokeGame.font.MeasureString(this.Name).X / 4), this.DrawScreenLocation.Y - 15), Color.Black);
 			base.Draw(spriteBatch);
 		}
-
-        public override void DrawOverlay(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
-        {
-            if (pokeMessage != null)
-                pokeMessage.Draw(spriteBatch);
-        }
-
-		public override void Update(GameTime gameTime)
-		{
-			if (!this.IsMoving && this.CurrentAnimationName.Contains("Walk"))
-				this.CurrentAnimationName = this.CurrentAnimationName.Substring(4, this.CurrentAnimationName.Length - 4);
-
-			if (this.IsMoving)
-			{
-				this.LastMoveTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-				if (this.LastMoveTime >= this.MoveDelay)
-				{
-					int x = this.Location.X;
-					int y = this.Location.Y;
-
-					if (this.Location.X < this.MovingDestination.X)
-					{
-						if (x + this.Speed > this.MovingDestination.X)
-							x = this.MovingDestination.X;
-						else
-							x += this.Speed;
-					}
-					else if (this.Location.X > this.MovingDestination.X)
-					{
-						if (x - this.Speed < this.MovingDestination.X)
-							x = this.MovingDestination.X;
-						else
-							x -= this.Speed;
-					}
-
-					if (this.Location.Y < this.MovingDestination.Y)
-					{
-						if (y + this.Speed > this.MovingDestination.Y)
-							y = this.MovingDestination.Y;
-						else
-							y += this.Speed;
-					}
-					else if (this.Location.Y > this.MovingDestination.Y)
-					{
-						if (y - this.Speed < this.MovingDestination.Y)
-							y = this.MovingDestination.Y;
-						else
-							y -= this.Speed;
-					}
-
-
-                    if (!this.IsJumping && !TileEngine.CollisionManager.CheckCollision(this, this.MovingDestination))
-                    {
-                        if (!TileEngine.EventManager.Collision(this))
-                            ReachedMoveDestination();
-                    }
-                    else
-                    {
-                        this.Location = new ScreenPoint(x, y);
-                    }
-
-					this.LastMoveTime = 0;
-				}
-
-				if (this.Location == this.MovingDestination)
-					ReachedMoveDestination();
-			}
-
-			base.Update(gameTime);
-		}
-
-        public void JumpWall()
-        {
-            this.IsJumping = true;
-
-            ScreenPoint dest = new ScreenPoint(TileEngine.Player.Location.X, TileEngine.Player.Location.Y);
-            ScreenPoint newDest = dest + (GetLookPoint().ToScreenPoint() * 2);
-            this.MovingDestination = newDest;
-        }
-
-		public override void ReachedMoveDestination()
-		{
-			this.MovingDestination = new ScreenPoint(0, 0); // eh?
-			this.LastMoveTime = 0;
-
-            base.ReachedMoveDestination();
-		}
-
-
-
-		#region ICollidable Members
-
-		public ScreenPoint GetLocation()
-		{
-			return this.Location;
-		}
-
-		#endregion
 	}
 }

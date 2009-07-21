@@ -18,6 +18,8 @@ namespace ValkyrieLibrary.Events
         public EventManager()
         {
             EventHandlerList = new List<IEventHandler>();
+            this.EventHandlerList.Add(new SignPostEvent());
+            this.EventHandlerList.Add(new JumpEvent());
             this.EventHandlerList.Add(new LoadEvent());
         }
 
@@ -35,17 +37,17 @@ namespace ValkyrieLibrary.Events
             return res;
         }
 
-        public bool Collision(Player player)
+        public bool Collision(BaseCharacter player)
         {
             return HandleEvent(player, ActivationTypes.Collision);
         }
 
-        public bool Movement(Player player)
+        public bool Movement(BaseCharacter player)
         {
             return HandleEvent(player, ActivationTypes.Movement);
         }
 
-        public bool HandleEvent(Player player, ActivationTypes type)
+        public bool HandleEvent(BaseCharacter player, ActivationTypes type)
         {
             MapPoint pos = player.MapLocation;
 

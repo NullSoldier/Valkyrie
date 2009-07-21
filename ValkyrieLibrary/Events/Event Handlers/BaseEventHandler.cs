@@ -23,6 +23,6 @@ namespace ValkyrieLibrary.Events
             return (this.ActivationType == activationType);
         }
 
-        public abstract void Trigger(Player player, Event e);
+        public abstract void Trigger(BaseCharacter player, Event e);
     }
 }

@@ -20,7 +20,7 @@ namespace ValkyrieLibrary.Events
             this.ActivationType = ActivationTypes.Collision;
         }
 
-        public override void Trigger(Player player, Event e)
+        public override void Trigger(BaseCharacter player, Event e)
         {
             String name = e.Parms["World"];
             String pos = e.Parms["Entry"];

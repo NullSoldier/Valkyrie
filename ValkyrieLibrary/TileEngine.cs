@@ -18,75 +18,51 @@ namespace ValkyrieLibrary.Core
 {
 	public static class TileEngine
 	{
-		public static Map CurrentMapChunk
-		{
-			get
-			{
-                if (TileEngine.Player == null || TileEngine.WorldManager.CurrentWorld == null)
-                    return null;
-
-				if( TileEngine.currentmapchunk == null)
-				{
-                    foreach (var map in TileEngine.WorldManager.CurrentWorld.WorldList.Values)
-					{
-                        MapPoint playerLoc = TileEngine.Player.Location.ToMapPoint();
-                        Rectangle mapSize = map.MapLocation.ToRect(map.Map.MapSize.ToPoint());
-
-						if (mapSize.Contains(playerLoc.ToPoint()) == true)
-                        {
-							TileEngine.currentmapchunk = map.Map;
-							break;
-						}
-						
-					}
-				}
-				return TileEngine.currentmapchunk;
-			}			
-		}
-
-		private static Map currentmapchunk;
-		private static Viewport viewport;
-
-        public static BaseCamera Camera;
-        public static Dictionary<string, string> Configuration;
+        public static Viewport Viewport;
+        public static BaseCamera Camera = null;
+        public static Dictionary<string, string> Configuration = null;
         public static Player Player = null;
 
-        public static TextureManager TextureManager;
-        public static ModuleManager ModuleManager;
-        public static CollisionManager CollisionManager;
-        public static WorldManager WorldManager;
-        public static EventManager EventManager;
+        public static TextureManager TextureManager = null;
+        public static ModuleManager ModuleManager = null;
+        public static CollisionManager CollisionManager = null;
+        public static WorldManager WorldManager = null;
+        public static EventManager EventManager = null;
 
 		public static int TileSize = 32;
-
-        public static Dictionary<string,MapHeader> CurWorld
+        public static bool IsMapLoaded { get { return (TileEngine.CurrentMapChunk != null); } }
+        public static Dictionary<string,MapHeader> CurWorld {get {return TileEngine.WorldManager.CurrentWorld.WorldList;}}
+		
+        private static Map currentmapchunk;
+        public static Map CurrentMapChunk
         {
             get
             {
-                return TileEngine.WorldManager.CurrentWorld.WorldList;
+                if (TileEngine.Player == null || TileEngine.WorldManager.CurrentWorld == null)
+                    return null;
+
+                if (TileEngine.currentmapchunk == null)
+                {
+                    foreach (var map in TileEngine.WorldManager.CurrentWorld.WorldList.Values)
+                    {
+                        MapPoint playerLoc = TileEngine.Player.Location.ToMapPoint();
+                        Rectangle mapSize = map.MapLocation.ToRect(map.Map.MapSize.ToPoint());
+
+                        if (mapSize.Contains(playerLoc.ToPoint()) == true)
+                        {
+                            TileEngine.currentmapchunk = map.Map;
+                            break;
+                        }
+
+                    }
+                }
+                return TileEngine.currentmapchunk;
             }
         }
 
-		/*public static Map Map
-		{
-			get { return TileEngine.CurrentMapChunk; }
-			set { TileEngine.SetMap(value); }
-		}*/
-
-		public static bool IsMapLoaded
-		{
-			get { return (TileEngine.CurrentMapChunk != null); }
-		}
-
-		public static Viewport Viewport
-		{
-			get { return TileEngine.viewport; }
-			set { TileEngine.viewport = value; }
-		}
-
-		static TileEngine()
-		{
-		}
+        static TileEngine()
+        {
+        }
 
 		public static void Initialize(ContentManager content, GraphicsDevice device)
 		{
@@ -161,8 +137,6 @@ namespace ValkyrieLibrary.Core
 
 		public static void DrawAllLayers(SpriteBatch spriteBatch, bool drawcharacters)
 		{
-			bool charsDrawn = false;
-
             spriteBatch.Begin();
 
 			foreach (var header in TileEngine.CurWorld.Values)
