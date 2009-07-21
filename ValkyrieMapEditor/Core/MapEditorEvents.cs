@@ -104,8 +104,8 @@ namespace ValkyrieMapEditor.Core
             if (res == DialogResult.OK)
             {
                 e.Type = frm.cbType.Text;
-                e.ParmOne = frm.tbArgOne.Text;
-                e.ParmTwo = frm.tbArgTwo.Text;
+                //e.ParmOne = frm.tbArgOne.Text;
+                //e.ParmTwo = frm.tbArgTwo.Text;
                 e.Dir = frm.cbDir.Text;
                 TileEngine.EventSystem.SetEvent(e);
             }

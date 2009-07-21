@@ -19,8 +19,8 @@ namespace ValkyrieMapEditor.Forms
 
         public void LoadEvent(Event e)
         {
-            this.tbArgOne.Text = e.ParmOne;
-            this.tbArgTwo.Text = e.ParmTwo;
+            //this.tbArgOne.Text = e.ParmOne;
+            //this.tbArgTwo.Text = e.ParmTwo;
 
             cbType.Text = e.Type;
             cbDir.Text = e.Dir;

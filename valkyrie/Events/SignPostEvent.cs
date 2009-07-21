@@ -18,7 +18,7 @@ namespace ValkyrieLibrary.Events
         public override void Trigger(Player player, Event e)
         {
             if (typeof(PokePlayer) == player.GetType())
-                ((PokePlayer)player).DisplayMessage(e.ParmOne, e.ParmTwo);
+                ((PokePlayer)player).DisplayMessage(e.Parms["Title"], e.Parms["Text"]);
         }
     }
 }

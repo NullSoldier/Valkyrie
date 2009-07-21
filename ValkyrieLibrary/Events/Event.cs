@@ -13,18 +13,17 @@ namespace ValkyrieLibrary.Events
         public MapPoint Location { get; set; }
         public MapPoint Size { get; set; }
         public String Type { get; set; }
-        public String ParmOne { get; set; }
-        public String ParmTwo { get; set; }
         public String Dir { get; set; }
+
+        public Dictionary<String, String> Parms;
 
         public Event(MapPoint loc, MapPoint size)
         {
             Location = loc;
             Size = size;
             Type = "";
-            ParmOne = "";
-            ParmTwo = "";
             Dir = "";
+            Parms = new Dictionary<String, String>();
         }
 
         public Event(XmlNode node)
@@ -35,11 +34,28 @@ namespace ValkyrieLibrary.Events
                 {
                     case "Type": Type = cnode.InnerText; break;
                     case "Dir": Dir = cnode.InnerText; break;
-                    case "ParmOne": ParmOne = cnode.InnerText; break;
-                    case "ParmTwo": ParmTwo = cnode.InnerText; break;
+                    case "Parameters": LoadParms(cnode); break;
                     case "Location": Location = new MapPoint(cnode); break;
                     case "Size": Size = new MapPoint(cnode); break;
                 }
+            }
+        }
+
+        public void LoadParms(XmlNode root)
+        {
+            foreach (XmlNode child in root.ChildNodes)
+            {
+                String name = "";
+                String type = "";
+
+                switch (child.Name)
+                {
+                    case "Name": name = child.InnerText; break;
+                    case "Type": type = child.InnerText; break;
+                }
+
+                if (name != "" && type != "")
+                    Parms.Add(name, type); 
             }
         }
 
@@ -48,8 +64,11 @@ namespace ValkyrieLibrary.Events
             this.Type = e.Type;
             this.Location = e.Location;
             this.Size = e.Size;
-            this.ParmOne = e.ParmOne;
-            this.ParmTwo = e.ParmTwo;
+
+            foreach (var parm in e.Parms.Keys)
+            {
+                this.Parms.Add(parm, e.Parms[parm]);
+            }
         }
 
         public Rectangle ToRect()
@@ -88,20 +107,30 @@ namespace ValkyrieLibrary.Events
             XmlElement type = doc.CreateElement("Type");
             type.InnerText = Type;
 
-            XmlElement pone = doc.CreateElement("ParmOne");
-            pone.InnerText = ParmOne;
-
-            XmlElement ptwo = doc.CreateElement("ParmTwo");
-            ptwo.InnerText = ParmTwo;
-
             XmlElement dir = doc.CreateElement("Dir");
             dir.InnerText = Dir;
+
+            XmlElement parmRoot = doc.CreateElement("Parameters");
+
+            foreach (var parm in this.Parms.Keys)
+            {
+                XmlElement pname = doc.CreateElement("Name");
+                pname.InnerText = parm;
+
+                XmlElement ptype = doc.CreateElement("Type");
+                ptype.InnerText = this.Parms[parm];
+
+                XmlElement parmNode = doc.CreateElement("Parameter");
+                parmNode.AppendChild(pname);
+                parmNode.AppendChild(ptype);
+
+                parmRoot.AppendChild(parmNode);
+            }
 
             parent.AppendChild(loc);
             parent.AppendChild(size);
             parent.AppendChild(type);
-            parent.AppendChild(pone);
-            parent.AppendChild(ptwo);
+            parent.AppendChild(parmRoot);
             parent.AppendChild(dir);
         }
     }
