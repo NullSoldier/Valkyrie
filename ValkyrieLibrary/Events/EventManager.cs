@@ -24,7 +24,15 @@ namespace ValkyrieLibrary.Events
         //A button pressed
         public bool Action(Player player)
         {
-            return HandleEvent(player, ActivationTypes.Activate);
+            bool res = false;
+
+            if (HandleEvent(player, ActivationTypes.Activate))
+                res = true;
+
+            if (HandleEvent(player, ActivationTypes.LookActivate))
+                res = true;
+
+            return res;
         }
 
         public bool Collision(Player player)
@@ -39,29 +47,27 @@ namespace ValkyrieLibrary.Events
 
         public bool HandleEvent(Player player, ActivationTypes type)
         {
-            Event e = GetEvent(player.MapLocation);
+            MapPoint pos = player.MapLocation;
+
+            if (type == ActivationTypes.LookActivate || type == ActivationTypes.Movement)
+                pos += player.GetLookPoint();
+
+            bool handled = false;
+
+            Event e = GetEvent(pos);
             if (e != null && e.IsSameFacing(player.Direction) == true)
             {
-                IEventHandler eHandle = GetEventHandler(e);
-                if (eHandle != null && eHandle.MeetsCriteria(type))
+                foreach (IEventHandler eh in EventHandlerList)
                 {
-                    eHandle.Trigger(player, e);
-                    return true;
+                    if (eh.Type != e.Type || !eh.MeetsCriteria(type))
+                        continue;
+
+                    eh.Trigger(player, e);
+                    handled = true;
                 }
             }
 
-            return false;
-        }
-
-        public IEventHandler GetEventHandler(Event e)
-        {
-            foreach (IEventHandler eh in EventHandlerList)
-            {
-                if (eh.Type == e.Type)
-                    return eh;
-            }
-
-            return null;
+            return handled;
         }
 
         //that is a map

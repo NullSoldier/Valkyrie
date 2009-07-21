@@ -19,6 +19,7 @@ namespace ValkyrieLibrary.Events
     {
         Activate,
         Collision,
-        Movement
+        Movement,
+        LookActivate,
     }
 }

@@ -62,6 +62,25 @@ namespace ValkyrieLibrary.Characters
         public abstract void Move(ScreenPoint Destination);
 
         public virtual void Action(String type) { }
+
+        public MapPoint GetLookPoint()
+        {
+            MapPoint point = new MapPoint(0,0);
+
+            if (this.Direction == Directions.North)
+                point = new MapPoint(0, -1);
+
+            if (this.Direction == Directions.South)
+                point = new MapPoint(0, 1);
+
+            if (this.Direction == Directions.West)
+                point = new MapPoint(-1, 0);
+
+            if (this.Direction == Directions.East)
+                point = new MapPoint(1, 0);
+
+            return point;
+        }
     }
 
 	public enum Genders

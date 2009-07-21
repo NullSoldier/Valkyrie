@@ -352,19 +352,23 @@ namespace ValkyrieLibrary.Maps
 
 		public bool TilePointInMapLocal(MapPoint point)
 		{
-			return (point.X < TileEngine.CurrentMapChunk.MapSize.X
-				&& point.Y < TileEngine.CurrentMapChunk.MapSize.Y
-				&& point.X >= 0
-				&& point.Y >= 0);
+            Rectangle mapSize = (new MapPoint(0,0)).ToRect(TileEngine.CurrentMapChunk.MapSize.ToPoint());
+            return (mapSize.Contains(point.ToPoint()) == true);
 		}
 
 		public bool TilePointInMapGlobal(MapPoint point)
 		{
-			return (point.X < (TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.X + TileEngine.CurrentMapChunk.MapSize.X)
-				&& point.Y < (TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.Y + TileEngine.CurrentMapChunk.MapSize.Y)
-				&& point.X >= TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.X
-				&& point.Y >= TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.Y);
+            Rectangle mapSize = TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.ToRect(TileEngine.CurrentMapChunk.MapSize.ToPoint());
+            return (mapSize.Contains(point.ToPoint()) == true);
 		}
+
+        public bool IsVisableToPlayer()
+        {
+            Rectangle mapSize = TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.ToRect(TileEngine.CurrentMapChunk.MapSize.ToPoint());
+            Rectangle worldSize = new Rectangle(0,0, TileEngine.Viewport.Width, TileEngine.Viewport.Height);
+  
+            return (mapSize.Intersects(worldSize) == true);
+        }
 	}
 
 	public enum MapLayer

@@ -164,7 +164,10 @@ namespace ValkyrieLibrary.Core
             ModuleManager.CurrentModule.Tick(time);
 
             foreach (var header in TileEngine.World.Values)
-                header.Map.Update(time);
+            {
+                if (header.Map.IsVisableToPlayer())
+                    header.Map.Update(time);
+            }
 		}
 
 		#region Draw Methods
@@ -179,6 +182,9 @@ namespace ValkyrieLibrary.Core
 
 			foreach (var header in TileEngine.World.Values)
 			{
+                if (!header.Map.IsVisableToPlayer())
+                    continue;
+
 				TileEngine.DrawBaseLayerMap(spriteBatch, header);
 				TileEngine.DrawMiddleLayerMap(spriteBatch, header);
 
@@ -194,8 +200,11 @@ namespace ValkyrieLibrary.Core
 
 		public static void DrawBaseLayer(SpriteBatch spriteBatch)
 		{
-			foreach(var header in TileEngine.World.Values)
-				TileEngine.DrawBaseLayerMap(spriteBatch, header);
+            foreach (var header in TileEngine.World.Values)
+            {
+                if (header.Map.IsVisableToPlayer())
+                    TileEngine.DrawBaseLayerMap(spriteBatch, header);
+            }
 		}
 
 		public static void DrawBaseLayerMap(SpriteBatch spriteBatch, MapHeader header)
@@ -235,8 +244,11 @@ namespace ValkyrieLibrary.Core
 		
 		public static void DrawMiddleLayer(SpriteBatch spriteBatch)
 		{
-			foreach (var header in TileEngine.World.Values)
-				TileEngine.DrawMiddleLayerMap(spriteBatch, header);
+            foreach (var header in TileEngine.World.Values)
+            {
+                if (header.Map.IsVisableToPlayer())
+                    TileEngine.DrawMiddleLayerMap(spriteBatch, header);
+            }
 		}
 
 		public static void DrawMiddleLayerMap(SpriteBatch spriteBatch, MapHeader header)
@@ -275,8 +287,11 @@ namespace ValkyrieLibrary.Core
 
 		public static void DrawTopLayer(SpriteBatch spriteBatch)
 		{
-			foreach (var header in TileEngine.World.Values)
-				DrawTopLayerMap(spriteBatch, header);
+            foreach (var header in TileEngine.World.Values)
+            {
+                if (header.Map.IsVisableToPlayer())
+                    DrawTopLayerMap(spriteBatch, header);
+            }
 		}
 
 		public static void DrawTopLayerMap(SpriteBatch spriteBatch, MapHeader header)

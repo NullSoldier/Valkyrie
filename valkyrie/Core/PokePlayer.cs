@@ -82,6 +82,8 @@ namespace ValkyrieLibrary.Characters
 			if (this.IsMoving)
 				return;
 
+            TileEngine.EventSystem.Movement(this);
+                
 			Directions tmpDirection = this.Location.ToPoint().RelativeDirection(Destination.ToPoint());
 
 			MapPoint point = Destination.ToMapPoint();
@@ -197,24 +199,7 @@ namespace ValkyrieLibrary.Characters
             this.IsJumping = true;
 
             ScreenPoint dest = new ScreenPoint(TileEngine.Player.Location.X, TileEngine.Player.Location.Y);
-
-            switch (Direction)
-            {
-                case Directions.North:
-					dest = new ScreenPoint(TileEngine.Player.Location.X, TileEngine.Player.Location.Y - 64);
-                    break;
-                case Directions.South:
-					dest = new ScreenPoint(TileEngine.Player.Location.X, TileEngine.Player.Location.Y + 64);
-                    break;
-                case Directions.West:
-					dest = new ScreenPoint(TileEngine.Player.Location.X - 64, TileEngine.Player.Location.Y);
-                    break;
-                case Directions.East:
-					dest = new ScreenPoint(TileEngine.Player.Location.X + 64, TileEngine.Player.Location.Y);
-                    break;
-            }
-
-            this.MovingDestination = dest;
+            this.MovingDestination = dest * (GetLookPoint().ToScreenPoint() * 64);
         }
 
 		public void ReachedMoveDestination()
