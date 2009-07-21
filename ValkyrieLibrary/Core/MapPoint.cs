@@ -5,11 +5,11 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using ValkyrieLibrary.Core;
 
-namespace ValkyrieLibrary.Core
+namespace ValkyrieLibrary
 {
 
     // one unit in a map point represents 32 units in a screen point
-    class MapPoint : BasePoint
+    public class MapPoint : BasePoint
     {
         public MapPoint(int x, int y) : base(x,y)
         {

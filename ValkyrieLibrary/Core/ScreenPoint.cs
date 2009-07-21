@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace ValkyrieLibrary.Core
+namespace ValkyrieLibrary
 {
     public class ScreenPoint : BasePoint
     {

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace ValkyrieLibrary.Core
+namespace ValkyrieLibrary
 {
-    public class BasePoint
+    public class BasePoint : IEquatable<BasePoint>
     {
         public int X
         {
@@ -36,8 +36,6 @@ namespace ValkyrieLibrary.Core
         {
             return new Point(this.X, this.Y);
         }
-
-
 
         public static BasePoint operator +(BasePoint a, BasePoint b)
         {
