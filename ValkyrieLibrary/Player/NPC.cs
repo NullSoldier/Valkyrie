@@ -9,9 +9,6 @@ namespace ValkyrieLibrary.Characters
 {
     public class NPC : BaseCharacter
     {
-		public override void Move(ScreenPoint Destination)
-		{
-			throw new NotImplementedException();
-		}
+
 	}
 }

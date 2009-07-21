@@ -85,7 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation\FrameAnimation.cs" />
-    <Compile Include="BaseCamera.cs" />
+    <Compile Include="Core\BaseCamera.cs" />
     <Compile Include="Collision\ICollidable.cs" />
     <Compile Include="Collision\ICollisionManager.cs" />
     <Compile Include="Core\BasePoint.cs" />
@@ -112,7 +112,7 @@
     <Compile Include="Player\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Modules\Module.cs" />
-    <Compile Include="TextureManager.cs" />
+    <Compile Include="Core\TextureManager.cs" />
     <Compile Include="TileEngine.cs" />
   </ItemGroup>
   <ItemGroup>
