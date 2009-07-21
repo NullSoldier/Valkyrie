@@ -71,7 +71,6 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.toolStripTools = new System.Windows.Forms.ToolStrip();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.btnEvent = new System.Windows.Forms.ToolStripButton();
             this.pctTileSurface = new ValkyrieMapEditor.TileBox();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -164,15 +163,19 @@
             // 
             // currentLayerAndBelowToolStripMenuItem
             // 
+            this.currentLayerAndBelowToolStripMenuItem.CheckOnClick = true;
             this.currentLayerAndBelowToolStripMenuItem.Name = "currentLayerAndBelowToolStripMenuItem";
             this.currentLayerAndBelowToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.currentLayerAndBelowToolStripMenuItem.Text = "Current Layer and Below";
+            this.currentLayerAndBelowToolStripMenuItem.Click += new System.EventHandler(this.currentLayerAndBelowToolStripMenuItem_Click);
             // 
             // allLayersToolStripMenuItem
             // 
+            this.allLayersToolStripMenuItem.CheckOnClick = true;
             this.allLayersToolStripMenuItem.Name = "allLayersToolStripMenuItem";
             this.allLayersToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.allLayersToolStripMenuItem.Text = "All Layers";
+            this.allLayersToolStripMenuItem.Click += new System.EventHandler(this.allLayersToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -181,9 +184,11 @@
             // 
             // dimOtherLayersToolStripMenuItem
             // 
+            this.dimOtherLayersToolStripMenuItem.CheckOnClick = true;
             this.dimOtherLayersToolStripMenuItem.Name = "dimOtherLayersToolStripMenuItem";
             this.dimOtherLayersToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.dimOtherLayersToolStripMenuItem.Text = "Dim Other Layers";
+            this.dimOtherLayersToolStripMenuItem.Text = "Current Layer Only";
+            this.dimOtherLayersToolStripMenuItem.Click += new System.EventHandler(this.dimOtherLayersToolStripMenuItem_Click);
             // 
             // toolTool
             // 
@@ -335,7 +340,6 @@
             this.pctSurface.TabIndex = 0;
             this.pctSurface.TabStop = false;
             this.pctSurface.Resize += new System.EventHandler(this.pctSurface_Resize);
-            this.pctSurface.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pctSurface_MouseClick);
             // 
             // VerticalScroll
             // 
@@ -547,32 +551,28 @@
             this.btnTopLayer,
             this.btnCollisionLayer,
             this.btnHelp,
+            this.btnEvent,
             this.toolStripSeparator3,
             this.btnPencil,
             this.btnRect,
             this.btnFill,
-            this.btnSelection,
-            this.toolStripSeparator4,
-            this.btnEvent});
+            this.btnSelection});
             this.toolStripTools.Location = new System.Drawing.Point(0, 26);
             this.toolStripTools.Name = "toolStripTools";
             this.toolStripTools.Size = new System.Drawing.Size(1008, 25);
             this.toolStripTools.TabIndex = 3;
             this.toolStripTools.Text = "toolStrip1";
             // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
-            // 
             // btnEvent
             // 
+            this.btnEvent.AutoSize = false;
+            this.btnEvent.CheckOnClick = true;
             this.btnEvent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnEvent.Enabled = false;
             this.btnEvent.Image = ((System.Drawing.Image)(resources.GetObject("btnEvent.Image")));
             this.btnEvent.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnEvent.Name = "btnEvent";
-            this.btnEvent.Size = new System.Drawing.Size(23, 22);
+            this.btnEvent.Size = new System.Drawing.Size(34, 22);
             this.btnEvent.Text = "Event Mode";
             this.btnEvent.Click += new System.EventHandler(this.btnEvent_Click);
             // 
@@ -670,8 +670,7 @@
 		private System.Windows.Forms.ToolStrip toolStripTools;
 		private System.Windows.Forms.VScrollBar VerticalScroll;
 		private System.Windows.Forms.HScrollBar HorizontalScroll;
-		private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStripButton btnEvent;
 	}
 }

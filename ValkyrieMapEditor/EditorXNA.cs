@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Windows.Forms;
+using System.Diagnostics;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -10,13 +14,12 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
-using ValkyrieLibrary.Core;
-using System.IO;
+
 using ValkyrieLibrary;
-using System.Windows.Forms;
 using ValkyrieLibrary.Maps;
+using ValkyrieLibrary.Core;
 using ValkyrieMapEditor.Core;
-using System.Diagnostics;
+
 
 namespace ValkyrieMapEditor
 {
@@ -25,24 +28,39 @@ namespace ValkyrieMapEditor
 	/// </summary>
 	public class EditorXNA : Microsoft.Xna.Framework.Game
 	{
-        public static GraphicsDevice graphicsDevice = null;
         public static SpriteFont font;
+        public static GraphicsDevice graphicsDevice = null;
+		public static GraphicsDeviceManager graphics = null;
 
-		GraphicsDeviceManager graphics;
-        //GraphicsDeviceManager graphics2;
         SpriteBatch spriteBatch;
 
 		//private Map testMap;
 		private IntPtr drawSurface;
         private IntPtr drawTilesSurface;
-		private Texture2D CollisionSprite;
 		private Texture2D SelectionSprite;
-        private MapEditorEvents MapEventHandler = new MapEditorEvents();
+
+        private Dictionary<ComponentID, IEditorComponent> ComponentList;
+        private IEditorComponent curComponent;
+        public RenderComponent Render;
+
+        public IEditorComponent CurComponent
+        {
+            get
+            {
+                if (this.curComponent == null)
+                    this.curComponent = this.ComponentList[ComponentID.Draw];
+
+                return curComponent;
+            }
+        }
+
+        public bool MapChanged { get; set; }
 
 		public EditorXNA()
 		{
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
+            ComponentList = new Dictionary<ComponentID,IEditorComponent>();
 		}
 
 		
@@ -56,59 +74,39 @@ namespace ValkyrieMapEditor
 			graphics.PreparingDeviceSettings +=
 				new EventHandler<PreparingDeviceSettingsEventArgs>(graphics_PreparingDeviceSettings);
 
-
             System.Windows.Forms.Control.FromHandle((this.Window.Handle)).VisibleChanged += new EventHandler(Game1_VisibleChanged);
 		}
 
 		
-        /// <summary>
-        /// Event capturing the construction of a draw surface and makes sure this gets redirected to
-        /// a predesignated drawsurface marked by pointer drawSurface
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void graphics_PreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
         {
 			e.GraphicsDeviceInformation.PresentationParameters.DeviceWindowHandle = drawSurface;
         }
 
-        /// <summary>
-        /// Occurs when the original gamewindows' visibility changes and makes sure it stays invisible
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void Game1_VisibleChanged(object sender, EventArgs e)
         {
 			if (System.Windows.Forms.Control.FromHandle((this.Window.Handle)).Visible == true)
 				System.Windows.Forms.Control.FromHandle((this.Window.Handle)).Visible = false;
         }
- 
 
-		/// <summary>
-		/// Allows the game to perform any initialization it needs to before starting to run.
-		/// This is where it can query for any required services and load any non-graphic
-		/// related content.  Calling base.Initialize will enumerate through any components
-		/// and initialize them as well.
-		/// </summary>
 		protected override void Initialize()
 		{
-			// TODO: Add your initialization logic here
-
 			base.Initialize();
 			Mouse.WindowHandle = this.drawSurface;
 		}
 
-		/// <summary>
-		/// LoadContent will be called once per game and is the place to load
-		/// all of your content.
-		/// </summary>
 		protected override void LoadContent()
 		{
+            this.Render = new RenderComponent();
+
+            this.ComponentList = new Dictionary<ComponentID, IEditorComponent>();
+            this.ComponentList.Add(ComponentID.Draw, new DrawComponent());
+            this.ComponentList.Add(ComponentID.Events, new EventsComponent());
+            this.ComponentList.Add(ComponentID.Collsion, new CollisionComponent());
+
             font = Content.Load<SpriteFont>("GameTextFont");
 
             graphicsDevice = this.GraphicsDevice;
-
-			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			// Custom loading
@@ -118,236 +116,95 @@ namespace ValkyrieMapEditor
             TileEngine.Load(new FileInfo("Data/TileEngineConfig.xml"));
 			TileEngine.Camera.CenterOriginOnPoint(new Point(0, 0));
 
-			this.CollisionSprite = Texture2D.FromFile(this.GraphicsDevice, "Graphics/EditorCollision.png");
+			
 			this.SelectionSprite = Texture2D.FromFile(this.GraphicsDevice, "Graphics/EditorSelection.png");
 
-            MapEventHandler.LoadContent(this.GraphicsDevice);
+            this.Render.LoadContent(this.GraphicsDevice);
+            foreach (var c in this.ComponentList)
+            {
+                c.Value.LoadContent(this.GraphicsDevice);
+            }
 		}
 
-		/// <summary>
-		/// UnloadContent will be called once per game and is the place to unload
-		/// all content.
-		/// </summary>
 		protected override void UnloadContent()
 		{
 			// TODO: Unload any non ContentManager content here
 		}
 
-		/// <summary>
-		/// Allows the game to run logic such as updating the world,
-		/// checking for collisions, gathering input, and playing audio.
-		/// </summary>
-		/// <param name="gameTime">Provides a snapshot of timing values.</param>
+        public void EnlistEvents(PictureBox pictureBox)
+        {
+            pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseDown);
+            pictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseUp);
+            pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MouseMove);
+            pictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MouseClicked);
+        }
+
+        public void SwitchTo(ComponentID component)
+        {
+            if (this.ComponentList.Keys.Contains(component))
+                curComponent = this.ComponentList[component];
+        }
+
+        #region Callbacks
+
 		protected override void Update(GameTime gameTime)
 		{
-            if (MapEventHandler.Enabled == true)
-                return;
-
-			if (!MapEditorManager.IgnoreInput)
-			{
-				// TODO: Add your update logic here
-				KeyboardState keyState = Keyboard.GetState();
-
-                if (TileEngine.IsMapLoaded && MapEditorManager.CurrentLayer != Map.EMapLayer.CollisionLayer
-					&& MapEditorManager.CurrentTool == Tools.Pencil) 
-					// Only do this if your not setting the collision layer or using something other than the pencil
-				{
-					var mouseState = Mouse.GetState();
-
-					if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed && mouseState.X > 0 && mouseState.Y > 0)
-					{
-						MapPoint tileLocation = new MapPoint((mouseState.X - (int)TileEngine.Camera.MapOffset.X) / 32, (mouseState.Y - (int)TileEngine.Camera.MapOffset.Y) / 32);
-
-                        if (TileEngine.CurrentMapChunk.TilePointInMapLocal(tileLocation))
-                        {
-                            for (int y = 0; y <= MapEditorManager.SelectedTilesRect.Height; y++)
-                            {
-                                for (int x = 0; x <= MapEditorManager.SelectedTilesRect.Width; x++)
-                                {
-                                    MapPoint tilesheetPoint = new MapPoint(MapEditorManager.SelectedTilesRect.X + x, MapEditorManager.SelectedTilesRect.Y + y);
-                                    MapPoint point = new MapPoint(tileLocation.X + x, tileLocation.Y + y);
-
-                                    if (TileEngine.CurrentMapChunk.TilePointInMapLocal(point))
-                                        TileEngine.CurrentMapChunk.SetData(MapEditorManager.CurrentLayer, point, TileEngine.CurrentMapChunk.GetTileSetValue(tilesheetPoint));
-                                }
-                            }
-                        }
-					}
-				}
-			}
+            this.Render.Update(gameTime);
+            this.CurComponent.Update(gameTime);
 
 			base.Update(gameTime);
 		}
 
-		public void SurfaceSizeChanged(object sender, ScreenResizedEventArgs e)
+        public void Resized(object sender, ScreenResizedEventArgs e)
 		{
-			graphics.PreferredBackBufferWidth = e.Width;
-			graphics.PreferredBackBufferHeight = e.Height;
-			graphics.IsFullScreen = false;
-			graphics.ApplyChanges();
-
-			if (TileEngine.Camera != null)
-			{
-				TileEngine.Camera.Screen.Width = e.Width;
-				TileEngine.Camera.Screen.Height = e.Height;
-
-                if (TileEngine.IsMapLoaded)
-                {
-                    // Move the X origin
-                    int DisplayedWidth = (TileEngine.CurrentMapChunk.MapSize.X * TileEngine.CurrentMapChunk.TileSize.X) + (int)TileEngine.Camera.MapOffset.X;
-                    if (DisplayedWidth < e.Width)
-                    {
-                        if (TileEngine.CurrentMapChunk.MapSize.X * TileEngine.CurrentMapChunk.TileSize.X < e.Width)
-                            TileEngine.Camera.CenterOriginOnPoint(0, (int)(TileEngine.Camera.MapOffset.Y * -1));
-                        else
-                        {
-                            int newOffset = (e.Width - DisplayedWidth);
-                            TileEngine.Camera.CenterOriginOnPoint((int)(TileEngine.Camera.MapOffset.X * -1) - newOffset, (int)(TileEngine.Camera.MapOffset.Y * -1));
-                        }
-                    }
-
-                    // Move the Y origin
-                    int DisplayedHeight = (TileEngine.CurrentMapChunk.MapSize.Y * TileEngine.CurrentMapChunk.TileSize.Y) + (int)TileEngine.Camera.MapOffset.Y;
-                    if (DisplayedHeight < e.Height)
-                    {
-                        if (TileEngine.CurrentMapChunk.MapSize.Y * TileEngine.CurrentMapChunk.TileSize.Y < e.Height)
-                            TileEngine.Camera.CenterOriginOnPoint((int)(TileEngine.Camera.MapOffset.X * -1), 0);
-                        else
-                        {
-                            int newOffset = (e.Height - DisplayedHeight);
-                            TileEngine.Camera.CenterOriginOnPoint((int)(TileEngine.Camera.MapOffset.X * -1), (int)(TileEngine.Camera.MapOffset.Y * -1) - newOffset);
-                        }
-                    }
-                }
-
-			}
-
-			
+            this.Render.OnSizeChanged(sender, e);
+            this.CurComponent.OnSizeChanged(sender, e);
 		}
 
-		public void ScrolledMap(object sender, ScrollEventArgs e)
+        public void Scrolled(object sender, ScrollEventArgs e)
 		{
-            int dif = (e.NewValue - e.OldValue);
-
-			if (e.Type == ScrollEventType.EndScroll) 
-                return;
-
-			int x = (int)(TileEngine.Camera.MapOffset.X) * -1;
-            int y = (int)(TileEngine.Camera.MapOffset.Y) * -1;
-
-			if (e.ScrollOrientation == ScrollOrientation.VerticalScroll)
-                y += dif*TileEngine.CurrentMapChunk.TileSize.Y;
-			else
-                x += dif*TileEngine.CurrentMapChunk.TileSize.X;
-
-            TileEngine.Camera.CenterOriginOnPoint(new Point(x, y));
+            this.Render.OnScrolled(sender, e);
+            this.CurComponent.OnScrolled(sender, e);
 		}
 
-        public void SurfaceClicked(object sender, SurfaceClickedEventArgs e)
+        public void MouseDown(object sender, MouseEventArgs e)
         {
-            if (MapEventHandler.Enabled == false)
-            {
-                if (TileEngine.IsMapLoaded && MapEditorManager.CurrentLayer == Map.EMapLayer.CollisionLayer)
-                {
-                    MapPoint point = new MapPoint((e.Location.X - (int)TileEngine.Camera.MapOffset.X) / 32, (e.Location.Y - (int)TileEngine.Camera.MapOffset.Y) / 32);
-
-                    if (e.Button == MouseButtons.Left)
-                        TileEngine.CurrentMapChunk.SetData(MapEditorManager.CurrentLayer, point, 1);
-                }
-            }
+            this.Render.OnMouseDown(sender, e);
+            this.CurComponent.OnMouseDown(sender, e);
         }
 
-        public void MouseDown(object sender, MouseEventArgs ev)
+        public void MouseMove(object sender, MouseEventArgs e)
         {
-            if (MapEventHandler.Enabled == true)
-                MapEventHandler.MouseDown(sender, ev);
+            this.Render.OnMouseMove(sender, e);
+            this.CurComponent.OnMouseMove(sender, e);
         }
 
-        public void MouseMove(object sender, MouseEventArgs ev)
+        public void MouseUp(object sender, MouseEventArgs e)
         {
-            if (MapEventHandler.Enabled == true)
-                MapEventHandler.MouseMove(sender, ev);
+            this.Render.OnMouseUp(sender, e);
+            this.CurComponent.OnMouseUp(sender, e);
         }
 
-        public void MouseUp(object sender, MouseEventArgs ev)
+        public void MouseClicked(object sender, MouseEventArgs e)
         {
-            if (MapEventHandler.Enabled == true)
-                MapEventHandler.MouseUp(sender, ev);
+            this.Render.OnMouseClicked(sender, e);
+            this.CurComponent.OnMouseClicked(sender, e);
         }
 
-        public void MouseClicked(object sender, MouseEventArgs ev)
-        {
-            if (MapEventHandler.Enabled == true)
-                MapEventHandler.MouseClicked(sender, ev);
-        }
 
-        public bool MapChanged { get; set; }
-
-		/// <summary>
-		/// This is called when the game should draw itself.
-		/// </summary>
-		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Draw(GameTime gameTime)
 		{
 			GraphicsDevice.Clear(Color.Gray);
 
-			if (TileEngine.IsMapLoaded)
-            {
-                TileEngine.DrawAllLayers(this.spriteBatch, false);
-            }
-
-			// TODO: Add your drawing code here
-			if (TileEngine.IsMapLoaded)
-			{
-                this.spriteBatch.Begin();
-
-				// Render Collision Layer
-				for (int y = 0; y < TileEngine.CurrentMapChunk.MapSize.Y; y++)
-				{
-					for (int x = 0; x < TileEngine.CurrentMapChunk.MapSize.X; x++)
-					{
-						int value = TileEngine.CurrentMapChunk.GetLayerValue(new MapPoint(x, y), Map.EMapLayer.CollisionLayer);
-
-						if (value == -1)
-							continue;
-
-						Rectangle destRectangle = new Rectangle(0, 0, TileEngine.CurrentMapChunk.TileSize.X, TileEngine.CurrentMapChunk.TileSize.Y);
-						destRectangle.X = (int)TileEngine.Camera.MapOffset.X + (int)TileEngine.Camera.CameraOffset.X + (x * TileEngine.CurrentMapChunk.TileSize.X);
-						destRectangle.Y = (int)TileEngine.Camera.MapOffset.Y + (int)TileEngine.Camera.CameraOffset.Y + (y * TileEngine.CurrentMapChunk.TileSize.Y);
-
-						this.spriteBatch.Draw(this.CollisionSprite, destRectangle, new Rectangle(0, 0, this.CollisionSprite.Width, this.CollisionSprite.Height), Color.White);
-					}
-                }
-
-                if (MapEventHandler.Enabled == true)
-                {
-                    MapEventHandler.Draw(this.spriteBatch);
-                }
-                else
-                {
-                    // Draw the current location of the mouse
-                    var mouseState = Mouse.GetState();
-                    if (mouseState.X > 0 && mouseState.Y > 0)
-                    {
-                        Point tileLocation = new Point(mouseState.X / 32, mouseState.Y / 32);
-                        Vector2 cLoc = new Vector2(tileLocation.X * 32, tileLocation.Y * 32);
-                        Rectangle pos = new Rectangle((int)cLoc.X, (int)cLoc.Y, MapEditorManager.SelectedTilesRect.Width * 32+32, MapEditorManager.SelectedTilesRect.Height * 32+32);
-
-                        Texture2D text = CreateSelectRectangle(pos.Width, pos.Height);
-
-                        if (text == null)
-                            text = this.SelectionSprite;
-
-                        this.spriteBatch.Draw(text, pos, new Rectangle(0,0, text.Width, text.Height), Color.White); 
-                    }
-                }
-
-                this.spriteBatch.End();
-			}
+            this.spriteBatch.Begin();
+            this.Render.Draw(this.spriteBatch);
+            this.CurComponent.Draw(this.spriteBatch);
+            this.spriteBatch.End();
 
 			base.Draw(gameTime);
-		}
+        }
 
+        #endregion
 
         static public Texture2D CreateSelectRectangle(int width, int height)
         {
@@ -406,5 +263,12 @@ namespace ValkyrieMapEditor
             rectangleTexture.SetData(color);//set the color data on the texture
             return rectangleTexture;
         }
-	}
+    }
+
+    public enum ComponentID
+    {
+        Draw,
+        Events,
+        Collsion,
+    };
 }

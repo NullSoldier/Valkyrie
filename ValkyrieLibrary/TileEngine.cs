@@ -134,6 +134,23 @@ namespace ValkyrieLibrary.Core
             TileEngine.ModuleManager.CurrentModule.Draw(spriteBatch, gameTime);
 		}
 
+        public static void DrawLayerMap(SpriteBatch spriteBatch, Map.EMapLayer layer)
+        {
+            DrawLayerMap(spriteBatch, layer, Color.White);
+        }
+
+        public static void DrawLayerMap(SpriteBatch spriteBatch, Map.EMapLayer layer, Color tint)
+        {
+            spriteBatch.Begin();
+            foreach (var header in TileEngine.CurWorld.Values)
+            {
+                if (!header.Map.IsVisableToPlayer())
+                    continue;
+
+                TileEngine.DrawLayerMap(spriteBatch, header, layer);
+            }
+            spriteBatch.End();
+        }
 
 		public static void DrawAllLayers(SpriteBatch spriteBatch, bool drawcharacters)
 		{
@@ -168,6 +185,11 @@ namespace ValkyrieLibrary.Core
 		}
 
         public static void DrawLayerMap(SpriteBatch spriteBatch, MapHeader header, Map.EMapLayer layer)
+        {
+            DrawLayerMap(spriteBatch, header, layer, Color.White);
+        }
+
+        public static void DrawLayerMap(SpriteBatch spriteBatch, MapHeader header, Map.EMapLayer layer, Color tint)
 		{
 			if (spriteBatch == null)
 				throw new ArgumentNullException();
@@ -175,6 +197,7 @@ namespace ValkyrieLibrary.Core
 			Map currentMap = header.Map;
             ScreenPoint camOffset = TileEngine.Camera.Offset();
             ScreenPoint tileSize = currentMap.TileSize;
+
 
 			for (int y = 0; y < currentMap.MapSize.Y; y++)
 			{
@@ -188,8 +211,10 @@ namespace ValkyrieLibrary.Core
 
                     Rectangle sourceRectangle = currentMap.GetLayerSourceRect(new MapPoint(x, y), layer);
 
-					if( !sourceRectangle.IsEmpty )
-                        spriteBatch.Draw(currentMap.Texture, des, sourceRectangle, Color.White);
+                    if (sourceRectangle.IsEmpty)
+                        continue;
+
+                    spriteBatch.Draw(currentMap.Texture, des, sourceRectangle, Color.White);
 				}
 			}
 		}

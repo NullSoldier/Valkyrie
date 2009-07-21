@@ -21,7 +21,7 @@ using ValkyrieLibrary.Events;
 
 namespace ValkyrieMapEditor.Core
 {
-    class MapEditorEvents
+    public class EventsComponent : IEditorComponent
     {
         private Texture2D EventSprite;
         private Texture2D SelectionSprite;
@@ -31,13 +31,6 @@ namespace ValkyrieMapEditor.Core
         public Point SelectedPoint {get; set; }
         public Point EndSelectedPoint { get; set; }
 
-        public bool Enabled
-        {
-            get 
-            { 
-                return (MapEditorManager.EventMode == true); 
-            }
-        }
 
         public bool IsStartAfterEnd()
         {
@@ -50,7 +43,7 @@ namespace ValkyrieMapEditor.Core
             this.SelectionSprite = Texture2D.FromFile(device, "Graphics/EditorSelection.png");
         }
 
-        public MapEditorEvents()
+        public EventsComponent()
         {
             this.SelectedPoint = new Point(0, 0);
             this.EndSelectedPoint = new Point(0, 0);
@@ -115,7 +108,7 @@ namespace ValkyrieMapEditor.Core
             }
         }
 
-        public void MouseDown(object sender, MouseEventArgs ev)
+        public void OnMouseDown(object sender, MouseEventArgs ev)
         {
             Cancel = false;
             //TileEngine.CurrentMapChunk.TilePointInMapLocal(tileLocation)
@@ -123,7 +116,7 @@ namespace ValkyrieMapEditor.Core
             this.EndSelectedPoint = new Point(ev.X / 32 + 1, ev.Y / 32 + 1);
         }
 
-        public void MouseMove(object sender, MouseEventArgs ev)
+        public void OnMouseMove(object sender, MouseEventArgs ev)
         {
             if (ev.Button == MouseButtons.Left)
             {
@@ -134,7 +127,7 @@ namespace ValkyrieMapEditor.Core
             }
         }
 
-        public void MouseUp(object sender, MouseEventArgs ev)
+        public void OnMouseUp(object sender, MouseEventArgs ev)
         {
             if (!IsStartAfterEnd())
             {
@@ -147,7 +140,7 @@ namespace ValkyrieMapEditor.Core
             }
         }
 
-        public void MouseClicked(object sender, MouseEventArgs ev)
+        public void OnMouseClicked(object sender, MouseEventArgs ev)
         {
             //this.SelectedPoint = new Point(ev.X / 32, ev.Y / 32);
             //this.EndSelectedPoint = new Point(ev.X / 32 + 1, ev.Y / 32 + 1);
@@ -155,9 +148,6 @@ namespace ValkyrieMapEditor.Core
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (Enabled == false)
-                return;
-
             foreach (Event e in TileEngine.CurrentMapChunk.EventList)
             {
 
@@ -229,6 +219,18 @@ namespace ValkyrieMapEditor.Core
 
             rectangleTexture.SetData(color);//set the color data on the texture
             return rectangleTexture;
+        }
+
+        public void OnSizeChanged(object sender, ScreenResizedEventArgs e)
+        {
+        }
+
+        public void OnScrolled(object sender, ScrollEventArgs e)
+        {
+        }
+
+        public void Update(GameTime gameTime)
+        {
         }
     }
 }

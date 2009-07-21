@@ -17,10 +17,12 @@ namespace ValkyrieMapEditor
 		public static Rectangle SelectedTilesRect = new Rectangle(0, 0, 0, 0);
         public static Map.EMapLayer CurrentLayer = Map.EMapLayer.BaseLayer;
 		public static FileInfo CurrentMapLocation;
+
+        public static ViewMode ViewMode = ViewMode.All;
+
 		public static bool IgnoreInput = false;
 		public static Tools CurrentTool = Tools.Pencil;
-        public static bool EventMode = false;
-
+        public static EditorXNA GameInstance = null;
 		public static Point MouseLocation
 		{
 			get
@@ -216,4 +218,11 @@ namespace ValkyrieMapEditor
 		Rectangle,
 		Bucket,
 	}
+
+    public enum ViewMode
+    {
+        All,
+        Below,
+        Dim
+    }
 }

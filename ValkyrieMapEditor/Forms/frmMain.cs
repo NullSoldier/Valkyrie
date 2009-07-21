@@ -19,7 +19,6 @@ namespace ValkyrieMapEditor
 	{
 		public bool MapChanged = false;
 		public event EventHandler<ScreenResizedEventArgs> ScreenResized;
-		public event EventHandler<SurfaceClickedEventArgs> SurfaceClicked;
 		public event EventHandler<ScrollEventArgs> ScrolledMap;
 
 		public frmMain()
@@ -107,7 +106,6 @@ namespace ValkyrieMapEditor
 		private void pctSurface_Resize(object sender, EventArgs e)
 		{
 			this.ScreenResized(this, new ScreenResizedEventArgs(this.pctSurface.Size.Width, this.pctSurface.Size.Height));
-
 			this.UpdateScrollBars();
 		}
 
@@ -142,11 +140,6 @@ namespace ValkyrieMapEditor
 				this.VerticalScroll.Value = 0;
 		}
 
-        private void pctSurface_MouseClick(object sender, MouseEventArgs e)
-        {
-            this.SurfaceClicked(this, new SurfaceClickedEventArgs(e.Button, new Point(e.X, e.Y)));
-        }
-
         private void btnMapProperties_Click(object sender, EventArgs e)
         {
             if (TileEngine.IsMapLoaded)
@@ -166,37 +159,36 @@ namespace ValkyrieMapEditor
         {
             this.btnMiddleLayer.Checked = false;
             this.btnTopLayer.Checked = false;
+            this.btnEvent.Checked = false;
             this.btnCollisionLayer.Checked = false;
 
             MapEditorManager.CurrentLayer = Map.EMapLayer.BaseLayer;
+            MapEditorManager.GameInstance.SwitchTo(ComponentID.Draw);
         }
 
         private void btnMiddleLayer_Click(object sender, EventArgs e)
         {
             this.btnBaseLayer.Checked = false;
             this.btnTopLayer.Checked = false;
+            this.btnEvent.Checked = false;
             this.btnCollisionLayer.Checked = false;
 
             MapEditorManager.CurrentLayer = Map.EMapLayer.MiddleLayer;
+            MapEditorManager.GameInstance.SwitchTo(ComponentID.Draw);
         }
 
         private void btnTopLayer_Click(object sender, EventArgs e)
         {
             this.btnBaseLayer.Checked = false;
             this.btnMiddleLayer.Checked = false;
+            this.btnEvent.Checked = false;
             this.btnCollisionLayer.Checked = false;
 
             MapEditorManager.CurrentLayer = Map.EMapLayer.TopLayer;
+            MapEditorManager.GameInstance.SwitchTo(ComponentID.Draw);
         }
 
-        private void btnCollisionLayer_Click(object sender, EventArgs e)
-        {
-            this.btnBaseLayer.Checked = false;
-            this.btnMiddleLayer.Checked = false;
-            this.btnTopLayer.Checked = false;
 
-            MapEditorManager.CurrentLayer = Map.EMapLayer.CollisionLayer;
-        }
 
         private void toolNew_Click(object sender, EventArgs e)
         {
@@ -323,9 +315,50 @@ namespace ValkyrieMapEditor
 
         private void btnEvent_Click(object sender, EventArgs e)
         {
-            MapEditorManager.EventMode = !MapEditorManager.EventMode;
-            this.btnEvent.Checked = MapEditorManager.EventMode;
+            this.btnBaseLayer.Checked = false;
+            this.btnMiddleLayer.Checked = false;
+            this.btnTopLayer.Checked = false;
+            this.btnCollisionLayer.Checked = false;
 
+            if (this.btnEvent.Checked)
+                MapEditorManager.GameInstance.SwitchTo(ComponentID.Events);
+            else
+                MapEditorManager.GameInstance.SwitchTo(ComponentID.Draw);
+        }
+
+        private void btnCollisionLayer_Click(object sender, EventArgs e)
+        {
+            this.btnBaseLayer.Checked = false;
+            this.btnMiddleLayer.Checked = false;
+            this.btnTopLayer.Checked = false;
+            this.btnEvent.Checked = false;
+
+            if (this.btnCollisionLayer.Checked)
+                MapEditorManager.GameInstance.SwitchTo(ComponentID.Collsion);
+            else
+                MapEditorManager.GameInstance.SwitchTo(ComponentID.Draw);
+        }
+
+        private void allLayersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            currentLayerAndBelowToolStripMenuItem.Checked = false;
+            dimOtherLayersToolStripMenuItem.Checked = false;
+            MapEditorManager.ViewMode = ViewMode.All;
+        }
+
+        private void currentLayerAndBelowToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            allLayersToolStripMenuItem.Checked = false;
+            dimOtherLayersToolStripMenuItem.Checked = false;
+
+            MapEditorManager.ViewMode = ViewMode.Below;
+        }
+
+        private void dimOtherLayersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            allLayersToolStripMenuItem.Checked = false;
+            currentLayerAndBelowToolStripMenuItem.Checked = false;
+            MapEditorManager.ViewMode = ViewMode.Dim;
         }
     }
 

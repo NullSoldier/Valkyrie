@@ -86,7 +86,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\MapEditorEvents.cs" />
+    <Compile Include="Core\Components\CollisionComponent.cs" />
+    <Compile Include="Core\Components\IEditorComponent.cs" />
+    <Compile Include="Core\Components\EventsComponent.cs" />
+    <Compile Include="Core\Components\RenderComponent.cs" />
+    <Compile Include="Core\Components\DrawComponent.cs" />
     <Compile Include="Forms\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
