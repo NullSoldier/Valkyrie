@@ -17,6 +17,9 @@ namespace ValkyrieLibrary.Characters
 			this.Animating = false;
 
 			this.Direction = Directions.South;
+
+            this.Location = new ScreenPoint(0, 0);
+            this.Sprite = null;
 		}
 
         public string Name;

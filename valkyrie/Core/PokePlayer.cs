@@ -174,6 +174,7 @@ namespace ValkyrieLibrary.Characters
 
                     if (!this.IsJumping && !TileEngine.CollisionManager.CheckCollision(this, this.MovingDestination))
                     {
+                        if (!TileEngine.EventSystem.Collision(this))
                             ReachedMoveDestination();
                     }
                     else

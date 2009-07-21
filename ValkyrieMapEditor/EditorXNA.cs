@@ -232,13 +232,13 @@ namespace ValkyrieMapEditor
 			if (e.Type == ScrollEventType.EndScroll) 
                 return;
 
-			int x = (int)(TileEngine.Camera.MapOffset.X);
-			int y = (int)(TileEngine.Camera.MapOffset.Y);
+			int x = (int)(TileEngine.Camera.MapOffset.X) * -1;
+            int y = (int)(TileEngine.Camera.MapOffset.Y) * -1;
 
 			if (e.ScrollOrientation == ScrollOrientation.VerticalScroll)
-                y -= dif*TileEngine.CurrentMapChunk.TileSize.Y;
+                y += dif*TileEngine.CurrentMapChunk.TileSize.Y;
 			else
-                x -= dif*TileEngine.CurrentMapChunk.TileSize.X;
+                x += dif*TileEngine.CurrentMapChunk.TileSize.X;
 
             TileEngine.Camera.CenterOriginOnPoint(new Point(x, y));
 		}

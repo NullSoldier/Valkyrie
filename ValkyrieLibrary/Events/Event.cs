@@ -83,7 +83,7 @@ namespace ValkyrieLibrary.Events
             Location.ToXml(doc, loc);
 
             XmlElement size = doc.CreateElement("Size");
-            Size.ToXml(doc, loc);
+            Size.ToXml(doc, size);
 
             XmlElement type = doc.CreateElement("Type");
             type.InnerText = Type;

@@ -82,8 +82,6 @@ namespace ValkyrieMapEditor.Core
             MapPoint size = new MapPoint(this.EndSelectedPoint.X - this.SelectedPoint.X, this.EndSelectedPoint.Y - this.SelectedPoint.Y);
 
 
-
-
             Event e = TileEngine.EventSystem.GetEventInRect(point, size);
 
             frmMapEvent frm = new frmMapEvent();

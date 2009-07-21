@@ -22,19 +22,20 @@ namespace ValkyrieLibrary.Core
 		{
 			get
 			{
+                if (TileEngine.Player == null)
+                    return null;
+
 				if( TileEngine.currentmapchunk == null)
 				{
 					foreach (var map in TileEngine.World.Values)
 					{
-						if (TileEngine.Player.Location.X >= (map.MapLocation.X * map.Map.TileSize.X)
-							&& TileEngine.Player.Location.X <= ((map.MapLocation.X * map.Map.TileSize.X) + (map.Map.MapSize.X * map.Map.TileSize.X)))
-						{
-							if (TileEngine.Player.Location.Y >= (map.MapLocation.Y * map.Map.TileSize.Y)
-							&& TileEngine.Player.Location.Y <= (map.MapLocation.Y * map.Map.TileSize.Y) + (map.Map.MapSize.Y * map.Map.TileSize.Y))
-							{
-								TileEngine.currentmapchunk = map.Map;
-								break;
-							}
+                        MapPoint playerLoc = TileEngine.Player.Location.ToMapPoint();
+                        Rectangle mapSize = map.MapLocation.ToRect(map.Map.MapSize.ToPoint());
+
+						if (mapSize.Contains(playerLoc.ToPoint()) == true)
+                        {
+							TileEngine.currentmapchunk = map.Map;
+							break;
 						}
 						
 					}
@@ -53,7 +54,7 @@ namespace ValkyrieLibrary.Core
         public static Dictionary<string, string> Configuration;
 		public static CollisionManager CollisionManager;
 		public static Dictionary<string, MapHeader> World;
-        public static Player Player;
+        public static Player Player = null;
         public static EventManager EventSystem;
 		public static int TileSize = 32;
         
