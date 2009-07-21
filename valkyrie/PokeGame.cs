@@ -66,8 +66,21 @@ namespace ValkyrieLibrary
             // TODO: Unload any non ContentManager content here
         }
 
+        float deltaFPSTime = 0;
+
+
         protected override void Update(GameTime gameTime)
         {
+            float elapsed = (float)gameTime.ElapsedRealTime.TotalSeconds;
+
+            float fps = 1 / elapsed;
+            deltaFPSTime += elapsed;
+            if (deltaFPSTime > 1)
+            {
+                Window.Title = "I am running at  <" + fps.ToString() + "> FPS";
+                deltaFPSTime -= 1;
+            }
+
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
