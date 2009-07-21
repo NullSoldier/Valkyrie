@@ -28,10 +28,5 @@ namespace ValkyrieLibrary.Core
         {
             return new MapPoint(this);
         }
-
-        public static override BasePoint newPoint(int X, int Y)
-        {
-            return new ScreenPoint(X, Y);
-        }
     }
 }

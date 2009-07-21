@@ -37,49 +37,62 @@ namespace ValkyrieLibrary.Core
             return new Point(this.X, this.Y);
         }
 
-        public static virtual BasePoint newPoint(int X, int Y)
-        {
-            return new BasePoint(X, Y);
-        }
 
-        public static BasePoint operator +(ScreenPoint a, ScreenPoint b)
+
+        public static BasePoint operator +(BasePoint a, BasePoint b)
         {
-            return newPoint(a.X + b.X, a.Y + b.Y);
+            a.X = a.X + b.X;
+            a.Y = a.Y + b.Y;
+            return a;
         }
 
         public static BasePoint operator *(BasePoint a, BasePoint b)
         {
-            return newPoint(a.X * b.X, a.Y * b.Y);
+            a.X = a.X * b.X;
+            a.Y = a.Y * b.Y;
+            return a;
         }
 
         public static BasePoint operator /(BasePoint a, BasePoint b)
         {
-            return newPoint(a.X / b.X, a.Y / b.Y);
+            a.X = a.X / b.X;
+            a.Y = a.Y / b.Y;
+            return a;
         }
 
         public static BasePoint operator -(BasePoint a, BasePoint b)
         {
-            return newPoint(a.X - b.X, a.Y - b.Y);
+            a.X = a.X - b.X;
+            a.Y = a.Y - b.Y;
+            return a;
         }
 
-        public static BasePoint operator +(ScreenPoint a, int b)
+        public static BasePoint operator +(BasePoint a, int b)
         {
-            return newPoint(a.X + b, a.Y + b);
+            a.X = a.X + b;
+            a.Y = a.Y + b;
+            return a;
         }
 
         public static BasePoint operator *(BasePoint a, int b)
         {
-            return newPoint(a.X * b, a.Y * b);
+            a.X = a.X * b;
+            a.Y = a.Y * b;
+            return a;
         }
 
         public static BasePoint operator /(BasePoint a, int b)
         {
-            return newPoint(a.X / b, a.Y / b);
+            a.X = a.X / b;
+            a.Y = a.Y / b;
+            return a;
         }
 
         public static BasePoint operator -(BasePoint a, int b)
         {
-            return newPoint(a.X - b, a.Y - b);
+            a.X = a.X - b;
+            a.Y = a.Y - b;
+            return a;
         }
 
         public static bool operator !=(BasePoint a, BasePoint b)

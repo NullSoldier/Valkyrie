@@ -23,18 +23,13 @@ namespace ValkyrieLibrary.Core
         {
         }
 
-        public MapPoint(ScreenPoint mapPoint) : base((mapPoint * 32).toPoint())
+        public MapPoint(ScreenPoint mapPoint) : base((mapPoint / 32).toPoint())
         {
         }
 
         public ScreenPoint toScreenPoint()
         {
             return new ScreenPoint(this);
-        }
-
-        public static override BasePoint newPoint(int X, int Y)
-        {
-            return new MapPoint(X, Y);
         }
     }
 }
