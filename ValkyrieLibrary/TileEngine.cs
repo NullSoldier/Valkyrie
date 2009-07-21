@@ -200,11 +200,15 @@ namespace ValkyrieLibrary.Core
 
 		public static void DrawBaseLayer(SpriteBatch spriteBatch)
 		{
+            spriteBatch.Begin();
+
             foreach (var header in TileEngine.World.Values)
             {
                 if (header.Map.IsVisableToPlayer())
                     TileEngine.DrawBaseLayerMap(spriteBatch, header);
             }
+
+            spriteBatch.End();
 		}
 
 		public static void DrawBaseLayerMap(SpriteBatch spriteBatch, MapHeader header)
@@ -213,85 +217,74 @@ namespace ValkyrieLibrary.Core
 				throw new ArgumentNullException();
 
 			Map currentMap = header.Map;
-			
+            ScreenPoint camOffset = TileEngine.Camera.Offset();
+            ScreenPoint tileSize = currentMap.TileSize;
+
 			for (int y = 0; y < currentMap.MapSize.Y; y++)
 			{
 				for (int x = 0; x < currentMap.MapSize.X; x++)
 				{
-					Rectangle destRectangle = new Rectangle(0, 0, currentMap.TileSize.X, currentMap.TileSize.Y);
-					destRectangle.X = (int)TileEngine.Camera.MapOffset.X + (int)TileEngine.Camera.CameraOffset.X + (x * currentMap.TileSize.X);
-					destRectangle.Y = (int)TileEngine.Camera.MapOffset.Y + (int)TileEngine.Camera.CameraOffset.Y + (y * currentMap.TileSize.Y);
+                    ScreenPoint pos = new MapPoint(x, y).ToScreenPoint() + camOffset + header.MapLocation.ToScreenPoint();
+                    Rectangle des = pos.ToRect(tileSize.ToPoint());
 
-					destRectangle.X += header.MapLocation.X * currentMap.TileSize.X;
-					destRectangle.Y += header.MapLocation.Y * currentMap.TileSize.Y;
+                    if (!TileEngine.Camera.CheckIsVisible(des))
+                        continue;
 
-					if( TileEngine.Camera.CheckVisible(destRectangle) )
-					{
-
-						MapPoint MapLoc = new MapPoint(x, y);
-
-						Rectangle sourceRectangle = currentMap.GetBaseLayerSourceRect(MapLoc);
-						if( !sourceRectangle.IsEmpty )
-						{
-							spriteBatch.Begin();
-							spriteBatch.Draw(currentMap.Texture, destRectangle, sourceRectangle, Color.White);
-							spriteBatch.End();
-						}
-					}
+					Rectangle sourceRectangle = currentMap.GetBaseLayerSourceRect(new MapPoint(x, y));
+					if( !sourceRectangle.IsEmpty )
+                        spriteBatch.Draw(currentMap.Texture, des, sourceRectangle, Color.White);
 				}
 			}
 		}
 		
 		public static void DrawMiddleLayer(SpriteBatch spriteBatch)
 		{
+            spriteBatch.Begin();
+
             foreach (var header in TileEngine.World.Values)
             {
                 if (header.Map.IsVisableToPlayer())
                     TileEngine.DrawMiddleLayerMap(spriteBatch, header);
             }
+
+            spriteBatch.End();
 		}
 
-		public static void DrawMiddleLayerMap(SpriteBatch spriteBatch, MapHeader header)
-		{
-			if (spriteBatch == null)
-				throw new ArgumentNullException();
+        public static void DrawMiddleLayerMap(SpriteBatch spriteBatch, MapHeader header)
+        {
+            if (spriteBatch == null)
+                throw new ArgumentNullException();
 
-			Map currentMap = header.Map;
-			
-			for (int y = 0; y < currentMap.MapSize.Y; y++)
-			{
-				for (int x = 0; x < currentMap.MapSize.X; x++)
-				{
-					Rectangle destRectangle = new Rectangle(0, 0, currentMap.TileSize.X, currentMap.TileSize.Y);
-					destRectangle.X = (int)TileEngine.Camera.MapOffset.X + (int)TileEngine.Camera.CameraOffset.X + (x * currentMap.TileSize.X);
-					destRectangle.Y = (int)TileEngine.Camera.MapOffset.Y + (int)TileEngine.Camera.CameraOffset.Y + (y * currentMap.TileSize.Y);
+            Map currentMap = header.Map;
+            ScreenPoint camOffset = TileEngine.Camera.Offset();
+            ScreenPoint tileSize = currentMap.TileSize;
 
-					destRectangle.X += header.MapLocation.X * currentMap.TileSize.X;
-					destRectangle.Y += header.MapLocation.Y * currentMap.TileSize.Y;
+            for (int y = 0; y < currentMap.MapSize.Y; y++)
+            {
+                for (int x = 0; x < currentMap.MapSize.X; x++)
+                {
+                    ScreenPoint pos = new MapPoint(x, y).ToScreenPoint() + camOffset + header.MapLocation.ToScreenPoint();
+                    Rectangle des = pos.ToRect(tileSize.ToPoint());
 
-					if( TileEngine.Camera.CheckVisible(destRectangle) )
-					{
-						MapPoint MapLoc = new MapPoint(x, y);
+                    if (!TileEngine.Camera.CheckIsVisible(des))
+                        continue;
 
-						Rectangle sourceRectangle = currentMap.GetMiddleLayerSourceRect(MapLoc);
-						if( !sourceRectangle.IsEmpty )
-						{
-							spriteBatch.Begin();
-							spriteBatch.Draw(currentMap.Texture, destRectangle, sourceRectangle, Color.White);
-							spriteBatch.End();
-						}
-					}
-				}
-			}
-		}
+                    Rectangle sourceRectangle = currentMap.GetMiddleLayerSourceRect(new MapPoint(x, y));
+                    if (!sourceRectangle.IsEmpty)
+                        spriteBatch.Draw(currentMap.Texture, des, sourceRectangle, Color.White);
+                }
+            }
+        }
 
 		public static void DrawTopLayer(SpriteBatch spriteBatch)
 		{
+            spriteBatch.Begin();
             foreach (var header in TileEngine.World.Values)
             {
                 if (header.Map.IsVisableToPlayer())
                     DrawTopLayerMap(spriteBatch, header);
             }
+            spriteBatch.End();
 		}
 
 		public static void DrawTopLayerMap(SpriteBatch spriteBatch, MapHeader header)
@@ -300,31 +293,23 @@ namespace ValkyrieLibrary.Core
 				throw new ArgumentNullException();
 
 			Map currentMap = header.Map;
+            ScreenPoint camOffset = TileEngine.Camera.Offset();
+            ScreenPoint tileSize = currentMap.TileSize;
 
 			for (int y = 0; y < currentMap.MapSize.Y; y++)
 			{
-				for (int x = 0; x < currentMap.MapSize.X; x++)
-				{
-					Rectangle destRectangle = new Rectangle(0, 0, currentMap.TileSize.X, currentMap.TileSize.Y);
-					destRectangle.X = (int)TileEngine.Camera.MapOffset.X + (int)TileEngine.Camera.CameraOffset.X + (x * currentMap.TileSize.X);
-					destRectangle.Y = (int)TileEngine.Camera.MapOffset.Y + (int)TileEngine.Camera.CameraOffset.Y + (y * currentMap.TileSize.Y);
+                for (int x = 0; x < currentMap.MapSize.X; x++)
+                {
+                    ScreenPoint pos = new MapPoint(x, y).ToScreenPoint() + camOffset + header.MapLocation.ToScreenPoint();
+                    Rectangle des = pos.ToRect(tileSize.ToPoint());
 
-					destRectangle.X += header.MapLocation.X * currentMap.TileSize.X;
-					destRectangle.Y += header.MapLocation.Y * currentMap.TileSize.Y;
+                    if (!TileEngine.Camera.CheckIsVisible(des))
+                        continue;
 
-					if (TileEngine.Camera.CheckVisible(destRectangle))
-					{
-						MapPoint MapLoc = new MapPoint(x, y);
-
-						Rectangle sourceRectangle = currentMap.GetTopLayerSourceRect(MapLoc);
-						if (!sourceRectangle.IsEmpty)
-						{
-							spriteBatch.Begin();
-							spriteBatch.Draw(currentMap.Texture, destRectangle, sourceRectangle, Color.White);
-							spriteBatch.End();
-						}
-					}
-				}
+                    Rectangle sourceRectangle = currentMap.GetTopLayerSourceRect(new MapPoint(x, y));
+                    if (!sourceRectangle.IsEmpty)
+                        spriteBatch.Draw(currentMap.Texture, des, sourceRectangle, Color.White);
+                }
 			}
 		}
 

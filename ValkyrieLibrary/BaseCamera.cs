@@ -40,22 +40,19 @@ namespace ValkyrieLibrary
 			set { this.MapOffset = new Vector2(value.X * -1, value.Y * -1);	}
 		}
 
-		#region Public Methods/Effects
-		public bool CheckVisible(Rectangle destRect)
-		{
-			if (destRect.X >= this.MapOffset.X - destRect.Width)
-			{
-				if (destRect.Y >= this.MapOffset.Y - destRect.Height)
-				{
-					if (destRect.X <= this.Screen.Width + destRect.Width)
-					{
-						if (destRect.Y <= this.Screen.Height + destRect.Height)
-							return true;
-					}
-				}
-			}
+        public ScreenPoint Offset()
+        {
+            ScreenPoint sp = new ScreenPoint(0,0);
+            sp.X = (int)TileEngine.Camera.MapOffset.X + (int)TileEngine.Camera.CameraOffset.X;
+            sp.Y = (int)TileEngine.Camera.MapOffset.Y + (int)TileEngine.Camera.CameraOffset.Y;
+            return sp;
+        }
 
-			return false;
+		#region Public Methods/Effects
+        public bool CheckIsVisible(Rectangle rect)
+		{
+            Rectangle screen = new Rectangle(0,0,this.Screen.Width, this.Screen.Height);
+            return (screen.Intersects(rect) == true);
 		}
 
 

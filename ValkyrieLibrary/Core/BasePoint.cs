@@ -124,7 +124,7 @@ namespace ValkyrieLibrary.Core
 
         public override string ToString()
         {
-            return "TODO";
+            return String.Format("X: {0}, Y: {1}", this.X, this.Y);
         }
 
         public void ToXml(XmlDocument doc, XmlElement parent)
