@@ -11,6 +11,16 @@ namespace ValkyrieLibrary.Characters
 {
 	public class Player : BaseCharacter
 	{
+        public MapPoint TileLocation
+        {
+            get { return new MapPoint(this.Location.X / TileEngine.CurrentMapChunk.TileSize.X, this.Location.Y / TileEngine.CurrentMapChunk.TileSize.Y); }
+        }
+
+        public MapPoint MapLocation
+        {
+            get { return TileEngine.GlobalTilePointToLocal(TileLocation); }
+        }
+
 		public Player()
 		{
 		

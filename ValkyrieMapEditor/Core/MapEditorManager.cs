@@ -7,6 +7,8 @@ using ValkyrieLibrary.Core;
 using System.Xml;
 using Microsoft.Xna.Framework;
 using ValkyrieLibrary.Maps;
+using ValkyrieLibrary.Events;
+using ValkyrieLibrary;
 
 namespace ValkyrieMapEditor
 {
@@ -116,7 +118,7 @@ namespace ValkyrieMapEditor
 			}
 
             var eventLayer = doc.CreateElement("Events");
-            foreach (MapEvent e in map.Events)
+            foreach (Event e in map.EventList)
             {
                 var eventNode = doc.CreateElement("Event");
                 e.toXml(doc, eventNode);
@@ -191,7 +193,7 @@ namespace ValkyrieMapEditor
 
 			MapHeader header = new MapHeader(map.Name, string.Empty);
 			header.Map = map;
-			header.MapLocation = new Point(0, 0);
+			header.MapLocation = new MapPoint(0, 0);
 
 			TileEngine.World.Add(map.Name, header);
 			TileEngine.Camera.CenterOriginOnPoint(0, 0);

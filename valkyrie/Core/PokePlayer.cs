@@ -9,8 +9,9 @@ using ValkyrieLibrary;
 using ValkyrieLibrary.Collision;
 using ValkyrieLibrary.Characters;
 using ValkyrieLibrary.Maps;
+using ValkyrieLibrary.Core;
 
-namespace ValkyrieLibrary.Core
+namespace ValkyrieLibrary.Characters
 {
 	class PokePlayer : Player, ICollidable
 	{
@@ -24,15 +25,6 @@ namespace ValkyrieLibrary.Core
 
         private PokeMessage pokeMessage;
 
-        public MapPoint TileLocation
-        {
-            get { return new MapPoint(this.Location.X / TileEngine.TileSize, this.Location.Y / TileEngine.TileSize); }
-        }
-
-        public MapPoint LocalMapLocation
-        {
-            get { return TileEngine.GlobalTilePointToLocal(TileLocation); }
-        }
 
 		public PokePlayer()
 		{
@@ -60,21 +52,15 @@ namespace ValkyrieLibrary.Core
 
         public void AButton()
         {
+            if (TileEngine.EventSystem.Action(this))
+                return;
+
             if (pokeMessage != null)
             {
                 if (!pokeMessage.Page())
                     pokeMessage = null;
 
                 return;
-            }
-
-            MapEvent e = TileEngine.CurrentMapChunk.GetEvent(this.LocalMapLocation);
-            if (e != null)
-            {
-                if (e.Type == "SignPost" && e.IsSameFacing(Direction) == true)
-                {
-                    DisplayMessage(e.ParmOne, e.ParmTwo);
-                }
             }
         }
 
@@ -96,7 +82,7 @@ namespace ValkyrieLibrary.Core
 			if (this.IsMoving)
 				return;
 
-			Directions tmpDirection = this.Location.toPoint().RelativeDirection(Destination.toPoint());
+			Directions tmpDirection = this.Location.ToPoint().RelativeDirection(Destination.ToPoint());
 
 			MapPoint point = Destination.ToMapPoint();
 
@@ -188,15 +174,7 @@ namespace ValkyrieLibrary.Core
 
                     if (!this.IsJumping && !TileEngine.CollisionManager.CheckCollision(this, this.MovingDestination))
                     {
-                        MapEvent e = TileEngine.CurrentMapChunk.GetEvent(this.LocalMapLocation);
-                        if (e != null && e.Type == "Jump" && e.IsSameFacing(Direction) == true)
-                        {
-                            JumpWall();
-                        }
-                        else
-                        {
                             ReachedMoveDestination();
-                        }
                     }
                     else
                     {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using Microsoft.Xna.Framework;
 using ValkyrieLibrary.Core;
 using System.Xml;
@@ -20,11 +21,11 @@ namespace ValkyrieLibrary.Core
         {
         }
 
-        public MapPoint(MapPoint point) : base(point.toPoint())
+        public MapPoint(MapPoint point) : base(point.ToPoint())
         {
         }
 
-        public MapPoint(ScreenPoint mapPoint) : base((mapPoint / 32).toPoint())
+        public MapPoint(ScreenPoint mapPoint) : base((mapPoint / 32).ToPoint())
         {
         }
 
@@ -35,6 +36,46 @@ namespace ValkyrieLibrary.Core
         public ScreenPoint ToScreenPoint()
         {
             return new ScreenPoint(this);
+        }
+
+        public static MapPoint operator +(MapPoint a, MapPoint b)
+        {
+            return new MapPoint(a.X + b.X, a.Y + b.Y);
+        }
+
+        public static MapPoint operator *(MapPoint a, MapPoint b)
+        {
+            return new MapPoint(a.X * b.X, a.Y * b.Y);
+        }
+
+        public static MapPoint operator /(MapPoint a, MapPoint b)
+        {
+            return new MapPoint(a.X / b.X, a.Y / b.Y);
+        }
+
+        public static MapPoint operator -(MapPoint a, MapPoint b)
+        {
+            return new MapPoint(a.X - b.X, a.Y - b.Y);
+        }
+
+        public static MapPoint operator +(MapPoint a, int b)
+        {
+            return new MapPoint(a.X + b, a.Y + b);
+        }
+
+        public static MapPoint operator *(MapPoint a, int b)
+        {
+            return new MapPoint(a.X * b, a.Y * b);
+        }
+
+        public static MapPoint operator /(MapPoint a, int b)
+        {
+            return new MapPoint(a.X / b, a.Y / b);
+        }
+
+        public static MapPoint operator -(MapPoint a, int b)
+        {
+            return new MapPoint(a.X - b, a.Y - b);
         }
     }
 }

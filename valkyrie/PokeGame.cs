@@ -14,6 +14,7 @@ using ValkyrieLibrary.Core;
 using System.IO;
 using ValkyrieLibrary.States;
 using ValkyrieLibrary.Maps;
+using ValkyrieLibrary.Events;
 
 namespace ValkyrieLibrary
 {
@@ -55,6 +56,9 @@ namespace ValkyrieLibrary
 
             TileEngine.Load(new FileInfo("Data/TileEngineConfig.xml"));
 			TileEngine.LoadWorld(new FileInfo("Data/PokeWorld.xml"));
+
+            TileEngine.EventSystem.EventHandlerList.Add(new SignPostEvent());
+            TileEngine.EventSystem.EventHandlerList.Add(new JumpEvent());
         }
 
         protected override void UnloadContent()

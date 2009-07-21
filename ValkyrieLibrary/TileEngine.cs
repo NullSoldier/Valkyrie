@@ -12,6 +12,7 @@ using System.Xml;
 using ValkyrieLibrary.Collision;
 using ValkyrieLibrary.Characters;
 using ValkyrieLibrary.Maps;
+using ValkyrieLibrary.Events;
 
 namespace ValkyrieLibrary.Core
 {
@@ -53,6 +54,7 @@ namespace ValkyrieLibrary.Core
 		public static CollisionManager CollisionManager;
 		public static Dictionary<string, MapHeader> World;
         public static Player Player;
+        public static EventManager EventSystem;
 		public static int TileSize = 32;
         
 		/*public static Map Map
@@ -83,6 +85,7 @@ namespace ValkyrieLibrary.Core
             TileEngine.ModuleManager = new ModuleManager();
             TileEngine.Configuration = new Dictionary<string, string>();
 			TileEngine.World = new Dictionary<string, MapHeader>();
+            TileEngine.EventSystem = new EventManager();
 		}
 
         public static void Load(FileInfo Configuration)
@@ -129,7 +132,7 @@ namespace ValkyrieLibrary.Core
 						y = Convert.ToInt32(subnode.InnerText);
 				}
 
-				MapHeader header = new MapHeader(name, path, new Point(x, y));
+				MapHeader header = new MapHeader(name, path, new MapPoint(x, y));
 				TileEngine.World.Add(header.MapName, header);
 			}
 		}
@@ -149,10 +152,9 @@ namespace ValkyrieLibrary.Core
 
 		public static MapPoint GlobalTilePointToLocal(MapPoint localpoint)
 		{
-			int x = localpoint.X - (TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.X);
-			int y = localpoint.Y - (TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.Y);
+            MapPoint temp = localpoint - TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation;
+            return temp;
 
-			return new MapPoint(x, y);
 		}
 
 		public static void Update(GameTime time)

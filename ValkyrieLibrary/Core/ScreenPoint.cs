@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using Microsoft.Xna.Framework;
 using System.Xml;
 
@@ -17,11 +18,11 @@ namespace ValkyrieLibrary.Core
         {
         }
 
-        public ScreenPoint(ScreenPoint point) : base(point.toPoint())
+        public ScreenPoint(ScreenPoint point) : base(point.ToPoint())
         {
         }
 
-        public ScreenPoint(MapPoint mapPoint) : base((mapPoint*32).toPoint())
+        public ScreenPoint(MapPoint mapPoint) : base((mapPoint*32).ToPoint())
         {
         }
 
@@ -32,6 +33,46 @@ namespace ValkyrieLibrary.Core
         public MapPoint ToMapPoint()
         {
             return new MapPoint(this);
+        }
+
+        public static ScreenPoint operator +(ScreenPoint a, ScreenPoint b)
+        {
+            return new ScreenPoint(a.X + b.X, a.Y + b.Y);
+        }
+
+        public static ScreenPoint operator *(ScreenPoint a, ScreenPoint b)
+        {
+            return new ScreenPoint(a.X * b.X, a.Y * b.Y);
+        }
+
+        public static ScreenPoint operator /(ScreenPoint a, ScreenPoint b)
+        {
+            return new ScreenPoint(a.X / b.X, a.Y / b.Y);
+        }
+
+        public static ScreenPoint operator -(ScreenPoint a, ScreenPoint b)
+        {
+            return new ScreenPoint(a.X - b.X, a.Y - b.Y);
+        }
+
+        public static ScreenPoint operator +(ScreenPoint a, int b)
+        {
+            return new ScreenPoint(a.X + b, a.Y + b);
+        }
+
+        public static ScreenPoint operator *(ScreenPoint a, int b)
+        {
+            return new ScreenPoint(a.X * b, a.Y * b);
+        }
+
+        public static ScreenPoint operator /(ScreenPoint a, int b)
+        {
+            return new ScreenPoint(a.X / b, a.Y / b);
+        }
+
+        public static ScreenPoint operator -(ScreenPoint a, int b)
+        {
+            return new ScreenPoint(a.X - b, a.Y - b);
         }
     }
 }

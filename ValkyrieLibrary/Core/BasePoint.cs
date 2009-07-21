@@ -44,65 +44,54 @@ namespace ValkyrieLibrary.Core
             }
         }
 
-        public Point toPoint()
+        public Point ToPoint()
         {
             return new Point(this.X, this.Y);
         }
 
+        public Rectangle ToRect(Point size)
+        {
+            return new Rectangle(this.X, this.Y, size.X, size.Y);
+        }
+
         public static BasePoint operator +(BasePoint a, BasePoint b)
         {
-            a.X = a.X + b.X;
-            a.Y = a.Y + b.Y;
-            return a;
+            return new BasePoint(a.X + b.X, a.Y + b.Y);
         }
 
         public static BasePoint operator *(BasePoint a, BasePoint b)
         {
-            a.X = a.X * b.X;
-            a.Y = a.Y * b.Y;
-            return a;
+            return new BasePoint(a.X * b.X, a.Y * b.Y);
         }
 
         public static BasePoint operator /(BasePoint a, BasePoint b)
         {
-            a.X = a.X / b.X;
-            a.Y = a.Y / b.Y;
-            return a;
+            return new BasePoint(a.X / b.X, a.Y / b.Y);
         }
 
         public static BasePoint operator -(BasePoint a, BasePoint b)
         {
-            a.X = a.X - b.X;
-            a.Y = a.Y - b.Y;
-            return a;
+            return new BasePoint(a.X - b.X, a.Y - b.Y);
         }
 
         public static BasePoint operator +(BasePoint a, int b)
         {
-            a.X = a.X + b;
-            a.Y = a.Y + b;
-            return a;
+            return new BasePoint(a.X + b, a.Y + b);
         }
 
         public static BasePoint operator *(BasePoint a, int b)
         {
-            a.X = a.X * b;
-            a.Y = a.Y * b;
-            return a;
+            return new BasePoint(a.X * b, a.Y * b);
         }
 
         public static BasePoint operator /(BasePoint a, int b)
         {
-            a.X = a.X / b;
-            a.Y = a.Y / b;
-            return a;
+            return new BasePoint(a.X / b, a.Y / b);
         }
 
         public static BasePoint operator -(BasePoint a, int b)
         {
-            a.X = a.X - b;
-            a.Y = a.Y - b;
-            return a;
+            return new BasePoint(a.X - b, a.Y - b);
         }
 
         public static bool operator !=(BasePoint a, BasePoint b)
@@ -112,7 +101,7 @@ namespace ValkyrieLibrary.Core
 
         public static bool operator ==(BasePoint a, BasePoint b)
         {
-            return !(a == b);
+            return (a.Equals(b));
         }
 
         public override bool Equals(object obj)

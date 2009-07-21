@@ -91,9 +91,12 @@
     <Compile Include="Core\BasePoint.cs" />
     <Compile Include="Core\MapPoint.cs" />
     <Compile Include="Core\ScreenPoint.cs" />
+    <Compile Include="Events\BaseEventHandler.cs" />
+    <Compile Include="Events\EventManager.cs" />
+    <Compile Include="Events\Event.cs" />
+    <Compile Include="Events\IEventHandler.cs" />
     <Compile Include="Input\KeybindController.cs" />
     <Compile Include="Input\KeyDef.cs" />
-    <Compile Include="Map\MapEvent.cs" />
     <Compile Include="Map\MapHandler.cs" />
     <Compile Include="Map\MapHeader.cs" />
     <Compile Include="Modules\ModuleManager.cs" />

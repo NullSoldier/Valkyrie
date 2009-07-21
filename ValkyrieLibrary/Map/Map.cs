@@ -11,19 +11,65 @@ using System.Diagnostics;
 using ValkyrieLibrary.Animation;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Maps;
+using ValkyrieLibrary.Events;
 
 namespace ValkyrieLibrary.Maps
 {
 	public class Map
 	{
+        #region Public Properties
+
+        public string Name { get; set; }
+
+        public Texture2D Texture
+        {
+            get
+            {
+                // Lazy texture loading
+                this.texture = TileEngine.TextureManager.GetTexture(this.TextureName);
+
+                return this.texture;
+            }
+            set { this.texture = value; }
+        }
+        public string TextureName { get; set; }
+
+        public MapPoint MapSize { get; set; }
+        public ScreenPoint TileSize { get; set; }
+
+
+        public int[] BaseLayer { get; set; }
+        public int[] MiddleLayer { get; set; }
+
+        public int[] TopLayer { get; set; }
+        public int[] CollisionLayer { get; set; }
+        public List<Event> EventList;
+
+        private Texture2D texture;
+
+        public int TilesPerRow
+        {
+            get { return ((this.Texture != null) ? (this.Texture.Width / this.TileSize.X) : 0); }
+        }
+
+        public int TilesPerCol
+        {
+            get { return ((this.Texture != null) ? (this.Texture.Height / this.TileSize.Y) : 0); }
+        }
+
+        public Dictionary<int, FrameAnimation> AnimatedTiles;
+
+        #endregion
+
+
+
 		public Map()
 		{
             this.BaseLayer = new int[0];
             this.MiddleLayer = new int[0];
             this.TopLayer = new int[0];
             this.CollisionLayer = new int[0];
-            this.Events = new List<MapEvent>();
-
+            this.EventList = new List<Event>();
 			this.AnimatedTiles = new Dictionary<int, FrameAnimation>();
 		}
 
@@ -33,105 +79,6 @@ namespace ValkyrieLibrary.Maps
 				anim.Update(gameTime);
 		}
 
-		#region Public Properties
-
-		public string Name { get; set; }
-
-		public Texture2D Texture
-		{
-			get
-			{
-				// Lazy texture loading
-				this.texture = TileEngine.TextureManager.GetTexture(this.TextureName);
-
-				return this.texture;
-			}
-			set { this.texture = value; }
-		}
-		public string TextureName { get; set; }
-
-		public MapPoint MapSize { get; set; }
-		public ScreenPoint TileSize { get; set; }
-
-		public int[] BaseLayer { get; set; }
-		public int[] MiddleLayer { get; set; }
-        public int[] TopLayer { get; set; }
-		public int[] CollisionLayer { get; set; }
-        public List<MapEvent> Events { get; set; }
-
-		private Texture2D texture;
-
-		public int TilesPerRow
-		{
-			get { return ((this.Texture != null) ? (this.Texture.Width / this.TileSize.X) : 0); }
-		}
-
-        public int TilesPerCol
-        {
-            get { return ((this.Texture != null) ? (this.Texture.Height / this.TileSize.Y) : 0); }
-        }
-
-		public Dictionary<int, FrameAnimation> AnimatedTiles;
-
-		#endregion
-
-        #region MapEvent
-
-        public MapEvent GetEventInRect(Rectangle rect)
-        {
-            foreach (MapEvent ev in Events)
-            {
-                Rectangle r = new Rectangle(ev.Location.X, ev.Location.Y, ev.Size.X, ev.Size.Y);
-                if (rect.Intersects(r) == true)
-                    return ev;
-            }
-
-            return null;
-        }
-
-        public MapEvent GetEvent(MapPoint pos)
-        {
-            foreach (MapEvent ev in Events)
-            {
-                Rectangle r = new Rectangle(ev.Location.X, ev.Location.Y, ev.Size.X, ev.Size.Y);
-                if (r.Contains(pos.toPoint()) == true)
-                    return ev;
-            }
-
-            return null;
-        }
-
-        public void SetEvent(MapEvent e)
-        {
-            foreach (MapEvent ev in Events)
-            {
-                if (ev.Location == e.Location && ev.Size == e.Size)
-                {
-                    ev.Type = e.Type;
-                    ev.Location = e.Location;
-                    ev.Size = e.Size;
-                    ev.ParmOne = e.ParmOne;
-                    ev.ParmTwo = e.ParmTwo;
-                    return;
-                }
-            }
-
-            Events.Add(e);
-        }
-
-        public void DelEvent(MapEvent e)
-        {
-            foreach (MapEvent ev in Events)
-            {
-                if (ev.Location == e.Location && ev.Size == e.Size)
-                {
-                    Events.Remove(ev);
-                    return;
-                }
-            }
-        }
-
-        #endregion
 
         #region Top Layer
         public int GetTopLayerValue(MapPoint point)
@@ -359,13 +306,7 @@ namespace ValkyrieLibrary.Maps
 				}
                 else if (innerNodes[i].Name == "Events")
                 {
-					XmlNodeList events = innerNodes[i].ChildNodes;
-
-					foreach (XmlNode node in events)
-					{
-                        MapEvent e = new MapEvent(node);
-                        Events.Add(e);
-                    }
+                    TileEngine.EventSystem.LoadEvents(this, innerNodes[i]);
                 }
 			}
 

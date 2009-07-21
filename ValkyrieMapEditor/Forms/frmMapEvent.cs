@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using ValkyrieLibrary.Maps;
+using ValkyrieLibrary.Events;
 
 namespace ValkyrieMapEditor.Forms
 {
@@ -17,7 +17,7 @@ namespace ValkyrieMapEditor.Forms
             InitializeComponent();
         }
 
-        public void LoadEvent(MapEvent e)
+        public void LoadEvent(Event e)
         {
             this.tbArgOne.Text = e.ParmOne;
             this.tbArgTwo.Text = e.ParmTwo;

@@ -17,6 +17,7 @@ using ValkyrieLibrary;
 using System.Windows.Forms;
 using ValkyrieLibrary.Maps;
 using ValkyrieMapEditor.Forms;
+using ValkyrieLibrary.Events;
 
 namespace ValkyrieMapEditor.Core
 {
@@ -77,25 +78,24 @@ namespace ValkyrieMapEditor.Core
             int xOffset = (int)TileEngine.Camera.MapOffset.X / 32 + (int)TileEngine.Camera.CameraOffset.X;
             int yOffset = (int)TileEngine.Camera.MapOffset.Y / 32 + (int)TileEngine.Camera.CameraOffset.Y;
 
-            Point point = new Point(SelectedPoint.X-xOffset, SelectedPoint.Y-yOffset);
-            Point size = new Point(this.EndSelectedPoint.X - this.SelectedPoint.X, this.EndSelectedPoint.Y - this.SelectedPoint.Y);
-
-            Rectangle rect = new Rectangle(point.X, point.Y, size.X, size.Y);
+            MapPoint point = new MapPoint(SelectedPoint.X - xOffset, SelectedPoint.Y - yOffset);
+            MapPoint size = new MapPoint(this.EndSelectedPoint.X - this.SelectedPoint.X, this.EndSelectedPoint.Y - this.SelectedPoint.Y);
 
 
 
-            MapEvent e = TileEngine.CurrentMapChunk.GetEventInRect(rect);
+
+            Event e = TileEngine.EventSystem.GetEventInRect(point, size);
 
             frmMapEvent frm = new frmMapEvent();
 
             if (e == null)
             {
-                e = new MapEvent(point, size);
+                e = new Event(point, size);
             }
             else
             {
-                SelectedPoint = e.Location;
-                EndSelectedPoint = new Point(e.Location.X + e.Size.X, e.Location.Y + e.Size.Y);
+                SelectedPoint = e.Location.ToPoint();
+                EndSelectedPoint = (e.Location+e.Size).ToPoint();
             }
 
 
@@ -109,11 +109,11 @@ namespace ValkyrieMapEditor.Core
                 e.ParmOne = frm.tbArgOne.Text;
                 e.ParmTwo = frm.tbArgTwo.Text;
                 e.Dir = frm.cbDir.Text;
-                TileEngine.CurrentMapChunk.SetEvent(e);
+                TileEngine.EventSystem.SetEvent(e);
             }
             else if (res == DialogResult.Abort)
             {
-                TileEngine.CurrentMapChunk.DelEvent(e);
+                TileEngine.EventSystem.DelEvent(e);
             }
         }
 
@@ -160,31 +160,13 @@ namespace ValkyrieMapEditor.Core
             if (Enabled == false)
                 return;
 
-            // Render events
-            for (int y = 0; y < TileEngine.CurrentMapChunk.MapSize.Y; y++)
+            foreach (Event e in TileEngine.CurrentMapChunk.EventList)
             {
-                for (int x = 0; x < TileEngine.CurrentMapChunk.MapSize.X; x++)
-                {
-                    MapEvent e = TileEngine.CurrentMapChunk.GetEvent(new MapPoint(x, y));
 
-                    if (e == null)
-                        continue;
-
-                    Rectangle destRectangle = new Rectangle(e.Location.X * 32, e.Location.Y * 32, 32, 32);
-                    destRectangle.X = (int)TileEngine.Camera.MapOffset.X + (int)TileEngine.Camera.CameraOffset.X + (x * TileEngine.CurrentMapChunk.TileSize.X);
-                    destRectangle.Y = (int)TileEngine.Camera.MapOffset.Y + (int)TileEngine.Camera.CameraOffset.Y + (y * TileEngine.CurrentMapChunk.TileSize.Y);
-
-                    spriteBatch.Draw(EventSprite, destRectangle, new Rectangle(0, 0, EventSprite.Width, EventSprite.Height), Color.White);
-                }
-            }
-
-            foreach (MapEvent e in TileEngine.CurrentMapChunk.Events)
-            {
                 Point newLoc = new Point((int)TileEngine.Camera.MapOffset.X + (int)TileEngine.Camera.CameraOffset.X + (e.Location.X * TileEngine.CurrentMapChunk.TileSize.X),
                      (int)TileEngine.Camera.MapOffset.Y + (int)TileEngine.Camera.CameraOffset.Y + (e.Location.Y * TileEngine.CurrentMapChunk.TileSize.Y));
 
-                spriteBatch.DrawString(EditorXNA.font, e.Type, new Vector2(newLoc.X + 10, newLoc.Y + 10), Color.AliceBlue);
-
+  
                 Texture2D border = CreateBorderRectangle(e.Size.X * 32, e.Size.Y * 32);
 
                 if (border != null)
@@ -192,6 +174,8 @@ namespace ValkyrieMapEditor.Core
                     Rectangle destRectangle = new Rectangle(newLoc.X, newLoc.Y, e.Size.X * 32, e.Size.Y * 32);
                     spriteBatch.Draw(border, destRectangle, new Rectangle(0, 0, border.Width, border.Height), Color.White);
                 }
+
+                spriteBatch.DrawString(EditorXNA.font, e.Type, new Vector2(newLoc.X + 10, newLoc.Y + 10), Color.AliceBlue);
             }
 
             if (!Cancel)
@@ -227,7 +211,7 @@ namespace ValkyrieMapEditor.Core
             {
                 for (int x = 1; x < width - 1; x++)
                 {
-                    color[x + (y * width)] = new Color(0, 0, 0, 0);
+                    color[x + (y * width)] = new Color(255, 0, 0, 125);
                 }
             }
 

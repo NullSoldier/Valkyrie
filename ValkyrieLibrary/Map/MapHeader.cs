@@ -15,9 +15,9 @@ namespace ValkyrieLibrary.Maps
 
 		#region Constructors
 		public MapHeader(string mapname, string filepath)
-			: this(mapname, filepath, new Point(0,0))	{ }
+            : this(mapname, filepath, new MapPoint(0, 0)) { }
 
-		public MapHeader(string mapname, string filepath, Point point)
+		public MapHeader(string mapname, string filepath, MapPoint point)
 		{
 			this.MapName = mapname;
 			this.MapLocation = point;
@@ -37,28 +37,12 @@ namespace ValkyrieLibrary.Maps
 			set { this.map = value; }
 		}
 
-		public string MapName
-		{
-			get { return this.mapname; }
-			set { this.mapname = value; }
-		}
-
-		public string MapFileLocation
-		{
-			get { return this.mapfilelocation; }
-			set { this.mapfilelocation = value; }
-		}
-
-		public Point MapLocation
-		{
-			get { return this.maplocation; }
-			set { this.maplocation = value; }
-		}
+        public string MapName { get; set; }
+        public string MapFileLocation { get; set; }
+        public MapPoint MapLocation { get; set; }
 
 		private Map map;
-		private string mapname;
-		private Point maplocation;
-		private string mapfilelocation;
+
 
 		public void Load()
 		{
