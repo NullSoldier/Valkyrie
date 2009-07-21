@@ -4,24 +4,31 @@
   <Worlds>
     <World Name="Main">
       <MapLoc>
+        <Name>Route2</Name>
+        <FilePath>Route2.xml</FilePath>
+        <X>12</X>
+        <Y>0</Y>
+      </MapLoc>      
+      
+      <MapLoc>
         <Name>PalletTown</Name>
         <FilePath>PalletTown.xml</FilePath>
         <X>12</X>
-        <Y>80</Y>
+        <Y>160</Y>
       </MapLoc>
 
       <MapLoc>
         <Name>Route1</Name>
         <FilePath>Route1.xml</FilePath>
         <X>12</X>
-        <Y>40</Y>
+        <Y>120</Y>
       </MapLoc>
 
       <MapLoc>
         <Name>ViridianCity</Name>
         <FilePath>ViridianCity.xml</FilePath>
         <X>0</X>
-        <Y>0</Y>
+        <Y>80</Y>
       </MapLoc>
     </World>
     <World Name="PalletTown_HouseOne">

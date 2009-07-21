@@ -279,7 +279,7 @@ namespace ValkyrieLibrary.Maps
 
         public bool IsVisableToPlayer()
         {
-            Rectangle mapSize = TileEngine.CurWorld[TileEngine.CurrentMapChunk.Name].MapLocation.ToRect(TileEngine.CurrentMapChunk.MapSize.ToPoint());
+            Rectangle mapSize = TileEngine.CurWorld[this.Name].MapLocation.ToRect(this.MapSize.ToPoint());
             Rectangle worldSize = new Rectangle(0,0, TileEngine.Viewport.Width, TileEngine.Viewport.Height);
   
             return (mapSize.Intersects(worldSize) == true);

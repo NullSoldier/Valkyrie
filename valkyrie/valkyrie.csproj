@@ -129,6 +129,7 @@
     <Content Include="Maps\Route1.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Maps\Route2.xml" />
     <Content Include="Maps\ViridianCity.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -52,7 +52,7 @@ namespace ValkyrieLibrary.States
             TileEngine.Player = new PokePlayer();
 			TileEngine.Player.Gender = Genders.Male;
             TileEngine.Player.Sprite = TileEngine.TextureManager.GetTexture("MaleSprite.png");
-            TileEngine.Player.Location = new ScreenPoint(736, 1537);
+            TileEngine.Player.Location = new MapPoint(14, 62).ToScreenPoint();
 
 
             this.KeybindController.AddKey(Keys.Left, "MoveLeft");
