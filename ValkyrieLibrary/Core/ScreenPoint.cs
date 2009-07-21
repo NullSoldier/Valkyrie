@@ -24,7 +24,11 @@ namespace ValkyrieLibrary
         {
         }
 
-        public MapPoint toMapPoint()
+        public ScreenPoint(XmlNode cnode) : base(cnode)
+        {
+        }
+
+        public MapPoint ToMapPoint()
         {
             return new MapPoint(this);
         }

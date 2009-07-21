@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using System.Xml;
 
 namespace ValkyrieLibrary
 {
@@ -30,6 +31,17 @@ namespace ValkyrieLibrary
         {
             this.X = point.X;
             this.Y = point.Y;
+        }
+
+        public BasePoint(XmlNode cnode)
+        {
+            foreach (XmlNode locNode in cnode.ChildNodes)
+            {
+                if (locNode.Name == "X")
+                    X = Convert.ToInt32(locNode.InnerText);
+                else if (locNode.Name == "Y")
+                    Y = Convert.ToInt32(locNode.InnerText);
+            }
         }
 
         public Point toPoint()
@@ -124,6 +136,17 @@ namespace ValkyrieLibrary
         public override string ToString()
         {
             return "TODO";
+        }
+
+        public void ToXml(XmlDocument doc, XmlElement parent)
+        {
+            var sizex = doc.CreateElement("X");
+            sizex.InnerText = X.ToString();
+            var sizey = doc.CreateElement("Y");
+            sizey.InnerText = Y.ToString();
+
+            parent.AppendChild(sizex);
+            parent.AppendChild(sizey);
         }
     }
 }
