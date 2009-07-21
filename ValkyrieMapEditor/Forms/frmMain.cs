@@ -168,7 +168,7 @@ namespace ValkyrieMapEditor
             this.btnTopLayer.Checked = false;
             this.btnCollisionLayer.Checked = false;
 
-            MapEditorManager.CurrentLayer = MapLayer.BaseLayer;
+            MapEditorManager.CurrentLayer = Map.EMapLayer.BaseLayer;
         }
 
         private void btnMiddleLayer_Click(object sender, EventArgs e)
@@ -177,7 +177,7 @@ namespace ValkyrieMapEditor
             this.btnTopLayer.Checked = false;
             this.btnCollisionLayer.Checked = false;
 
-            MapEditorManager.CurrentLayer = MapLayer.MiddleLayer;
+            MapEditorManager.CurrentLayer = Map.EMapLayer.MiddleLayer;
         }
 
         private void btnTopLayer_Click(object sender, EventArgs e)
@@ -186,7 +186,7 @@ namespace ValkyrieMapEditor
             this.btnMiddleLayer.Checked = false;
             this.btnCollisionLayer.Checked = false;
 
-            MapEditorManager.CurrentLayer = MapLayer.TopLayer;
+            MapEditorManager.CurrentLayer = Map.EMapLayer.TopLayer;
         }
 
         private void btnCollisionLayer_Click(object sender, EventArgs e)
@@ -195,7 +195,7 @@ namespace ValkyrieMapEditor
             this.btnMiddleLayer.Checked = false;
             this.btnTopLayer.Checked = false;
 
-            MapEditorManager.CurrentLayer = MapLayer.CollisionLayer;
+            MapEditorManager.CurrentLayer = Map.EMapLayer.CollisionLayer;
         }
 
         private void toolNew_Click(object sender, EventArgs e)

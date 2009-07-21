@@ -12,6 +12,9 @@ namespace ValkyrieLibrary.Events
         public SignPostEvent()
         {
             Type = "SignPost";
+
+            this.Parameters.Add("Title");
+            this.Parameters.Add("Text");
         }
 
         public override bool MeetsCriteria(ActivationTypes activationType)

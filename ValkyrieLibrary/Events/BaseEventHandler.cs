@@ -10,7 +10,13 @@ namespace ValkyrieLibrary.Events
     public abstract class BaseEventHandler : IEventHandler
     {
         public ActivationTypes ActivationType { get; set; }
+        public List<String> Parameters;
         public String Type { get; set; }
+
+        public BaseEventHandler()
+        {
+            this.Parameters = new List<String>();
+        }
 
         public virtual bool MeetsCriteria(ActivationTypes activationType)
         {

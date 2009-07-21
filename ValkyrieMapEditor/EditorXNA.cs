@@ -148,7 +148,7 @@ namespace ValkyrieMapEditor
 				// TODO: Add your update logic here
 				KeyboardState keyState = Keyboard.GetState();
 
-				if (TileEngine.IsMapLoaded && MapEditorManager.CurrentLayer != MapLayer.CollisionLayer
+                if (TileEngine.IsMapLoaded && MapEditorManager.CurrentLayer != Map.EMapLayer.CollisionLayer
 					&& MapEditorManager.CurrentTool == Tools.Pencil) 
 					// Only do this if your not setting the collision layer or using something other than the pencil
 				{
@@ -247,7 +247,7 @@ namespace ValkyrieMapEditor
         {
             if (MapEventHandler.Enabled == false)
             {
-                if (TileEngine.IsMapLoaded && MapEditorManager.CurrentLayer == MapLayer.CollisionLayer)
+                if (TileEngine.IsMapLoaded && MapEditorManager.CurrentLayer == Map.EMapLayer.CollisionLayer)
                 {
                     MapPoint point = new MapPoint((e.Location.X - (int)TileEngine.Camera.MapOffset.X) / 32, (e.Location.Y - (int)TileEngine.Camera.MapOffset.Y) / 32);
 
@@ -293,9 +293,7 @@ namespace ValkyrieMapEditor
 
 			if (TileEngine.IsMapLoaded)
             {
-                TileEngine.DrawBaseLayer(this.spriteBatch);
-                TileEngine.DrawMiddleLayer(this.spriteBatch);
-                TileEngine.DrawTopLayer(this.spriteBatch);
+                TileEngine.DrawAllLayers(this.spriteBatch, false);
             }
 
 			// TODO: Add your drawing code here
@@ -308,7 +306,7 @@ namespace ValkyrieMapEditor
 				{
 					for (int x = 0; x < TileEngine.CurrentMapChunk.MapSize.X; x++)
 					{
-						int value = TileEngine.CurrentMapChunk.GetCollisionLayerValue(new MapPoint(x, y));
+						int value = TileEngine.CurrentMapChunk.GetLayerValue(new MapPoint(x, y), Map.EMapLayer.CollisionLayer);
 
 						if (value == -1)
 							continue;

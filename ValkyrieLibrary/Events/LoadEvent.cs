@@ -12,6 +12,10 @@ namespace ValkyrieLibrary.Events
     {
         public LoadEvent()
         {
+            this.Parameters.Add("Name");
+            this.Parameters.Add("World");
+            this.Parameters.Add("Entry");
+
             this.Type = "Load";
             this.ActivationType = ActivationTypes.Collision;
         }

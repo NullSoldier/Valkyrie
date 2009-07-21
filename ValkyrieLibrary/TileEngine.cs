@@ -158,42 +158,42 @@ namespace ValkyrieLibrary.Core
             TileEngine.ModuleManager.CurrentModule.Draw(spriteBatch, gameTime);
 		}
 
+
 		public static void DrawAllLayers(SpriteBatch spriteBatch, bool drawcharacters)
 		{
 			bool charsDrawn = false;
+
+            spriteBatch.Begin();
 
 			foreach (var header in TileEngine.CurWorld.Values)
 			{
                 if (!header.Map.IsVisableToPlayer())
                     continue;
 
-				TileEngine.DrawBaseLayerMap(spriteBatch, header);
-				TileEngine.DrawMiddleLayerMap(spriteBatch, header);
+                TileEngine.DrawLayerMap(spriteBatch, header, Map.EMapLayer.BaseLayer);
+                TileEngine.DrawLayerMap(spriteBatch, header, Map.EMapLayer.MiddleLayer);
 
-				if (drawcharacters && !charsDrawn)
-				{
-					TileEngine.DrawCharacters(spriteBatch);
-					charsDrawn = true;
-				}
+                if (!drawcharacters)
+                    TileEngine.DrawLayerMap(spriteBatch, header, Map.EMapLayer.TopLayer);
+            }
 
-				TileEngine.DrawTopLayerMap(spriteBatch, header);
-			}
-		}
-
-		public static void DrawBaseLayer(SpriteBatch spriteBatch)
-		{
-            spriteBatch.Begin();
-
-            foreach (var header in TileEngine.CurWorld.Values)
+			if (drawcharacters)
             {
-                if (header.Map.IsVisableToPlayer())
-                    TileEngine.DrawBaseLayerMap(spriteBatch, header);
+				TileEngine.DrawCharacters(spriteBatch);
+
+			    foreach (var header in TileEngine.CurWorld.Values)
+			    {
+                    if (!header.Map.IsVisableToPlayer())
+                        continue;
+
+                    TileEngine.DrawLayerMap(spriteBatch, header, Map.EMapLayer.TopLayer);
+                }
             }
 
             spriteBatch.End();
 		}
 
-		public static void DrawBaseLayerMap(SpriteBatch spriteBatch, MapHeader header)
+        public static void DrawLayerMap(SpriteBatch spriteBatch, MapHeader header, Map.EMapLayer layer)
 		{
 			if (spriteBatch == null)
 				throw new ArgumentNullException();
@@ -212,96 +212,17 @@ namespace ValkyrieLibrary.Core
                     if (!TileEngine.Camera.CheckIsVisible(des))
                         continue;
 
-					Rectangle sourceRectangle = currentMap.GetBaseLayerSourceRect(new MapPoint(x, y));
+                    Rectangle sourceRectangle = currentMap.GetLayerSourceRect(new MapPoint(x, y), layer);
+
 					if( !sourceRectangle.IsEmpty )
                         spriteBatch.Draw(currentMap.Texture, des, sourceRectangle, Color.White);
 				}
 			}
 		}
-		
-		public static void DrawMiddleLayer(SpriteBatch spriteBatch)
-		{
-            spriteBatch.Begin();
-
-            foreach (var header in TileEngine.CurWorld.Values)
-            {
-                if (header.Map.IsVisableToPlayer())
-                    TileEngine.DrawMiddleLayerMap(spriteBatch, header);
-            }
-
-            spriteBatch.End();
-		}
-
-        public static void DrawMiddleLayerMap(SpriteBatch spriteBatch, MapHeader header)
-        {
-            if (spriteBatch == null)
-                throw new ArgumentNullException();
-
-            Map currentMap = header.Map;
-            ScreenPoint camOffset = TileEngine.Camera.Offset();
-            ScreenPoint tileSize = currentMap.TileSize;
-
-            for (int y = 0; y < currentMap.MapSize.Y; y++)
-            {
-                for (int x = 0; x < currentMap.MapSize.X; x++)
-                {
-                    ScreenPoint pos = new MapPoint(x, y).ToScreenPoint() + camOffset + header.MapLocation.ToScreenPoint();
-                    Rectangle des = pos.ToRect(tileSize.ToPoint());
-
-                    if (!TileEngine.Camera.CheckIsVisible(des))
-                        continue;
-
-                    Rectangle sourceRectangle = currentMap.GetMiddleLayerSourceRect(new MapPoint(x, y));
-                    if (!sourceRectangle.IsEmpty)
-                        spriteBatch.Draw(currentMap.Texture, des, sourceRectangle, Color.White);
-                }
-            }
-        }
-
-		public static void DrawTopLayer(SpriteBatch spriteBatch)
-		{
-            spriteBatch.Begin();
-            foreach (var header in TileEngine.CurWorld.Values)
-            {
-                if (header.Map.IsVisableToPlayer())
-                    DrawTopLayerMap(spriteBatch, header);
-            }
-            spriteBatch.End();
-		}
-
-		public static void DrawTopLayerMap(SpriteBatch spriteBatch, MapHeader header)
-		{
-			if (spriteBatch == null)
-				throw new ArgumentNullException();
-
-			Map currentMap = header.Map;
-            ScreenPoint camOffset = TileEngine.Camera.Offset();
-            ScreenPoint tileSize = currentMap.TileSize;
-
-			for (int y = 0; y < currentMap.MapSize.Y; y++)
-			{
-                for (int x = 0; x < currentMap.MapSize.X; x++)
-                {
-                    ScreenPoint pos = new MapPoint(x, y).ToScreenPoint() + camOffset + header.MapLocation.ToScreenPoint();
-                    Rectangle des = pos.ToRect(tileSize.ToPoint());
-
-                    if (!TileEngine.Camera.CheckIsVisible(des))
-                        continue;
-
-                    Rectangle sourceRectangle = currentMap.GetTopLayerSourceRect(new MapPoint(x, y));
-                    if (!sourceRectangle.IsEmpty)
-                        spriteBatch.Draw(currentMap.Texture, des, sourceRectangle, Color.White);
-                }
-			}
-		}
 
         public static void DrawCharacters(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
-
 			TileEngine.Player.Draw(spriteBatch);
-
-            spriteBatch.End();
         }
 
         public static void DrawOverlay(SpriteBatch spriteBatch)

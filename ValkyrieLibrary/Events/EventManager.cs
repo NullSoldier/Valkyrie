@@ -13,12 +13,11 @@ namespace ValkyrieLibrary.Events
     public class EventManager
     {
         public List<IEventHandler> EventHandlerList;
-        
+    
 
         public EventManager()
         {
             EventHandlerList = new List<IEventHandler>();
-
             this.EventHandlerList.Add(new LoadEvent());
         }
 
