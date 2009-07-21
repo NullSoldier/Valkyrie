@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using ValkyrieLibrary.Animation;
+using Microsoft.Xna.Framework.Graphics;
+using ValkyrieLibrary.Core;
 
 namespace ValkyrieLibrary.Characters
 {
@@ -18,12 +20,12 @@ namespace ValkyrieLibrary.Characters
 		public int Level;
 		public int Gold;
 
-        public virtual void DrawOverlay(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
+        public virtual void DrawOverlay(SpriteBatch spriteBatch)
         {
 
         }
 
-		public override void Move(Point Destination)
+		public override void Move(ScreenPoint Destination)
 		{
 			throw new NotImplementedException();
 		}

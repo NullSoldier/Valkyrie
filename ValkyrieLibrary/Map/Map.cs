@@ -50,8 +50,8 @@ namespace ValkyrieLibrary.Maps
 		}
 		public string TextureName { get; set; }
 
-		public Point MapSize { get; set; }
-		public Point TileSize { get; set; }
+		public MapPoint MapSize { get; set; }
+		public ScreenPoint TileSize { get; set; }
 
 		public int[] BaseLayer { get; set; }
 		public int[] MiddleLayer { get; set; }
@@ -89,12 +89,12 @@ namespace ValkyrieLibrary.Maps
             return null;
         }
 
-        public MapEvent GetEvent(Point pos)
+        public MapEvent GetEvent(MapPoint pos)
         {
             foreach (MapEvent ev in Events)
             {
                 Rectangle r = new Rectangle(ev.Location.X, ev.Location.Y, ev.Size.X, ev.Size.Y);
-                if (r.Contains(pos) == true)
+                if (r.Contains(pos.toPoint()) == true)
                     return ev;
             }
 
@@ -134,31 +134,31 @@ namespace ValkyrieLibrary.Maps
         #endregion
 
         #region Top Layer
-        public int GetTopLayerValue(Point MapPoint)
+        public int GetTopLayerValue(MapPoint point)
 		{
-			if (MapPoint.X < 0 || (MapPoint.X > this.MapSize.X) || MapPoint.Y < 0 || (MapPoint.Y > this.MapSize.Y))
+			if (point.X < 0 || (point.X > this.MapSize.X) || point.Y < 0 || (point.Y > this.MapSize.Y))
 				throw new ArgumentOutOfRangeException();
 
-			return this.TopLayer[MapPoint.Y * this.MapSize.X + MapPoint.X];
+			return this.TopLayer[point.Y * this.MapSize.X + point.X];
 		}
        
-        private void SetTopLayerValue(Point MapPoint, int value)
+        private void SetTopLayerValue(MapPoint point, int value)
         {
-            if (MapPoint.X < 0 || (MapPoint.X > this.MapSize.X) || MapPoint.Y < 0 || (MapPoint.Y > this.MapSize.Y))
+            if (point.X < 0 || (point.X > this.MapSize.X) || point.Y < 0 || (point.Y > this.MapSize.Y))
                 throw new ArgumentOutOfRangeException();
 
-            this.TopLayer[MapPoint.Y * this.MapSize.X + MapPoint.X] = value;
+            this.TopLayer[point.Y * this.MapSize.X + point.X] = value;
         }
 
-		public Rectangle GetTopLayerSourceRect(Point MapPoint)
+		public Rectangle GetTopLayerSourceRect(MapPoint point)
 		{
-			if (MapPoint.X < 0 || MapPoint.X > this.MapSize.X ||
-				MapPoint.Y < 0 || MapPoint.Y >= this.MapSize.Y)
+			if (point.X < 0 || point.X > this.MapSize.X ||
+				point.Y < 0 || point.Y >= this.MapSize.Y)
 			{
 				return Rectangle.Empty;
 			}
 
-			int TopLayerValue = this.GetTopLayerValue(MapPoint);
+			int TopLayerValue = this.GetTopLayerValue(point);
 
 			if (TopLayerValue < 0)
 				return Rectangle.Empty;
@@ -171,31 +171,31 @@ namespace ValkyrieLibrary.Maps
         #endregion
 
         #region Middle Layer
-        public int GetMiddleLayerValue(Point MapPoint)
+        public int GetMiddleLayerValue(MapPoint point)
 		{
-			if (MapPoint.X < 0 || (MapPoint.X > this.MapSize.X) || MapPoint.Y < 0 || (MapPoint.Y > this.MapSize.Y))
+			if (point.X < 0 || (point.X > this.MapSize.X) || point.Y < 0 || (point.Y > this.MapSize.Y))
 				throw new ArgumentOutOfRangeException();
 
-			return this.MiddleLayer[MapPoint.Y * this.MapSize.X + MapPoint.X];
+			return this.MiddleLayer[point.Y * this.MapSize.X + point.X];
 		}
 
-        private void SetMiddleLayerValue(Point MapPoint, int value)
+        private void SetMiddleLayerValue(MapPoint point, int value)
         {
-            if (MapPoint.X < 0 || (MapPoint.X > this.MapSize.X) || MapPoint.Y < 0 || (MapPoint.Y > this.MapSize.Y))
+            if (point.X < 0 || (point.X > this.MapSize.X) || point.Y < 0 || (point.Y > this.MapSize.Y))
                 throw new ArgumentOutOfRangeException();
 
-            this.MiddleLayer[MapPoint.Y * this.MapSize.X + MapPoint.X] = value;
+            this.MiddleLayer[point.Y * this.MapSize.X + point.X] = value;
         }
 
-		public Rectangle GetMiddleLayerSourceRect(Point MapPoint)
+		public Rectangle GetMiddleLayerSourceRect(MapPoint point)
 		{
-			if (MapPoint.X < 0 || MapPoint.X > this.MapSize.X ||
-				MapPoint.Y < 0 || MapPoint.Y >= this.MapSize.Y)
+			if (point.X < 0 || point.X > this.MapSize.X ||
+				point.Y < 0 || point.Y >= this.MapSize.Y)
 			{
 				return Rectangle.Empty;
 			}
 
-			int MiddleLayerValue = this.GetMiddleLayerValue(MapPoint);
+			int MiddleLayerValue = this.GetMiddleLayerValue(point);
 
 			if (MiddleLayerValue < 0)
 				return Rectangle.Empty;
@@ -211,31 +211,31 @@ namespace ValkyrieLibrary.Maps
         #endregion
 
         #region BaseLayer
-        public int GetBaseLayerValue(Point MapPoint)
+        public int GetBaseLayerValue(MapPoint point)
 		{
-			if (MapPoint.X < 0 || (MapPoint.X > this.MapSize.X ) || MapPoint.Y < 0 || (MapPoint.Y > this.MapSize.Y) )
+			if (point.X < 0 || (point.X > this.MapSize.X ) || point.Y < 0 || (point.Y > this.MapSize.Y) )
 				throw new ArgumentOutOfRangeException();
 
-			return this.BaseLayer[MapPoint.Y * this.MapSize.X + MapPoint.X];
+			return this.BaseLayer[point.Y * this.MapSize.X + point.X];
 		}
 
-        private void SetBaseLayerValue(Point MapPoint, int value)
+        private void SetBaseLayerValue(MapPoint point, int value)
 		{
-			if (MapPoint.X < 0 || (MapPoint.X > this.MapSize.X ) || MapPoint.Y < 0 || (MapPoint.Y > this.MapSize.Y) )
+			if (point.X < 0 || (point.X > this.MapSize.X ) || point.Y < 0 || (point.Y > this.MapSize.Y) )
 				throw new ArgumentOutOfRangeException();
 
-			this.BaseLayer[MapPoint.Y * this.MapSize.X + MapPoint.X] = value;
+			this.BaseLayer[point.Y * this.MapSize.X + point.X] = value;
 		}
 
-		public Rectangle GetBaseLayerSourceRect(Point MapPoint)
+		public Rectangle GetBaseLayerSourceRect(MapPoint point)
 		{
-			if (MapPoint.X < 0 || MapPoint.X > this.MapSize.X ||
-				MapPoint.Y < 0 || MapPoint.Y >= this.MapSize.Y)
+			if (point.X < 0 || point.X > this.MapSize.X ||
+				point.Y < 0 || point.Y >= this.MapSize.Y)
 			{
 				return Rectangle.Empty;
 			}
 
-			int baseLayerValue = this.GetBaseLayerValue(MapPoint);
+			int baseLayerValue = this.GetBaseLayerValue(point);
 
 			if (baseLayerValue < 0)
 				return Rectangle.Empty;
@@ -251,20 +251,20 @@ namespace ValkyrieLibrary.Maps
         #endregion
 
 		#region Collision Layer
-		public int GetCollisionLayerValue(Point MapPoint)
+		public int GetCollisionLayerValue(MapPoint point)
 		{
-			if (MapPoint.X < 0 || (MapPoint.X > this.MapSize.X) || MapPoint.Y < 0 || (MapPoint.Y > this.MapSize.Y))
+			if (point.X < 0 || (point.X > this.MapSize.X) || point.Y < 0 || (point.Y > this.MapSize.Y))
 				throw new ArgumentOutOfRangeException();
 
-			return this.CollisionLayer[MapPoint.Y * this.MapSize.X + MapPoint.X];
+			return this.CollisionLayer[point.Y * this.MapSize.X + point.X];
 		}
 
-		private void SetCollisionLayerValue(Point MapPoint, int value)
+		private void SetCollisionLayerValue(MapPoint point, int value)
 		{
-			if (MapPoint.X < 0 || (MapPoint.X > this.MapSize.X) || MapPoint.Y < 0 || (MapPoint.Y > this.MapSize.Y))
+			if (point.X < 0 || (point.X > this.MapSize.X) || point.Y < 0 || (point.Y > this.MapSize.Y))
 				throw new ArgumentOutOfRangeException();
 
-			this.CollisionLayer[MapPoint.Y * this.MapSize.X + MapPoint.X] = value;
+			this.CollisionLayer[point.Y * this.MapSize.X + point.X] = value;
 		}
 		#endregion
 
@@ -296,19 +296,19 @@ namespace ValkyrieLibrary.Maps
 						else if (node.Name == "Y")
 							y = Convert.ToInt32(node.InnerText);
 					}
-					this.MapSize = new Point(x, y);
+					this.MapSize = new MapPoint(x, y);
 				}
 				else if (innerNodes[i].Name == "TilePixelSize")
 				{
 					int size = Convert.ToInt32(innerNodes[i].InnerText);
-					this.TileSize = new Point(size, size); // Tiles are always square
+					this.TileSize = new ScreenPoint(size, size); // Tiles are always square
 				}
 
                 else if (innerNodes[i].Name == "BaseLayer")
                 {
                     string[] baseText = innerNodes[i].InnerText.Replace("\r\n", string.Empty).Replace("   ", string.Empty).Trim().Split(' ');
 
-                    this.BaseLayer = Array.ConvertAll<string, int>(baseText, new Converter<string, int>(this.ConvertStringToInt));
+					this.BaseLayer = Array.ConvertAll<string, int>(baseText, new Converter<string, int>(this.ConvertStringToInt));
                 }
 
                 else if (innerNodes[i].Name == "MiddleLayer")
@@ -373,7 +373,7 @@ namespace ValkyrieLibrary.Maps
 			
 		}
 
-        public void SetData(MapLayer layer, Point location, int value)
+        public void SetData(MapLayer layer, MapPoint location, int value)
         {
             switch (layer)
             {
@@ -398,8 +398,9 @@ namespace ValkyrieLibrary.Maps
         }
         #endregion
 
-		public int GetTileSetValue(Point point)
+		public int GetTileSetValue(MapPoint point)
 		{
+			// Returns the TileID of a tile in the tile set using it's X, and Y coordinents
 			return (point.Y * this.TilesPerRow + point.X);
 		}
 
@@ -408,7 +409,7 @@ namespace ValkyrieLibrary.Maps
 			return Convert.ToInt32(value);
 		}
 
-		public bool TilePointInMapLocal(Point point)
+		public bool TilePointInMapLocal(MapPoint point)
 		{
 			return (point.X < TileEngine.CurrentMapChunk.MapSize.X
 				&& point.Y < TileEngine.CurrentMapChunk.MapSize.Y
@@ -416,7 +417,7 @@ namespace ValkyrieLibrary.Maps
 				&& point.Y >= 0);
 		}
 
-		public bool TilePointInMapGlobal(Point point)
+		public bool TilePointInMapGlobal(MapPoint point)
 		{
 			return (point.X < (TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.X + TileEngine.CurrentMapChunk.MapSize.X)
 				&& point.Y < (TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.Y + TileEngine.CurrentMapChunk.MapSize.Y)

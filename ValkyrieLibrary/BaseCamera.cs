@@ -75,8 +75,8 @@ namespace ValkyrieLibrary
 			this.CenterOnPoint(Char.Location);
 		}
 
-		public void CenterOnPoint(Point Point)
-		{
+		public void CenterOnPoint(ScreenPoint Point)
+		{			
 			this.MapOffset.X = Point.X * -1;
 			this.MapOffset.X += (this.Screen.Width / 2);
 

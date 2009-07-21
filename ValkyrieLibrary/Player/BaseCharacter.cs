@@ -22,17 +22,17 @@ namespace ValkyrieLibrary.Characters
         public string Name;
 
         public Texture2D Sprite;
-		public Point Location;
+		public ScreenPoint Location;
 		public Directions Direction;
+		
+		public Dictionary<string, FrameAnimation> Animations;
+		public string CurrentAnimationName;
+		public bool Animating;
 
 		public FrameAnimation CurrentAnimation
 		{
 			get { return this.Animations[this.CurrentAnimationName]; }
 		}
-
-		public Dictionary<string, FrameAnimation> Animations;
-		public string CurrentAnimationName;
-		public bool Animating;
 
 		public Vector2 DrawScreenLocation
 		{
@@ -45,6 +45,7 @@ namespace ValkyrieLibrary.Characters
 				return location;
 			}
 		}
+
 		public virtual void Draw(SpriteBatch spriteBatch)
 		{
 			spriteBatch.Draw(this.Sprite, this.DrawScreenLocation, Animations[this.CurrentAnimationName].FrameRectangle, Color.White);
@@ -55,11 +56,9 @@ namespace ValkyrieLibrary.Characters
 			this.CurrentAnimation.Update(gameTime);
 		}
 
-        public abstract void Move(Point Destination);
+        public abstract void Move(ScreenPoint Destination);
 
-        public virtual void Action(String type)
-        {
-        }
+        public virtual void Action(String type) { }
     }
 
 	public enum Genders

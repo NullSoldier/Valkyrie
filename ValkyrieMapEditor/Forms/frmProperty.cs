@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using System.IO;
 using System.Drawing;
 using ValkyrieLibrary.Maps;
+using ValkyrieLibrary;
 
 namespace ValkyrieMapEditor
 {
@@ -84,8 +85,8 @@ namespace ValkyrieMapEditor
 
 			// Other properties
             this.map.Name = this.inName.Text;
-            this.map.MapSize = new Microsoft.Xna.Framework.Point((int)this.inMapWidth.Value, (int)this.inMapHeight.Value);
-            this.map.TileSize = new Microsoft.Xna.Framework.Point((int)this.inTileWidth.Value, (int)this.inTileHeight.Value);
+            this.map.MapSize = new MapPoint((int)this.inMapWidth.Value, (int)this.inMapHeight.Value);
+            this.map.TileSize = new ScreenPoint((int)this.inTileWidth.Value, (int)this.inTileHeight.Value);
 
 			this.DialogResult = DialogResult.OK;
             this.Close();

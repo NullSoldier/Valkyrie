@@ -12,9 +12,9 @@ namespace ValkyrieLibrary.Core
 		: CollisionManager
 	{
 
-		public override bool CheckCollision(ICollidable Source, Point Destination)
+		public override bool CheckCollision(ICollidable Source, ScreenPoint Destination)
 		{
-			Point tilePoint = TileEngine.GlobalTilePointToLocal(new Point(Destination.X / TileEngine.CurrentMapChunk.TileSize.X, Destination.Y / TileEngine.CurrentMapChunk.TileSize.Y));
+			MapPoint tilePoint = TileEngine.GlobalTilePointToLocal(Destination.ToMapPoint());
 
 			if (!TileEngine.CurrentMapChunk.TilePointInMapLocal(tilePoint))
 				return true;

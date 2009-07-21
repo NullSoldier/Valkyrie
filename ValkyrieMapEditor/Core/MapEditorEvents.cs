@@ -165,7 +165,7 @@ namespace ValkyrieMapEditor.Core
             {
                 for (int x = 0; x < TileEngine.CurrentMapChunk.MapSize.X; x++)
                 {
-                    MapEvent e = TileEngine.CurrentMapChunk.GetEvent(new Point(x, y));
+                    MapEvent e = TileEngine.CurrentMapChunk.GetEvent(new MapPoint(x, y));
 
                     if (e == null)
                         continue;

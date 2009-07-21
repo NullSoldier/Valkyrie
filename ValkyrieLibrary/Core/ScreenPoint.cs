@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using System.Xml;
 
-namespace ValkyrieLibrary
+namespace ValkyrieLibrary.Core
 {
     public class ScreenPoint : BasePoint
     {

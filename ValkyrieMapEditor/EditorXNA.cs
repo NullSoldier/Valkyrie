@@ -156,7 +156,7 @@ namespace ValkyrieMapEditor
 
 					if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed && mouseState.X > 0 && mouseState.Y > 0)
 					{
-						Point tileLocation = new Point((mouseState.X - (int)TileEngine.Camera.MapOffset.X) / 32, (mouseState.Y - (int)TileEngine.Camera.MapOffset.Y) / 32);
+						MapPoint tileLocation = new MapPoint((mouseState.X - (int)TileEngine.Camera.MapOffset.X) / 32, (mouseState.Y - (int)TileEngine.Camera.MapOffset.Y) / 32);
 
                         if (TileEngine.CurrentMapChunk.TilePointInMapLocal(tileLocation))
                         {
@@ -164,8 +164,8 @@ namespace ValkyrieMapEditor
                             {
                                 for (int x = 0; x <= MapEditorManager.SelectedTilesRect.Width; x++)
                                 {
-                                    Point tilesheetPoint = new Point(MapEditorManager.SelectedTilesRect.X + x, MapEditorManager.SelectedTilesRect.Y + y);
-                                    Point point = new Point(tileLocation.X + x, tileLocation.Y + y);
+                                    MapPoint tilesheetPoint = new MapPoint(MapEditorManager.SelectedTilesRect.X + x, MapEditorManager.SelectedTilesRect.Y + y);
+                                    MapPoint point = new MapPoint(tileLocation.X + x, tileLocation.Y + y);
 
                                     if (TileEngine.CurrentMapChunk.TilePointInMapLocal(point))
                                         TileEngine.CurrentMapChunk.SetData(MapEditorManager.CurrentLayer, point, TileEngine.CurrentMapChunk.GetTileSetValue(tilesheetPoint));
@@ -249,7 +249,7 @@ namespace ValkyrieMapEditor
             {
                 if (TileEngine.IsMapLoaded && MapEditorManager.CurrentLayer == MapLayer.CollisionLayer)
                 {
-                    Point point = new Point((e.Location.X - (int)TileEngine.Camera.MapOffset.X) / 32, (e.Location.Y - (int)TileEngine.Camera.MapOffset.Y) / 32);
+                    MapPoint point = new MapPoint((e.Location.X - (int)TileEngine.Camera.MapOffset.X) / 32, (e.Location.Y - (int)TileEngine.Camera.MapOffset.Y) / 32);
 
                     if (e.Button == MouseButtons.Left)
                         TileEngine.CurrentMapChunk.SetData(MapEditorManager.CurrentLayer, point, 1);
@@ -308,7 +308,7 @@ namespace ValkyrieMapEditor
 				{
 					for (int x = 0; x < TileEngine.CurrentMapChunk.MapSize.X; x++)
 					{
-						int value = TileEngine.CurrentMapChunk.GetCollisionLayerValue(new Point(x, y));
+						int value = TileEngine.CurrentMapChunk.GetCollisionLayerValue(new MapPoint(x, y));
 
 						if (value == -1)
 							continue;

@@ -31,7 +31,7 @@ namespace ValkyrieLibrary.States
 
         public void Tick(GameTime gameTime)
         {
-			TileEngine.Camera.CenterOnPoint(new Point(TileEngine.Player.Location.X + (TileEngine.Player.CurrentAnimation.FrameRectangle.Width / 2), TileEngine.Player.Location.Y + (TileEngine.Player.CurrentAnimation.FrameRectangle.Height / 2)));
+			TileEngine.Camera.CenterOnPoint(new ScreenPoint(TileEngine.Player.Location.X + (TileEngine.Player.CurrentAnimation.FrameRectangle.Width / 2), TileEngine.Player.Location.Y + (TileEngine.Player.CurrentAnimation.FrameRectangle.Height / 2)));
 
             this.KeybindController.Update();
 			TileEngine.Player.Update(gameTime);
@@ -56,7 +56,7 @@ namespace ValkyrieLibrary.States
             TileEngine.Player = new PokePlayer();
 			TileEngine.Player.Gender = Genders.Male;
             TileEngine.Player.Sprite = TileEngine.TextureManager.GetTexture("MaleSprite.png");
-            TileEngine.Player.Location = new Point(736, 1537);
+            TileEngine.Player.Location = new ScreenPoint(736, 1537);
 
 
             this.KeybindController.AddKey(Keys.Left, "MoveLeft");
@@ -102,16 +102,16 @@ namespace ValkyrieLibrary.States
             switch (this.KeybindController.GetKeyAction(CrntDir))
             {
                 case "MoveUp":
-					TileEngine.Player.Move(new Point(TileEngine.Player.Location.X, TileEngine.Player.Location.Y - 32));
+					TileEngine.Player.Move(new ScreenPoint(TileEngine.Player.Location.X, TileEngine.Player.Location.Y - 32));
                     break;
                 case "MoveDown":
-					TileEngine.Player.Move(new Point(TileEngine.Player.Location.X, TileEngine.Player.Location.Y + 32));
+					TileEngine.Player.Move(new ScreenPoint(TileEngine.Player.Location.X, TileEngine.Player.Location.Y + 32));
                     break;
                 case "MoveLeft":
-					TileEngine.Player.Move(new Point(TileEngine.Player.Location.X - 32, TileEngine.Player.Location.Y));
+					TileEngine.Player.Move(new ScreenPoint(TileEngine.Player.Location.X - 32, TileEngine.Player.Location.Y));
                     break;
                 case "MoveRight":
-					TileEngine.Player.Move(new Point(TileEngine.Player.Location.X + 32, TileEngine.Player.Location.Y));
+					TileEngine.Player.Move(new ScreenPoint(TileEngine.Player.Location.X + 32, TileEngine.Player.Location.Y));
                     break;
             }
         }

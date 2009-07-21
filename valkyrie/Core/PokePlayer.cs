@@ -20,16 +20,16 @@ namespace ValkyrieLibrary.Core
 		public float MoveDelay = 0.002f;
 		public int Speed = 2;
 		public float LastMoveTime = 0;
-		public Point MovingDestination;
+		public ScreenPoint MovingDestination;
 
         private PokeMessage pokeMessage;
 
-        public Point TileLocation
+        public MapPoint TileLocation
         {
-            get { return new Point(this.Location.X / TileEngine.CurrentMapChunk.TileSize.X, this.Location.Y / TileEngine.CurrentMapChunk.TileSize.Y); }
+            get { return new MapPoint(this.Location.X / TileEngine.TileSize, this.Location.Y / TileEngine.TileSize); }
         }
 
-        public Point MapLocation
+        public MapPoint LocalMapLocation
         {
             get { return TileEngine.GlobalTilePointToLocal(TileLocation); }
         }
@@ -68,7 +68,7 @@ namespace ValkyrieLibrary.Core
                 return;
             }
 
-            MapEvent e = TileEngine.CurrentMapChunk.GetEvent(MapLocation);
+            MapEvent e = TileEngine.CurrentMapChunk.GetEvent(this.LocalMapLocation);
             if (e != null)
             {
                 if (e.Type == "SignPost" && e.IsSameFacing(Direction) == true)
@@ -88,7 +88,7 @@ namespace ValkyrieLibrary.Core
             }
         }
 
-		public override void Move(Point Destination)
+		public override void Move(ScreenPoint Destination)
 		{
             if (this.pokeMessage != null)
                 return;
@@ -96,9 +96,9 @@ namespace ValkyrieLibrary.Core
 			if (this.IsMoving)
 				return;
 
-			Directions tmpDirection = this.Location.RelativeDirection(Destination);
+			Directions tmpDirection = this.Location.toPoint().RelativeDirection(Destination.toPoint());
 
-			Point point = new Point(Destination.X / TileEngine.CurrentMapChunk.TileSize.X, Destination.Y / TileEngine.CurrentMapChunk.TileSize.Y);
+			MapPoint point = Destination.ToMapPoint();
 
             if (tmpDirection == Directions.North)
             {
@@ -121,10 +121,10 @@ namespace ValkyrieLibrary.Core
                 Direction = Directions.West;
             }
 
-			this.MovingDestination = new Point(point.X * TileEngine.CurrentMapChunk.TileSize.X, point.Y * TileEngine.CurrentMapChunk.TileSize.Y);
+			this.MovingDestination = new ScreenPoint(point.X * TileEngine.CurrentMapChunk.TileSize.X, point.Y * TileEngine.CurrentMapChunk.TileSize.Y);
 			
 			// Clear the chunk when moving across boundries
-			if( !TileEngine.CurrentMapChunk.TilePointInMapGlobal(new Point(point.X, point.Y)))
+			if( !TileEngine.CurrentMapChunk.TilePointInMapGlobal(new MapPoint(point.X, point.Y)))
 				TileEngine.ClearCurrentMapChunk();
 
 			this.IsMoving = true;
@@ -188,7 +188,7 @@ namespace ValkyrieLibrary.Core
 
                     if (!this.IsJumping && !TileEngine.CollisionManager.CheckCollision(this, this.MovingDestination))
                     {
-                        MapEvent e = TileEngine.CurrentMapChunk.GetEvent(MapLocation);
+                        MapEvent e = TileEngine.CurrentMapChunk.GetEvent(this.LocalMapLocation);
                         if (e != null && e.Type == "Jump" && e.IsSameFacing(Direction) == true)
                         {
                             JumpWall();
@@ -200,7 +200,7 @@ namespace ValkyrieLibrary.Core
                     }
                     else
                     {
-                        this.Location = new Point(x, y);
+                        this.Location = new ScreenPoint(x, y);
                     }
 
 					this.LastMoveTime = 0;
@@ -217,21 +217,21 @@ namespace ValkyrieLibrary.Core
         {
             this.IsJumping = true;
 
-            Point dest = new Point(TileEngine.Player.Location.X, TileEngine.Player.Location.Y);
+            ScreenPoint dest = new ScreenPoint(TileEngine.Player.Location.X, TileEngine.Player.Location.Y);
 
             switch (Direction)
             {
                 case Directions.North:
-                    dest = new Point(TileEngine.Player.Location.X, TileEngine.Player.Location.Y - 64);
+					dest = new ScreenPoint(TileEngine.Player.Location.X, TileEngine.Player.Location.Y - 64);
                     break;
                 case Directions.South:
-                    dest = new Point(TileEngine.Player.Location.X, TileEngine.Player.Location.Y + 64);
+					dest = new ScreenPoint(TileEngine.Player.Location.X, TileEngine.Player.Location.Y + 64);
                     break;
                 case Directions.West:
-                    dest = new Point(TileEngine.Player.Location.X - 64, TileEngine.Player.Location.Y);
+					dest = new ScreenPoint(TileEngine.Player.Location.X - 64, TileEngine.Player.Location.Y);
                     break;
                 case Directions.East:
-                    dest = new Point(TileEngine.Player.Location.X + 64, TileEngine.Player.Location.Y);
+					dest = new ScreenPoint(TileEngine.Player.Location.X + 64, TileEngine.Player.Location.Y);
                     break;
             }
 
@@ -241,7 +241,7 @@ namespace ValkyrieLibrary.Core
 		public void ReachedMoveDestination()
 		{
 			this.IsMoving = false;
-			this.MovingDestination = Point.Zero;
+			this.MovingDestination = new ScreenPoint(0, 0); // eh?
 			this.LastMoveTime = 0;
             this.IsJumping = false;
 		}
@@ -250,7 +250,7 @@ namespace ValkyrieLibrary.Core
 
 		#region ICollidable Members
 
-		public Point GetLocation()
+		public ScreenPoint GetLocation()
 		{
 			return this.Location;
 		}

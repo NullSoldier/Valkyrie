@@ -53,6 +53,7 @@ namespace ValkyrieLibrary.Core
 		public static CollisionManager CollisionManager;
 		public static Dictionary<string, MapHeader> World;
         public static Player Player;
+		public static int TileSize = 32;
         
 		/*public static Map Map
 		{
@@ -138,7 +139,7 @@ namespace ValkyrieLibrary.Core
 			TileEngine.currentmapchunk = null;
 		}
 
-		public static Point GlobalPixelPointToLocal(Point localpoint)
+		public static Point GlobalPixelPointToLocal(MapPoint localpoint)
 		{
 			int x = localpoint.X - (TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.X - TileEngine.CurrentMapChunk.TileSize.X);
 			int y = localpoint.Y - (TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.Y - TileEngine.CurrentMapChunk.TileSize.Y);
@@ -146,12 +147,12 @@ namespace ValkyrieLibrary.Core
 			return new Point(x, y);
 		}
 
-		public static Point GlobalTilePointToLocal(Point localpoint)
+		public static MapPoint GlobalTilePointToLocal(MapPoint localpoint)
 		{
 			int x = localpoint.X - (TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.X);
 			int y = localpoint.Y - (TileEngine.World[TileEngine.CurrentMapChunk.Name].MapLocation.Y);
 
-			return new Point(x, y);
+			return new MapPoint(x, y);
 		}
 
 		public static void Update(GameTime time)
@@ -215,7 +216,8 @@ namespace ValkyrieLibrary.Core
 					if( TileEngine.Camera.CheckVisible(destRectangle) )
 					{
 
-						Point MapLoc = new Point(x, y);
+						MapPoint MapLoc = new MapPoint(x, y);
+
 						Rectangle sourceRectangle = currentMap.GetBaseLayerSourceRect(MapLoc);
 						if( !sourceRectangle.IsEmpty )
 						{
@@ -254,7 +256,8 @@ namespace ValkyrieLibrary.Core
 
 					if( TileEngine.Camera.CheckVisible(destRectangle) )
 					{
-						Point MapLoc = new Point(x, y);
+						MapPoint MapLoc = new MapPoint(x, y);
+
 						Rectangle sourceRectangle = currentMap.GetMiddleLayerSourceRect(MapLoc);
 						if( !sourceRectangle.IsEmpty )
 						{
@@ -293,7 +296,8 @@ namespace ValkyrieLibrary.Core
 
 					if (TileEngine.Camera.CheckVisible(destRectangle))
 					{
-						Point MapLoc = new Point(x, y);
+						MapPoint MapLoc = new MapPoint(x, y);
+
 						Rectangle sourceRectangle = currentMap.GetTopLayerSourceRect(MapLoc);
 						if (!sourceRectangle.IsEmpty)
 						{
