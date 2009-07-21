@@ -11,8 +11,6 @@ namespace ValkyrieLibrary.Characters
 {
 	public class Player : BaseCharacter
 	{
-
-
 		public Player()
 		{
 		
@@ -26,10 +24,5 @@ namespace ValkyrieLibrary.Characters
         {
 
         }
-
-		public override void Move(ScreenPoint Destination)
-		{
-			throw new NotImplementedException();
-		}
     }
 }
