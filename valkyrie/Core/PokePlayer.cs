@@ -8,20 +8,30 @@ using Microsoft.Xna.Framework.Graphics;
 using ValkyrieLibrary;
 using ValkyrieLibrary.Collision;
 using ValkyrieLibrary.Characters;
+using ValkyrieLibrary.Maps;
 
 namespace ValkyrieLibrary.Core
 {
 	class PokePlayer : Player, ICollidable
 	{
 		public bool IsMoving = false;
+        public bool IsJumping = false;
+
 		public float MoveDelay = 0.002f;
 		public int Speed = 2;
 		public float LastMoveTime = 0;
 		public Point MovingDestination;
 
+        private PokeMessage pokeMessage;
+
         public Point TileLocation
         {
             get { return new Point(this.Location.X / TileEngine.CurrentMapChunk.TileSize.X, this.Location.Y / TileEngine.CurrentMapChunk.TileSize.Y); }
+        }
+
+        public Point MapLocation
+        {
+            get { return TileEngine.GlobalTilePointToLocal(TileLocation); }
         }
 
 		public PokePlayer()
@@ -43,8 +53,46 @@ namespace ValkyrieLibrary.Core
 			}
 		}
 
+        public void DisplayMessage(String title, String msg)
+        {
+            pokeMessage = new PokeMessage(title, msg);
+        }
+
+        public void AButton()
+        {
+            if (pokeMessage != null)
+            {
+                if (!pokeMessage.Page())
+                    pokeMessage = null;
+
+                return;
+            }
+
+            MapEvent e = TileEngine.CurrentMapChunk.GetEvent(MapLocation);
+            if (e != null)
+            {
+                if (e.Type == "SignPost" && e.IsSameFacing(Direction) == true)
+                {
+                    DisplayMessage(e.ParmOne, e.ParmTwo);
+                }
+            }
+        }
+
+        public override void Action(String type)
+        {
+            switch (type)
+            {
+                case "AButton":
+                    AButton();
+                    break;
+            }
+        }
+
 		public override void Move(Point Destination)
 		{
+            if (this.pokeMessage != null)
+                return;
+
 			if (this.IsMoving)
 				return;
 
@@ -52,14 +100,26 @@ namespace ValkyrieLibrary.Core
 
 			Point point = new Point(Destination.X / TileEngine.CurrentMapChunk.TileSize.X, Destination.Y / TileEngine.CurrentMapChunk.TileSize.Y);
 
-			if (tmpDirection == Directions.North)
-				this.CurrentAnimationName = "WalkNorth";
-			else if (tmpDirection == Directions.East)
-				this.CurrentAnimationName = "WalkEast";
-			else if (tmpDirection == Directions.South)
-				this.CurrentAnimationName = "WalkSouth";
-			else if (tmpDirection == Directions.West)
-				this.CurrentAnimationName = "WalkWest";
+            if (tmpDirection == Directions.North)
+            {
+                this.CurrentAnimationName = "WalkNorth";
+                Direction = Directions.North;
+            }
+            else if (tmpDirection == Directions.East)
+            {
+                this.CurrentAnimationName = "WalkEast";
+                Direction = Directions.East;
+            }
+            else if (tmpDirection == Directions.South)
+            {
+                this.CurrentAnimationName = "WalkSouth";
+                Direction = Directions.South;
+            }
+            else if (tmpDirection == Directions.West)
+            {
+                this.CurrentAnimationName = "WalkWest";
+                Direction = Directions.West;
+            }
 
 			this.MovingDestination = new Point(point.X * TileEngine.CurrentMapChunk.TileSize.X, point.Y * TileEngine.CurrentMapChunk.TileSize.Y);
 			
@@ -75,6 +135,12 @@ namespace ValkyrieLibrary.Core
 			spriteBatch.DrawString(PokeGame.font, this.Name, new Vector2(this.DrawScreenLocation.X - (PokeGame.font.MeasureString(this.Name).X / 4), this.DrawScreenLocation.Y - 15), Color.Black);
 			base.Draw(spriteBatch);
 		}
+
+        public override void DrawOverlay(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
+        {
+            if (pokeMessage != null)
+                pokeMessage.Draw(spriteBatch);
+        }
 
 		public override void Update(GameTime gameTime)
 		{
@@ -120,10 +186,22 @@ namespace ValkyrieLibrary.Core
 					}
 
 
-					if (!TileEngine.CollisionManager.CheckCollision(this, this.MovingDestination))
-						ReachedMoveDestination();
-					else
-						this.Location = new Point(x, y);
+                    if (!this.IsJumping && !TileEngine.CollisionManager.CheckCollision(this, this.MovingDestination))
+                    {
+                        MapEvent e = TileEngine.CurrentMapChunk.GetEvent(MapLocation);
+                        if (e != null && e.Type == "Jump" && e.IsSameFacing(Direction) == true)
+                        {
+                            JumpWall();
+                        }
+                        else
+                        {
+                            ReachedMoveDestination();
+                        }
+                    }
+                    else
+                    {
+                        this.Location = new Point(x, y);
+                    }
 
 					this.LastMoveTime = 0;
 				}
@@ -135,11 +213,37 @@ namespace ValkyrieLibrary.Core
 			base.Update(gameTime);
 		}
 
+        public void JumpWall()
+        {
+            this.IsJumping = true;
+
+            Point dest = new Point(TileEngine.Player.Location.X, TileEngine.Player.Location.Y);
+
+            switch (Direction)
+            {
+                case Directions.North:
+                    dest = new Point(TileEngine.Player.Location.X, TileEngine.Player.Location.Y - 64);
+                    break;
+                case Directions.South:
+                    dest = new Point(TileEngine.Player.Location.X, TileEngine.Player.Location.Y + 64);
+                    break;
+                case Directions.West:
+                    dest = new Point(TileEngine.Player.Location.X - 64, TileEngine.Player.Location.Y);
+                    break;
+                case Directions.East:
+                    dest = new Point(TileEngine.Player.Location.X + 64, TileEngine.Player.Location.Y);
+                    break;
+            }
+
+            this.MovingDestination = dest;
+        }
+
 		public void ReachedMoveDestination()
 		{
 			this.IsMoving = false;
 			this.MovingDestination = Point.Zero;
 			this.LastMoveTime = 0;
+            this.IsJumping = false;
 		}
 
 

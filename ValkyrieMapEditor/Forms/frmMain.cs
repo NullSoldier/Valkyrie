@@ -103,6 +103,7 @@ namespace ValkyrieMapEditor
 			this.btnPencil.Enabled = true;
 			this.btnRect.Enabled = true;
 			this.btnFill.Enabled = true;
+            this.btnEvent.Enabled = true;
         }
 
 		private void pctSurface_Resize(object sender, EventArgs e)
@@ -307,7 +308,14 @@ namespace ValkyrieMapEditor
 			this.UpdateScrollBars();
 		}
 
-	}
+        private void btnEvent_Click(object sender, EventArgs e)
+        {
+            MapEditorManager.EventMode = !MapEditorManager.EventMode;
+            this.btnEvent.Checked = MapEditorManager.EventMode;
+
+        }
+    }
+
 
 	#region EventArgs
 	public class ScreenResizedEventArgs

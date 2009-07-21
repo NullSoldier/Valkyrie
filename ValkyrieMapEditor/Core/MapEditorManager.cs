@@ -17,6 +17,7 @@ namespace ValkyrieMapEditor
 		public static FileInfo CurrentMapLocation;
 		public static bool IgnoreInput = false;
 		public static Tools CurrentTool = Tools.Pencil;
+        public static bool EventMode = false;
 
 		public static Point MouseLocation
 		{
@@ -103,6 +104,14 @@ namespace ValkyrieMapEditor
 				collisionlayerbuilder.Append(" ");
 			}
 
+            var eventLayer = doc.CreateElement("Events");
+            foreach (MapEvent e in map.Events)
+            {
+                var eventNode = doc.CreateElement("Event");
+                e.toXml(doc, eventNode);
+                eventLayer.AppendChild(eventNode);
+            }
+            
 			collisionLayer.InnerText = collisionlayerbuilder.ToString();
 
 			// Append children and save
@@ -117,6 +126,7 @@ namespace ValkyrieMapEditor
 			mapElement.AppendChild(middlelayer);
 			mapElement.AppendChild(collisionLayer);
 			mapElement.AppendChild(toplayer);
+            mapElement.AppendChild(eventLayer);
 
 			doc.AppendChild(mapElement);
 			doc.Save(location.FullName);

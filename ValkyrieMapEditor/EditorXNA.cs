@@ -15,6 +15,7 @@ using System.IO;
 using ValkyrieLibrary;
 using System.Windows.Forms;
 using ValkyrieLibrary.Maps;
+using ValkyrieMapEditor.Core;
 using System.Diagnostics;
 
 namespace ValkyrieMapEditor
@@ -24,14 +25,19 @@ namespace ValkyrieMapEditor
 	/// </summary>
 	public class EditorXNA : Microsoft.Xna.Framework.Game
 	{
+        public static GraphicsDevice graphicsDevice = null;
+        public static SpriteFont font;
+
 		GraphicsDeviceManager graphics;
         GraphicsDeviceManager graphics2;
-		SpriteBatch spriteBatch;
+        SpriteBatch spriteBatch;
+
 		private Map testMap;
 		private IntPtr drawSurface;
         private IntPtr drawTilesSurface;
 		private Texture2D CollisionSprite;
 		private Texture2D SelectionSprite;
+        private MapEditorEvents MapEventHandler = new MapEditorEvents();
 
 		public EditorXNA()
 		{
@@ -51,8 +57,7 @@ namespace ValkyrieMapEditor
 				new EventHandler<PreparingDeviceSettingsEventArgs>(graphics_PreparingDeviceSettings);
 
 
-            System.Windows.Forms.Control.FromHandle((this.Window.Handle)).VisibleChanged +=
-                new EventHandler(Game1_VisibleChanged);
+            System.Windows.Forms.Control.FromHandle((this.Window.Handle)).VisibleChanged += new EventHandler(Game1_VisibleChanged);
 		}
 
 		
@@ -99,6 +104,10 @@ namespace ValkyrieMapEditor
 		/// </summary>
 		protected override void LoadContent()
 		{
+            font = Content.Load<SpriteFont>("GameTextFont");
+
+            graphicsDevice = this.GraphicsDevice;
+
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -111,6 +120,8 @@ namespace ValkyrieMapEditor
 
 			this.CollisionSprite = Texture2D.FromFile(this.GraphicsDevice, "Graphics/EditorCollision.png");
 			this.SelectionSprite = Texture2D.FromFile(this.GraphicsDevice, "Graphics/EditorSelection.png");
+
+            MapEventHandler.LoadContent(this.GraphicsDevice);
 		}
 
 		/// <summary>
@@ -129,6 +140,9 @@ namespace ValkyrieMapEditor
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
 		{
+            if (MapEventHandler.Enabled == true)
+                return;
+
 			if (!MapEditorManager.IgnoreInput)
 			{
 				// TODO: Add your update logic here
@@ -138,23 +152,24 @@ namespace ValkyrieMapEditor
 				{
 					var mouseState = Mouse.GetState();
 
-					if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed &&
-						mouseState.X > 0 && mouseState.Y > 0)
+					if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed && mouseState.X > 0 && mouseState.Y > 0)
 					{
-						Point tileLocation = new Point((mouseState.X - (int)TileEngine.Camera.MapOffset.X) / 32,
-							(mouseState.Y - (int)TileEngine.Camera.MapOffset.Y) / 32);
+						Point tileLocation = new Point((mouseState.X - (int)TileEngine.Camera.MapOffset.X) / 32, (mouseState.Y - (int)TileEngine.Camera.MapOffset.Y) / 32);
 
-						for (int y = 0; y <= MapEditorManager.SelectedTilesRect.Height; y++)
-						{
-							for (int x = 0; x <= MapEditorManager.SelectedTilesRect.Width; x++)
-							{
-								Point tilesheetPoint = new Point(MapEditorManager.SelectedTilesRect.X + x, MapEditorManager.SelectedTilesRect.Y + y);
-								Point point = new Point(tileLocation.X + x, tileLocation.Y + y);
+                        if (TileEngine.CurrentMapChunk.TilePointInMapLocal(tileLocation))
+                        {
+                            for (int y = 0; y <= MapEditorManager.SelectedTilesRect.Height; y++)
+                            {
+                                for (int x = 0; x <= MapEditorManager.SelectedTilesRect.Width; x++)
+                                {
+                                    Point tilesheetPoint = new Point(MapEditorManager.SelectedTilesRect.X + x, MapEditorManager.SelectedTilesRect.Y + y);
+                                    Point point = new Point(tileLocation.X + x, tileLocation.Y + y);
 
-								if (TileEngine.CurrentMapChunk.TilePointInMapLocal(point))
-									TileEngine.CurrentMapChunk.SetData(MapEditorManager.CurrentLayer, point, TileEngine.CurrentMapChunk.GetTileSetValue(tilesheetPoint));
-							}
-						}
+                                    if (TileEngine.CurrentMapChunk.TilePointInMapLocal(point))
+                                        TileEngine.CurrentMapChunk.SetData(MapEditorManager.CurrentLayer, point, TileEngine.CurrentMapChunk.GetTileSetValue(tilesheetPoint));
+                                }
+                            }
+                        }
 					}
 				}
 			}
@@ -210,33 +225,58 @@ namespace ValkyrieMapEditor
 
 		public void ScrolledMap(object sender, ScrollEventArgs e)
 		{
-			int x = (int)(TileEngine.Camera.MapOffset.X) * -1;
-			int y = (int)(TileEngine.Camera.MapOffset.Y) * -1;
+            int dif = (e.NewValue - e.OldValue);
+
+			if (e.Type == ScrollEventType.EndScroll) 
+                return;
+
+			int x = (int)(TileEngine.Camera.MapOffset.X);
+			int y = (int)(TileEngine.Camera.MapOffset.Y);
 
 			if (e.ScrollOrientation == ScrollOrientation.VerticalScroll)
-			{
-				y = e.NewValue * TileEngine.CurrentMapChunk.TileSize.Y;
-			}
+                y -= dif*TileEngine.CurrentMapChunk.TileSize.Y;
 			else
-			{
-				x = e.NewValue * TileEngine.CurrentMapChunk.TileSize.X;
-			}
+                x -= dif*TileEngine.CurrentMapChunk.TileSize.X;
 
-			TileEngine.Camera.CenterOriginOnPoint(new Point(x, y));
+            TileEngine.Camera.CenterOriginOnPoint(new Point(x, y));
 		}
 
         public void SurfaceClicked(object sender, SurfaceClickedEventArgs e)
         {
-           if (TileEngine.IsMapLoaded && MapEditorManager.CurrentLayer == MapLayer.CollisionLayer)
+            if (MapEventHandler.Enabled == false)
             {
-                if (e.Button == MouseButtons.Left )
+                if (TileEngine.IsMapLoaded && MapEditorManager.CurrentLayer == MapLayer.CollisionLayer)
                 {
-					Point point = new Point((e.Location.X - (int)TileEngine.Camera.MapOffset.X) / 32, (e.Location.Y - (int)TileEngine.Camera.MapOffset.Y) / 32);
+                    Point point = new Point((e.Location.X - (int)TileEngine.Camera.MapOffset.X) / 32, (e.Location.Y - (int)TileEngine.Camera.MapOffset.Y) / 32);
 
-					if( TileEngine.CurrentMapChunk.TilePointInMapGlobal(point) )
-						TileEngine.CurrentMapChunk.SetData(MapEditorManager.CurrentLayer, point, 1);
+                    if (e.Button == MouseButtons.Left)
+                        TileEngine.CurrentMapChunk.SetData(MapEditorManager.CurrentLayer, point, 1);
                 }
             }
+        }
+
+        public void MouseDown(object sender, MouseEventArgs ev)
+        {
+            if (MapEventHandler.Enabled == true)
+                MapEventHandler.MouseDown(sender, ev);
+        }
+
+        public void MouseMove(object sender, MouseEventArgs ev)
+        {
+            if (MapEventHandler.Enabled == true)
+                MapEventHandler.MouseMove(sender, ev);
+        }
+
+        public void MouseUp(object sender, MouseEventArgs ev)
+        {
+            if (MapEventHandler.Enabled == true)
+                MapEventHandler.MouseUp(sender, ev);
+        }
+
+        public void MouseClicked(object sender, MouseEventArgs ev)
+        {
+            if (MapEventHandler.Enabled == true)
+                MapEventHandler.MouseClicked(sender, ev);
         }
 
         public bool MapChanged { get; set; }
@@ -259,19 +299,7 @@ namespace ValkyrieMapEditor
 			// TODO: Add your drawing code here
 			if (TileEngine.IsMapLoaded)
 			{
-				// Draw the current location of the mouse
-				var mouseState = Mouse.GetState();
-				if (mouseState.X > 0 && mouseState.Y > 0)
-				{
-					Point tileLocation = new Point(mouseState.X / 32, mouseState.Y / 32);
-
-					Vector2 currentLocation = new Vector2(tileLocation.X * 32, tileLocation.Y * 32);
-
-
-					this.spriteBatch.Begin();
-					this.spriteBatch.Draw(this.SelectionSprite, currentLocation, Color.White);
-					this.spriteBatch.End();
-				}
+                this.spriteBatch.Begin();
 
 				// Render Collision Layer
 				for (int y = 0; y < TileEngine.CurrentMapChunk.MapSize.Y; y++)
@@ -287,15 +315,96 @@ namespace ValkyrieMapEditor
 						destRectangle.X = (int)TileEngine.Camera.MapOffset.X + (int)TileEngine.Camera.CameraOffset.X + (x * TileEngine.CurrentMapChunk.TileSize.X);
 						destRectangle.Y = (int)TileEngine.Camera.MapOffset.Y + (int)TileEngine.Camera.CameraOffset.Y + (y * TileEngine.CurrentMapChunk.TileSize.Y);
 
-						this.spriteBatch.Begin();
 						this.spriteBatch.Draw(this.CollisionSprite, destRectangle, new Rectangle(0, 0, this.CollisionSprite.Width, this.CollisionSprite.Height), Color.White);
-						this.spriteBatch.End();
 					}
-				}
+                }
+
+                if (MapEventHandler.Enabled == true)
+                {
+                    MapEventHandler.Draw(this.spriteBatch);
+                }
+                else
+                {
+                    // Draw the current location of the mouse
+                    var mouseState = Mouse.GetState();
+                    if (mouseState.X > 0 && mouseState.Y > 0)
+                    {
+                        Point tileLocation = new Point(mouseState.X / 32, mouseState.Y / 32);
+                        Vector2 cLoc = new Vector2(tileLocation.X * 32, tileLocation.Y * 32);
+                        Rectangle pos = new Rectangle((int)cLoc.X, (int)cLoc.Y, MapEditorManager.SelectedTilesRect.Width * 32+32, MapEditorManager.SelectedTilesRect.Height * 32+32);
+
+                        Texture2D text = CreateSelectRectangle(pos.Width, pos.Height);
+
+                        if (text == null)
+                            text = this.SelectionSprite;
+
+                        this.spriteBatch.Draw(text, pos, new Rectangle(0,0, text.Width, text.Height), Color.White); 
+                    }
+                }
+
+                this.spriteBatch.End();
 			}
 
 			base.Draw(gameTime);
 		}
+
+
+        static public Texture2D CreateSelectRectangle(int width, int height)
+        {
+            int limit = 4;
+
+            if (width <= limit * 2 || height <= limit * 2)
+                return null;
+
+            // create the rectangle texture, ,but it will have no color! lets fix that
+            Texture2D rectangleTexture = new Texture2D(EditorXNA.graphicsDevice, width, height, 1, TextureUsage.None, SurfaceFormat.Color);
+           
+            Color[] color = new Color[width * height];//set the color to the amount of pixels
+
+            //loop through all the colors setting them to whatever values we want
+            for (int y = 1; y < height-1; y++)
+            {
+                for (int x = 1; x < width-1; x++)
+                {
+                    if ((x < limit) || (x > width - limit - 2) || (y < limit) || (y > height - limit - 2))
+                    {
+                        color[x + (y * width)] = new Color(255, 255, 255, 255);
+                    }
+                    else
+                    {
+                        color[x + (y * width)] = new Color(0, 0, 0, 0);
+                    }
+                }
+            }
+
+            //outer four
+            for (int y = 0; y < height; y++)
+                color[0 + (y * width)] = new Color(0, 0, 0, 255);
+
+            for (int y = 0; y < height; y++)
+                color[width - 2 + (y * width)] = new Color(0, 0, 0, 255);
+
+            for (int x = 0; x < width; x++)
+                color[x + (0 * width)] = new Color(0, 0, 0, 255);
+
+            for (int x = 0; x < width; x++)
+                color[x + ((height - 2) * width)] = new Color(0, 0, 0, 255);
+
+            //inner four
+            for (int y = limit; y < (height - limit -1); y++)
+                color[limit + (y * width)] = new Color(0, 0, 0, 255);
+
+            for (int y = limit; y < (height - limit - 1); y++)
+                color[width - limit - 2 + (y * width)] = new Color(0, 0, 0, 255);
+
+            for (int x = limit; x < (width - limit - 1); x++)
+                color[x + (limit * width)] = new Color(0, 0, 0, 255);
+
+            for (int x = limit; x < (width - limit - 1); x++)
+                color[x + ((height - limit -2) * width)] = new Color(0, 0, 0, 255);
+
+            rectangleTexture.SetData(color);//set the color data on the texture
+            return rectangleTexture;
+        }
 	}
 }
-

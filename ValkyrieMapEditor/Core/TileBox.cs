@@ -8,8 +8,7 @@ using ValkyrieMapEditor.Properties;
 
 namespace ValkyrieMapEditor
 {
-	public class TileBox
-		: PictureBox
+	public class TileBox : PictureBox
 	{
 		public event EventHandler<TileSelectionChangedEventArgs> TileSelectionChanged;
 		public Point TileSize
@@ -68,14 +67,17 @@ namespace ValkyrieMapEditor
 
 		public void Tile_MouseDown(object sender, MouseEventArgs ev)
 		{
-			if (this.Image == null) return;
+			if (this.Image == null) 
+                return;
+
 			this.SelectedPoint = new Point(ev.X / 32, ev.Y / 32);
 			this.EndSelectedPoint = new Point(ev.X / 32, ev.Y / 32);
 		}
 
 		public void Tile_MouseMove(object sender, MouseEventArgs ev)
 		{
-			if (this.Image == null) return;
+			if (this.Image == null) 
+                return;
 
 			if( ev.Button == MouseButtons.Left)
 				this.EndSelectedPoint = new Point(ev.X / 32, ev.Y / 32);
@@ -83,7 +85,8 @@ namespace ValkyrieMapEditor
 
 		public void Tile_MouseUp(object sender, MouseEventArgs ev)
 		{
-			if (this.Image == null) return;
+			if (this.Image == null) 
+                return;
 
 			this.EndSelectedPoint = new Point(ev.X / 32, ev.Y / 32);
 
@@ -101,10 +104,10 @@ namespace ValkyrieMapEditor
 
 		public void MouseClicked(object sender, MouseEventArgs ev)
 		{
-			if (this.Image == null) return;
+			if (this.Image == null) 
+                return;
 
 			this.SelectedPoint = new Point(ev.X / 32, ev.Y / 32);
-
 			this.Invalidate();
 		}
 

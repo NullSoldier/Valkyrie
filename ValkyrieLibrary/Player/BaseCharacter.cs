@@ -57,7 +57,9 @@ namespace ValkyrieLibrary.Characters
 
         public abstract void Move(Point Destination);
 
-
+        public virtual void Action(String type)
+        {
+        }
     }
 
 	public enum Genders

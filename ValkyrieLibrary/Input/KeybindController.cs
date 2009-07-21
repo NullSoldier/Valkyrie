@@ -115,6 +115,22 @@ namespace ValkyrieLibrary.Input
 
             foreach (Keys key in CrntKeys)
             {
+                if (!IsDir(key) && LastKeys != null)
+                {
+                    bool doBreak = false;
+
+                    foreach (Keys lastKey in LastKeys)
+                    {
+                        if (key == lastKey)
+                        {
+                            doBreak = true;
+                            break;
+                        }
+                    }
+
+                    if (doBreak)
+                        break;
+                }
 
                 if (KeyDefCollection.ContainsKey(key))
                 {
@@ -128,8 +144,7 @@ namespace ValkyrieLibrary.Input
 
     }
 
-    public class KeyPressedEventArgs
-        : EventArgs
+    public class KeyPressedEventArgs : EventArgs
     {
         public KeyPressedEventArgs(Keys key, string Action)
         {

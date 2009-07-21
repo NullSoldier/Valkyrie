@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Content;
 using System.Diagnostics;
 using ValkyrieLibrary.Animation;
 using ValkyrieLibrary.Core;
+using ValkyrieLibrary.Maps;
 
 namespace ValkyrieLibrary.Maps
 {
@@ -21,6 +22,7 @@ namespace ValkyrieLibrary.Maps
             this.MiddleLayer = new int[0];
             this.TopLayer = new int[0];
             this.CollisionLayer = new int[0];
+            this.Events = new List<MapEvent>();
 
 			this.AnimatedTiles = new Dictionary<int, FrameAnimation>();
 		}
@@ -55,6 +57,7 @@ namespace ValkyrieLibrary.Maps
 		public int[] MiddleLayer { get; set; }
         public int[] TopLayer { get; set; }
 		public int[] CollisionLayer { get; set; }
+        public List<MapEvent> Events { get; set; }
 
 		private Texture2D texture;
 
@@ -63,9 +66,72 @@ namespace ValkyrieLibrary.Maps
 			get { return ((this.Texture != null) ? (this.Texture.Width / this.TileSize.X) : 0); }
 		}
 
+        public int TilesPerCol
+        {
+            get { return ((this.Texture != null) ? (this.Texture.Height / this.TileSize.Y) : 0); }
+        }
+
 		public Dictionary<int, FrameAnimation> AnimatedTiles;
 
 		#endregion
+
+        #region MapEvent
+
+        public MapEvent GetEventInRect(Rectangle rect)
+        {
+            foreach (MapEvent ev in Events)
+            {
+                Rectangle r = new Rectangle(ev.Location.X, ev.Location.Y, ev.Size.X, ev.Size.Y);
+                if (rect.Intersects(r) == true)
+                    return ev;
+            }
+
+            return null;
+        }
+
+        public MapEvent GetEvent(Point pos)
+        {
+            foreach (MapEvent ev in Events)
+            {
+                Rectangle r = new Rectangle(ev.Location.X, ev.Location.Y, ev.Size.X, ev.Size.Y);
+                if (r.Contains(pos) == true)
+                    return ev;
+            }
+
+            return null;
+        }
+
+        public void SetEvent(MapEvent e)
+        {
+            foreach (MapEvent ev in Events)
+            {
+                if (ev.Location == e.Location && ev.Size == e.Size)
+                {
+                    ev.Type = e.Type;
+                    ev.Location = e.Location;
+                    ev.Size = e.Size;
+                    ev.ParmOne = e.ParmOne;
+                    ev.ParmTwo = e.ParmTwo;
+                    return;
+                }
+            }
+
+            Events.Add(e);
+        }
+
+        public void DelEvent(MapEvent e)
+        {
+            foreach (MapEvent ev in Events)
+            {
+                if (ev.Location == e.Location && ev.Size == e.Size)
+                {
+                    Events.Remove(ev);
+                    return;
+                }
+            }
+        }
+
+        #endregion
 
         #region Top Layer
         public int GetTopLayerValue(Point MapPoint)
@@ -291,7 +357,16 @@ namespace ValkyrieLibrary.Maps
 						this.AnimatedTiles.Add(tileID, new FrameAnimation(tileRect, frameCount));
 					}
 				}
+                else if (innerNodes[i].Name == "Events")
+                {
+					XmlNodeList events = innerNodes[i].ChildNodes;
 
+					foreach (XmlNode node in events)
+					{
+                        MapEvent e = new MapEvent(node);
+                        Events.Add(e);
+                    }
+                }
 			}
 
 			

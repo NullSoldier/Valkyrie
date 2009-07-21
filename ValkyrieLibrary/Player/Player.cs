@@ -18,6 +18,10 @@ namespace ValkyrieLibrary.Characters
 		public int Level;
 		public int Gold;
 
+        public virtual void DrawOverlay(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
+        {
+
+        }
 
 		public override void Move(Point Destination)
 		{

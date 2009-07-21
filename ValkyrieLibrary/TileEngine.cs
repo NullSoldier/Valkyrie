@@ -158,6 +158,9 @@ namespace ValkyrieLibrary.Core
 		{
 			// Run tile engine logic here
             ModuleManager.CurrentModule.Tick(time);
+
+            foreach (var header in TileEngine.World.Values)
+                header.Map.Update(time);
 		}
 
 		#region Draw Methods
@@ -309,6 +312,13 @@ namespace ValkyrieLibrary.Core
 
 			TileEngine.Player.Draw(spriteBatch);
 
+            spriteBatch.End();
+        }
+
+        public static void DrawOverlay(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Begin();
+            TileEngine.Player.DrawOverlay(spriteBatch);
             spriteBatch.End();
         }
 

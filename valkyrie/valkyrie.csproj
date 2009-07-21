@@ -87,6 +87,7 @@
     <Compile Include="Core\PokeCamera.cs" />
     <Compile Include="Core\PokeCollisionManager.cs" />
     <Compile Include="Core\PokePlayer.cs" />
+    <Compile Include="Core\PokeMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="PokeGame.cs" />

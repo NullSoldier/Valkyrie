@@ -54,8 +54,8 @@ namespace ValkyrieLibrary
 
 		public void CenterOriginOnPoint(Point Point)
 		{
-			this.MapOffset.X = Point.X * -1;
-			this.MapOffset.Y = Point.Y * -1;
+			this.MapOffset.X = Point.X;
+			this.MapOffset.Y = Point.Y;
 		}
 
 		public void CenterOriginOnPoint(int x, int y)

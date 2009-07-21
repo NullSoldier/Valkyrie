@@ -22,7 +22,10 @@ namespace ValkyrieLibrary.States
 
         private Keys CrntDir;
 
-        public GameModule() { }
+        public GameModule() 
+        {
+            KeybindController.LoadKeys();
+        }
 
         #region IModule Members
 
@@ -32,7 +35,6 @@ namespace ValkyrieLibrary.States
 
             this.KeybindController.Update();
 			TileEngine.Player.Update(gameTime);
-			TileEngine.CurrentMapChunk.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -44,6 +46,7 @@ namespace ValkyrieLibrary.States
 			TileEngine.DrawMiddleLayer(spriteBatch);
 			TileEngine.DrawCharacters(spriteBatch);
 			TileEngine.DrawTopLayer(spriteBatch);
+            TileEngine.DrawOverlay(spriteBatch);
 			//TileEngine.DrawAllLayers(spriteBatch, true);
         }
 
@@ -88,6 +91,14 @@ namespace ValkyrieLibrary.States
                 UpdateDirection(ev.KeyPressed);
             }
 
+            switch (ev.Action)
+            {
+                case "AButton":
+                case "BButton":
+                    TileEngine.Player.Action(ev.Action);
+                    return;
+            }
+
             switch (this.KeybindController.GetKeyAction(CrntDir))
             {
                 case "MoveUp":
@@ -101,8 +112,6 @@ namespace ValkyrieLibrary.States
                     break;
                 case "MoveRight":
 					TileEngine.Player.Move(new Point(TileEngine.Player.Location.X + 32, TileEngine.Player.Location.Y));
-                    break;
-                default:
                     break;
             }
         }
