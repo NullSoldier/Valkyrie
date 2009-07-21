@@ -34,19 +34,26 @@ namespace ValkyrieLibrary
 
 		}
 
+		public Point CameraOrigin
+		{
+			get { return new Point((int)(this.MapOffset.X * -1), (int)(this.MapOffset.Y * -1));	}
+			set { this.MapOffset = new Vector2(value.X * -1, value.Y * -1);	}
+		}
+
 		#region Public Methods/Effects
 		public bool CheckVisible(Rectangle destRect)
 		{
 			if (destRect.X >= this.MapOffset.X - destRect.Width)
 			{
-				if(	destRect.Y >= this.MapOffset.Y - destRect.Height )
+				if (destRect.Y >= this.MapOffset.Y - destRect.Height)
 				{
 					if (destRect.X <= this.Screen.Width + destRect.Width)
 					{
-						if( destRect.Y <= this.Screen.Height + destRect.Height)
+						if (destRect.Y <= this.Screen.Height + destRect.Height)
 							return true;
 					}
-			}	}
+				}
+			}
 
 			return false;
 		}
@@ -54,8 +61,8 @@ namespace ValkyrieLibrary
 
 		public void CenterOriginOnPoint(Point Point)
 		{
-			this.MapOffset.X = Point.X;
-			this.MapOffset.Y = Point.Y;
+			this.MapOffset.X = Point.X * -1;
+			this.MapOffset.Y = Point.Y * -1;
 		}
 
 		public void CenterOriginOnPoint(int x, int y)
@@ -70,10 +77,10 @@ namespace ValkyrieLibrary
 
 		public void CenterOnPoint(Point Point)
 		{
-            this.MapOffset.X = Point.X * -1;
+			this.MapOffset.X = Point.X * -1;
 			this.MapOffset.X += (this.Screen.Width / 2);
 
-            this.MapOffset.Y = Point.Y * -1;
+			this.MapOffset.Y = Point.Y * -1;
 			this.MapOffset.Y += (this.Screen.Height / 2);
 		}
 

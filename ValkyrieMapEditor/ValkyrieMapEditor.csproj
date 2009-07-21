@@ -127,13 +127,15 @@
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
     <Content Include="Graphics\AllPokeTiles.png" />
+    <Content Include="Graphics\EditorEvent.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Graphics\EditorCollision.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Graphics\EditorSelection.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="Graphics\EditorTools.png" />
     <None Include="Resources\rectangle.png" />
     <None Include="Resources\pencil.png" />
     <None Include="Resources\bucket.png" />

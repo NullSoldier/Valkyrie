@@ -38,7 +38,8 @@ namespace ValkyrieMapEditor
             if (!newMap)
             {
                 this.inName.Text = this.map.Name;
-                this.inTileSet.Text = this.map.TextureName;
+
+				this.inTileSet.Text = MapEditorManager.CurrentTileSetLocation.FullName;
 
                 this.inMapWidth.Value = this.map.MapSize.X;
                 this.inMapHeight.Value = this.map.MapSize.Y;

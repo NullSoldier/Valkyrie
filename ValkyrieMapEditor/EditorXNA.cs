@@ -148,7 +148,9 @@ namespace ValkyrieMapEditor
 				// TODO: Add your update logic here
 				KeyboardState keyState = Keyboard.GetState();
 
-				if (TileEngine.IsMapLoaded && MapEditorManager.CurrentLayer != MapLayer.CollisionLayer)
+				if (TileEngine.IsMapLoaded && MapEditorManager.CurrentLayer != MapLayer.CollisionLayer
+					&& MapEditorManager.CurrentTool == Tools.Pencil) 
+					// Only do this if your not setting the collision layer or using something other than the pencil
 				{
 					var mouseState = Mouse.GetState();
 

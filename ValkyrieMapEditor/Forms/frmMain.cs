@@ -88,9 +88,7 @@ namespace ValkyrieMapEditor
 			this.pctTileSurface.TileSize = new Point(map.TileSize.X, map.TileSize.Y);
 			this.pctTileSurface.Invalidate();
 
-			this.UpdateScrollBars();
-			this.HorizontalScroll.Value = 0;
-			this.VerticalScroll.Value = 0;
+			this.UpdateScrollBars(true);
 
 			this.btnMapProperties.Enabled = true;
 			this.toolSave.Enabled = true;
@@ -115,6 +113,11 @@ namespace ValkyrieMapEditor
 
 		private void UpdateScrollBars()
 		{
+			this.UpdateScrollBars(false);
+		}
+
+		private void UpdateScrollBars(bool Reset)
+		{
 			if (!TileEngine.IsMapLoaded) return;
 
 			this.HorizontalScroll.Visible = (TileEngine.CurrentMapChunk.MapSize.X * TileEngine.CurrentMapChunk.TileSize.X > this.pctSurface.Size.Width);
@@ -127,6 +130,16 @@ namespace ValkyrieMapEditor
 			int yTilesInView = ((this.pctSurface.Height + this.HorizontalScroll.Height) / TileEngine.CurrentMapChunk.TileSize.Y);
 			int yUnseenAmount = TileEngine.CurrentMapChunk.MapSize.Y - yTilesInView;
 			this.VerticalScroll.Maximum = yUnseenAmount + this.VerticalScroll.LargeChange - 1;
+
+			/* Don't set to 0 when they aren't visible
+			 * when there isnt enough map to show a scroll
+			 * bar the values for it are wonky!
+			*/
+			if (Reset && this.HorizontalScroll.Visible)
+				this.HorizontalScroll.Value = 0;
+
+			if (Reset && this.VerticalScroll.Visible)
+				this.VerticalScroll.Value = 0;
 		}
 
         private void pctSurface_MouseClick(object sender, MouseEventArgs e)

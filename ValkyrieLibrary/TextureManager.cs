@@ -35,7 +35,7 @@ namespace ValkyrieLibrary.Core
 
 		public void AddTexture(string FileName)
 		{
-			Texture2D newTexture = Texture2D.FromFile(this.Device, TextureRoot + "\\" + FileName);
+			Texture2D newTexture = Texture2D.FromFile(this.Device, Path.Combine(TextureRoot, FileName));
 
             this.AddTexture(FileName, newTexture);
 		}

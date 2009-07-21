@@ -33,6 +33,17 @@ namespace ValkyrieMapEditor
 			}
 		}
 
+		public static FileInfo CurrentTileSetLocation
+		{
+			get
+			{
+				if (TileEngine.IsMapLoaded)
+					return new FileInfo(Path.Combine(Environment.CurrentDirectory, Path.Combine(TileEngine.Configuration["GraphicsRoot"], TileEngine.CurrentMapChunk.TextureName)));
+				else
+					return new FileInfo(String.Empty);
+			}
+		}
+
 		private static object MouseLock = new Object();
 		private static Point mouselocation = new Point(0, 0);
 
@@ -141,6 +152,7 @@ namespace ValkyrieMapEditor
             newMap.LoadMap(location);
 
 			MapEditorManager.CurrentMapLocation = location;
+
             return newMap;
         }
 
@@ -167,9 +179,7 @@ namespace ValkyrieMapEditor
 				newMap.CollisionLayer[i] = ((i < oldMap.CollisionLayer.Length) ? oldMap.CollisionLayer[i] : -1);
             }
 
-
             return newMap;
-
         }
 
 		public static void SetWorldMap(Map map)
