@@ -7,6 +7,7 @@ using ValkyrieLibrary.Characters;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary.Events;
 using ValkyrieLibrary.Core;
+using ValkyrieLibrary.Core.Points;
 
 namespace ValkyrieLibrary.Maps
 {

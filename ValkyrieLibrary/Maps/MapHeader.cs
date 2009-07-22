@@ -5,6 +5,7 @@ using System.Text;
 using ValkyrieLibrary.Core;
 using System.IO;
 using Microsoft.Xna.Framework;
+using ValkyrieLibrary.Core.Points;
 
 namespace ValkyrieLibrary.Maps
 {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using ValkyrieLibrary.Core;
+using ValkyrieLibrary.Core.Points;
 
 namespace ValkyrieLibrary.Collision
 {
@@ -12,11 +13,5 @@ namespace ValkyrieLibrary.Collision
 		public List<ICollidable> Collidables;
 
 		public abstract bool CheckCollision(ICollidable Source, ScreenPoint Destination);
-
-
-
-
-
-
 	}
 }

@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Maps;
+using ValkyrieLibrary.Core.Points;
+using ValkyrieLibrary;
 
 namespace ValkyrieMapEditor.Core
 {
@@ -51,7 +53,7 @@ namespace ValkyrieMapEditor.Core
                 MapPoint point = new MapPoint((e.Location.X - (int)TileEngine.Camera.MapOffset.X) / 32, (e.Location.Y - (int)TileEngine.Camera.MapOffset.Y) / 32);
 
                 if (e.Button == MouseButtons.Left)
-                    TileEngine.CurrentMapChunk.SetData(Map.EMapLayer.CollisionLayer, point, 1);
+                    TileEngine.CurrentMapChunk.SetData(MapLayers.CollisionLayer, point, 1);
             }
         }
 
@@ -61,7 +63,7 @@ namespace ValkyrieMapEditor.Core
             {
                 for (int x = 0; x < TileEngine.CurrentMapChunk.MapSize.X; x++)
                 {
-                    int value = TileEngine.CurrentMapChunk.GetLayerValue(new MapPoint(x, y), Map.EMapLayer.CollisionLayer);
+                    int value = TileEngine.CurrentMapChunk.GetLayerValue(new MapPoint(x, y), MapLayers.CollisionLayer);
 
                     if (value == -1)
                         continue;

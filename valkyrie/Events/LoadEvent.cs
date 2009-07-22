@@ -5,8 +5,9 @@ using System.Text;
 using ValkyrieLibrary.Characters;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary;
+using ValkyrieLibrary.Events;
 
-namespace ValkyrieLibrary.Events
+namespace Valkyrie.Events
 {
     public class LoadEvent : BaseEventHandler
     {

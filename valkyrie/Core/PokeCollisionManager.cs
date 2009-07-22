@@ -5,8 +5,10 @@ using System.Text;
 using ValkyrieLibrary.Collision;
 using ValkyrieLibrary;
 using Microsoft.Xna.Framework;
+using ValkyrieLibrary.Core.Points;
+using ValkyrieLibrary.Maps;
 
-namespace ValkyrieLibrary.Core
+namespace Valkyrie.Core
 {
 	class PokeCollisionManager
 		: CollisionManager
@@ -19,7 +21,7 @@ namespace ValkyrieLibrary.Core
 			if (!TileEngine.CurrentMapChunk.TilePointInMapLocal(tilePoint))
 				return true;
 
-			if (TileEngine.CurrentMapChunk.GetLayerValue(tilePoint, Maps.Map.EMapLayer.CollisionLayer) != -1)
+			if (TileEngine.CurrentMapChunk.GetLayerValue(tilePoint, MapLayers.CollisionLayer) != -1)
 				return false;
 
 			return true;

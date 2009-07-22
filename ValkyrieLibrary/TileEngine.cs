@@ -13,15 +13,17 @@ using ValkyrieLibrary.Collision;
 using ValkyrieLibrary.Characters;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary.Events;
+using ValkyrieLibrary.Core.Points;
+using ValkyrieLibrary.Core;
 
-namespace ValkyrieLibrary.Core
+namespace ValkyrieLibrary
 {
 	public static class TileEngine
 	{
         public static Viewport Viewport;
         public static BaseCamera Camera = null;
         public static Dictionary<string, string> Configuration = null;
-        public static Player Player = null;
+        public static BaseCharacter Player = null;
 
         public static TextureManager TextureManager = null;
         public static ModuleManager ModuleManager = null;
@@ -67,7 +69,7 @@ namespace ValkyrieLibrary.Core
 		public static void Initialize(ContentManager content, GraphicsDevice device)
 		{
 			TileEngine.TextureManager = new TextureManager(content, device, "Graphics");
-            TileEngine.Player = new Player();
+			TileEngine.Player = null; // Cannot assign to abstract class, removed player
             TileEngine.ModuleManager = new ModuleManager();
             TileEngine.Configuration = new Dictionary<string, string>();
             TileEngine.WorldManager = new WorldManager();
@@ -134,12 +136,12 @@ namespace ValkyrieLibrary.Core
             TileEngine.ModuleManager.CurrentModule.Draw(spriteBatch, gameTime);
 		}
 
-        public static void DrawLayerMap(SpriteBatch spriteBatch, Map.EMapLayer layer)
+        public static void DrawLayerMap(SpriteBatch spriteBatch, MapLayers layer)
         {
             DrawLayerMap(spriteBatch, layer, Color.White);
         }
 
-        public static void DrawLayerMap(SpriteBatch spriteBatch, Map.EMapLayer layer, Color tint)
+        public static void DrawLayerMap(SpriteBatch spriteBatch, MapLayers layer, Color tint)
         {
             spriteBatch.Begin();
             foreach (var header in TileEngine.CurWorld.Values)
@@ -161,11 +163,11 @@ namespace ValkyrieLibrary.Core
                 if (!header.Map.IsVisableToPlayer())
                     continue;
 
-                TileEngine.DrawLayerMap(spriteBatch, header, Map.EMapLayer.BaseLayer);
-                TileEngine.DrawLayerMap(spriteBatch, header, Map.EMapLayer.MiddleLayer);
+                TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.BaseLayer);
+                TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.MiddleLayer);
 
                 if (!drawcharacters)
-                    TileEngine.DrawLayerMap(spriteBatch, header, Map.EMapLayer.TopLayer);
+                    TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.TopLayer);
             }
 
 			if (drawcharacters)
@@ -177,19 +179,19 @@ namespace ValkyrieLibrary.Core
                     if (!header.Map.IsVisableToPlayer())
                         continue;
 
-                    TileEngine.DrawLayerMap(spriteBatch, header, Map.EMapLayer.TopLayer);
+                    TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.TopLayer);
                 }
             }
 
             spriteBatch.End();
 		}
 
-        public static void DrawLayerMap(SpriteBatch spriteBatch, MapHeader header, Map.EMapLayer layer)
+        public static void DrawLayerMap(SpriteBatch spriteBatch, MapHeader header, MapLayers layer)
         {
             DrawLayerMap(spriteBatch, header, layer, Color.White);
         }
 
-        public static void DrawLayerMap(SpriteBatch spriteBatch, MapHeader header, Map.EMapLayer layer, Color tint)
+        public static void DrawLayerMap(SpriteBatch spriteBatch, MapHeader header, MapLayers layer, Color tint)
 		{
 			if (spriteBatch == null)
 				throw new ArgumentNullException();

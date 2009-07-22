@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Input;
 
-namespace ValkyrieLibrary.States
+namespace Valkyrie.States
 {
     public class MenuModule : IModule
     {

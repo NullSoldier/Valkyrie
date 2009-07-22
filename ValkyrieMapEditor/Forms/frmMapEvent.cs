@@ -12,18 +12,30 @@ namespace ValkyrieMapEditor.Forms
 {
     public partial class frmMapEvent : Form
     {
-        public frmMapEvent()
+		public Event Event
+		{
+			get { return this.pevent; }
+			set { this.pevent = value; }
+		}
+
+		private Event pevent;
+
+		public frmMapEvent() { }
+
+        public frmMapEvent(Event e)
         {
             InitializeComponent();
         }
 
-        public void LoadEvent(Event e)
-        {
-            //this.tbArgOne.Text = e.ParmOne;
-            //this.tbArgTwo.Text = e.ParmTwo;
+		private void frmMapEvent_Load(object sender, EventArgs e)
+		{
+			this.DisplayEvent();
+		}
 
-            cbType.Text = e.Type;
-            cbDir.Text = e.Dir;
+        public void DisplayEvent()
+        {
+            inType.Text = this.Event.Type;
+            inDirection.Text = this.Event.Dir;
         }
     }
 }

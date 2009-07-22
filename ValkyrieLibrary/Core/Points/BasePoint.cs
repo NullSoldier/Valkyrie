@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using System.Xml;
 
-namespace ValkyrieLibrary.Core
+namespace ValkyrieLibrary.Core.Points
 {
     public class BasePoint : IEquatable<BasePoint>
     {

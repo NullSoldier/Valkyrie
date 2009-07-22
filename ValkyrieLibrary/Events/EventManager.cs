@@ -7,24 +7,26 @@ using Microsoft.Xna.Framework;
 using ValkyrieLibrary.Characters;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Maps;
+using ValkyrieLibrary.Core.Points;
 
 namespace ValkyrieLibrary.Events
 {
     public class EventManager
     {
-        public List<IEventHandler> EventHandlerList;
+        private readonly List<IEventHandler> EventHandlerList;
     
-
         public EventManager()
         {
-            EventHandlerList = new List<IEventHandler>();
-            this.EventHandlerList.Add(new SignPostEvent());
-            this.EventHandlerList.Add(new JumpEvent());
-            this.EventHandlerList.Add(new LoadEvent());
+            this.EventHandlerList = new List<IEventHandler>();
         }
 
+		public void AddEventHandler(IEventHandler handler)
+		{
+			this.EventHandlerList.Add(handler);
+		}
+
         //A button pressed
-        public bool Action(Player player)
+        public bool Action(BaseCharacter player)
         {
             bool res = false;
 
@@ -49,14 +51,15 @@ namespace ValkyrieLibrary.Events
 
         public bool HandleEvent(BaseCharacter player, ActivationTypes type)
         {
-            MapPoint pos = player.MapLocation;
+            BasePoint pos = player.MapLocation;
 
             if (type == ActivationTypes.LookActivate || type == ActivationTypes.Movement)
                 pos += player.GetLookPoint();
 
             bool handled = false;
 
-            Event e = GetEvent(pos);
+			// Should be generic to any point and not aware of the maps tiles so if it was pixel based movement you could technically have events at pixel locations
+            Event e = GetEvent(new MapPoint(pos.X, pos.Y));
             if (e != null && e.IsSameFacing(player.Direction) == true)
             {
                 foreach (IEventHandler eh in EventHandlerList)

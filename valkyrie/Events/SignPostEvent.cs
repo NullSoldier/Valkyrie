@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ValkyrieLibrary.Characters;
+using ValkyrieLibrary.Events;
+using Valkyrie.Characters;
 
-namespace ValkyrieLibrary.Events
+namespace Valkyrie.Events
 {
     public class SignPostEvent : BaseEventHandler
     {
@@ -23,7 +25,8 @@ namespace ValkyrieLibrary.Events
 
         public override void Trigger(BaseCharacter player, Event e)
         {
-            player.DisplayMessage(e.Parms["Title"], e.Parms["Text"]);
+			if( player is PokePlayer)
+				((PokePlayer)player).DisplayMessage(e.Parms["Title"], e.Parms["Text"]);
         }
     }
 }

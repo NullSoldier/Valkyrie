@@ -9,13 +9,14 @@ using Microsoft.Xna.Framework;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary.Events;
 using ValkyrieLibrary;
+using ValkyrieLibrary.Core.Points;
 
 namespace ValkyrieMapEditor
 {
     public static class MapEditorManager
     {
 		public static Rectangle SelectedTilesRect = new Rectangle(0, 0, 0, 0);
-        public static Map.EMapLayer CurrentLayer = Map.EMapLayer.BaseLayer;
+        public static MapLayers CurrentLayer = MapLayers.BaseLayer;
 		public static FileInfo CurrentMapLocation;
 
         public static ViewMode ViewMode = ViewMode.All;

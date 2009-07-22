@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ValkyrieMapEditor.Properties;
 using System.Threading;
 using ValkyrieLibrary.Maps;
+using ValkyrieLibrary;
 
 namespace ValkyrieMapEditor
 {
@@ -162,7 +163,7 @@ namespace ValkyrieMapEditor
             this.btnEvent.Checked = false;
             this.btnCollisionLayer.Checked = false;
 
-            MapEditorManager.CurrentLayer = Map.EMapLayer.BaseLayer;
+            MapEditorManager.CurrentLayer = MapLayers.BaseLayer;
             MapEditorManager.GameInstance.SwitchTo(ComponentID.Draw);
         }
 
@@ -173,7 +174,7 @@ namespace ValkyrieMapEditor
             this.btnEvent.Checked = false;
             this.btnCollisionLayer.Checked = false;
 
-            MapEditorManager.CurrentLayer = Map.EMapLayer.MiddleLayer;
+            MapEditorManager.CurrentLayer = MapLayers.MiddleLayer;
             MapEditorManager.GameInstance.SwitchTo(ComponentID.Draw);
         }
 
@@ -184,11 +185,9 @@ namespace ValkyrieMapEditor
             this.btnEvent.Checked = false;
             this.btnCollisionLayer.Checked = false;
 
-            MapEditorManager.CurrentLayer = Map.EMapLayer.TopLayer;
+            MapEditorManager.CurrentLayer = MapLayers.TopLayer;
             MapEditorManager.GameInstance.SwitchTo(ComponentID.Draw);
         }
-
-
 
         private void toolNew_Click(object sender, EventArgs e)
         {

@@ -12,8 +12,10 @@ using Microsoft.Xna.Framework.Input;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary.Characters;
 using ValkyrieLibrary.Input;
+using ValkyrieLibrary.Core.Points;
+using Valkyrie.Characters;
 
-namespace ValkyrieLibrary.States
+namespace Valkyrie.States
 {
     class GameModule : IModule
     {
@@ -49,10 +51,12 @@ namespace ValkyrieLibrary.States
         public void Load()
         {
             // Player
-            TileEngine.Player = new PokePlayer();
-			TileEngine.Player.Gender = Genders.Male;
-            TileEngine.Player.Sprite = TileEngine.TextureManager.GetTexture("MaleSprite.png");
-            TileEngine.Player.Location = new MapPoint(14, 62).ToScreenPoint();
+			PokePlayer player = new PokePlayer();
+			player.Gender = Genders.Male;
+			player.Sprite = TileEngine.TextureManager.GetTexture("MaleSprite.png");
+			player.Location = new MapPoint(14, 62).ToScreenPoint();
+
+			TileEngine.Player = player;
 
 
             this.KeybindController.AddKey(Keys.Left, "MoveLeft");

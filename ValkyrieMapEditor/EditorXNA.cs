@@ -82,13 +82,13 @@ namespace ValkyrieMapEditor
 
         private void Init()
         {
-            ComponentList = new Dictionary<ComponentID, IEditorComponent>();
-            this.Render = new RenderComponent();
+			ComponentList = new Dictionary<ComponentID, IEditorComponent>();
+			this.Render = new RenderComponent();
 
-            this.ComponentList = new Dictionary<ComponentID, IEditorComponent>();
-            this.ComponentList.Add(ComponentID.Draw, new DrawComponent());
-            this.ComponentList.Add(ComponentID.Events, new EventsComponent());
-            this.ComponentList.Add(ComponentID.Collsion, new CollisionComponent());
+			this.ComponentList = new Dictionary<ComponentID, IEditorComponent>();
+			this.ComponentList.Add(ComponentID.Draw, new DrawComponent());
+			this.ComponentList.Add(ComponentID.Events, new EventsComponent());
+			this.ComponentList.Add(ComponentID.Collsion, new CollisionComponent());
         }
 
 		
@@ -111,8 +111,6 @@ namespace ValkyrieMapEditor
 
 		protected override void LoadContent()
 		{
-
-
             font = Content.Load<SpriteFont>("GameTextFont");
 
             graphicsDevice = this.GraphicsDevice;
@@ -124,7 +122,7 @@ namespace ValkyrieMapEditor
             TileEngine.Camera = new BaseCamera(0, 0, 800, 600);
             TileEngine.Load(new FileInfo("Data/TileEngineConfig.xml"));
 			TileEngine.Camera.CenterOriginOnPoint(new Point(0, 0));
-
+			TileEngine.Player = new MapEditorPlayer();
 			
 			this.SelectionSprite = Texture2D.FromFile(this.GraphicsDevice, "Graphics/EditorSelection.png");
 

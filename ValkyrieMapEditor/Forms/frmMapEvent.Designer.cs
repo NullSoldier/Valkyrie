@@ -28,155 +28,143 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.tbArgOne = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.tbArgTwo = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.cbType = new System.Windows.Forms.ComboBox();
-            this.cbDir = new System.Windows.Forms.ComboBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(34, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Type:";
-            // 
-            // tbArgOne
-            // 
-            this.tbArgOne.Location = new System.Drawing.Point(52, 36);
-            this.tbArgOne.Name = "tbArgOne";
-            this.tbArgOne.Size = new System.Drawing.Size(241, 20);
-            this.tbArgOne.TabIndex = 0;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 39);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Arg 1:";
-            // 
-            // tbArgTwo
-            // 
-            this.tbArgTwo.Location = new System.Drawing.Point(52, 62);
-            this.tbArgTwo.Multiline = true;
-            this.tbArgTwo.Name = "tbArgTwo";
-            this.tbArgTwo.Size = new System.Drawing.Size(242, 88);
-            this.tbArgTwo.TabIndex = 3;
-            // 
-            // button1
-            // 
-            this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button1.Location = new System.Drawing.Point(57, 156);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Ok";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button2.Location = new System.Drawing.Point(138, 156);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "Cancel";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(15, 65);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Arg 2:";
-            // 
-            // cbType
-            // 
-            this.cbType.FormattingEnabled = true;
-            this.cbType.Items.AddRange(new object[] {
+			this.lblType = new System.Windows.Forms.Label();
+			this.btnOk = new System.Windows.Forms.Button();
+			this.btnCancel = new System.Windows.Forms.Button();
+			this.inType = new System.Windows.Forms.ComboBox();
+			this.inDirection = new System.Windows.Forms.ComboBox();
+			this.btnDelete = new System.Windows.Forms.Button();
+			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+			this.lblDirection = new System.Windows.Forms.Label();
+			this.SuspendLayout();
+			// 
+			// lblType
+			// 
+			this.lblType.AutoSize = true;
+			this.lblType.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblType.Location = new System.Drawing.Point(12, 13);
+			this.lblType.Name = "lblType";
+			this.lblType.Size = new System.Drawing.Size(37, 15);
+			this.lblType.TabIndex = 1;
+			this.lblType.Text = "Type:";
+			// 
+			// btnOk
+			// 
+			this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+			this.btnOk.Location = new System.Drawing.Point(331, 270);
+			this.btnOk.Name = "btnOk";
+			this.btnOk.Size = new System.Drawing.Size(87, 27);
+			this.btnOk.TabIndex = 4;
+			this.btnOk.Text = "Ok";
+			this.btnOk.UseVisualStyleBackColor = true;
+			// 
+			// btnCancel
+			// 
+			this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			this.btnCancel.Location = new System.Drawing.Point(424, 270);
+			this.btnCancel.Name = "btnCancel";
+			this.btnCancel.Size = new System.Drawing.Size(87, 27);
+			this.btnCancel.TabIndex = 5;
+			this.btnCancel.Text = "Cancel";
+			this.btnCancel.UseVisualStyleBackColor = true;
+			// 
+			// inType
+			// 
+			this.inType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.inType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.inType.FormattingEnabled = true;
+			this.inType.Items.AddRange(new object[] {
             "Jump",
             "SignPost"});
-            this.cbType.Location = new System.Drawing.Point(52, 9);
-            this.cbType.Name = "cbType";
-            this.cbType.Size = new System.Drawing.Size(161, 21);
-            this.cbType.Sorted = true;
-            this.cbType.TabIndex = 7;
-            this.cbType.Text = "Null Event";
-            // 
-            // cbDir
-            // 
-            this.cbDir.FormattingEnabled = true;
-            this.cbDir.Items.AddRange(new object[] {
-            "All",
-            "East",
-            "North",
-            "South",
-            "West"});
-            this.cbDir.Location = new System.Drawing.Point(219, 9);
-            this.cbDir.Name = "cbDir";
-            this.cbDir.Size = new System.Drawing.Size(72, 21);
-            this.cbDir.Sorted = true;
-            this.cbDir.TabIndex = 8;
-            this.cbDir.Text = "All";
-            // 
-            // button3
-            // 
-            this.button3.DialogResult = System.Windows.Forms.DialogResult.Abort;
-            this.button3.Location = new System.Drawing.Point(219, 156);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 9;
-            this.button3.Text = "Delete";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // frmMapEvent
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(303, 187);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.cbDir);
-            this.Controls.Add(this.cbType);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.tbArgTwo);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.tbArgOne);
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "frmMapEvent";
-            this.Text = "Map Event";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+			this.inType.Location = new System.Drawing.Point(82, 10);
+			this.inType.Name = "inType";
+			this.inType.Size = new System.Drawing.Size(429, 23);
+			this.inType.Sorted = true;
+			this.inType.TabIndex = 7;
+			// 
+			// inDirection
+			// 
+			this.inDirection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.inDirection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.inDirection.FormattingEnabled = true;
+			this.inDirection.Location = new System.Drawing.Point(82, 48);
+			this.inDirection.Name = "inDirection";
+			this.inDirection.Size = new System.Drawing.Size(429, 23);
+			this.inDirection.Sorted = true;
+			this.inDirection.TabIndex = 8;
+			// 
+			// btnDelete
+			// 
+			this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnDelete.DialogResult = System.Windows.Forms.DialogResult.Abort;
+			this.btnDelete.Location = new System.Drawing.Point(136, 270);
+			this.btnDelete.Name = "btnDelete";
+			this.btnDelete.Size = new System.Drawing.Size(87, 27);
+			this.btnDelete.TabIndex = 9;
+			this.btnDelete.Text = "Delete";
+			this.btnDelete.UseVisualStyleBackColor = true;
+			// 
+			// flowLayoutPanel1
+			// 
+			this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.flowLayoutPanel1.Location = new System.Drawing.Point(15, 85);
+			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(496, 179);
+			this.flowLayoutPanel1.TabIndex = 10;
+			// 
+			// lblDirection
+			// 
+			this.lblDirection.AutoSize = true;
+			this.lblDirection.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblDirection.Location = new System.Drawing.Point(12, 51);
+			this.lblDirection.Name = "lblDirection";
+			this.lblDirection.Size = new System.Drawing.Size(62, 15);
+			this.lblDirection.TabIndex = 11;
+			this.lblDirection.Text = "Direction:";
+			// 
+			// frmMapEvent
+			// 
+			this.AcceptButton = this.btnOk;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.ClientSize = new System.Drawing.Size(518, 309);
+			this.Controls.Add(this.lblDirection);
+			this.Controls.Add(this.flowLayoutPanel1);
+			this.Controls.Add(this.btnDelete);
+			this.Controls.Add(this.inDirection);
+			this.Controls.Add(this.inType);
+			this.Controls.Add(this.btnCancel);
+			this.Controls.Add(this.btnOk);
+			this.Controls.Add(this.lblType);
+			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
+			this.Name = "frmMapEvent";
+			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+			this.Text = "Map Event";
+			this.Load += new System.EventHandler(this.frmMapEvent_Load);
+			this.ResumeLayout(false);
+			this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Label label3;
-
-        public System.Windows.Forms.TextBox tbArgOne;
-        public System.Windows.Forms.TextBox tbArgTwo;
-        public System.Windows.Forms.ComboBox cbType;
-        public System.Windows.Forms.ComboBox cbDir;
-        private System.Windows.Forms.Button button3;
+		private System.Windows.Forms.Label lblType;
+        private System.Windows.Forms.Button btnOk;
+		private System.Windows.Forms.Button btnCancel;
+        public System.Windows.Forms.ComboBox inType;
+        public System.Windows.Forms.ComboBox inDirection;
+        private System.Windows.Forms.Button btnDelete;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+		private System.Windows.Forms.Label lblDirection;
     }
 }

@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using ValkyrieLibrary;
 using Microsoft.Xna.Framework;
+using ValkyrieLibrary.Core.Points;
 
-namespace ValkyrieLibrary.Core
+namespace Valkyrie.Core
 {
 	public class PokeCamera
 		: BaseCamera

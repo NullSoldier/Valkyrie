@@ -12,6 +12,7 @@ using ValkyrieLibrary.Animation;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary.Events;
+using ValkyrieLibrary.Core.Points;
 
 namespace ValkyrieLibrary.Maps
 {
@@ -34,14 +35,6 @@ namespace ValkyrieLibrary.Maps
         public int TilesPerCol {get { return ((this.Texture != null) ? (this.Texture.Height / this.TileSize.Y) : 0); }}
 
         public Dictionary<int, FrameAnimation> AnimatedTiles;
-
-        public enum EMapLayer
-        {
-            BaseLayer,
-            MiddleLayer,
-            TopLayer,
-            CollisionLayer
-        };
 
         public Texture2D Texture
         {
@@ -77,7 +70,7 @@ namespace ValkyrieLibrary.Maps
 				anim.Update(gameTime);
 		}
 
-        public int GetLayerValue(MapPoint point, EMapLayer layer)
+        public int GetLayerValue(MapPoint point, MapLayers layer)
 		{
 			if (point.X < 0 || (point.X > this.MapSize.X) || point.Y < 0 || (point.Y > this.MapSize.Y))
 				throw new ArgumentOutOfRangeException();
@@ -85,21 +78,21 @@ namespace ValkyrieLibrary.Maps
             switch (layer)
             {
                 default:
-                case EMapLayer.BaseLayer: 
+                case MapLayers.BaseLayer: 
                     return this.BaseLayer[point.Y * this.MapSize.X + point.X];
 
-                case EMapLayer.MiddleLayer: 
+                case MapLayers.MiddleLayer: 
                     return this.MiddleLayer[point.Y * this.MapSize.X + point.X];
 
-                case EMapLayer.TopLayer: 
+                case MapLayers.TopLayer: 
                     return this.TopLayer[point.Y * this.MapSize.X + point.X];
 
-                case EMapLayer.CollisionLayer: 
+                case MapLayers.CollisionLayer: 
                     return this.CollisionLayer[point.Y * this.MapSize.X + point.X];
             }
 		}
        
-        private void SetLayerValue(MapPoint point, int value, EMapLayer layer)
+        private void SetLayerValue(MapPoint point, int value, MapLayers layer)
         {
             if (point.X < 0 || (point.X > this.MapSize.X) || point.Y < 0 || (point.Y > this.MapSize.Y))
                 throw new ArgumentOutOfRangeException();
@@ -107,21 +100,21 @@ namespace ValkyrieLibrary.Maps
             switch (layer)
             {
                 default:
-                case EMapLayer.BaseLayer: 
+                case MapLayers.BaseLayer: 
                     this.BaseLayer[point.Y * this.MapSize.X + point.X] = value; break;
 
-                case EMapLayer.MiddleLayer:
+                case MapLayers.MiddleLayer:
                     this.MiddleLayer[point.Y * this.MapSize.X + point.X] = value; break;
 
-                case EMapLayer.TopLayer: 
+                case MapLayers.TopLayer: 
                     this.TopLayer[point.Y * this.MapSize.X + point.X] = value; break;
 
-                case EMapLayer.CollisionLayer:
+                case MapLayers.CollisionLayer:
                     this.CollisionLayer[point.Y * this.MapSize.X + point.X] = value; break;
             }
         }
 
-		public Rectangle GetLayerSourceRect(MapPoint point, EMapLayer layer)
+		public Rectangle GetLayerSourceRect(MapPoint point, MapLayers layer)
 		{
 			if (point.X < 0 || point.X > this.MapSize.X ||
 				point.Y < 0 || point.Y >= this.MapSize.Y)
@@ -238,9 +231,9 @@ namespace ValkyrieLibrary.Maps
 			
 		}
 
-        public void SetData(EMapLayer layer, MapPoint location, int value)
+        public void SetData(MapLayers layer, MapPoint location, int value)
         {
-            if (layer == EMapLayer.CollisionLayer)
+            if (layer == MapLayers.CollisionLayer)
             {
                 if (GetLayerValue(location, layer) != -1)
                     SetLayerValue(location, -1, layer);

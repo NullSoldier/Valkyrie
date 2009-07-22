@@ -12,9 +12,11 @@ using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 using ValkyrieLibrary.Core;
 using System.IO;
-using ValkyrieLibrary.States;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary.Events;
+using Valkyrie.Events;
+using Valkyrie.Core;
+using Valkyrie.States;
 
 namespace ValkyrieLibrary
 {
@@ -41,6 +43,11 @@ namespace ValkyrieLibrary
             TileEngine.Camera = new PokeCamera(0, 0, 800, 600);
 			TileEngine.CollisionManager = new PokeCollisionManager();
 			TileEngine.TileSize = 32;
+
+			// Events
+			TileEngine.EventManager.AddEventHandler(new SignPostEvent());
+			TileEngine.EventManager.AddEventHandler(new JumpEvent());
+			TileEngine.EventManager.AddEventHandler(new LoadEvent());
 
             base.Initialize();
         }

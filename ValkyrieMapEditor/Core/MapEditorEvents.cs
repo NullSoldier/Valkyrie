@@ -18,11 +18,10 @@ using System.Windows.Forms;
 using ValkyrieLibrary.Maps;
 using ValkyrieMapEditor.Forms;
 using ValkyrieLibrary.Events;
-using ValkyrieLibrary.Core.Points;
 
 namespace ValkyrieMapEditor.Core
 {
-    public class EventsComponent : IEditorComponent
+    class MapEditorEvents
     {
         private Texture2D EventSprite;
         private Texture2D SelectionSprite;
@@ -32,6 +31,13 @@ namespace ValkyrieMapEditor.Core
         public Point SelectedPoint {get; set; }
         public Point EndSelectedPoint { get; set; }
 
+        public bool Enabled
+        {
+            get 
+            { 
+                return (MapEditorManager.EventMode == true); 
+            }
+        }
 
         public bool IsStartAfterEnd()
         {
@@ -44,7 +50,7 @@ namespace ValkyrieMapEditor.Core
             this.SelectionSprite = Texture2D.FromFile(device, "Graphics/EditorSelection.png");
         }
 
-        public EventsComponent()
+        public MapEditorEvents()
         {
             this.SelectedPoint = new Point(0, 0);
             this.EndSelectedPoint = new Point(0, 0);
@@ -76,7 +82,7 @@ namespace ValkyrieMapEditor.Core
             MapPoint size = new MapPoint(this.EndSelectedPoint.X - this.SelectedPoint.X, this.EndSelectedPoint.Y - this.SelectedPoint.Y);
 
 
-            Event e = TileEngine.EventManager.GetEventInRect(point, size);
+            Event e = TileEngine.EventSystem.GetEventInRect(point, size);
 
             frmMapEvent frm = new frmMapEvent();
 
@@ -91,25 +97,25 @@ namespace ValkyrieMapEditor.Core
             }
 
 
-            //frm.LoadEvent(e);
+            frm.LoadEvent(e);
 
             DialogResult res = frm.ShowDialog();
-			throw new NotImplementedException();
+
             if (res == DialogResult.OK)
             {
-                /*e.Type = frm.cbType.Text;
+                e.Type = frm.inType.Text;
                 //e.ParmOne = frm.tbArgOne.Text;
                 //e.ParmTwo = frm.tbArgTwo.Text;
-                e.Dir = frm.cbDir.Text;
-                TileEngine.EventManager.SetEvent(e);*/
+                e.Direction = frm.inDirection.Text;
+                TileEngine.EventSystem.SetEvent(e);
             }
             else if (res == DialogResult.Abort)
             {
-                TileEngine.EventManager.DelEvent(e);
+                TileEngine.EventSystem.DelEvent(e);
             }
         }
 
-        public void OnMouseDown(object sender, MouseEventArgs ev)
+        public void MouseDown(object sender, MouseEventArgs ev)
         {
             Cancel = false;
             //TileEngine.CurrentMapChunk.TilePointInMapLocal(tileLocation)
@@ -117,7 +123,7 @@ namespace ValkyrieMapEditor.Core
             this.EndSelectedPoint = new Point(ev.X / 32 + 1, ev.Y / 32 + 1);
         }
 
-        public void OnMouseMove(object sender, MouseEventArgs ev)
+        public void MouseMove(object sender, MouseEventArgs ev)
         {
             if (ev.Button == MouseButtons.Left)
             {
@@ -128,7 +134,7 @@ namespace ValkyrieMapEditor.Core
             }
         }
 
-        public void OnMouseUp(object sender, MouseEventArgs ev)
+        public void MouseUp(object sender, MouseEventArgs ev)
         {
             if (!IsStartAfterEnd())
             {
@@ -141,7 +147,7 @@ namespace ValkyrieMapEditor.Core
             }
         }
 
-        public void OnMouseClicked(object sender, MouseEventArgs ev)
+        public void MouseClicked(object sender, MouseEventArgs ev)
         {
             //this.SelectedPoint = new Point(ev.X / 32, ev.Y / 32);
             //this.EndSelectedPoint = new Point(ev.X / 32 + 1, ev.Y / 32 + 1);
@@ -149,6 +155,9 @@ namespace ValkyrieMapEditor.Core
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (Enabled == false)
+                return;
+
             foreach (Event e in TileEngine.CurrentMapChunk.EventList)
             {
 
@@ -220,18 +229,6 @@ namespace ValkyrieMapEditor.Core
 
             rectangleTexture.SetData(color);//set the color data on the texture
             return rectangleTexture;
-        }
-
-        public void OnSizeChanged(object sender, ScreenResizedEventArgs e)
-        {
-        }
-
-        public void OnScrolled(object sender, ScrollEventArgs e)
-        {
-        }
-
-        public void Update(GameTime gameTime)
-        {
         }
     }
 }

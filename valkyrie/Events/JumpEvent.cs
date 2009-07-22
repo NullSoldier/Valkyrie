@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ValkyrieLibrary.Characters;
+using ValkyrieLibrary.Events;
+using Valkyrie.Characters;
 
-namespace ValkyrieLibrary.Events
+namespace Valkyrie.Events
 {
     public class JumpEvent : BaseEventHandler
     {
@@ -16,7 +18,10 @@ namespace ValkyrieLibrary.Events
 
         public override void Trigger(BaseCharacter player, Event e)
         {
-            player.JumpWall();
+			if( player is PokePlayer )
+				((PokePlayer)player).JumpWall();
+
+			// Otherwise a non player activated this event so ignore
         }
     }
 }

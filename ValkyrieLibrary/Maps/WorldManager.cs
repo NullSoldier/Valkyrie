@@ -7,6 +7,7 @@ using System.IO;
 
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Maps;
+using ValkyrieLibrary.Core.Points;
 
 
 namespace ValkyrieLibrary.Maps
@@ -36,7 +37,7 @@ namespace ValkyrieLibrary.Maps
             {
                 this.curWorld = this.WorldsList[Name];
                 TileEngine.ClearCurrentMapChunk();
-                TileEngine.Player.ReachedMoveDestination();
+                TileEngine.Player.StopMoving();
                 TileEngine.Player.Location = this.curWorld.FindStartLocation(startLoc);
                 TileEngine.Camera.CenterOnCharacter(TileEngine.Player);
             }

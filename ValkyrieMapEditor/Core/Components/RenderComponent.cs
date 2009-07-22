@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Maps;
+using ValkyrieLibrary;
 
 namespace ValkyrieMapEditor.Core
 {
@@ -108,33 +109,33 @@ namespace ValkyrieMapEditor.Core
             }
             else if (MapEditorManager.ViewMode == ViewMode.Below)
             {
-                if (MapEditorManager.CurrentLayer == Map.EMapLayer.TopLayer)
+                if (MapEditorManager.CurrentLayer == MapLayers.TopLayer)
                 {
                     TileEngine.DrawAllLayers(spriteBatch, false);
                 }
-                else if (MapEditorManager.CurrentLayer == Map.EMapLayer.MiddleLayer)
+                else if (MapEditorManager.CurrentLayer == MapLayers.MiddleLayer)
                 {
-                    TileEngine.DrawLayerMap(spriteBatch, Map.EMapLayer.BaseLayer);
-                    TileEngine.DrawLayerMap(spriteBatch, Map.EMapLayer.MiddleLayer);
+                    TileEngine.DrawLayerMap(spriteBatch, MapLayers.BaseLayer);
+                    TileEngine.DrawLayerMap(spriteBatch, MapLayers.MiddleLayer);
                 }
                 else
                 {
-                    TileEngine.DrawLayerMap(spriteBatch, Map.EMapLayer.BaseLayer);
+                    TileEngine.DrawLayerMap(spriteBatch, MapLayers.BaseLayer);
                 }
             }
             else
             {
-                if (MapEditorManager.CurrentLayer == Map.EMapLayer.TopLayer)
+                if (MapEditorManager.CurrentLayer == MapLayers.TopLayer)
                 {
-                    TileEngine.DrawLayerMap(spriteBatch, Map.EMapLayer.TopLayer);
+                    TileEngine.DrawLayerMap(spriteBatch, MapLayers.TopLayer);
                 }
-                else if (MapEditorManager.CurrentLayer == Map.EMapLayer.MiddleLayer)
+                else if (MapEditorManager.CurrentLayer == MapLayers.MiddleLayer)
                 {
-                    TileEngine.DrawLayerMap(spriteBatch, Map.EMapLayer.MiddleLayer);
+                    TileEngine.DrawLayerMap(spriteBatch, MapLayers.MiddleLayer);
                 }
                 else
                 {
-                    TileEngine.DrawLayerMap(spriteBatch, Map.EMapLayer.BaseLayer);
+                    TileEngine.DrawLayerMap(spriteBatch, MapLayers.BaseLayer);
                 }
             }
 

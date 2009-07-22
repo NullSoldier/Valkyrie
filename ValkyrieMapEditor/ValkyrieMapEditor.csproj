@@ -91,6 +91,7 @@
     <Compile Include="Core\Components\EventsComponent.cs" />
     <Compile Include="Core\Components\RenderComponent.cs" />
     <Compile Include="Core\Components\DrawComponent.cs" />
+    <Compile Include="Core\MapEditorPlayer.cs" />
     <Compile Include="Forms\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -130,7 +131,6 @@
     </Content>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
-    <Content Include="Graphics\AllPokeTiles.png" />
     <Content Include="Graphics\EditorEvent.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -153,12 +153,6 @@
     <None Include="Resources\page_go.png" />
     <None Include="Resources\disk.png" />
     <None Include="Resources\page.png" />
-    <None Include="Graphics\TestTileSet.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Graphics\PokemonTiles.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <NestedContentProject Include="Content\Content.contentproj">

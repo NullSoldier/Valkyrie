@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using ValkyrieLibrary;
 
 
-namespace ValkyrieLibrary.Core
+namespace Valkyrie.Core
 {
     class PokeMessage
     {
