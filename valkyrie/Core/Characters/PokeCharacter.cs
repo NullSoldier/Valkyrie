@@ -5,7 +5,7 @@ using System.Text;
 using ValkyrieLibrary.Characters;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using ValkyrieLibrary.Core.Points;
+using ValkyrieLibrary.Core;
 using ValkyrieLibrary;
 
 namespace Valkyrie.Core.Characters
@@ -26,25 +26,6 @@ namespace Valkyrie.Core.Characters
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			spriteBatch.Draw(this.Sprite, new Vector2(this.Location.X, this.Location.Y), Animations[this.CurrentAnimationName].FrameRectangle, Color.White);
-		}
-
-		public override BasePoint GetLookPoint()
-		{
-			BasePoint point = new BasePoint(0, 0);
-
-			if (this.Direction == Directions.North)
-				point = new BasePoint(0, -1);
-
-			if (this.Direction == Directions.South)
-				point = new BasePoint(0, 1);
-
-			if (this.Direction == Directions.West)
-				point = new BasePoint(-1, 0);
-
-			if (this.Direction == Directions.East)
-				point = new BasePoint(1, 0);
-
-			return point;
 		}
 
 		public override void Move(ScreenPoint Destination)
@@ -68,12 +49,10 @@ namespace Valkyrie.Core.Characters
 
 		public override void DrawOverlay(SpriteBatch spriteBatch)
 		{
-			
 		}
 
 		public override void Action(string type)
 		{
-			throw new NotImplementedException();
 		}
 
 		public override void StopMoving()

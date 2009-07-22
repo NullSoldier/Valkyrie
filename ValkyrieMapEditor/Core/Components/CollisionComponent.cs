@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Maps;
-using ValkyrieLibrary.Core.Points;
+using ValkyrieLibrary.Core;
 using ValkyrieLibrary;
 
 namespace ValkyrieMapEditor.Core

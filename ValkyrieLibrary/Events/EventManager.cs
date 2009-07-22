@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using ValkyrieLibrary.Characters;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Maps;
-using ValkyrieLibrary.Core.Points;
 
 namespace ValkyrieLibrary.Events
 {

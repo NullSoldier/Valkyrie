@@ -5,7 +5,6 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using System.Xml;
 using ValkyrieLibrary.Core;
-using ValkyrieLibrary.Core.Points;
 
 namespace ValkyrieLibrary.Events
 {

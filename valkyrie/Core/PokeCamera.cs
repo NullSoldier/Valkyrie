@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ValkyrieLibrary;
 using Microsoft.Xna.Framework;
-using ValkyrieLibrary.Core.Points;
+using ValkyrieLibrary.Core;
 
 namespace Valkyrie.Core
 {

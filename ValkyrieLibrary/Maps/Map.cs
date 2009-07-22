@@ -12,7 +12,6 @@ using ValkyrieLibrary.Animation;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary.Events;
-using ValkyrieLibrary.Core.Points;
 
 namespace ValkyrieLibrary.Maps
 {

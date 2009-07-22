@@ -5,10 +5,10 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using ValkyrieLibrary.Core;
 
-namespace ValkyrieLibrary.Collision
+namespace ValkyrieLibrary.Characters
 {
-	public interface ICollidable
-	{
-		ScreenPoint GetLocation();
+    public class NPC : BaseCharacter
+    {
+
 	}
 }

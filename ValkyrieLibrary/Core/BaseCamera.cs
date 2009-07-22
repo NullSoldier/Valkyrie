@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Characters;
-using ValkyrieLibrary.Core.Points;
 
 namespace ValkyrieLibrary
 {

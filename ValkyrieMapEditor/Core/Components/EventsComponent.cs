@@ -18,7 +18,7 @@ using System.Windows.Forms;
 using ValkyrieLibrary.Maps;
 using ValkyrieMapEditor.Forms;
 using ValkyrieLibrary.Events;
-using ValkyrieLibrary.Core.Points;
+using ValkyrieLibrary.Core;
 
 namespace ValkyrieMapEditor.Core
 {

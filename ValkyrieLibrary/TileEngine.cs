@@ -13,7 +13,6 @@ using ValkyrieLibrary.Collision;
 using ValkyrieLibrary.Characters;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary.Events;
-using ValkyrieLibrary.Core.Points;
 using ValkyrieLibrary.Core;
 
 namespace ValkyrieLibrary

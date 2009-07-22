@@ -11,7 +11,7 @@ using System.IO;
 using System.Drawing;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary;
-using ValkyrieLibrary.Core.Points;
+using ValkyrieLibrary.Core;
 
 namespace ValkyrieMapEditor
 {

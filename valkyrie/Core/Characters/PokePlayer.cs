@@ -10,8 +10,6 @@ using ValkyrieLibrary.Collision;
 using ValkyrieLibrary.Characters;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary.Core;
-using ValkyrieLibrary.Core.Points;
-using ValkyrieLibrary.Characters;
 using Valkyrie.Core.Characters;
 
 namespace Valkyrie.Characters
@@ -33,17 +31,6 @@ namespace Valkyrie.Characters
                 this.Animations.Add("WalkEast", new FrameAnimation(new Rectangle(0, 42, 28, 42), 3));
                 this.Animations.Add("WalkSouth", new FrameAnimation(new Rectangle(0, 84, 28, 42), 3));
                 this.Animations.Add("WalkWest", new FrameAnimation(new Rectangle(0, 126, 28, 42), 3));
-			}
-		}
-
-		public Vector2 DrawScreenLocation
-		{
-			get
-			{
-				Vector2 location = new Vector2();
-				location.X = (int)TileEngine.Camera.MapOffset.X + this.Location.X + TileEngine.CurrentMapChunk.TileSize.X/2 - this.CurrentAnimation.FrameRectangle.Width/2 ;
-				location.Y = (int)TileEngine.Camera.MapOffset.Y + this.Location.Y + TileEngine.CurrentMapChunk.TileSize.Y - this.CurrentAnimation.FrameRectangle.Height;
-				return location;
 			}
 		}
 
@@ -132,7 +119,7 @@ namespace Valkyrie.Characters
             }
 		}
 
-		public void DisplayMessage(String title, String msg)
+		public override void DisplayMessage(String title, String msg)
 		{
 			throw new NotSupportedException();
 		}

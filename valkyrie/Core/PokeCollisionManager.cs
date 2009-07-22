@@ -5,7 +5,7 @@ using System.Text;
 using ValkyrieLibrary.Collision;
 using ValkyrieLibrary;
 using Microsoft.Xna.Framework;
-using ValkyrieLibrary.Core.Points;
+using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Maps;
 
 namespace Valkyrie.Core

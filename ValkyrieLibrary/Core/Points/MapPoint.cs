@@ -6,7 +6,7 @@ using System.Xml;
 using Microsoft.Xna.Framework;
 using ValkyrieLibrary.Core;
 
-namespace ValkyrieLibrary.Core.Points
+namespace ValkyrieLibrary.Core
 {
 
     // one unit in a map point represents 32 units in a screen point

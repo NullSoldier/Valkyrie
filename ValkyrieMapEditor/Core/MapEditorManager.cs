@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary.Events;
 using ValkyrieLibrary;
-using ValkyrieLibrary.Core.Points;
+using ValkyrieLibrary.Core;
 
 namespace ValkyrieMapEditor
 {

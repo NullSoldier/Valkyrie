@@ -12,7 +12,6 @@ using Microsoft.Xna.Framework.Input;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary.Characters;
 using ValkyrieLibrary.Input;
-using ValkyrieLibrary.Core.Points;
 using Valkyrie.Characters;
 
 namespace Valkyrie.States

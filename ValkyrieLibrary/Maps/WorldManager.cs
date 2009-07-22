@@ -7,7 +7,6 @@ using System.IO;
 
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Maps;
-using ValkyrieLibrary.Core.Points;
 
 
 namespace ValkyrieLibrary.Maps
