@@ -129,7 +129,7 @@ namespace Valkyrie.Characters
             this.IsJumping = true;
 
             ScreenPoint dest = new ScreenPoint(TileEngine.Player.Location.X, TileEngine.Player.Location.Y);
-            ScreenPoint newDest = dest + (new ScreenPoint(this.GetLookPoint().X, this.GetLookPoint().Y) * 2);
+            ScreenPoint newDest = dest + (new ScreenPoint(GetLookPoint()) * 2);
             this.MovingDestination = newDest;
         }
 		#endregion
