@@ -40,8 +40,8 @@ namespace ValkyrieMapEditor
 		private Texture2D SelectionSprite;
 
         private Dictionary<ComponentID, IEditorComponent> ComponentList;
-        private IEditorComponent curComponent;
-        public RenderComponent Render;
+        private IEditorComponent curComponent = null;
+        public RenderComponent Render = null;
 
         public IEditorComponent CurComponent
         {
@@ -58,14 +58,17 @@ namespace ValkyrieMapEditor
 
 		public EditorXNA()
 		{
+            Init();
+
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
-            ComponentList = new Dictionary<ComponentID,IEditorComponent>();
 		}
 
 		
 		public EditorXNA(IntPtr drawSurface, IntPtr drawTilesSurface)
 		{
+            Init();
+
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 
@@ -74,8 +77,19 @@ namespace ValkyrieMapEditor
 			graphics.PreparingDeviceSettings +=
 				new EventHandler<PreparingDeviceSettingsEventArgs>(graphics_PreparingDeviceSettings);
 
-            System.Windows.Forms.Control.FromHandle((this.Window.Handle)).VisibleChanged += new EventHandler(Game1_VisibleChanged);
+            System.Windows.Forms.Control.FromHandle((this.Window.Handle)).VisibleChanged += new EventHandler(Game1_VisibleChanged);         
 		}
+
+        private void Init()
+        {
+            ComponentList = new Dictionary<ComponentID, IEditorComponent>();
+            this.Render = new RenderComponent();
+
+            this.ComponentList = new Dictionary<ComponentID, IEditorComponent>();
+            this.ComponentList.Add(ComponentID.Draw, new DrawComponent());
+            this.ComponentList.Add(ComponentID.Events, new EventsComponent());
+            this.ComponentList.Add(ComponentID.Collsion, new CollisionComponent());
+        }
 
 		
         void graphics_PreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
@@ -97,12 +111,7 @@ namespace ValkyrieMapEditor
 
 		protected override void LoadContent()
 		{
-            this.Render = new RenderComponent();
 
-            this.ComponentList = new Dictionary<ComponentID, IEditorComponent>();
-            this.ComponentList.Add(ComponentID.Draw, new DrawComponent());
-            this.ComponentList.Add(ComponentID.Events, new EventsComponent());
-            this.ComponentList.Add(ComponentID.Collsion, new CollisionComponent());
 
             font = Content.Load<SpriteFont>("GameTextFont");
 
