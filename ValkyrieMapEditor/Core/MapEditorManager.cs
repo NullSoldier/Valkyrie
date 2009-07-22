@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary.Events;
 using ValkyrieLibrary;
-using ValkyrieLibrary.Core;
 
 namespace ValkyrieMapEditor
 {
@@ -191,11 +190,10 @@ namespace ValkyrieMapEditor
 		{
             if (TileEngine.WorldManager.CurrentWorld != null)
             {
-                foreach (MapHeader tmpHeader in TileEngine.CurWorld.Values)
+                foreach (MapHeader tmpHeader in TileEngine.WorldManager.CurrentWorld.WorldList.Values)
                     tmpHeader.Unload();
 
-                TileEngine.CurWorld.Clear();
-    
+                TileEngine.WorldManager.CurrentWorld.WorldList.Clear();
             }
 
             TileEngine.WorldManager.WorldsList.Clear();

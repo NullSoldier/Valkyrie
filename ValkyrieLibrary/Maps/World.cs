@@ -13,14 +13,19 @@ namespace ValkyrieLibrary.Maps
     public class World
     {
         public Dictionary<string, MapHeader> WorldList;
+        public String DefaultSpawn { get; set; }
 
         public World()
         {
             this.WorldList = new Dictionary<string, MapHeader>();
+            this.DefaultSpawn = "";
         }
 
         public ScreenPoint FindStartLocation(String name)
         {
+            if (name == "Default")
+                name = DefaultSpawn;
+
             foreach (var mapHeader in WorldList)
             {
                 foreach (Event e in mapHeader.Value.Map.EventList)
@@ -34,6 +39,9 @@ namespace ValkyrieLibrary.Maps
                         return e.Location.ToScreenPoint() + mapHeader.Value.MapLocation.ToScreenPoint();
                 }
             }
+
+            if (name != DefaultSpawn)
+                return FindStartLocation(DefaultSpawn);
 
             return new ScreenPoint(0,0);
         }

@@ -14,6 +14,7 @@ namespace ValkyrieLibrary.Maps
     public class WorldManager
     {
         public Dictionary<String, World> WorldsList;
+        
         public World CurrentWorld
         {
             get
@@ -27,7 +28,7 @@ namespace ValkyrieLibrary.Maps
         public WorldManager()
         {
             this.WorldsList = new Dictionary<String, World>();
-            curWorld = null;
+            this.curWorld = null;
         }
 
         public void SetWorld(String Name, String startLoc)
@@ -54,31 +55,37 @@ namespace ValkyrieLibrary.Maps
 
                 foreach (XmlNode node in worldNode.ChildNodes)
                 {
-                    string name = string.Empty;
-                    string path = string.Empty;
-                    int x = 0, y = 0;
-
-                    foreach (XmlNode subnode in node.ChildNodes)
+                    if (node.Name == "DefaultSpawn")
                     {
-                        if (subnode.Name == "Name")
-                            name = subnode.InnerText;
-                        else if (subnode.Name == "FilePath")
-                            path = subnode.InnerText;
-                        else if (subnode.Name == "X")
-                            x = Convert.ToInt32(subnode.InnerText);
-                        else if (subnode.Name == "Y")
-                            y = Convert.ToInt32(subnode.InnerText);
+                        w.DefaultSpawn = node.InnerText;
                     }
+                    else if (node.Name == "MapLoc")
+                    {
 
-                    MapHeader header = new MapHeader(name, path, new MapPoint(x, y));
-                    w.WorldList.Add(header.MapName, header);
+                        string name = string.Empty;
+                        string path = string.Empty;
+                        int x = 0, y = 0;
+
+                        foreach (XmlNode subnode in node.ChildNodes)
+                        {
+                            if (subnode.Name == "Name")
+                                name = subnode.InnerText;
+                            else if (subnode.Name == "FilePath")
+                                path = subnode.InnerText;
+                            else if (subnode.Name == "X")
+                                x = Convert.ToInt32(subnode.InnerText);
+                            else if (subnode.Name == "Y")
+                                y = Convert.ToInt32(subnode.InnerText);
+                        }
+
+                        MapHeader header = new MapHeader(name, path, new MapPoint(x, y));
+                        w.WorldList.Add(header.MapName, header);
+                    }
                 }
 
                 var worldName = worldNode.Attributes.GetNamedItem("Name");
                 this.WorldsList.Add(worldName.InnerText, w);
             }
-
-            curWorld = WorldsList["Main"];
         }
 
     }

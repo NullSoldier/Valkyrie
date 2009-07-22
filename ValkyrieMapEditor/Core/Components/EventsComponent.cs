@@ -18,7 +18,6 @@ using System.Windows.Forms;
 using ValkyrieLibrary.Maps;
 using ValkyrieMapEditor.Forms;
 using ValkyrieLibrary.Events;
-using ValkyrieLibrary.Core;
 
 namespace ValkyrieMapEditor.Core
 {
@@ -95,18 +94,18 @@ namespace ValkyrieMapEditor.Core
 
             DialogResult res = frm.ShowDialog();
 			throw new NotImplementedException();
-            if (res == DialogResult.OK)
-            {
-                /*e.Type = frm.cbType.Text;
-                //e.ParmOne = frm.tbArgOne.Text;
-                //e.ParmTwo = frm.tbArgTwo.Text;
-                e.Dir = frm.cbDir.Text;
-                TileEngine.EventManager.SetEvent(e);*/
-            }
-            else if (res == DialogResult.Abort)
-            {
-                TileEngine.EventManager.DelEvent(e);
-            }
+            //if (res == DialogResult.OK)
+            //{
+            //    /*e.Type = frm.cbType.Text;
+            //    //e.ParmOne = frm.tbArgOne.Text;
+            //    //e.ParmTwo = frm.tbArgTwo.Text;
+            //    e.Dir = frm.cbDir.Text;
+            //    TileEngine.EventManager.SetEvent(e);*/
+            //}
+            //else if (res == DialogResult.Abort)
+            //{
+            //    TileEngine.EventManager.DelEvent(e);
+            //}
         }
 
         public void OnMouseDown(object sender, MouseEventArgs ev)

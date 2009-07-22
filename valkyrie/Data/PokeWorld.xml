@@ -3,6 +3,7 @@
 <XnaContent>
   <Worlds>
     <World Name="Main">
+      <DefaultSpawn>PalletTown_HouseOne_External</DefaultSpawn>
       <MapLoc>
         <Name>Route2</Name>
         <FilePath>Route2.xml</FilePath>
@@ -33,9 +34,10 @@
     </World>
     
     <World Name="PalletTown_HouseOne">
+      <DefaultSpawn>PalletTown_HouseOne_Internal</DefaultSpawn>
       <MapLoc>
         <Name>MyHome</Name>
-        <FilePath>PalletTown_HouseOne.xml</FilePath>
+        <FilePath>PalletTown_House1.xml</FilePath>
         <X>0</X>
         <Y>0</Y>
       </MapLoc>
