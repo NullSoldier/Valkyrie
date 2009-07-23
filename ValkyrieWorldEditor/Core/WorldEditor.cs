@@ -12,11 +12,10 @@ namespace ValkyrieWorldEditor.Core
 {
     public static class WorldEditor
     {
+        public static frmMain MainForm = null;
+
         public static bool IgnoreInput = false;
         public static double Scale{get { return scale; }}
-     
-        public static EditorXNA Game;
-        public static frmMain MainForm;
 
         public static World CurWorld { get { return TileEngine.WorldManager.CurrentWorld; } }
         public static Map CurMap { get { return curMap; } }
@@ -53,7 +52,5 @@ namespace ValkyrieWorldEditor.Core
             WorldEditor.curMap = map;
             MainForm.RefreshMapProp(WorldEditor.curMap);
         }
-
-
     }
 }

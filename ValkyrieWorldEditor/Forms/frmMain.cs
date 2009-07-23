@@ -14,17 +14,28 @@ using ValkyrieLibrary;
 
 namespace ValkyrieWorldEditor.Forms
 {
-    public partial class frmMain : Form
+    public partial class frmMain : XNARenderForm
     {
         public event EventHandler<ScreenResizedEventArgs> ScreenResized;
         public event EventHandler<ScrollEventArgs> ScrolledMap;
 
-        public frmMain()
+        public frmMain() 
         {
             InitializeComponent();
+
+            XNARenderControls.Add(this.pctPreview);
+            XNARenderControls.Add(this.pctSurface);
+
+            InitRenderControls();
+
+            this.ScreenResized += this.pctSurface.Resized;
+            this.ScrolledMap += this.pctSurface.Scrolled;
+
+            this.ScreenResized += this.pctPreview.Resized;
+            this.ScrolledMap += this.pctPreview.Scrolled;
         }
 
-        private void UpdateScrollBars()
+        public void UpdateScrollBars()
         {
             this.UpdateScrollBars(false);
         }
@@ -44,11 +55,11 @@ namespace ValkyrieWorldEditor.Forms
 
             int xTilesInView = ((this.pctSurface.Width + this.VerticalScroll.Width) / TileSize.X);
             int xUnseenAmount = worldMap.ToMapPoint().X - xTilesInView;
-            this.HorizontalScroll.Maximum = worldMap.ToMapPoint().X;
+            this.HorizontalScroll.Maximum = xUnseenAmount + this.HorizontalScroll.LargeChange - 1;
 
             int yTilesInView = ((this.pctSurface.Height + this.HorizontalScroll.Height) / TileSize.Y);
             int yUnseenAmount = worldMap.ToMapPoint().Y - yTilesInView;
-            this.VerticalScroll.Maximum = worldMap.ToMapPoint().Y;
+            this.VerticalScroll.Maximum = yUnseenAmount + this.VerticalScroll.LargeChange - 1;
 
             MapPoint camOff = (new ScreenPoint(TileEngine.Camera.CameraOrigin) * (WorldEditor.Scale)).ToMapPoint();
 
@@ -61,10 +72,10 @@ namespace ValkyrieWorldEditor.Forms
             */
 
             if (this.HorizontalScroll.Visible)
-                this.HorizontalScroll.Value = camOff.X;
+                this.HorizontalScroll.Value = Math.Min(this.HorizontalScroll.Maximum, camOff.X);
 
             if (this.VerticalScroll.Visible)
-                this.VerticalScroll.Value = camOff.Y;
+                this.VerticalScroll.Value = Math.Min(this.VerticalScroll.Maximum, camOff.Y);
         }
         private void frmMain_Activated(object sender, EventArgs e)
         {
@@ -160,16 +171,6 @@ namespace ValkyrieWorldEditor.Forms
             }
         }
 
-        public IntPtr getDrawSurface()
-        {
-            return this.pctSurface.Handle;
-        }
-
-        public IntPtr getPreviewSurface()
-        {
-            return this.pctPreview.Handle;
-        }
-
         private void OnWorldSelect(object sender, EventArgs e)
         {
             WorldEditor.SetCurWorld(cbCurWorld.Text);
@@ -223,8 +224,7 @@ namespace ValkyrieWorldEditor.Forms
     }
 
     #region EventArgs
-    public class ScreenResizedEventArgs
-            : EventArgs
+    public class ScreenResizedEventArgs : EventArgs
     {
         public ScreenResizedEventArgs(int width, int height)
         {
@@ -236,8 +236,7 @@ namespace ValkyrieWorldEditor.Forms
         public int Height;
     }
 
-    public class SurfaceClickedEventArgs
-        : EventArgs
+    public class SurfaceClickedEventArgs : EventArgs
     {
         public SurfaceClickedEventArgs(MouseButtons button, Point location)
         {

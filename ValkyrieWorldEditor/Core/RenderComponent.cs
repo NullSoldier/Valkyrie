@@ -21,10 +21,10 @@ namespace ValkyrieWorldEditor.Core
 
         public void OnSizeChanged(object sender, ScreenResizedEventArgs e)
         {
-            EditorXNA.graphics.PreferredBackBufferWidth = e.Width;
-            EditorXNA.graphics.PreferredBackBufferHeight = e.Height;
-            EditorXNA.graphics.IsFullScreen = false;
-            EditorXNA.graphics.ApplyChanges();
+            //EditorXNA.graphics.PreferredBackBufferWidth = e.Width;
+            //EditorXNA.graphics.PreferredBackBufferHeight = e.Height;
+            //EditorXNA.graphics.IsFullScreen = false;
+            //EditorXNA.graphics.ApplyChanges();
 
             if (TileEngine.Camera != null)
             {
@@ -102,7 +102,7 @@ namespace ValkyrieWorldEditor.Core
             if (!TileEngine.IsMapLoaded)
                 return;
 
-            TileEngine.DrawAllLayers(spriteBatch, false);
+            TileEngine.DrawEverything(spriteBatch);
         }
 
         public void Update(GameTime gameTime)

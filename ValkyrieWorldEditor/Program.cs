@@ -15,21 +15,13 @@ namespace ValkyrieWorldEditor
         [STAThreadAttribute]
         static void Main(string[] args)
         {
-			frmMain form = new frmMain();
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
-            using (EditorXNA game = new EditorXNA(form.getDrawSurface(), form.getPreviewSurface()))
-			{
-                form.ScreenResized += game.Resized;
-                form.ScrolledMap += game.Scrolled;
+            frmMain main = new frmMain();
+            WorldEditor.MainForm = main;
 
-                game.EnlistEvents(form.pctSurface);
-
-                WorldEditor.Game = game;
-                WorldEditor.MainForm = form;
-
-                form.Show();
-				game.Run(); 
-			} 
+            Application.Run(main);
         }
     }
 }

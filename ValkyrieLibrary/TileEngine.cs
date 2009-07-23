@@ -153,6 +153,19 @@ namespace ValkyrieLibrary
             }
         }
 
+        public static void DrawEverything(SpriteBatch spriteBatch)
+		{
+            if (TileEngine.WorldManager.CurrentWorld == null)
+                return;
+
+            foreach (var header in TileEngine.WorldManager.CurrentWorld.WorldList.Values)
+			{
+				TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.UnderLayer);
+                TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.BaseLayer);
+                TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.MiddleLayer);
+                TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.TopLayer);
+            }
+		}
 		public static void DrawAllLayers(SpriteBatch spriteBatch, bool drawcharacters)
 		{
             if (TileEngine.WorldManager.CurrentWorld == null)

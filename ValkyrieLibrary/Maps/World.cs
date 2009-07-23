@@ -58,8 +58,8 @@ namespace ValkyrieLibrary.Maps
 
             foreach (var mh in this.WorldList)
             {
-                int xSize = mh.Value.MapLocation.X + mh.Value.Map.TilesPerCol;
-                int ySize = mh.Value.MapLocation.Y + mh.Value.Map.TilesPerRow;
+                int xSize = mh.Value.MapLocation.X + mh.Value.Map.MapSize.X;
+                int ySize = mh.Value.MapLocation.Y + mh.Value.Map.MapSize.Y;
 
                 if (xSize > this.WorldSize.X)
                     this.WorldSize.X = xSize;

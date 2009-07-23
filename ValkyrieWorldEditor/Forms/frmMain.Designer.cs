@@ -56,13 +56,12 @@
             this.tbMapXPos = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tbMapName = new System.Windows.Forms.TextBox();
-            this.pctPreview = new System.Windows.Forms.PictureBox();
-            this.pctSurface = new System.Windows.Forms.PictureBox();
+            this.pctSurface = new ValkyrieWorldEditor.Forms.MainRender();
+            this.pctPreview = new ValkyrieWorldEditor.Forms.PreviewRender();
             this.toolStrip1.SuspendLayout();
             this.groupWorld.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pctPreview)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pctSurface)).BeginInit();
+            //((System.ComponentModel.ISupportInitialize)(this.pctSurface)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -197,7 +196,6 @@
             // tscbScale
             // 
             this.tscbScale.Items.AddRange(new object[] {
-            "10",
             "25",
             "50",
             "75",
@@ -346,15 +344,6 @@
             this.tbMapName.TabIndex = 0;
             this.tbMapName.TextChanged += new System.EventHandler(this.OnNameChange);
             // 
-            // pctPreview
-            // 
-            this.pctPreview.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.pctPreview.Location = new System.Drawing.Point(6, 28);
-            this.pctPreview.Name = "pctPreview";
-            this.pctPreview.Size = new System.Drawing.Size(187, 187);
-            this.pctPreview.TabIndex = 9;
-            this.pctPreview.TabStop = false;
-            // 
             // pctSurface
             // 
             this.pctSurface.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -368,6 +357,15 @@
             this.pctSurface.TabStop = false;
             this.pctSurface.Click += new System.EventHandler(this.pctSurface_Click);
             this.pctSurface.Resize += new System.EventHandler(this.pctSurface_Resized);
+            // 
+            // pctPreview
+            // 
+            this.pctPreview.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.pctPreview.Location = new System.Drawing.Point(6, 28);
+            this.pctPreview.Name = "pctPreview";
+            this.pctPreview.Size = new System.Drawing.Size(187, 199);
+            this.pctPreview.TabIndex = 9;
+            this.pctPreview.Texture = null;
             // 
             // frmMain
             // 
@@ -394,8 +392,7 @@
             this.groupWorld.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pctPreview)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pctSurface)).EndInit();
+            //((System.ComponentModel.ISupportInitialize)(this.pctSurface)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -424,13 +421,14 @@
         private System.Windows.Forms.TextBox tbMapXPos;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox tbMapName;
-        private System.Windows.Forms.PictureBox pctPreview;
         private System.Windows.Forms.ToolStripButton btnOpen;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripComboBox tscbScale;
         private System.Windows.Forms.ToolStripButton btnHand;
         private System.Windows.Forms.ToolStripButton btnSelect;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        public System.Windows.Forms.PictureBox pctSurface;
+
+        private MainRender pctSurface;
+        private PreviewRender pctPreview;
     }
 }

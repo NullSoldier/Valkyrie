@@ -49,6 +49,11 @@ namespace ValkyrieLibrary.Core
             return new Point(this.X, this.Y);
         }
 
+        public Vector2 ToVector2()
+        {
+            return new Vector2((float)X, (float)Y);
+        }
+
         public Rectangle ToRect(Point size)
         {
             return new Rectangle(this.X, this.Y, size.X, size.Y);

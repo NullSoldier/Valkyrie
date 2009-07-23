@@ -16,14 +16,37 @@ namespace ValkyrieLibrary
 		public Vector2 CameraOffset;
 		public Viewport Viewport;
 
+        private Stack<BaseCamera> camStack;
+
 		public BaseCamera()
 		{
 			this.Screen = new Rectangle(0, 0, 0, 0);
 			this.MapOffset = new Vector2(0, 0);
+            camStack = new Stack<BaseCamera>();
 		}
+
+        public BaseCamera(BaseCamera cam)
+        {
+            camStack = new Stack<BaseCamera>();
+            this.SetCamera(cam);
+        }
+
+        public void SetCamera(BaseCamera cam)
+        {
+            this.Screen = new Rectangle(cam.Screen.X, cam.Screen.Y, cam.Screen.Width, cam.Screen.Height);
+            this.MapOffset = new Vector2(cam.MapOffset.X, cam.MapOffset.Y);
+            this.CameraOffset = new Vector2(cam.CameraOffset.X, cam.CameraOffset.Y);
+
+            this.Viewport.X = this.Screen.X;
+            this.Viewport.Y = this.Screen.Y;
+            this.Viewport.Width = this.Screen.Width;
+            this.Viewport.Height = this.Screen.Height;
+        }
 
 		public BaseCamera(int X, int Y, int Width, int Height)
 		{
+            camStack = new Stack<BaseCamera>();
+
 			this.Screen = new Rectangle(X, Y, Width, Height);
 			this.MapOffset = new Vector2(0, 0);
 
@@ -91,15 +114,30 @@ namespace ValkyrieLibrary
 		}
 		#endregion
 
-        public void Scale(double Scale)
+        public void Scale(double scale)
         {
-            this.Screen = new Rectangle(Screen.X, Screen.Y, (int)(Screen.Width * (1.0 / Scale)), (int)(Screen.Height * (1.0 / Scale)));
-            this.MapOffset = new Vector2(0, 0);
+            this.Scale(scale, scale);
+        }
+
+        public void Scale(double x, double y)
+        {
+            this.Screen = new Rectangle(Screen.X, Screen.Y, (int)(Screen.Width * (1.0 / x)), (int)(Screen.Height * (1.0 / y)));
+            //this.MapOffset = new Vector2(0, 0);
 
             this.Viewport.X = this.Screen.X;
             this.Viewport.Y = this.Screen.Y;
             this.Viewport.Width = this.Screen.Width;
             this.Viewport.Height = this.Screen.Height;
+        }
+
+        public void Push()
+        {
+            this.camStack.Push(new BaseCamera(this));
+        }
+
+        public void Pop()
+        {
+            this.SetCamera(this.camStack.Pop());
         }
     }
 }

@@ -92,6 +92,21 @@
     <Compile Include="Core\SelectComponent.cs" />
     <Compile Include="Core\WorldEditor.cs" />
     <Compile Include="Core\WorldEditorPlayer.cs" />
+    <Compile Include="Forms\MainRender.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\PreviewRender.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\XNARenderControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\XNARenderControl.Designer.cs">
+      <DependentUpon>XNARenderControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\XNARenderForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
