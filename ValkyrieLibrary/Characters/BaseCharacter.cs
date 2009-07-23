@@ -120,9 +120,10 @@ namespace ValkyrieLibrary.Characters
 
 	public enum Directions
 	{
-		North,
-		East,
-		South,
-		West
+		Any=0,
+		North=2,
+		East=4,
+		South=8,
+		West=16
 	}
 }
