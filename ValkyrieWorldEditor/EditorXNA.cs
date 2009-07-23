@@ -84,6 +84,7 @@ namespace ValkyrieWorldEditor
             TileEngine.Camera = new BaseCamera(0, 0, 800, 600);
             TileEngine.Load(new FileInfo("Data/TileEngineConfig.xml"));
             TileEngine.Camera.CenterOriginOnPoint(new Point(0, 0));
+            TileEngine.Camera.Viewport.Height += 500;
             TileEngine.Player = new WorldEditorPlayer();
         }
 
@@ -103,8 +104,8 @@ namespace ValkyrieWorldEditor
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            GraphicsDevice.Clear(Color.Gray);
+            TileEngine.DrawAllLayers(spriteBatch, false);
             base.Draw(gameTime);
         }
     }

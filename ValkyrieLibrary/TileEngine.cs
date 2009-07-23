@@ -157,6 +157,9 @@ namespace ValkyrieLibrary
 
 		public static void DrawAllLayers(SpriteBatch spriteBatch, bool drawcharacters)
 		{
+            if (TileEngine.WorldManager.CurrentWorld == null)
+                return;
+
             spriteBatch.Begin();
 
             foreach (var header in TileEngine.WorldManager.CurrentWorld.WorldList.Values)

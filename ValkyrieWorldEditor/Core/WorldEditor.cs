@@ -27,6 +27,8 @@ namespace ValkyrieWorldEditor.Core
         {
             TileEngine.Configuration["MapRoot"] = UniLocation.Directory.Parent.FullName + "\\Maps";
             TileEngine.Configuration["GraphicsRoot"] = UniLocation.Directory.Parent.FullName + "\\Graphics";
+            TileEngine.TextureManager.TextureRoot = TileEngine.Configuration["GraphicsRoot"];
+
             TileEngine.WorldManager.Load(UniLocation);
             MainForm.RefreshWorldList(TileEngine.WorldManager);
         }
