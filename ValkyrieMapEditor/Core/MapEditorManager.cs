@@ -73,7 +73,19 @@ namespace ValkyrieMapEditor
 			var tilepixelsize = doc.CreateElement("TilePixelSize");
 			tilepixelsize.InnerText = map.TileSize.X.ToString();
 
-			// Base layer
+			// Under Layer
+			var underlayer = doc.CreateElement("UnderLayer");
+
+			var underlayerbuilder = new StringBuilder();
+			for (int i = 0; i < map.UnderLayer.Length; i++)
+			{
+				underlayerbuilder.Append(map.UnderLayer[i]);
+				underlayerbuilder.Append(" ");
+			}
+
+			underlayer.InnerText = underlayerbuilder.ToString();
+
+			// Base Layer
 			var baselayer = doc.CreateElement("BaseLayer");
 			
 			var baselayerbuilder = new StringBuilder();
@@ -137,17 +149,17 @@ namespace ValkyrieMapEditor
 			mapElement.AppendChild(tileset);
 			mapElement.AppendChild(mapsize);
 			mapElement.AppendChild(tilepixelsize);
+			mapElement.AppendChild(underlayer);
 			mapElement.AppendChild(baselayer);
 			mapElement.AppendChild(middlelayer);
-			mapElement.AppendChild(collisionLayer);
 			mapElement.AppendChild(toplayer);
+			mapElement.AppendChild(collisionLayer);
             mapElement.AppendChild(eventLayer);
 
 			doc.AppendChild(mapElement);
 			doc.Save(location.FullName);
 
 			MapEditorManager.CurrentMapLocation = location;
-
         }
 
         public static Map LoadMap(FileInfo location)
@@ -170,6 +182,7 @@ namespace ValkyrieMapEditor
             newMap.TextureName = oldMap.TextureName;
             newMap.Texture = TileEngine.TextureManager.GetTexture(newMap.TextureName);
 
+			newMap.UnderLayer = new int[oldMap.MapSize.X * oldMap.MapSize.Y];
             newMap.BaseLayer = new int[oldMap.MapSize.X * oldMap.MapSize.Y];
             newMap.MiddleLayer = new int[oldMap.MapSize.X * oldMap.MapSize.Y];
             newMap.TopLayer = new int[oldMap.MapSize.X * oldMap.MapSize.Y];
@@ -177,7 +190,8 @@ namespace ValkyrieMapEditor
 
             for (int i = 0; i < (oldMap.MapSize.X * oldMap.MapSize.Y); i++)
             {
-                newMap.BaseLayer[i] = ((i < oldMap.BaseLayer.Length) ? oldMap.BaseLayer[i] : 0);
+				newMap.UnderLayer[i] = ((i < oldMap.UnderLayer.Length) ? oldMap.UnderLayer[i] : -1);
+                newMap.BaseLayer[i] = ((i < oldMap.BaseLayer.Length) ? oldMap.BaseLayer[i] : -1);
                 newMap.MiddleLayer[i] = ((i < oldMap.MiddleLayer.Length) ? oldMap.MiddleLayer[i] : -1);
                 newMap.TopLayer[i] = ((i < oldMap.TopLayer.Length) ? oldMap.TopLayer[i] : -1);
 				newMap.CollisionLayer[i] = ((i < oldMap.CollisionLayer.Length) ? oldMap.CollisionLayer[i] : -1);

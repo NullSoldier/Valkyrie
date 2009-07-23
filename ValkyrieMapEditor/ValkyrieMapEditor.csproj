@@ -134,6 +134,9 @@
     <Content Include="Graphics\EditorEvent.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\Layers-256x256.png" />
+    <None Include="Resources\lightning.png" />
+    <None Include="Resources\map.png" />
     <None Include="Graphics\EditorCollision.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

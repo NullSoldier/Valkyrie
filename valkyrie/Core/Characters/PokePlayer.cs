@@ -39,6 +39,17 @@ namespace Valkyrie.Characters
 			spriteBatch.Draw(this.Sprite, this.DrawScreenLocation, Animations[this.CurrentAnimationName].FrameRectangle, Color.White);
 		}
 
+		public Vector2 DrawScreenLocation
+		{
+			get
+			{
+				Vector2 location = new Vector2();
+				location.X = (int)TileEngine.Camera.MapOffset.X + this.Location.X + TileEngine.CurrentMapChunk.TileSize.X / 2 - this.CurrentAnimation.FrameRectangle.Width / 2;
+				location.Y = (int)TileEngine.Camera.MapOffset.Y + this.Location.Y + TileEngine.CurrentMapChunk.TileSize.Y - this.CurrentAnimation.FrameRectangle.Height;
+				return location;
+			}
+		}
+
 		public override void Update(GameTime gameTime)
 		{
 			if (!this.IsMoving && this.CurrentAnimationName.Contains("Walk"))
@@ -85,7 +96,10 @@ namespace Valkyrie.Characters
 					if (!this.IsJumping && !TileEngine.CollisionManager.CheckCollision(this, this.MovingDestination))
 					{
 						if (!TileEngine.EventManager.Collision(this))
+						{
 							this.StopMoving();
+							TileEngine.EventManager.Collision((BaseCharacter)this);
+						}
 					}
 					else
 					{
@@ -119,7 +133,7 @@ namespace Valkyrie.Characters
             }
 		}
 
-		public override void DisplayMessage(String title, String msg)
+		public void DisplayMessage(String title, String msg)
 		{
 			throw new NotSupportedException();
 		}
@@ -129,7 +143,7 @@ namespace Valkyrie.Characters
             this.IsJumping = true;
 
             ScreenPoint dest = new ScreenPoint(TileEngine.Player.Location.X, TileEngine.Player.Location.Y);
-            ScreenPoint newDest = dest + (new ScreenPoint(GetLookPoint()) * 2);
+            ScreenPoint newDest = dest + (new ScreenPoint(this.GetLookPoint().ToMapPoint().X * 2, this.GetLookPoint().ToMapPoint().Y) * 2);
             this.MovingDestination = newDest;
         }
 		#endregion
@@ -173,5 +187,15 @@ namespace Valkyrie.Characters
 			base.StopMoving();
 		}
 		#endregion
+	}
+
+	public static class HelperMethods
+	{
+		// Base point is not abstract so it doesn't matter if you add this extension method.
+		// You can't just cast MapPoint to BasePoint
+		public static MapPoint ToMapPoint(this BasePoint value)
+		{
+			return new MapPoint(value.X * TileEngine.TileSize, value.Y * TileEngine.TileSize);
+		}
 	}
 }

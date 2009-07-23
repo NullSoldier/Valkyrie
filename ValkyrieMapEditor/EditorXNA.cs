@@ -140,10 +140,10 @@ namespace ValkyrieMapEditor
 
         public void EnlistEvents(PictureBox pictureBox)
         {
-            pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseDown);
-            pictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseUp);
-            pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MouseMove);
-            pictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MouseClicked);
+            pictureBox.MouseDown += this.MouseDown;
+            pictureBox.MouseUp += this.MouseUp;
+            pictureBox.MouseMove += this.MouseMove;
+            pictureBox.MouseClick += this.MouseClicked;
         }
 
         public void SwitchTo(ComponentID component)

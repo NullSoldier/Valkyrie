@@ -116,6 +116,27 @@ namespace ValkyrieMapEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap imgLayers {
+            get {
+                object obj = ResourceManager.GetObject("imgLayers", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap imgLightning {
+            get {
+                object obj = ResourceManager.GetObject("imgLightning", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap imgMap {
+            get {
+                object obj = ResourceManager.GetObject("imgMap", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap imgMiddleLayer {
             get {
                 object obj = ResourceManager.GetObject("imgMiddleLayer", resourceCulture);

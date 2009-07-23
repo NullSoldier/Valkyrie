@@ -19,6 +19,7 @@ namespace ValkyrieLibrary.Maps
 	{
         #region Public Properties
 
+		public int[] UnderLayer { get; set; }
         public int[] BaseLayer { get; set; }
         public int[] MiddleLayer { get; set; }
         public int[] TopLayer { get; set; }
@@ -55,6 +56,7 @@ namespace ValkyrieLibrary.Maps
 
 		public Map()
 		{
+			this.UnderLayer = new int[0];
             this.BaseLayer = new int[0];
             this.MiddleLayer = new int[0];
             this.TopLayer = new int[0];
@@ -77,6 +79,9 @@ namespace ValkyrieLibrary.Maps
             switch (layer)
             {
                 default:
+				case MapLayers.UnderLayer:
+					return this.UnderLayer[point.Y * this.MapSize.X + point.X];
+
                 case MapLayers.BaseLayer: 
                     return this.BaseLayer[point.Y * this.MapSize.X + point.X];
 
@@ -99,6 +104,9 @@ namespace ValkyrieLibrary.Maps
             switch (layer)
             {
                 default:
+				case MapLayers.UnderLayer:
+					this.UnderLayer[point.Y * this.MapSize.X + point.X] = value; break;
+
                 case MapLayers.BaseLayer: 
                     this.BaseLayer[point.Y * this.MapSize.X + point.X] = value; break;
 
@@ -125,10 +133,13 @@ namespace ValkyrieLibrary.Maps
             if (LayerValue < 0)
 				return Rectangle.Empty;
 
-			return new Rectangle(
-                (LayerValue % this.TilesPerRow) * TileSize.X,
-                (LayerValue / this.TilesPerRow) * TileSize.Y,
-				TileSize.X - 1, TileSize.Y - 1);
+			if (this.AnimatedTiles.ContainsKey(LayerValue))
+				return this.AnimatedTiles[LayerValue].FrameRectangle;
+			else
+				return new Rectangle(
+					(LayerValue % this.TilesPerRow) * TileSize.X,
+					(LayerValue / this.TilesPerRow) * TileSize.Y,
+					TileSize.X - 1, TileSize.Y - 1);
         }
 
         #region Map Management
@@ -167,26 +178,33 @@ namespace ValkyrieLibrary.Maps
 					this.TileSize = new ScreenPoint(size, size); // Tiles are always square
 				}
 
-                else if (innerNodes[i].Name == "BaseLayer")
-                {
-                    string[] baseText = innerNodes[i].InnerText.Replace("\r\n", string.Empty).Replace("   ", string.Empty).Trim().Split(' ');
+				else if (innerNodes[i].Name == "UnderLayer")
+				{
+					string[] baseText = innerNodes[i].InnerText.Replace("\r\n", string.Empty).Replace("   ", string.Empty).Trim().Split(' ');
+
+					this.UnderLayer = Array.ConvertAll<string, int>(baseText, new Converter<string, int>(this.ConvertStringToInt));
+				}
+
+				else if (innerNodes[i].Name == "BaseLayer")
+				{
+					string[] baseText = innerNodes[i].InnerText.Replace("\r\n", string.Empty).Replace("   ", string.Empty).Trim().Split(' ');
 
 					this.BaseLayer = Array.ConvertAll<string, int>(baseText, new Converter<string, int>(this.ConvertStringToInt));
-                }
+				}
 
-                else if (innerNodes[i].Name == "MiddleLayer")
-                {
-                    string[] baseText = innerNodes[i].InnerText.Replace("\r\n", string.Empty).Replace("   ", string.Empty).Trim().Split(' ');
+				else if (innerNodes[i].Name == "MiddleLayer")
+				{
+					string[] baseText = innerNodes[i].InnerText.Replace("\r\n", string.Empty).Replace("   ", string.Empty).Trim().Split(' ');
 
-                    this.MiddleLayer = Array.ConvertAll<string, int>(baseText, new Converter<string, int>(this.ConvertStringToInt));
-                }
+					this.MiddleLayer = Array.ConvertAll<string, int>(baseText, new Converter<string, int>(this.ConvertStringToInt));
+				}
 
-                else if (innerNodes[i].Name == "TopLayer")
-                {
-                    string[] baseText = innerNodes[i].InnerText.Replace("\r\n", string.Empty).Replace("   ", string.Empty).Trim().Split(' ');
+				else if (innerNodes[i].Name == "TopLayer")
+				{
+					string[] baseText = innerNodes[i].InnerText.Replace("\r\n", string.Empty).Replace("   ", string.Empty).Trim().Split(' ');
 
-                    this.TopLayer = Array.ConvertAll<string, int>(baseText, new Converter<string, int>(this.ConvertStringToInt));
-                }
+					this.TopLayer = Array.ConvertAll<string, int>(baseText, new Converter<string, int>(this.ConvertStringToInt));
+				}
 				else if (innerNodes[i].Name == "CollisionLayer")
 				{
 					string[] baseText = innerNodes[i].InnerText.Replace("\r\n", string.Empty).Replace("   ", string.Empty).Trim().Split(' ');
@@ -203,7 +221,7 @@ namespace ValkyrieLibrary.Maps
 						int frameCount = 0;
 						Rectangle tileRect = Rectangle.Empty;
 
-						foreach(XmlNode subnode in node.ChildNodes)
+						foreach (XmlNode subnode in node.ChildNodes)
 						{
 							if (subnode.Name == "TileID")
 								tileID = Convert.ToInt32(subnode.InnerText);
@@ -214,16 +232,16 @@ namespace ValkyrieLibrary.Maps
 								var data = Array.ConvertAll<string, int>(subnode.InnerText.Split(' '), new Converter<string, int>(this.ConvertStringToInt));
 								tileRect = new Rectangle(data[0], data[1], data[2], data[3]);
 							}
-	
+
 						}
 
 						this.AnimatedTiles.Add(tileID, new FrameAnimation(tileRect, frameCount));
 					}
 				}
-                else if (innerNodes[i].Name == "Events")
-                {
-                    TileEngine.EventManager.LoadEvents(this, innerNodes[i]);
-                }
+				else if (innerNodes[i].Name == "Events")
+				{
+					TileEngine.EventManager.LoadEvents(this, innerNodes[i]);
+				}
 			}
 
 			

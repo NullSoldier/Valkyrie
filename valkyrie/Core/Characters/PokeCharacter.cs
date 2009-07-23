@@ -61,5 +61,7 @@ namespace Valkyrie.Core.Characters
 			this.MovingDestination = new ScreenPoint(0, 0); // eh?
 			this.LastMoveTime = 0;
 		}
+
+
 	}
 }

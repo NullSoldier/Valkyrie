@@ -50,9 +50,10 @@ namespace ValkyrieLibrary.Events
 
         public bool HandleEvent(BaseCharacter player, ActivationTypes type)
         {
+			// This code needs handling
             BasePoint pos = player.MapLocation;
 
-            if (type == ActivationTypes.LookActivate || type == ActivationTypes.Movement)
+            if (type == ActivationTypes.LookActivate || type == ActivationTypes.Movement || type == ActivationTypes.Collision)
                 pos += player.GetLookPoint();
 
             bool handled = false;

@@ -35,7 +35,7 @@ namespace ValkyrieLibrary.Maps
                     if (e.Type != "Load")
                         continue;
 
-                    String eName = e.Parms["Name"];
+                    String eName = e.Parameters["Name"];
 
                     if (eName == name)
                         return e.Location.ToScreenPoint() + mapHeader.Value.MapLocation.ToScreenPoint();

@@ -26,7 +26,7 @@ namespace Valkyrie.Events
         public override void Trigger(BaseCharacter player, Event e)
         {
 			if( player is PokePlayer)
-				((PokePlayer)player).DisplayMessage(e.Parms["Title"], e.Parms["Text"]);
+				((PokePlayer)player).DisplayMessage(e.Parameters["Title"], e.Parameters["Text"]);
         }
     }
 }

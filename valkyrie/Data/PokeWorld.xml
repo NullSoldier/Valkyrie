@@ -31,6 +31,14 @@
         <X>0</X>
         <Y>80</Y>
       </MapLoc>
+
+      <MapLoc>
+        <Name>Route21</Name>
+        <FilePath>Route21.xml</FilePath>
+        <X>12</X>
+        <Y>182</Y>
+      </MapLoc>
+
     </World>
     
     <World Name="PalletTown_HouseOne">

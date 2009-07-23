@@ -50,10 +50,12 @@ namespace Valkyrie.States
         public void Load()
         {
             // Player
-			TileEngine.Player = new PokePlayer();
-            TileEngine.WorldManager.SetWorld("Main", "Default");
-            TileEngine.Player.Sprite = TileEngine.TextureManager.GetTexture("MaleSprite.png");
-            
+			PokePlayer player = new PokePlayer();
+			player.Gender = Genders.Male;
+			player.Sprite = TileEngine.TextureManager.GetTexture("MaleSprite.png");
+			TileEngine.Player = player;
+
+			TileEngine.WorldManager.SetWorld("Main", "Default");
 
             this.KeybindController.AddKey(Keys.Left, "MoveLeft");
             this.KeybindController.AddKey(Keys.Up, "MoveUp");

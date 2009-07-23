@@ -56,7 +56,7 @@ namespace ValkyrieMapEditor.Core
             this.EndSelectedPoint = new Point(0, 0);
         }
 
-        public void newEvent()
+        public void CreateOrEditEvent()
         {
             if (Cancel)
                 return;
@@ -74,38 +74,26 @@ namespace ValkyrieMapEditor.Core
             MapPoint point = new MapPoint(SelectedPoint.X - xOffset, SelectedPoint.Y - yOffset);
             MapPoint size = new MapPoint(this.EndSelectedPoint.X - this.SelectedPoint.X, this.EndSelectedPoint.Y - this.SelectedPoint.Y);
 
-
             Event e = TileEngine.EventManager.GetEventInRect(point, size);
 
-            frmMapEvent frm = new frmMapEvent();
+			if (e != null)
+			{
+				SelectedPoint = e.Location.ToPoint();
+				EndSelectedPoint = (e.Location + e.Size).ToPoint();
+			}
+			else
+				e = new Event(point, size);
 
-            if (e == null)
-            {
-                e = new Event(point, size);
-            }
-            else
-            {
-                SelectedPoint = e.Location.ToPoint();
-                EndSelectedPoint = (e.Location+e.Size).ToPoint();
-            }
+			frmMapEvent dialog = new frmMapEvent(e);
+			DialogResult result = dialog.ShowDialog();
 
+			e = dialog.Event;
 
-            //frm.LoadEvent(e);
+			if (result == DialogResult.OK)
+                TileEngine.EventManager.SetEvent(e);
 
-            DialogResult res = frm.ShowDialog();
-			throw new NotImplementedException();
-            //if (res == DialogResult.OK)
-            //{
-            //    /*e.Type = frm.cbType.Text;
-            //    //e.ParmOne = frm.tbArgOne.Text;
-            //    //e.ParmTwo = frm.tbArgTwo.Text;
-            //    e.Dir = frm.cbDir.Text;
-            //    TileEngine.EventManager.SetEvent(e);*/
-            //}
-            //else if (res == DialogResult.Abort)
-            //{
-            //    TileEngine.EventManager.DelEvent(e);
-            //}
+			else if (result == DialogResult.Abort)
+                TileEngine.EventManager.DelEvent(e);
         }
 
         public void OnMouseDown(object sender, MouseEventArgs ev)
@@ -132,7 +120,7 @@ namespace ValkyrieMapEditor.Core
             if (!IsStartAfterEnd())
             {
                 this.EndSelectedPoint = new Point(ev.X / 32 + 1, ev.Y / 32 + 1);
-                newEvent();
+                this.CreateOrEditEvent();
             }
             else
             {

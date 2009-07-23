@@ -115,28 +115,46 @@ namespace ValkyrieMapEditor.Core
                 }
                 else if (MapEditorManager.CurrentLayer == MapLayers.MiddleLayer)
                 {
+					TileEngine.DrawLayerMap(spriteBatch, MapLayers.UnderLayer);
                     TileEngine.DrawLayerMap(spriteBatch, MapLayers.BaseLayer);
                     TileEngine.DrawLayerMap(spriteBatch, MapLayers.MiddleLayer);
                 }
-                else
-                {
-                    TileEngine.DrawLayerMap(spriteBatch, MapLayers.BaseLayer);
-                }
+				else if (MapEditorManager.CurrentLayer == MapLayers.BaseLayer)
+				{
+					TileEngine.DrawLayerMap(spriteBatch, MapLayers.UnderLayer);
+					TileEngine.DrawLayerMap(spriteBatch, MapLayers.BaseLayer);
+				}
+				else
+				{
+					TileEngine.DrawLayerMap(spriteBatch, MapLayers.UnderLayer);
+				}
             }
             else
             {
-                if (MapEditorManager.CurrentLayer == MapLayers.TopLayer)
-                {
-                    TileEngine.DrawLayerMap(spriteBatch, MapLayers.TopLayer);
-                }
-                else if (MapEditorManager.CurrentLayer == MapLayers.MiddleLayer)
-                {
-                    TileEngine.DrawLayerMap(spriteBatch, MapLayers.MiddleLayer);
-                }
-                else
-                {
-                    TileEngine.DrawLayerMap(spriteBatch, MapLayers.BaseLayer);
-                }
+				// I only changed this because I really wanted to use a switch here
+				// because I already wrote the code and I didn't want to waste it... heh
+				// Also it looks pretty clean. :D
+				switch (MapEditorManager.CurrentLayer)
+				{
+					case MapLayers.UnderLayer:
+						TileEngine.DrawLayerMap(spriteBatch, MapLayers.UnderLayer);
+						break;
+
+					case MapLayers.BaseLayer:
+						TileEngine.DrawLayerMap(spriteBatch, MapLayers.BaseLayer);
+						break;
+
+					case MapLayers.MiddleLayer:
+						TileEngine.DrawLayerMap(spriteBatch, MapLayers.MiddleLayer);
+						break;
+
+					case MapLayers.TopLayer:
+						TileEngine.DrawLayerMap(spriteBatch, MapLayers.TopLayer);
+						break;
+
+					default:
+						break;
+				}
             }
 
             spriteBatch.Begin();

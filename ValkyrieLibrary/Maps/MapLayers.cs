@@ -7,9 +7,10 @@ namespace ValkyrieLibrary.Maps
 {
 	public enum MapLayers
 	{
-		BaseLayer,
-		MiddleLayer,
-		TopLayer,
-		CollisionLayer
+		UnderLayer=0,
+		BaseLayer=2,
+		MiddleLayer=4,
+		TopLayer=8,
+		CollisionLayer=16
 	};
 }

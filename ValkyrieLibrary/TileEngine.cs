@@ -164,6 +164,7 @@ namespace ValkyrieLibrary
                 if (!header.Map.IsVisableToPlayer())
                     continue;
 
+				TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.UnderLayer);
                 TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.BaseLayer);
                 TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.MiddleLayer);
 

@@ -23,8 +23,8 @@ namespace Valkyrie.Events
 
         public override void Trigger(BaseCharacter player, Event e)
         {
-            String name = e.Parms["World"];
-            String pos = e.Parms["Entry"];
+            String name = e.Parameters["World"];
+            String pos = e.Parameters["Entry"];
 
             TileEngine.WorldManager.SetWorld(name, pos);
         }

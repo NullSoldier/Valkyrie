@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using System.Xml;
 using ValkyrieLibrary.Core;
+using ValkyrieLibrary.Characters;
 
 namespace ValkyrieLibrary.Events
 {
@@ -13,29 +14,30 @@ namespace ValkyrieLibrary.Events
         public MapPoint Location { get; set; }
         public MapPoint Size { get; set; }
         public String Type { get; set; }
-        public String Dir { get; set; }
+        public Directions Direction { get; set; }
+		public ActivationTypes Activation { get; set; }
 
-        public Dictionary<String, String> Parms;
+        public Dictionary<String, String> Parameters;
 
         public Event(MapPoint loc, MapPoint size)
         {
             Location = loc;
             Size = size;
             Type = "";
-            Dir = "";
-            Parms = new Dictionary<String, String>();
+			Direction = Directions.North;
+            Parameters = new Dictionary<String, String>();
         }
 
         public Event(XmlNode node)
         {
-            Parms = new Dictionary<String, String>();
+            Parameters = new Dictionary<String, String>();
 
 			foreach (XmlNode cnode in node.ChildNodes)
 			{
                 switch (cnode.Name)
                 {
                     case "Type": Type = cnode.InnerText; break;
-                    case "Dir": Dir = cnode.InnerText; break;
+                    case "Dir": Direction = (Directions)Enum.Parse(typeof(Directions), cnode.InnerText); break;
                     case "Parameters": LoadParms(cnode); break;
                     case "Location": Location = new MapPoint(cnode); break;
                     case "Size": Size = new MapPoint(cnode); break;
@@ -60,7 +62,7 @@ namespace ValkyrieLibrary.Events
                 }
 
                 if (name != "" && type != "")
-                    Parms.Add(name, type);
+                    Parameters.Add(name, type);
             }
         }
 
@@ -70,9 +72,9 @@ namespace ValkyrieLibrary.Events
             this.Location = e.Location;
             this.Size = e.Size;
 
-            foreach (var parm in e.Parms.Keys)
+            foreach (var parm in e.Parameters.Keys)
             {
-                this.Parms.Add(parm, e.Parms[parm]);
+                this.Parameters.Add(parm, e.Parameters[parm]);
             }
         }
 
@@ -81,21 +83,21 @@ namespace ValkyrieLibrary.Events
             return new Rectangle(Location.X, Location.Y, Size.X, Size.Y);
         }
 
-        public bool IsSameFacing(ValkyrieLibrary.Characters.Directions facing)
+        public bool IsSameFacing(Directions facing)
         {
-            if (Dir == "All")
+            if (this.Direction == Directions.Any)
                 return true;
 
-            if (facing == ValkyrieLibrary.Characters.Directions.North && Dir == "North")
+            if (facing == Directions.North && this.Direction == Directions.North)
                 return true;
 
-            if (facing == ValkyrieLibrary.Characters.Directions.South && Dir == "South")
+			if (facing == Directions.South && this.Direction == Directions.South)
                 return true;
 
-            if (facing == ValkyrieLibrary.Characters.Directions.West && Dir == "West")
+            if (facing == Directions.West && this.Direction == Directions.West)
                 return true;
 
-            if (facing == ValkyrieLibrary.Characters.Directions.East && Dir == "East")
+            if (facing == Directions.East && this.Direction == Directions.East)
                 return true;
 
             return false;
@@ -113,17 +115,17 @@ namespace ValkyrieLibrary.Events
             type.InnerText = Type;
 
             XmlElement dir = doc.CreateElement("Dir");
-            dir.InnerText = Dir;
+            dir.InnerText = Direction.ToString();
 
             XmlElement parmRoot = doc.CreateElement("Parameters");
 
-            foreach (var parm in this.Parms.Keys)
+            foreach (var parm in this.Parameters.Keys)
             {
                 XmlElement pname = doc.CreateElement("Name");
                 pname.InnerText = parm;
 
                 XmlElement ptype = doc.CreateElement("Type");
-                ptype.InnerText = this.Parms[parm];
+                ptype.InnerText = this.Parameters[parm];
 
                 XmlElement parmNode = doc.CreateElement("Parameter");
                 parmNode.AppendChild(pname);

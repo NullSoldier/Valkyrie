@@ -13,6 +13,8 @@ using ValkyrieMapEditor.Properties;
 using System.Threading;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary;
+using System.Reflection;
+using ValkyrieLibrary.Events;
 
 namespace ValkyrieMapEditor
 {
@@ -22,12 +24,19 @@ namespace ValkyrieMapEditor
 		public event EventHandler<ScreenResizedEventArgs> ScreenResized;
 		public event EventHandler<ScrollEventArgs> ScrolledMap;
 
+		public string ValkyrieGameInstallationAssemblyPath = @"C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\valkyrie\bin\x86\Debug\valkyrie.exe";
+		public static List<Type> EventHandlerTypes;
+
 		public frmMain()
 		{
 			InitializeComponent();
 
+			this.Icon = Icon.FromHandle(Resources.imgLayers.GetHicon());
+
 			this.pctTileSurface.Initialize();
 			this.pctTileSurface.TileSelectionChanged += this.SelectionChanged;
+
+			this.CollectEventHandlers(Assembly.LoadFile(this.ValkyrieGameInstallationAssemblyPath));
 		}
 
 		private void frmMain_Load(object sender, EventArgs e)
@@ -39,6 +48,18 @@ namespace ValkyrieMapEditor
 		private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			Application.Exit();
+		}
+
+		public void CollectEventHandlers(Assembly assembly)
+		{
+			var Types = assembly.GetTypes().Where(p => p.IsSubclassOf(typeof(BaseEventHandler)));
+
+			List<Type> ehandlers = new List<Type>();
+
+			foreach (var handler in Types)
+				ehandlers.Add(handler);
+
+			frmMain.EventHandlerTypes = ehandlers;
 		}
 
 		public IntPtr getDrawSurface()
@@ -93,6 +114,7 @@ namespace ValkyrieMapEditor
 			this.btnMapProperties.Enabled = true;
 			this.toolSave.Enabled = true;
 			this.toolSaveAs.Enabled = true;
+			this.btnUnderLayer.Enabled = true;
 			this.btnBaseLayer.Enabled = true;
 			this.btnMiddleLayer.Enabled = true;
 			this.btnTopLayer.Enabled = true;
@@ -132,7 +154,7 @@ namespace ValkyrieMapEditor
 
 			/* Don't set to 0 when they aren't visible
 			 * when there isnt enough map to show a scroll
-			 * bar the values for it are wonky!
+			 * bar the values for it are crazy!
 			*/
 			if (Reset && this.HorizontalScroll.Visible)
 				this.HorizontalScroll.Value = 0;
@@ -156,8 +178,21 @@ namespace ValkyrieMapEditor
             }
         }
 
+		private void btnUnderLayer_Click(object sender, EventArgs e)
+		{
+			this.btnBaseLayer.Checked = false;
+			this.btnMiddleLayer.Checked = false;
+			this.btnTopLayer.Checked = false;
+			this.btnEvent.Checked = false;
+			this.btnCollisionLayer.Checked = false;
+
+			MapEditorManager.CurrentLayer = MapLayers.UnderLayer;
+			MapEditorManager.GameInstance.SwitchTo(ComponentID.Draw);
+		}
+
         private void btnBaseLayer_Click(object sender, EventArgs e)
         {
+			this.btnUnderLayer.Checked = false;
             this.btnMiddleLayer.Checked = false;
             this.btnTopLayer.Checked = false;
             this.btnEvent.Checked = false;
@@ -169,6 +204,7 @@ namespace ValkyrieMapEditor
 
         private void btnMiddleLayer_Click(object sender, EventArgs e)
         {
+			this.btnUnderLayer.Checked = false;
             this.btnBaseLayer.Checked = false;
             this.btnTopLayer.Checked = false;
             this.btnEvent.Checked = false;
@@ -180,6 +216,7 @@ namespace ValkyrieMapEditor
 
         private void btnTopLayer_Click(object sender, EventArgs e)
         {
+			this.btnUnderLayer.Checked = false;
             this.btnBaseLayer.Checked = false;
             this.btnMiddleLayer.Checked = false;
             this.btnEvent.Checked = false;
@@ -305,11 +342,6 @@ namespace ValkyrieMapEditor
 			
 			if( handler != null)
 				this.ScrolledMap(sender, e);
-		}
-
-		private void btnSelection_Click(object sender, EventArgs e)
-		{
-			this.UpdateScrollBars();
 		}
 
         private void btnEvent_Click(object sender, EventArgs e)
