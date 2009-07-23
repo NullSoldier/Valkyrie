@@ -99,7 +99,10 @@ namespace ValkyrieWorldEditor.Forms
                 return;
 
             ScreenPoint pos = new ScreenPoint(e.X, e.Y) * lastScale;
-            ScreenPoint mapSize = TileEngine.WorldManager.CurrentWorld.WorldSize.ToScreenPoint();
+            ScreenPoint screenSize = new ScreenPoint(TileEngine.Camera.Screen.Width, TileEngine.Camera.Screen.Height);
+            ScreenPoint mapSize = TileEngine.WorldManager.CurrentWorld.WorldSize.ToScreenPoint() - screenSize;
+            
+            pos -= screenSize / 2;
 
             pos.X = Math.Max(0, pos.X);
             pos.Y = Math.Max(0, pos.Y);

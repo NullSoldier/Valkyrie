@@ -26,41 +26,41 @@ namespace ValkyrieWorldEditor.Core
             //EditorXNA.graphics.IsFullScreen = false;
             //EditorXNA.graphics.ApplyChanges();
 
-            if (TileEngine.Camera != null)
-            {
-                TileEngine.Camera.Screen.Width = e.Width;
-                TileEngine.Camera.Screen.Height = e.Height;
+            //if (TileEngine.Camera != null)
+            //{
+            //    TileEngine.Camera.Screen.Width = e.Width;
+            //    TileEngine.Camera.Screen.Height = e.Height;
 
-                if (TileEngine.IsMapLoaded)
-                {
-                    // Move the X origin
-                    int DisplayedWidth = (TileEngine.CurrentMapChunk.MapSize.X * TileEngine.CurrentMapChunk.TileSize.X) + (int)TileEngine.Camera.MapOffset.X;
-                    if (DisplayedWidth < e.Width)
-                    {
-                        if (TileEngine.CurrentMapChunk.MapSize.X * TileEngine.CurrentMapChunk.TileSize.X < e.Width)
-                            TileEngine.Camera.CenterOriginOnPoint(0, (int)(TileEngine.Camera.MapOffset.Y * -1));
-                        else
-                        {
-                            int newOffset = (e.Width - DisplayedWidth);
-                            TileEngine.Camera.CenterOriginOnPoint((int)(TileEngine.Camera.MapOffset.X * -1) - newOffset, (int)(TileEngine.Camera.MapOffset.Y * -1));
-                        }
-                    }
+            //    if (TileEngine.IsMapLoaded)
+            //    {
+            //        // Move the X origin
+            //        int DisplayedWidth = (TileEngine.CurrentMapChunk.MapSize.X * TileEngine.CurrentMapChunk.TileSize.X) + (int)TileEngine.Camera.MapOffset.X;
+            //        if (DisplayedWidth < e.Width)
+            //        {
+            //            if (TileEngine.CurrentMapChunk.MapSize.X * TileEngine.CurrentMapChunk.TileSize.X < e.Width)
+            //                TileEngine.Camera.CenterOriginOnPoint(0, (int)(TileEngine.Camera.MapOffset.Y * -1));
+            //            else
+            //            {
+            //                int newOffset = (e.Width - DisplayedWidth);
+            //                TileEngine.Camera.CenterOriginOnPoint((int)(TileEngine.Camera.MapOffset.X * -1) - newOffset, (int)(TileEngine.Camera.MapOffset.Y * -1));
+            //            }
+            //        }
 
-                    // Move the Y origin
-                    int DisplayedHeight = (TileEngine.CurrentMapChunk.MapSize.Y * TileEngine.CurrentMapChunk.TileSize.Y) + (int)TileEngine.Camera.MapOffset.Y;
-                    if (DisplayedHeight < e.Height)
-                    {
-                        if (TileEngine.CurrentMapChunk.MapSize.Y * TileEngine.CurrentMapChunk.TileSize.Y < e.Height)
-                            TileEngine.Camera.CenterOriginOnPoint((int)(TileEngine.Camera.MapOffset.X * -1), 0);
-                        else
-                        {
-                            int newOffset = (e.Height - DisplayedHeight);
-                            TileEngine.Camera.CenterOriginOnPoint((int)(TileEngine.Camera.MapOffset.X * -1), (int)(TileEngine.Camera.MapOffset.Y * -1) - newOffset);
-                        }
-                    }
-                }
+            //        // Move the Y origin
+            //        int DisplayedHeight = (TileEngine.CurrentMapChunk.MapSize.Y * TileEngine.CurrentMapChunk.TileSize.Y) + (int)TileEngine.Camera.MapOffset.Y;
+            //        if (DisplayedHeight < e.Height)
+            //        {
+            //            if (TileEngine.CurrentMapChunk.MapSize.Y * TileEngine.CurrentMapChunk.TileSize.Y < e.Height)
+            //                TileEngine.Camera.CenterOriginOnPoint((int)(TileEngine.Camera.MapOffset.X * -1), 0);
+            //            else
+            //            {
+            //                int newOffset = (e.Height - DisplayedHeight);
+            //                TileEngine.Camera.CenterOriginOnPoint((int)(TileEngine.Camera.MapOffset.X * -1), (int)(TileEngine.Camera.MapOffset.Y * -1) - newOffset);
+            //            }
+            //        }
+            //    }
 
-            }
+            //}
         }
 
         public void OnScrolled(object sender, ScrollEventArgs e)
