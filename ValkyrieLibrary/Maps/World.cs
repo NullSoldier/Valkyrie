@@ -14,11 +14,13 @@ namespace ValkyrieLibrary.Maps
     {
         public Dictionary<string, MapHeader> WorldList;
         public String DefaultSpawn { get; set; }
+        public String Name;
 
         public World()
         {
             this.WorldList = new Dictionary<string, MapHeader>();
             this.DefaultSpawn = "";
+            this.Name = "No Name";
         }
 
         public ScreenPoint FindStartLocation(String name)

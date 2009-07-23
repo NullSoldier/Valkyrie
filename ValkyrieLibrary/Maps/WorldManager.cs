@@ -84,7 +84,8 @@ namespace ValkyrieLibrary.Maps
                 }
 
                 var worldName = worldNode.Attributes.GetNamedItem("Name");
-                this.WorldsList.Add(worldName.InnerText, w);
+                w.Name = worldName.InnerText;
+                this.WorldsList.Add(w.Name, w);
             }
         }
 
