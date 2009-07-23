@@ -96,8 +96,10 @@ namespace ValkyrieLibrary
 
         protected override void Draw(GameTime gameTime)
         {
+            this.spriteBatch.Begin();
 			TileEngine.Draw(spriteBatch, gameTime);
-			 
+            this.spriteBatch.End(); 
+
             base.Draw(gameTime);
         }
     }

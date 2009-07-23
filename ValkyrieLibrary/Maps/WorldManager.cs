@@ -14,7 +14,7 @@ namespace ValkyrieLibrary.Maps
     public class WorldManager
     {
         public Dictionary<String, World> WorldsList;
-        
+
         public World CurrentWorld
         {
             get
@@ -42,6 +42,7 @@ namespace ValkyrieLibrary.Maps
                 TileEngine.Camera.CenterOnCharacter(TileEngine.Player);
             }
         }
+
 
         public void Load(FileInfo WorldConfiguration)
         {
@@ -85,9 +86,9 @@ namespace ValkyrieLibrary.Maps
 
                 var worldName = worldNode.Attributes.GetNamedItem("Name");
                 w.Name = worldName.InnerText;
+                w.CalcWorldSize();
                 this.WorldsList.Add(w.Name, w);
             }
         }
-
     }
 }

@@ -8,8 +8,9 @@ using Microsoft.Xna.Framework.Graphics;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary;
+using ValkyrieWorldEditor.Forms;
 
-namespace ValkyrieMapEditor.Core
+namespace ValkyrieWorldEditor.Core
 {
     public class RenderComponent : IEditorComponent
     {
@@ -101,59 +102,7 @@ namespace ValkyrieMapEditor.Core
             if (!TileEngine.IsMapLoaded)
                 return;
 
-            if (MapEditorManager.ViewMode == ViewMode.All)
-            {
-                TileEngine.DrawAllLayers(spriteBatch, false);
-            }
-            else if (MapEditorManager.ViewMode == ViewMode.Below)
-            {
-                if (MapEditorManager.CurrentLayer == MapLayers.TopLayer)
-                {
-                    TileEngine.DrawAllLayers(spriteBatch, false);
-                }
-                else if (MapEditorManager.CurrentLayer == MapLayers.MiddleLayer)
-                {
-					TileEngine.DrawLayerMap(spriteBatch, MapLayers.UnderLayer);
-                    TileEngine.DrawLayerMap(spriteBatch, MapLayers.BaseLayer);
-                    TileEngine.DrawLayerMap(spriteBatch, MapLayers.MiddleLayer);
-                }
-				else if (MapEditorManager.CurrentLayer == MapLayers.BaseLayer)
-				{
-					TileEngine.DrawLayerMap(spriteBatch, MapLayers.UnderLayer);
-					TileEngine.DrawLayerMap(spriteBatch, MapLayers.BaseLayer);
-				}
-				else
-				{
-					TileEngine.DrawLayerMap(spriteBatch, MapLayers.UnderLayer);
-				}
-            }
-            else
-            {
-				// I only changed this because I really wanted to use a switch here
-				// because I already wrote the code and I didn't want to waste it... heh
-				// Also it looks pretty clean. :D
-				switch (MapEditorManager.CurrentLayer)
-				{
-					case MapLayers.UnderLayer:
-						TileEngine.DrawLayerMap(spriteBatch, MapLayers.UnderLayer);
-						break;
-
-					case MapLayers.BaseLayer:
-						TileEngine.DrawLayerMap(spriteBatch, MapLayers.BaseLayer);
-						break;
-
-					case MapLayers.MiddleLayer:
-						TileEngine.DrawLayerMap(spriteBatch, MapLayers.MiddleLayer);
-						break;
-
-					case MapLayers.TopLayer:
-						TileEngine.DrawLayerMap(spriteBatch, MapLayers.TopLayer);
-						break;
-
-					default:
-						break;
-				}
-            }
+            TileEngine.DrawAllLayers(spriteBatch, false);
         }
 
         public void Update(GameTime gameTime)

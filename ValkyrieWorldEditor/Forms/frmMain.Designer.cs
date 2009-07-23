@@ -37,6 +37,11 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnAddWorld = new System.Windows.Forms.ToolStripButton();
             this.btnAddMap = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnHand = new System.Windows.Forms.ToolStripButton();
+            this.btnSelect = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.tscbScale = new System.Windows.Forms.ToolStripComboBox();
             this.VerticalScroll = new System.Windows.Forms.VScrollBar();
             this.HorizontalScroll = new System.Windows.Forms.HScrollBar();
             this.groupWorld = new System.Windows.Forms.GroupBox();
@@ -69,7 +74,12 @@
             this.btnExport,
             this.toolStripSeparator1,
             this.btnAddWorld,
-            this.btnAddMap});
+            this.btnAddMap,
+            this.toolStripSeparator2,
+            this.btnHand,
+            this.btnSelect,
+            this.toolStripSeparator3,
+            this.tscbScale});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(959, 25);
@@ -151,6 +161,53 @@
             this.btnAddMap.Text = "toolStripButton5";
             this.btnAddMap.ToolTipText = "Add map";
             // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // btnHand
+            // 
+            this.btnHand.AutoSize = false;
+            this.btnHand.CheckOnClick = true;
+            this.btnHand.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnHand.Image = ((System.Drawing.Image)(resources.GetObject("btnHand.Image")));
+            this.btnHand.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnHand.Name = "btnHand";
+            this.btnHand.Size = new System.Drawing.Size(32, 22);
+            this.btnHand.Text = "toolStripButton1";
+            this.btnHand.ToolTipText = "Hand Tool";
+            // 
+            // btnSelect
+            // 
+            this.btnSelect.AutoSize = false;
+            this.btnSelect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnSelect.Image = ((System.Drawing.Image)(resources.GetObject("btnSelect.Image")));
+            this.btnSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSelect.Name = "btnSelect";
+            this.btnSelect.Size = new System.Drawing.Size(32, 22);
+            this.btnSelect.Text = "Select Map";
+            this.btnSelect.ToolTipText = "Select Tool";
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tscbScale
+            // 
+            this.tscbScale.Items.AddRange(new object[] {
+            "10",
+            "25",
+            "50",
+            "75",
+            "100"});
+            this.tscbScale.Name = "tscbScale";
+            this.tscbScale.Size = new System.Drawing.Size(75, 25);
+            this.tscbScale.Text = "100";
+            this.tscbScale.ToolTipText = "Scale";
+            this.tscbScale.TextChanged += new System.EventHandler(this.OnScaleChanged);
+            // 
             // VerticalScroll
             // 
             this.VerticalScroll.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -160,6 +217,7 @@
             this.VerticalScroll.Size = new System.Drawing.Size(17, 582);
             this.VerticalScroll.TabIndex = 4;
             this.VerticalScroll.Visible = false;
+            this.VerticalScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.OnSurfaceScrolled);
             // 
             // HorizontalScroll
             // 
@@ -170,6 +228,7 @@
             this.HorizontalScroll.Size = new System.Drawing.Size(740, 18);
             this.HorizontalScroll.TabIndex = 3;
             this.HorizontalScroll.Visible = false;
+            this.HorizontalScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.OnSurfaceScrolled);
             // 
             // groupWorld
             // 
@@ -298,6 +357,9 @@
             // 
             // pctSurface
             // 
+            this.pctSurface.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.pctSurface.BackColor = System.Drawing.SystemColors.ControlDark;
             this.pctSurface.Location = new System.Drawing.Point(199, 28);
             this.pctSurface.Name = "pctSurface";
@@ -364,6 +426,11 @@
         private System.Windows.Forms.TextBox tbMapName;
         private System.Windows.Forms.PictureBox pctPreview;
         private System.Windows.Forms.ToolStripButton btnOpen;
-        private System.Windows.Forms.PictureBox pctSurface;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripComboBox tscbScale;
+        private System.Windows.Forms.ToolStripButton btnHand;
+        private System.Windows.Forms.ToolStripButton btnSelect;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        public System.Windows.Forms.PictureBox pctSurface;
     }
 }

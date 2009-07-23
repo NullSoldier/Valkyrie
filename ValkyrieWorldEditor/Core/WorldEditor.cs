@@ -13,7 +13,8 @@ namespace ValkyrieWorldEditor.Core
     public static class WorldEditor
     {
         public static bool IgnoreInput = false;
-
+        public static double Scale{get { return scale; }}
+     
         public static EditorXNA Game;
         public static frmMain MainForm;
 
@@ -21,7 +22,13 @@ namespace ValkyrieWorldEditor.Core
         public static Map CurMap { get { return curMap; } }
 
         private static Map curMap = null;
+        private static double scale = 1.0;
 
+        public static void SetScale(double scale)
+        {
+            WorldEditor.scale = scale;
+            TileEngine.Camera.Scale(scale);
+        }
 
         public static void LoadUniverse(FileInfo UniLocation)
         {

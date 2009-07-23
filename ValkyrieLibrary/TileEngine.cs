@@ -144,7 +144,6 @@ namespace ValkyrieLibrary
 
         public static void DrawLayerMap(SpriteBatch spriteBatch, MapLayers layer, Color tint)
         {
-            spriteBatch.Begin();
             foreach (var header in TileEngine.WorldManager.CurrentWorld.WorldList.Values)
             {
                 if (!header.Map.IsVisableToPlayer())
@@ -152,15 +151,12 @@ namespace ValkyrieLibrary
 
                 TileEngine.DrawLayerMap(spriteBatch, header, layer);
             }
-            spriteBatch.End();
         }
 
 		public static void DrawAllLayers(SpriteBatch spriteBatch, bool drawcharacters)
 		{
             if (TileEngine.WorldManager.CurrentWorld == null)
                 return;
-
-            spriteBatch.Begin();
 
             foreach (var header in TileEngine.WorldManager.CurrentWorld.WorldList.Values)
 			{
@@ -187,8 +183,6 @@ namespace ValkyrieLibrary
                     TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.TopLayer);
                 }
             }
-
-            spriteBatch.End();
 		}
 
         public static void DrawLayerMap(SpriteBatch spriteBatch, MapHeader header, MapLayers layer)
@@ -233,9 +227,7 @@ namespace ValkyrieLibrary
 
         public static void DrawOverlay(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
             TileEngine.Player.DrawOverlay(spriteBatch);
-            spriteBatch.End();
         }
 
 		#endregion

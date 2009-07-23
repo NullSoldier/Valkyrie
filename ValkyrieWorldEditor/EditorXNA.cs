@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Windows.Forms;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -17,6 +18,7 @@ using ValkyrieLibrary;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary.Core;
 using ValkyrieWorldEditor.Core;
+using ValkyrieWorldEditor.Forms;
 
 namespace ValkyrieWorldEditor
 {
@@ -29,6 +31,21 @@ namespace ValkyrieWorldEditor
         public static GraphicsDevice graphicsDevice = null;
         public static GraphicsDeviceManager graphics = null;
 
+        private Dictionary<ComponentID, IEditorComponent> ComponentList;
+        private IEditorComponent curComponent = null;
+        public RenderComponent Render = null;
+
+        public IEditorComponent CurComponent
+        {
+            get
+            {
+                if (this.curComponent == null)
+                    this.curComponent = this.ComponentList[ComponentID.Hand];
+
+                return curComponent;
+            }
+        }
+
         SpriteBatch spriteBatch;
 
         private IntPtr drawSurface;
@@ -36,12 +53,16 @@ namespace ValkyrieWorldEditor
 
         public EditorXNA()
         {
+            Init();
+
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
         public EditorXNA(IntPtr drawSurface, IntPtr drawTilesSurface)
         {
+            Init();
+
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
@@ -51,6 +72,16 @@ namespace ValkyrieWorldEditor
                 new EventHandler<PreparingDeviceSettingsEventArgs>(PreparingDeviceSettings);
 
             System.Windows.Forms.Control.FromHandle((this.Window.Handle)).VisibleChanged += new EventHandler(VisibleChanged);
+        }
+
+        private void Init()
+        {
+            ComponentList = new Dictionary<ComponentID, IEditorComponent>();
+            this.Render = new RenderComponent();
+
+            this.ComponentList = new Dictionary<ComponentID, IEditorComponent>();
+            this.ComponentList.Add(ComponentID.Select, new SelectComponent());
+            this.ComponentList.Add(ComponentID.Hand, new HandComponent());
         }
 
         void PreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
@@ -84,7 +115,6 @@ namespace ValkyrieWorldEditor
             TileEngine.Camera = new BaseCamera(0, 0, 800, 600);
             TileEngine.Load(new FileInfo("Data/TileEngineConfig.xml"));
             TileEngine.Camera.CenterOriginOnPoint(new Point(0, 0));
-            TileEngine.Camera.Viewport.Height += 500;
             TileEngine.Player = new WorldEditorPlayer();
         }
 
@@ -95,18 +125,85 @@ namespace ValkyrieWorldEditor
         }
 
 
+        public void EnlistEvents(PictureBox pictureBox)
+        {
+            pictureBox.MouseDown += this.MouseDown;
+            pictureBox.MouseUp += this.MouseUp;
+            pictureBox.MouseMove += this.MouseMove;
+            pictureBox.MouseClick += this.MouseClicked;
+        }
+
+        #region Callbacks
+
         protected override void Update(GameTime gameTime)
         {
- 
+            this.Render.Update(gameTime);
+            this.CurComponent.Update(gameTime);
+
             base.Update(gameTime);
+        }
+
+        public void Resized(object sender, ScreenResizedEventArgs e)
+        {
+            this.Render.OnSizeChanged(sender, e);
+            this.CurComponent.OnSizeChanged(sender, e);
+        }
+
+        public void Scrolled(object sender, ScrollEventArgs e)
+        {
+            this.Render.OnScrolled(sender, e);
+            this.CurComponent.OnScrolled(sender, e);
+        }
+
+        public void MouseDown(object sender, MouseEventArgs e)
+        {
+            this.Render.OnMouseDown(sender, e);
+            this.CurComponent.OnMouseDown(sender, e);
+        }
+
+        public void MouseMove(object sender, MouseEventArgs e)
+        {
+            this.Render.OnMouseMove(sender, e);
+            this.CurComponent.OnMouseMove(sender, e);
+        }
+
+        public void MouseUp(object sender, MouseEventArgs e)
+        {
+            this.Render.OnMouseUp(sender, e);
+            this.CurComponent.OnMouseUp(sender, e);
+        }
+
+        public void MouseClicked(object sender, MouseEventArgs e)
+        {
+            this.Render.OnMouseClicked(sender, e);
+            this.CurComponent.OnMouseClicked(sender, e);
         }
 
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Gray);
-            TileEngine.DrawAllLayers(spriteBatch, false);
+
+            float scale = (float)WorldEditor.Scale;
+
+            Matrix transform = Matrix.CreateScale(new Vector3(scale, scale, 0));
+            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState, transform);
+
+            this.Render.Draw(this.spriteBatch);
+            this.CurComponent.Draw(this.spriteBatch);
+
+            this.spriteBatch.End();
+
+
             base.Draw(gameTime);
         }
+
+        #endregion
     }
+
+    public enum ComponentID
+    {
+        Hand,
+        Select
+    };
 }

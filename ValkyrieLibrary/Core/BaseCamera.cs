@@ -31,7 +31,6 @@ namespace ValkyrieLibrary
 			this.Viewport.Y = this.Screen.Y;
 			this.Viewport.Width = this.Screen.Width;
 			this.Viewport.Height = this.Screen.Height;
-
 		}
 
 		public Point CameraOrigin
@@ -91,5 +90,16 @@ namespace ValkyrieLibrary
 			throw new NotSupportedException();
 		}
 		#endregion
-	}
+
+        public void Scale(double Scale)
+        {
+            this.Screen = new Rectangle(Screen.X, Screen.Y, (int)(Screen.Width * (1.0 / Scale)), (int)(Screen.Height * (1.0 / Scale)));
+            this.MapOffset = new Vector2(0, 0);
+
+            this.Viewport.X = this.Screen.X;
+            this.Viewport.Y = this.Screen.Y;
+            this.Viewport.Width = this.Screen.Width;
+            this.Viewport.Height = this.Screen.Height;
+        }
+    }
 }

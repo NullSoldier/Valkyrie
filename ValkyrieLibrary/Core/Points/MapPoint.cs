@@ -76,5 +76,26 @@ namespace ValkyrieLibrary.Core
         {
             return new MapPoint(a.X - b, a.Y - b);
         }
+
+        public static MapPoint operator +(MapPoint a, double b)
+        {
+            return new MapPoint((int)(a.X + b), (int)(a.Y + b));
+        }
+
+        public static MapPoint operator *(MapPoint a, double b)
+        {
+            return new MapPoint((int)(a.X * b), (int)(a.Y * b));
+        }
+
+        public static MapPoint operator /(MapPoint a, double b)
+        {
+            return new MapPoint((int)(a.X / b), (int)(a.Y / b));
+        }
+
+        public static MapPoint operator -(MapPoint a, double b)
+        {
+            return new MapPoint((int)(a.X - b), (int)(a.Y - b));
+        }
     }
+
 }

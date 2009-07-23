@@ -1,4 +1,5 @@
 using System;
+using System.Windows.Forms;
 
 using ValkyrieWorldEditor.Forms;
 using ValkyrieWorldEditor;
@@ -18,12 +19,10 @@ namespace ValkyrieWorldEditor
 
             using (EditorXNA game = new EditorXNA(form.getDrawSurface(), form.getPreviewSurface()))
 			{
-                //form.ScreenResized += game.Resized;
-                //form.ScrolledMap += game.Scrolled;
+                form.ScreenResized += game.Resized;
+                form.ScrolledMap += game.Scrolled;
 
-                //game.EnlistEvents(form.pctSurface);
-
-                //MapEditorManager.GameInstance = game;
+                game.EnlistEvents(form.pctSurface);
 
                 WorldEditor.Game = game;
                 WorldEditor.MainForm = form;

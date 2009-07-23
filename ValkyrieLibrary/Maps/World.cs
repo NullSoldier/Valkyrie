@@ -15,12 +15,14 @@ namespace ValkyrieLibrary.Maps
         public Dictionary<string, MapHeader> WorldList;
         public String DefaultSpawn { get; set; }
         public String Name;
+        public MapPoint WorldSize { get; set; }
 
         public World()
         {
             this.WorldList = new Dictionary<string, MapHeader>();
             this.DefaultSpawn = "";
             this.Name = "No Name";
+            this.WorldSize = new MapPoint(0, 0);
         }
 
         public ScreenPoint FindStartLocation(String name)
@@ -46,6 +48,25 @@ namespace ValkyrieLibrary.Maps
                 return FindStartLocation(DefaultSpawn);
 
             return new ScreenPoint(0,0);
+        }
+
+
+        public void CalcWorldSize()
+        {
+            this.WorldSize.X = 0;
+            this.WorldSize.Y = 0;
+
+            foreach (var mh in this.WorldList)
+            {
+                int xSize = mh.Value.MapLocation.X + mh.Value.Map.TilesPerCol;
+                int ySize = mh.Value.MapLocation.Y + mh.Value.Map.TilesPerRow;
+
+                if (xSize > this.WorldSize.X)
+                    this.WorldSize.X = xSize;
+
+                if (ySize > this.WorldSize.Y)
+                    this.WorldSize.Y = ySize;
+            }
         }
     }
 }

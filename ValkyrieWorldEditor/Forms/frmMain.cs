@@ -31,28 +31,40 @@ namespace ValkyrieWorldEditor.Forms
 
         private void UpdateScrollBars(bool Reset)
         {
-            if (!TileEngine.IsMapLoaded) return;
+            if (!TileEngine.IsMapLoaded || TileEngine.WorldManager.CurrentWorld == null) 
+                return;
 
-            this.HorizontalScroll.Visible = (TileEngine.CurrentMapChunk.MapSize.X * TileEngine.CurrentMapChunk.TileSize.X > this.pctSurface.Size.Width);
-            this.VerticalScroll.Visible = (TileEngine.CurrentMapChunk.MapSize.Y * TileEngine.CurrentMapChunk.TileSize.Y > this.pctSurface.Size.Height);
+            ScreenPoint worldMap = (TileEngine.WorldManager.CurrentWorld.WorldSize*(WorldEditor.Scale)).ToScreenPoint();
+            ScreenPoint TileSize = TileEngine.CurrentMapChunk.TileSize * (WorldEditor.Scale);
 
-            int xTilesInView = ((this.pctSurface.Width + this.VerticalScroll.Width) / TileEngine.CurrentMapChunk.TileSize.X);
-            int xUnseenAmount = TileEngine.CurrentMapChunk.MapSize.X - xTilesInView;
-            this.HorizontalScroll.Maximum = xUnseenAmount + this.HorizontalScroll.LargeChange - 1;
 
-            int yTilesInView = ((this.pctSurface.Height + this.HorizontalScroll.Height) / TileEngine.CurrentMapChunk.TileSize.Y);
-            int yUnseenAmount = TileEngine.CurrentMapChunk.MapSize.Y - yTilesInView;
-            this.VerticalScroll.Maximum = yUnseenAmount + this.VerticalScroll.LargeChange - 1;
+
+            this.HorizontalScroll.Visible = (worldMap.X > this.pctSurface.Size.Width);
+            this.VerticalScroll.Visible = (worldMap.Y > this.pctSurface.Size.Height);
+
+            int xTilesInView = ((this.pctSurface.Width + this.VerticalScroll.Width) / TileSize.X);
+            int xUnseenAmount = worldMap.ToMapPoint().X - xTilesInView;
+            this.HorizontalScroll.Maximum = worldMap.ToMapPoint().X;
+
+            int yTilesInView = ((this.pctSurface.Height + this.HorizontalScroll.Height) / TileSize.Y);
+            int yUnseenAmount = worldMap.ToMapPoint().Y - yTilesInView;
+            this.VerticalScroll.Maximum = worldMap.ToMapPoint().Y;
+
+            MapPoint camOff = (new ScreenPoint(TileEngine.Camera.CameraOrigin) * (WorldEditor.Scale)).ToMapPoint();
+
+            //camOff.X -= xTilesInView;
+            //camOff.Y -= yTilesInView;
 
             /* Don't set to 0 when they aren't visible
              * when there isnt enough map to show a scroll
              * bar the values for it are wonky!
             */
-            if (Reset && this.HorizontalScroll.Visible)
-                this.HorizontalScroll.Value = 0;
 
-            if (Reset && this.VerticalScroll.Visible)
-                this.VerticalScroll.Value = 0;
+            if (this.HorizontalScroll.Visible)
+                this.HorizontalScroll.Value = camOff.X;
+
+            if (this.VerticalScroll.Visible)
+                this.VerticalScroll.Value = camOff.Y;
         }
         private void frmMain_Activated(object sender, EventArgs e)
         {
@@ -83,7 +95,7 @@ namespace ValkyrieWorldEditor.Forms
 
             WorldEditor.LoadUniverse(UniLocation);
 
-            //this.UpdateScrollBars();
+            this.UpdateScrollBars();
         }
 
         public void RefreshWorldList(WorldManager worldMng)
@@ -189,6 +201,23 @@ namespace ValkyrieWorldEditor.Forms
         {
             this.ScreenResized(this, new ScreenResizedEventArgs(this.pctSurface.Size.Width, this.pctSurface.Size.Height));
             this.UpdateScrollBars();
+        }
+
+        private void OnScaleChanged(object sender, EventArgs e)
+        {
+            double val = (double)Double.Parse(tscbScale.Text);
+            double res =(val * 0.01);
+            WorldEditor.SetScale(res);
+
+            UpdateScrollBars(false);
+        }
+
+        private void OnSurfaceScrolled(object sender, ScrollEventArgs e)
+        {
+			var handler = this.ScrolledMap;
+			
+			if( handler != null)
+				this.ScrolledMap(sender, e);
         }
 
     }

@@ -29,12 +29,8 @@ namespace Valkyrie.States
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            spriteBatch.Begin();
-
             spriteBatch.GraphicsDevice.Clear(Color.Black);
             spriteBatch.Draw(TileEngine.TextureManager.GetTexture("PokeBackground.png"), new Vector2(0,0), Color.White);
-
-            spriteBatch.End();
         }
 
         public void Load()

@@ -86,6 +86,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\HandComponent.cs" />
+    <Compile Include="Core\IEditorComponent.cs" />
+    <Compile Include="Core\RenderComponent.cs" />
+    <Compile Include="Core\SelectComponent.cs" />
     <Compile Include="Core\WorldEditor.cs" />
     <Compile Include="Core\WorldEditorPlayer.cs" />
     <Compile Include="Forms\frmMain.cs">
@@ -101,6 +105,7 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="TileEngineConfig.xml" />
   </ItemGroup>
   <ItemGroup>
     <NestedContentProject Include="Content\Content.contentproj">
