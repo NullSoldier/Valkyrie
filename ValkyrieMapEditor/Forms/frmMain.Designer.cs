@@ -74,6 +74,8 @@
 			this.toolStripTools = new System.Windows.Forms.ToolStrip();
 			this.btnUnderLayer = new System.Windows.Forms.ToolStripButton();
 			this.btnEvent = new System.Windows.Forms.ToolStripButton();
+			this.btnAnimatedTileEditor = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -571,7 +573,9 @@
             this.btnPencil,
             this.btnRect,
             this.btnFill,
-            this.btnSelection});
+            this.btnSelection,
+            this.toolStripSeparator4,
+            this.btnAnimatedTileEditor});
 			this.toolStripTools.Location = new System.Drawing.Point(0, 26);
 			this.toolStripTools.Name = "toolStripTools";
 			this.toolStripTools.Size = new System.Drawing.Size(1008, 25);
@@ -602,6 +606,22 @@
 			this.btnEvent.Size = new System.Drawing.Size(34, 22);
 			this.btnEvent.Text = "Event Mode";
 			this.btnEvent.Click += new System.EventHandler(this.btnEvent_Click);
+			// 
+			// btnAnimatedTileEditor
+			// 
+			this.btnAnimatedTileEditor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnAnimatedTileEditor.Enabled = false;
+			this.btnAnimatedTileEditor.Image = ((System.Drawing.Image)(resources.GetObject("btnAnimatedTileEditor.Image")));
+			this.btnAnimatedTileEditor.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.btnAnimatedTileEditor.Name = "btnAnimatedTileEditor";
+			this.btnAnimatedTileEditor.Size = new System.Drawing.Size(23, 22);
+			this.btnAnimatedTileEditor.Text = "Animated Tile Manager";
+			this.btnAnimatedTileEditor.Click += new System.EventHandler(this.btnAnimatedTileEditor_Click);
+			// 
+			// toolStripSeparator4
+			// 
+			this.toolStripSeparator4.Name = "toolStripSeparator4";
+			this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
 			// 
 			// frmMain
 			// 
@@ -688,5 +708,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStripButton btnEvent;
 		private System.Windows.Forms.ToolStripButton btnUnderLayer;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+		private System.Windows.Forms.ToolStripButton btnAnimatedTileEditor;
 	}
 }

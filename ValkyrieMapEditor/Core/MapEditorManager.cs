@@ -52,7 +52,7 @@ namespace ValkyrieMapEditor
 		private static Point mouselocation = new Point(0, 0);
 
         public static void SaveMap(Map map, FileInfo location)
-        {
+		{
 			XmlDocument doc = new XmlDocument();
 
 			var mapElement = doc.CreateElement("Map");
@@ -87,7 +87,7 @@ namespace ValkyrieMapEditor
 
 			// Base Layer
 			var baselayer = doc.CreateElement("BaseLayer");
-			
+
 			var baselayerbuilder = new StringBuilder();
 			for (int i = 0; i < map.BaseLayer.Length; i++)
 			{
@@ -131,15 +131,39 @@ namespace ValkyrieMapEditor
 				collisionlayerbuilder.Append(" ");
 			}
 
-            var eventLayer = doc.CreateElement("Events");
-            foreach (Event e in map.EventList)
-            {
-                var eventNode = doc.CreateElement("Event");
-                e.toXml(doc, eventNode);
-                eventLayer.AppendChild(eventNode);
-            }
-            
 			collisionLayer.InnerText = collisionlayerbuilder.ToString();
+
+			// Events
+			var eventLayer = doc.CreateElement("Events");
+			foreach (Event e in map.EventList)
+			{
+				var eventNode = doc.CreateElement("Event");
+				e.toXml(doc, eventNode);
+				eventLayer.AppendChild(eventNode);
+			}
+
+			// Animations
+			var animations = doc.CreateElement("AnimatedTiles");
+
+			foreach (var FrameAnimation in map.AnimatedTiles.Values)
+			{
+				var tileNode = doc.CreateElement("AnimatedTile");
+				
+				var tileid = doc.CreateElement("TileID");
+				tileid.InnerText = (FrameAnimation.InitialFrameRect.Y * map.MapSize.X + FrameAnimation.InitialFrameRect.X).ToString();
+
+				var tilerect = doc.CreateElement("TileRect");
+				tilerect.InnerText = string.Format("{0} {1} {2} {3}", FrameAnimation.InitialFrameRect.X, FrameAnimation.InitialFrameRect.Y, FrameAnimation.InitialFrameRect.Width, FrameAnimation.InitialFrameRect.Height);
+
+				var framecount = doc.CreateElement("FrameCount");
+				framecount.InnerText = FrameAnimation.FrameCount.ToString();
+
+				tileNode.AppendChild(tileid);
+				tileNode.AppendChild(tilerect);
+				tileNode.AppendChild(framecount);
+
+				animations.AppendChild(tileNode);
+			}
 
 			// Append children and save
 			mapsize.AppendChild(mapsizex);
@@ -154,13 +178,14 @@ namespace ValkyrieMapEditor
 			mapElement.AppendChild(middlelayer);
 			mapElement.AppendChild(toplayer);
 			mapElement.AppendChild(collisionLayer);
-            mapElement.AppendChild(eventLayer);
+			mapElement.AppendChild(eventLayer);
+			mapElement.AppendChild(animations);
 
 			doc.AppendChild(mapElement);
 			doc.Save(location.FullName);
 
 			MapEditorManager.CurrentMapLocation = location;
-        }
+		}
 
         public static Map LoadMap(FileInfo location)
         {

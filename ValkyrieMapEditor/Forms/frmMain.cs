@@ -15,6 +15,7 @@ using ValkyrieLibrary.Maps;
 using ValkyrieLibrary;
 using System.Reflection;
 using ValkyrieLibrary.Events;
+using ValkyrieMapEditor.Forms;
 
 namespace ValkyrieMapEditor
 {
@@ -111,6 +112,7 @@ namespace ValkyrieMapEditor
 
 			this.UpdateScrollBars(true);
 
+			this.btnAnimatedTileEditor.Enabled = true;
 			this.btnMapProperties.Enabled = true;
 			this.toolSave.Enabled = true;
 			this.toolSaveAs.Enabled = true;
@@ -391,6 +393,12 @@ namespace ValkyrieMapEditor
             currentLayerAndBelowToolStripMenuItem.Checked = false;
             MapEditorManager.ViewMode = ViewMode.Dim;
         }
+
+		private void btnAnimatedTileEditor_Click(object sender, EventArgs e)
+		{
+			frmAnimatedTileManager dialog = new frmAnimatedTileManager(TileEngine.CurrentMapChunk);
+			dialog.ShowDialog(this);
+		}
     }
 
 

@@ -118,6 +118,9 @@
     <Compile Include="EditorXNA.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Data\TileEngineConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
     <Content Include="TileEngineConfig.xml" />

@@ -20,8 +20,6 @@ namespace Valkyrie.Events
         {
 			if( player is PokePlayer )
 				((PokePlayer)player).JumpWall();
-
-			// Otherwise a non player activated this event so ignore
         }
     }
 }

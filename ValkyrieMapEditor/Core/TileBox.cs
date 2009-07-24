@@ -11,6 +11,7 @@ namespace ValkyrieMapEditor
 	public class TileBox : PictureBox
 	{
 		public event EventHandler<TileSelectionChangedEventArgs> TileSelectionChanged;
+
 		public Point TileSize
 		{
 			get { return this.tilesize; }
