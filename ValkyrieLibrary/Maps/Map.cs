@@ -283,13 +283,13 @@ namespace ValkyrieLibrary.Maps
 
 		public bool TilePointInMapGlobal(MapPoint point)
 		{
-            Rectangle mapSize = TileEngine.WorldManager.CurrentWorld.WorldList[TileEngine.CurrentMapChunk.Name].MapLocation.ToRect(TileEngine.CurrentMapChunk.MapSize.ToPoint());
+            Rectangle mapSize = TileEngine.WorldManager.CurrentWorld.MapList[this.Name].MapLocation.ToRect(this.MapSize.ToPoint());
             return (mapSize.Contains(point.ToPoint()) == true);
 		}
 
         public bool IsVisableToPlayer()
         {
-            Rectangle mapSize = TileEngine.WorldManager.CurrentWorld.WorldList[this.Name].MapLocation.ToRect(this.MapSize.ToPoint());
+            Rectangle mapSize = TileEngine.WorldManager.CurrentWorld.MapList[this.Name].MapLocation.ToRect(this.MapSize.ToPoint());
             Rectangle worldSize = new Rectangle(0,0, TileEngine.Viewport.Width, TileEngine.Viewport.Height);
   
             return (mapSize.Intersects(worldSize) == true);

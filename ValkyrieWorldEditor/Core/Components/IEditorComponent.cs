@@ -11,14 +11,17 @@ namespace ValkyrieWorldEditor.Core
 {
     public interface IEditorComponent
     {
+        float Scale { get; set; }
+
         void OnSizeChanged(object sender, ScreenResizedEventArgs e);
         void OnScrolled(object sender, ScrollEventArgs e);
         void OnMouseDown(object sender, MouseEventArgs ev);
         void OnMouseMove(object sender, MouseEventArgs ev);
         void OnMouseUp(object sender, MouseEventArgs ev);
         void OnMouseClicked(object sender, MouseEventArgs ev);
+        void OnMouseDoubleClicked(object sender, MouseEventArgs ev);
 
-        void Draw(SpriteBatch spriteBatch);
+        void Draw(GraphicsDevice gfxDevice, SpriteBatch spriteBatch);
         void Update(GameTime gameTime);
 
         void LoadContent(GraphicsDevice graphicsDevice);

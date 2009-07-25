@@ -43,7 +43,7 @@ namespace ValkyrieLibrary
 
                 if (TileEngine.currentmapchunk == null)
                 {
-                    foreach (var map in TileEngine.WorldManager.CurrentWorld.WorldList.Values)
+                    foreach (var map in TileEngine.WorldManager.CurrentWorld.MapList.Values)
                     {
                         MapPoint playerLoc = TileEngine.Player.Location.ToMapPoint();
                         Rectangle mapSize = map.MapLocation.ToRect(map.Map.MapSize.ToPoint());
@@ -103,15 +103,15 @@ namespace ValkyrieLibrary
 
 		public static Point GlobalPixelPointToLocal(MapPoint localpoint)
 		{
-            int x = localpoint.X - (TileEngine.WorldManager.CurrentWorld.WorldList[TileEngine.CurrentMapChunk.Name].MapLocation.X - TileEngine.CurrentMapChunk.TileSize.X);
-            int y = localpoint.Y - (TileEngine.WorldManager.CurrentWorld.WorldList[TileEngine.CurrentMapChunk.Name].MapLocation.Y - TileEngine.CurrentMapChunk.TileSize.Y);
+            int x = localpoint.X - (TileEngine.WorldManager.CurrentWorld.MapList[TileEngine.CurrentMapChunk.Name].MapLocation.X - TileEngine.CurrentMapChunk.TileSize.X);
+            int y = localpoint.Y - (TileEngine.WorldManager.CurrentWorld.MapList[TileEngine.CurrentMapChunk.Name].MapLocation.Y - TileEngine.CurrentMapChunk.TileSize.Y);
 
 			return new Point(x, y);
 		}
 
 		public static MapPoint GlobalTilePointToLocal(MapPoint localpoint)
 		{
-            MapPoint temp = localpoint - TileEngine.WorldManager.CurrentWorld.WorldList[TileEngine.CurrentMapChunk.Name].MapLocation;
+            MapPoint temp = localpoint - TileEngine.WorldManager.CurrentWorld.MapList[TileEngine.CurrentMapChunk.Name].MapLocation;
             return temp;
 
 		}
@@ -124,7 +124,7 @@ namespace ValkyrieLibrary
             if (TileEngine.WorldManager.CurrentWorld == null)
                 return;
 
-            foreach (var header in TileEngine.WorldManager.CurrentWorld.WorldList.Values)
+            foreach (var header in TileEngine.WorldManager.CurrentWorld.MapList.Values)
             {
                 if (header.Map.IsVisableToPlayer())
                     header.Map.Update(time);
@@ -144,7 +144,7 @@ namespace ValkyrieLibrary
 
         public static void DrawLayerMap(SpriteBatch spriteBatch, MapLayers layer, Color tint)
         {
-            foreach (var header in TileEngine.WorldManager.CurrentWorld.WorldList.Values)
+            foreach (var header in TileEngine.WorldManager.CurrentWorld.MapList.Values)
             {
                 if (!header.Map.IsVisableToPlayer())
                     continue;
@@ -158,7 +158,7 @@ namespace ValkyrieLibrary
             if (TileEngine.WorldManager.CurrentWorld == null)
                 return;
 
-            foreach (var header in TileEngine.WorldManager.CurrentWorld.WorldList.Values)
+            foreach (var header in TileEngine.WorldManager.CurrentWorld.MapList.Values)
 			{
 				TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.UnderLayer);
                 TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.BaseLayer);
@@ -171,7 +171,7 @@ namespace ValkyrieLibrary
             if (TileEngine.WorldManager.CurrentWorld == null)
                 return;
 
-            foreach (var header in TileEngine.WorldManager.CurrentWorld.WorldList.Values)
+            foreach (var header in TileEngine.WorldManager.CurrentWorld.MapList.Values)
 			{
                 if (!header.Map.IsVisableToPlayer())
                     continue;
@@ -188,7 +188,7 @@ namespace ValkyrieLibrary
             {
 				TileEngine.DrawCharacters(spriteBatch);
 
-                foreach (var header in TileEngine.WorldManager.CurrentWorld.WorldList.Values)
+                foreach (var header in TileEngine.WorldManager.CurrentWorld.MapList.Values)
 			    {
                     if (!header.Map.IsVisableToPlayer())
                         continue;

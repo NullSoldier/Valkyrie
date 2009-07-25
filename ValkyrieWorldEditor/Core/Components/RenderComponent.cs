@@ -14,6 +14,7 @@ namespace ValkyrieWorldEditor.Core
 {
     public class RenderComponent : IEditorComponent
     {
+        public float Scale { get; set; }
         public RenderComponent()
         {
 
@@ -97,12 +98,26 @@ namespace ValkyrieWorldEditor.Core
         {
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void OnMouseDoubleClicked(object sender, MouseEventArgs ev)
+        {
+
+        }
+
+        public void Draw(GraphicsDevice gfxDevice, SpriteBatch spriteBatch)
         {
             if (!TileEngine.IsMapLoaded)
                 return;
 
             TileEngine.DrawEverything(spriteBatch);
+
+
+            foreach (var mh in WorldEditor.SelectedMaps)
+            {
+                Rectangle rect = (mh.MapLocation.ToScreenPoint()+TileEngine.Camera.Offset()).ToRect(mh.Map.MapSize.ToScreenPoint().ToPoint());
+                Texture2D img = CreateSelectRectangle(gfxDevice, rect.Width, rect.Height, new Color(0, 240, 255, 125));
+
+                spriteBatch.Draw(img, rect, Color.White);
+            }
         }
 
         public void Update(GameTime gameTime)
@@ -112,5 +127,41 @@ namespace ValkyrieWorldEditor.Core
         public void LoadContent(GraphicsDevice graphicsDevice)
         {
         }
+
+        public static Texture2D CreateSelectRectangle(GraphicsDevice gfxDevice, int width, int height, Color fillColor)
+        {
+            if (width <= 2 || height <= 2)
+                return null;
+
+            // create the rectangle texture, ,but it will have no color! lets fix that
+            Texture2D rectangleTexture = new Texture2D(gfxDevice, width, height, 1, TextureUsage.None, SurfaceFormat.Color);
+            Color[] color = new Color[width * height];//set the color to the amount of pixels
+
+            //loop through all the colors setting them to whatever values we want
+            for (int y = 1; y < height - 1; y++)
+            {
+                for (int x = 1; x < width - 1; x++)
+                {
+                    color[x + (y * width)] = fillColor;
+                }
+            }
+
+            //outer four
+            for (int y = 0; y < height; y++)
+                color[0 + (y * width)] = new Color(0, 0, 0, 255);
+
+            for (int y = 0; y < height; y++)
+                color[width - 1 + (y * width)] = new Color(0, 0, 0, 255);
+
+            for (int x = 0; x < width; x++)
+                color[x + (0 * width)] = new Color(0, 0, 0, 255);
+
+            for (int x = 0; x < width; x++)
+                color[x + ((height - 1) * width)] = new Color(0, 0, 0, 255);
+
+            rectangleTexture.SetData(color);//set the color data on the texture
+            return rectangleTexture;
+        }
+
     }
 }

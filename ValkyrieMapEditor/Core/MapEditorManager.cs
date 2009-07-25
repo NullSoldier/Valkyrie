@@ -229,10 +229,10 @@ namespace ValkyrieMapEditor
 		{
             if (TileEngine.WorldManager.CurrentWorld != null)
             {
-                foreach (MapHeader tmpHeader in TileEngine.WorldManager.CurrentWorld.WorldList.Values)
+                foreach (MapHeader tmpHeader in TileEngine.WorldManager.CurrentWorld.MapList.Values)
                     tmpHeader.Unload();
 
-                TileEngine.WorldManager.CurrentWorld.WorldList.Clear();
+                TileEngine.WorldManager.CurrentWorld.MapList.Clear();
             }
 
             TileEngine.WorldManager.WorldsList.Clear();
@@ -242,7 +242,7 @@ namespace ValkyrieMapEditor
 			header.MapLocation = new MapPoint(0, 0);
 
             World w = new World();
-            w.WorldList.Add(map.Name, header);
+            w.MapList.Add(map.Name, header);
 
             TileEngine.WorldManager.WorldsList.Add(map.Name, w);
             TileEngine.WorldManager.SetWorld(map.Name, null);

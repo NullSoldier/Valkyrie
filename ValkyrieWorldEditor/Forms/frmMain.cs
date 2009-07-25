@@ -19,6 +19,8 @@ namespace ValkyrieWorldEditor.Forms
         public event EventHandler<ScreenResizedEventArgs> ScreenResized;
         public event EventHandler<ScrollEventArgs> ScrolledMap;
 
+        private bool ignoreTextChanges = false;
+
         public frmMain() 
         {
             InitializeComponent();
@@ -33,6 +35,8 @@ namespace ValkyrieWorldEditor.Forms
 
             this.ScreenResized += this.pctPreview.Resized;
             this.ScrolledMap += this.pctPreview.Scrolled;
+
+            this.pctPreview.Cursor = System.Windows.Forms.Cursors.Hand;
         }
 
         public void UpdateScrollBars()
@@ -47,8 +51,6 @@ namespace ValkyrieWorldEditor.Forms
 
             ScreenPoint worldMap = (TileEngine.WorldManager.CurrentWorld.WorldSize*(WorldEditor.Scale)).ToScreenPoint();
             ScreenPoint TileSize = TileEngine.CurrentMapChunk.TileSize * (WorldEditor.Scale);
-
-
 
             this.HorizontalScroll.Visible = (worldMap.X > this.pctSurface.Size.Width);
             this.VerticalScroll.Visible = (worldMap.Y > this.pctSurface.Size.Height);
@@ -88,6 +90,81 @@ namespace ValkyrieWorldEditor.Forms
         }
 
 
+        public void UpdateSelectedMap()
+        {
+            this.tbMapName.Text = "";
+            this.ignoreTextChanges = true;
+
+            if (WorldEditor.SelectedMaps.Count() == 0)
+            {
+                this.groupBox1.Enabled = false;
+                this.tbMapName.Enabled = false;
+            }
+            else
+            {
+                this.groupBox1.Enabled = true;
+
+                if (WorldEditor.SelectedMaps.Count() == 1)
+                {
+                    this.tbMapName.Enabled = true;
+                    this.tbMapName.Text = WorldEditor.SelectedMaps[0].Map.Name;
+                    this.tbMapXPos.Text = WorldEditor.SelectedMaps[0].MapLocation.X.ToString();
+                    this.tbMapYPos.Text = WorldEditor.SelectedMaps[0].MapLocation.Y.ToString();
+                }
+                else
+                {
+                    this.tbMapName.Enabled = false;
+
+                    MapPoint loc = new MapPoint(9999, 9999);
+
+                    foreach (var mh in WorldEditor.SelectedMaps)
+                    {
+                        if (mh.MapLocation.X < loc.X)
+                            loc.X = mh.MapLocation.X;
+
+                        if (mh.MapLocation.Y < loc.Y)
+                            loc.Y = mh.MapLocation.Y;
+                    }
+
+                    this.tbMapXPos.Text = loc.X.ToString();
+                    this.tbMapYPos.Text = loc.Y.ToString();
+                }
+            }
+
+            this.ignoreTextChanges = false;
+        }
+
+        public void SetActiveComponent(ComponentID compId)
+        {
+            this.pctSurface.SetActiveComponent(compId);
+
+            switch (compId)
+            {
+                case ComponentID.Hand:
+                    this.pctSurface.Cursor = System.Windows.Forms.Cursors.Hand;
+
+                    this.btnSelect.Checked = false;
+                    this.btnMove.Checked = false;
+                    this.btnHand.Checked = true;
+                    break;
+
+                case ComponentID.Move:
+                    this.pctSurface.Cursor = System.Windows.Forms.Cursors.NoMove2D;
+
+                    this.btnSelect.Checked = false;
+                    this.btnMove.Checked = true;
+                    this.btnHand.Checked = false;
+                    break;
+
+                case ComponentID.Select:
+                    this.pctSurface.Cursor = System.Windows.Forms.Cursors.Arrow;
+
+                    this.btnSelect.Checked = true;
+                    this.btnMove.Checked = false;
+                    this.btnHand.Checked = false;
+                    break;
+            }
+        }
 
         private void btnOpen_Click(object sender, EventArgs e)
         {
@@ -107,6 +184,14 @@ namespace ValkyrieWorldEditor.Forms
             WorldEditor.LoadUniverse(UniLocation);
 
             this.UpdateScrollBars();
+            SetActiveComponent(ComponentID.Hand);
+
+            this.btnHand.Enabled = true;
+            this.btnMove.Enabled = true;
+            this.btnSelect.Enabled = true;
+            this.btnExport.Enabled = true;
+            this.btnAddMap.Enabled = true;
+            this.btnAddWorld.Enabled = true;
         }
 
         public void RefreshWorldList(WorldManager worldMng)
@@ -143,7 +228,7 @@ namespace ValkyrieWorldEditor.Forms
 
                 cbDefaultSpawn.Items.Clear();
 
-                foreach (var map in curWorld.WorldList)
+                foreach (var map in curWorld.MapList)
                 {
                     foreach (var e in map.Value.Map.EventList)
                     {
@@ -220,6 +305,100 @@ namespace ValkyrieWorldEditor.Forms
 			if( handler != null)
 				this.ScrolledMap(sender, e);
         }
+
+        private void OnAddWorldClicked(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnAddMapClicked(object sender, EventArgs e)
+        {
+         
+        }
+
+        private void OnHandClicked(object sender, EventArgs e)
+        {
+            SetActiveComponent(ComponentID.Hand);
+        }
+
+        private void OnSelectClicked(object sender, EventArgs e)
+        {
+            SetActiveComponent(ComponentID.Select);
+        }
+
+        private void OnMoveClicked(object sender, EventArgs e)
+        {
+            SetActiveComponent(ComponentID.Move);
+        }
+
+        private void OnNewClicked(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnSaveClicked(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnExportClicked(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnMapXPosChange(object sender, EventArgs e)
+        {
+            if (ignoreTextChanges || this.tbMapXPos.Text.Length == 0)
+                return;
+
+            if (WorldEditor.SelectedMaps.Count() == 1)
+            {
+                WorldEditor.SelectedMaps[0].MapLocation.X = Int32.Parse(this.tbMapXPos.Text);
+            }
+            else
+            {
+                MapPoint loc = new MapPoint(9999, 9999);
+
+                foreach (var mh in WorldEditor.SelectedMaps)
+                {
+                    if (mh.MapLocation.X < loc.X)
+                        loc.X = mh.MapLocation.X;
+                }
+
+                foreach (var mh in WorldEditor.SelectedMaps)
+                {
+                    mh.MapLocation.X += Int32.Parse(this.tbMapXPos.Text) - loc.X;
+                }
+            }
+        }
+
+        private void OnMapYPosChange(object sender, EventArgs e)
+        {
+            if (ignoreTextChanges || this.tbMapYPos.Text.Length == 0)
+                return;
+
+            if (WorldEditor.SelectedMaps.Count() == 1)
+            {
+                WorldEditor.SelectedMaps[0].MapLocation.Y = Int32.Parse(this.tbMapYPos.Text);
+            }
+            else
+            {
+                MapPoint loc = new MapPoint(9999, 9999);
+
+                foreach (var mh in WorldEditor.SelectedMaps)
+                {
+                    if (mh.MapLocation.Y < loc.Y)
+                        loc.Y = mh.MapLocation.Y;
+                }
+
+                foreach (var mh in WorldEditor.SelectedMaps)
+                {
+                    mh.MapLocation.Y += Int32.Parse(this.tbMapYPos.Text) - loc.Y;
+                }
+            }
+        }
+
+
 
     }
 

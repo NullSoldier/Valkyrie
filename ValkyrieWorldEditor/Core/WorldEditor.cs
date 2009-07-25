@@ -23,10 +23,12 @@ namespace ValkyrieWorldEditor.Core
         private static Map curMap = null;
         private static double scale = 1.0;
 
+        public static List<MapHeader> SelectedMaps= new List<MapHeader>();
+
+
         public static void SetScale(double scale)
         {
             WorldEditor.scale = scale;
-            TileEngine.Camera.Scale(scale);
         }
 
         public static void LoadUniverse(FileInfo UniLocation)
@@ -52,5 +54,7 @@ namespace ValkyrieWorldEditor.Core
             WorldEditor.curMap = map;
             MainForm.RefreshMapProp(WorldEditor.curMap);
         }
+
+
     }
 }

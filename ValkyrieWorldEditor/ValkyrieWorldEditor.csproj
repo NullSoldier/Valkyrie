@@ -86,10 +86,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\HandComponent.cs" />
-    <Compile Include="Core\IEditorComponent.cs" />
-    <Compile Include="Core\RenderComponent.cs" />
-    <Compile Include="Core\SelectComponent.cs" />
+    <Compile Include="Core\Components\HandComponent.cs" />
+    <Compile Include="Core\Components\IEditorComponent.cs" />
+    <Compile Include="Core\Components\MoveComponent.cs" />
+    <Compile Include="Core\Components\RenderComponent.cs" />
+    <Compile Include="Core\Components\SelectComponent.cs" />
     <Compile Include="Core\WorldEditor.cs" />
     <Compile Include="Core\WorldEditorPlayer.cs" />
     <Compile Include="Forms\MainRender.cs">

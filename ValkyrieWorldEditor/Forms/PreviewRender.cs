@@ -24,13 +24,28 @@ namespace ValkyrieWorldEditor.Forms
 {
     public class PreviewRender : XNARenderControl
     {
+        private Dictionary<ComponentID, IEditorComponent> ComponentList;
+        private IEditorComponent curComponent = null;
         public RenderComponent Render = null;
         private float lastScale = 0.0f;
-        private bool dragging = false;
 
+        public IEditorComponent CurComponent
+        {
+            get
+            {
+                if (this.curComponent == null)
+                    this.curComponent = this.ComponentList[ComponentID.Hand];
+
+                return curComponent;
+            }
+        }
 
         public PreviewRender()
         {
+            this.ComponentList = new Dictionary<ComponentID, IEditorComponent>();
+            this.ComponentList.Add(ComponentID.Select, new SelectComponent());
+            this.ComponentList.Add(ComponentID.Hand, new HandComponent());
+            this.ComponentList.Add(ComponentID.Move, new MoveComponent());
             this.Render = new RenderComponent();
 
             this.MouseDown += this.OnMouseDown_Event;
@@ -38,6 +53,11 @@ namespace ValkyrieWorldEditor.Forms
             this.MouseMove += this.OnMouseMove_Event;
             this.MouseClick += this.OnMouseClick_Event;
             this.MouseDoubleClick += this.OnMouseDoubleClick_Event;
+        }
+
+        public void SetActiveComponent(ComponentID compId)
+        {
+            //this.curComponent = this.ComponentList[compId];
         }
 
         protected override void Initialize(GraphicsDevice gfxDevice)
@@ -53,67 +73,47 @@ namespace ValkyrieWorldEditor.Forms
 
         public void Resized(object sender, ScreenResizedEventArgs e)
         {
-
+            this.Render.OnSizeChanged(sender, e);
+            this.CurComponent.OnSizeChanged(sender, e);
         }
 
         public void Scrolled(object sender, ScrollEventArgs e)
         {
-
+            this.Render.OnScrolled(sender, e);
+            this.CurComponent.OnScrolled(sender, e);
         }
 
         public void OnMouseDown_Event(object sender, MouseEventArgs e)
         {
             this.Render.OnMouseDown(sender, e);
-            dragging = true;
+            this.CurComponent.OnMouseDown(sender, e);
         }
 
         public void OnMouseMove_Event(object sender, MouseEventArgs e)
         {
             this.Render.OnMouseMove(sender, e);
-
-            if (dragging)
-                MoveCamera(e);
+            this.CurComponent.OnMouseMove(sender, e);
         }
 
         public void OnMouseUp_Event(object sender, MouseEventArgs e)
         {
             this.Render.OnMouseUp(sender, e);
-            dragging = false;
+            this.CurComponent.OnMouseUp(sender, e);
         }
 
         public void OnMouseClick_Event(object sender, MouseEventArgs e)
         {
             this.Render.OnMouseClicked(sender, e);
+            this.CurComponent.OnMouseClicked(sender, e);
         }
 
         public void OnMouseDoubleClick_Event(object sender, MouseEventArgs e)
         {
-            //this.Render.OnMouseClicked(sender, e);
-
-            MoveCamera(e);
+            this.Render.OnMouseDoubleClicked(sender, e);
+            this.CurComponent.OnMouseDoubleClicked(sender, e);
         }
 
-        private void MoveCamera(MouseEventArgs e)
-        {
-            if (TileEngine.WorldManager.CurrentWorld == null)
-                return;
 
-            ScreenPoint pos = new ScreenPoint(e.X, e.Y) * lastScale;
-            ScreenPoint screenSize = new ScreenPoint(TileEngine.Camera.Screen.Width, TileEngine.Camera.Screen.Height);
-            ScreenPoint mapSize = TileEngine.WorldManager.CurrentWorld.WorldSize.ToScreenPoint() - screenSize;
-            
-            pos -= screenSize / 2;
-
-            pos.X = Math.Max(0, pos.X);
-            pos.Y = Math.Max(0, pos.Y);
-
-            pos.X = Math.Min(mapSize.X, pos.X);
-            pos.Y = Math.Min(mapSize.Y, pos.Y);
-
-            TileEngine.Camera.MapOffset = (pos*-1).ToVector2();
-
-            WorldEditor.MainForm.UpdateScrollBars();
-        }
         
 
         public override void Draw(GraphicsDevice gfxDevice, SpriteBatch spriteBatch)
@@ -132,6 +132,10 @@ namespace ValkyrieWorldEditor.Forms
 
             lastScale = (scalep.X > scalep.Y) ? scalep.X : scalep.Y;
 
+            foreach (var com in this.ComponentList)
+            {
+                com.Value.Scale = lastScale;
+            }
 
             Matrix transform = Matrix.CreateScale(new Vector3((1.0f / lastScale), (1.0f / lastScale), 0));
 
@@ -140,52 +144,24 @@ namespace ValkyrieWorldEditor.Forms
             TileEngine.Camera.Scale(1.0 / (double)(lastScale));
 
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState, transform);
-            this.Render.Draw(spriteBatch);
-
+            this.Render.Draw(gfxDevice, spriteBatch);
+            this.CurComponent.Draw(gfxDevice, spriteBatch);
             TileEngine.Camera.Pop();
 
+            TileEngine.Camera.Push();
+            TileEngine.Camera.Scale((float)WorldEditor.Scale);
+
             Rectangle rect = (TileEngine.Camera.Offset() * -1).ToRect(new Point(Math.Min(this.Width * (int)lastScale, TileEngine.Camera.Screen.Width), Math.Min(this.Height * (int)lastScale, TileEngine.Camera.Screen.Height)));
-            Texture2D img = CreateSelectRectangle(gfxDevice, rect.Width, rect.Height);
+            Texture2D img = RenderComponent.CreateSelectRectangle(gfxDevice, rect.Width, rect.Height, new Color(255, 0, 0, 125));
 
             spriteBatch.Draw(img, rect, Color.White);
 
             spriteBatch.End();
+
+            TileEngine.Camera.Pop();
         }
 
-        private Texture2D CreateSelectRectangle(GraphicsDevice gfxDevice, int width, int height)
-        {
-            if (width <= 2 || height <= 2)
-                return null;
-
-            // create the rectangle texture, ,but it will have no color! lets fix that
-            Texture2D rectangleTexture = new Texture2D(gfxDevice, width, height, 1, TextureUsage.None, SurfaceFormat.Color);
-            Color[] color = new Color[width * height];//set the color to the amount of pixels
-
-            //loop through all the colors setting them to whatever values we want
-            for (int y = 1; y < height - 1; y++)
-            {
-                for (int x = 1; x < width - 1; x++)
-                {
-                    color[x + (y * width)] = new Color(255, 0, 0, 125);
-                }
-            }
-
-            //outer four
-            for (int y = 0; y < height; y++)
-                color[0 + (y * width)] = new Color(0, 0, 0, 255);
-
-            for (int y = 0; y < height; y++)
-                color[width - 1 + (y * width)] = new Color(0, 0, 0, 255);
-
-            for (int x = 0; x < width; x++)
-                color[x + (0 * width)] = new Color(0, 0, 0, 255);
-
-            for (int x = 0; x < width; x++)
-                color[x + ((height - 1) * width)] = new Color(0, 0, 0, 255);
 
 
-            rectangleTexture.SetData(color);//set the color data on the texture
-            return rectangleTexture;
-        }
     }
 }

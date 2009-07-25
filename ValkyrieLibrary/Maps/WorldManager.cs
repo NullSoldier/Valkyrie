@@ -80,7 +80,7 @@ namespace ValkyrieLibrary.Maps
                         }
 
                         MapHeader header = new MapHeader(name, path, new MapPoint(x, y));
-                        w.WorldList.Add(header.MapName, header);
+                        w.MapList.Add(header.MapName, header);
                     }
                 }
 

@@ -51,17 +51,22 @@ namespace ValkyrieWorldEditor.Forms
 
             this.content.RootDirectory = "Content";
 
-            ComponentList = new Dictionary<ComponentID, IEditorComponent>();
             this.Render = new RenderComponent();
 
             this.ComponentList = new Dictionary<ComponentID, IEditorComponent>();
             this.ComponentList.Add(ComponentID.Select, new SelectComponent());
             this.ComponentList.Add(ComponentID.Hand, new HandComponent());
+            this.ComponentList.Add(ComponentID.Move, new MoveComponent());
 
             this.MouseDown += this.OnMouseDown_Event;
             this.MouseUp += this.OnMouseUp_Event;
             this.MouseMove += this.OnMouseMove_Event;
             this.MouseClick += this.OnMouseClick_Event;
+        }
+
+        public void SetActiveComponent(ComponentID compId)
+        {
+            this.curComponent = this.ComponentList[compId];
         }
 
 
@@ -121,25 +126,42 @@ namespace ValkyrieWorldEditor.Forms
             this.CurComponent.OnMouseClicked(sender, e);
         }
 
+        public void OnMouseDoubleClick_Event(object sender, MouseEventArgs e)
+        {
+            this.Render.OnMouseDoubleClicked(sender, e);
+            this.CurComponent.OnMouseDoubleClicked(sender, e);
+        }
+
         public override void Draw(GraphicsDevice gfxDevice, SpriteBatch spriteBatch)
         {
             gfxDevice.Clear(Color.Gray);
 
-            float scale = (float)WorldEditor.Scale;
+            float lastScale = (float)WorldEditor.Scale;
 
-            Matrix transform = Matrix.CreateScale(new Vector3(scale, scale, 0));
+            foreach (var com in this.ComponentList)
+            {
+                com.Value.Scale = (1.0f / lastScale);
+            }
+
+            TileEngine.Camera.Push();
+            TileEngine.Camera.Scale(lastScale);
+
+            Matrix transform = Matrix.CreateScale(new Vector3(lastScale, lastScale, 0));
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState, transform);
 
-            this.Render.Draw(spriteBatch);
-            this.CurComponent.Draw(spriteBatch);
+            this.Render.Draw(gfxDevice, spriteBatch);
+            this.CurComponent.Draw(gfxDevice, spriteBatch);
 
             spriteBatch.End();
+
+            TileEngine.Camera.Pop();
         }
     }
 
     public enum ComponentID
     {
         Hand,
-        Select
+        Select,
+        Move
     };
 }

@@ -40,6 +40,7 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnHand = new System.Windows.Forms.ToolStripButton();
             this.btnSelect = new System.Windows.Forms.ToolStripButton();
+            this.btnMove = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.tscbScale = new System.Windows.Forms.ToolStripComboBox();
             this.VerticalScroll = new System.Windows.Forms.VScrollBar();
@@ -61,7 +62,6 @@
             this.toolStrip1.SuspendLayout();
             this.groupWorld.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            //((System.ComponentModel.ISupportInitialize)(this.pctSurface)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -77,6 +77,7 @@
             this.toolStripSeparator2,
             this.btnHand,
             this.btnSelect,
+            this.btnMove,
             this.toolStripSeparator3,
             this.tscbScale});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -95,6 +96,7 @@
             this.btnNew.Size = new System.Drawing.Size(32, 22);
             this.btnNew.Text = "toolStripButton1";
             this.btnNew.ToolTipText = "New";
+            this.btnNew.Click += new System.EventHandler(this.OnNewClicked);
             // 
             // btnOpen
             // 
@@ -118,6 +120,7 @@
             this.btnSave.Size = new System.Drawing.Size(32, 22);
             this.btnSave.Text = "toolStripButton2";
             this.btnSave.ToolTipText = "Save";
+            this.btnSave.Click += new System.EventHandler(this.OnSaveClicked);
             // 
             // btnExport
             // 
@@ -130,6 +133,7 @@
             this.btnExport.Size = new System.Drawing.Size(32, 22);
             this.btnExport.Text = "toolStripButton3";
             this.btnExport.ToolTipText = "Export";
+            this.btnExport.Click += new System.EventHandler(this.OnExportClicked);
             // 
             // toolStripSeparator1
             // 
@@ -147,6 +151,7 @@
             this.btnAddWorld.Size = new System.Drawing.Size(32, 22);
             this.btnAddWorld.Text = "toolStripButton4";
             this.btnAddWorld.ToolTipText = "Add World";
+            this.btnAddWorld.Click += new System.EventHandler(this.OnAddWorldClicked);
             // 
             // btnAddMap
             // 
@@ -159,6 +164,7 @@
             this.btnAddMap.Size = new System.Drawing.Size(32, 22);
             this.btnAddMap.Text = "toolStripButton5";
             this.btnAddMap.ToolTipText = "Add map";
+            this.btnAddMap.Click += new System.EventHandler(this.OnAddMapClicked);
             // 
             // toolStripSeparator2
             // 
@@ -168,25 +174,42 @@
             // btnHand
             // 
             this.btnHand.AutoSize = false;
-            this.btnHand.CheckOnClick = true;
+            this.btnHand.Checked = true;
+            this.btnHand.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnHand.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnHand.Enabled = false;
             this.btnHand.Image = ((System.Drawing.Image)(resources.GetObject("btnHand.Image")));
             this.btnHand.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnHand.Name = "btnHand";
             this.btnHand.Size = new System.Drawing.Size(32, 22);
             this.btnHand.Text = "toolStripButton1";
             this.btnHand.ToolTipText = "Hand Tool";
+            this.btnHand.Click += new System.EventHandler(this.OnHandClicked);
             // 
             // btnSelect
             // 
             this.btnSelect.AutoSize = false;
             this.btnSelect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnSelect.Enabled = false;
             this.btnSelect.Image = ((System.Drawing.Image)(resources.GetObject("btnSelect.Image")));
             this.btnSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(32, 22);
             this.btnSelect.Text = "Select Map";
             this.btnSelect.ToolTipText = "Select Tool";
+            this.btnSelect.Click += new System.EventHandler(this.OnSelectClicked);
+            // 
+            // btnMove
+            // 
+            this.btnMove.AutoSize = false;
+            this.btnMove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnMove.Enabled = false;
+            this.btnMove.Image = ((System.Drawing.Image)(resources.GetObject("btnMove.Image")));
+            this.btnMove.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnMove.Name = "btnMove";
+            this.btnMove.Size = new System.Drawing.Size(32, 22);
+            this.btnMove.Text = "Move";
+            this.btnMove.Click += new System.EventHandler(this.OnMoveClicked);
             // 
             // toolStripSeparator3
             // 
@@ -319,6 +342,7 @@
             this.tbMapYPos.Name = "tbMapYPos";
             this.tbMapYPos.Size = new System.Drawing.Size(82, 20);
             this.tbMapYPos.TabIndex = 2;
+            this.tbMapYPos.TextChanged += new System.EventHandler(this.OnMapYPosChange);
             // 
             // tbMapXPos
             // 
@@ -326,6 +350,7 @@
             this.tbMapXPos.Name = "tbMapXPos";
             this.tbMapXPos.Size = new System.Drawing.Size(82, 20);
             this.tbMapXPos.TabIndex = 2;
+            this.tbMapXPos.TextChanged += new System.EventHandler(this.OnMapXPosChange);
             // 
             // label3
             // 
@@ -355,6 +380,7 @@
             this.pctSurface.Size = new System.Drawing.Size(740, 581);
             this.pctSurface.TabIndex = 1;
             this.pctSurface.TabStop = false;
+            this.pctSurface.Texture = null;
             this.pctSurface.Click += new System.EventHandler(this.pctSurface_Click);
             this.pctSurface.Resize += new System.EventHandler(this.pctSurface_Resized);
             // 
@@ -381,6 +407,7 @@
             this.Controls.Add(this.HorizontalScroll);
             this.Controls.Add(this.pctSurface);
             this.Controls.Add(this.toolStrip1);
+            this.Location = new System.Drawing.Point(0, 0);
             this.Name = "frmMain";
             this.Text = "Valkyrie World Editor";
             this.Deactivate += new System.EventHandler(this.frmMain_Deactivated);
@@ -392,7 +419,6 @@
             this.groupWorld.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            //((System.ComponentModel.ISupportInitialize)(this.pctSurface)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -430,5 +456,6 @@
 
         private MainRender pctSurface;
         private PreviewRender pctPreview;
+        private System.Windows.Forms.ToolStripButton btnMove;
     }
 }

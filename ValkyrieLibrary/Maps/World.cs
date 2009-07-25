@@ -12,14 +12,14 @@ namespace ValkyrieLibrary.Maps
 {
     public class World
     {
-        public Dictionary<string, MapHeader> WorldList;
+        public Dictionary<string, MapHeader> MapList;
         public String DefaultSpawn { get; set; }
         public String Name;
         public MapPoint WorldSize { get; set; }
 
         public World()
         {
-            this.WorldList = new Dictionary<string, MapHeader>();
+            this.MapList = new Dictionary<string, MapHeader>();
             this.DefaultSpawn = "";
             this.Name = "No Name";
             this.WorldSize = new MapPoint(0, 0);
@@ -30,7 +30,7 @@ namespace ValkyrieLibrary.Maps
             if (name == "Default")
                 name = DefaultSpawn;
 
-            foreach (var mapHeader in WorldList)
+            foreach (var mapHeader in MapList)
             {
                 foreach (Event e in mapHeader.Value.Map.EventList)
                 {
@@ -56,7 +56,7 @@ namespace ValkyrieLibrary.Maps
             this.WorldSize.X = 0;
             this.WorldSize.Y = 0;
 
-            foreach (var mh in this.WorldList)
+            foreach (var mh in this.MapList)
             {
                 int xSize = mh.Value.MapLocation.X + mh.Value.Map.MapSize.X;
                 int ySize = mh.Value.MapLocation.Y + mh.Value.Map.MapSize.Y;
