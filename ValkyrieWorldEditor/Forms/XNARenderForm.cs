@@ -186,8 +186,21 @@ namespace ValkyrieWorldEditor.Core
             }
         }
 
+        float deltaFPSTime = 0;
+        double totalElaspedRealTime = 0;
+
         private void Update(float deltaTime)
         {
+            float elapsed = (float)deltaTime;
+
+            float fps = 1 / elapsed;
+            deltaFPSTime += elapsed;
+            if (deltaFPSTime > 1)
+            {
+                this.Text = "I am running at  <" + fps.ToString() + "> FPS";
+                deltaFPSTime -= 1;
+            }
+
             foreach (var rControl in XNARenderControls)
             {
                 rControl.Update(deltaTime);
