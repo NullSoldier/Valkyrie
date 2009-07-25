@@ -20,6 +20,7 @@ namespace ValkyrieWorldEditor.Forms
         public event EventHandler<ScrollEventArgs> ScrolledMap;
 
         private bool ignoreTextChanges = false;
+        private bool ignoreCheckEvent = false;
 
         public frmMain() 
         {
@@ -131,6 +132,25 @@ namespace ValkyrieWorldEditor.Forms
                 }
             }
 
+            ignoreCheckEvent = true;
+            for (int x = 0; x < listMapList.Items.Count; x++)
+            {
+                bool check = false;
+
+                foreach (var map in WorldEditor.SelectedMaps)
+                {
+                    if (listMapList.Items[x].ToString() == map.MapName)
+                    {
+                        check = true;
+                        break;
+                    }
+                }
+
+                listMapList.SetItemChecked(x, check);
+            }
+            ignoreCheckEvent = false;
+
+
             this.ignoreTextChanges = false;
         }
 
@@ -185,7 +205,12 @@ namespace ValkyrieWorldEditor.Forms
 
             this.UpdateScrollBars();
             SetActiveComponent(ComponentID.Hand);
+            EnableButtons();
+        }
 
+        private void EnableButtons()
+        {
+            this.btnSave.Enabled = true;
             this.btnHand.Enabled = true;
             this.btnMove.Enabled = true;
             this.btnSelect.Enabled = true;
@@ -227,9 +252,12 @@ namespace ValkyrieWorldEditor.Forms
                 groupWorld.Enabled = true;
 
                 cbDefaultSpawn.Items.Clear();
+                listMapList.Items.Clear();
 
                 foreach (var map in curWorld.MapList)
                 {
+                    listMapList.Items.Add( map.Value.MapName );
+
                     foreach (var e in map.Value.Map.EventList)
                     {
                         if (e.Type == "Load")
@@ -308,12 +336,22 @@ namespace ValkyrieWorldEditor.Forms
 
         private void OnAddWorldClicked(object sender, EventArgs e)
         {
+            frmNewWorld newWorld = new frmNewWorld();
+            DialogResult res = newWorld.ShowDialog();
 
+            if (res == DialogResult.OK)
+                WorldEditor.AddWorld(newWorld.GetString());
         }
 
         private void OnAddMapClicked(object sender, EventArgs e)
         {
-         
+            OpenFileDialog openDialog = new OpenFileDialog();
+
+            var result = openDialog.ShowDialog(this);
+            if (result == DialogResult.Cancel)
+                return;
+
+            WorldEditor.AddMap(new FileInfo(openDialog.FileName));       
         }
 
         private void OnHandClicked(object sender, EventArgs e)
@@ -333,17 +371,21 @@ namespace ValkyrieWorldEditor.Forms
 
         private void OnNewClicked(object sender, EventArgs e)
         {
-
+            WorldEditor.NewUniverse("Main");
+            EnableButtons();
         }
 
         private void OnSaveClicked(object sender, EventArgs e)
         {
-
+            TileEngine.WorldManager.Save();
         }
 
         private void OnExportClicked(object sender, EventArgs e)
         {
+            DialogResult res = fbdExport.ShowDialog();
 
+            if (res == DialogResult.OK)
+                TileEngine.WorldManager.Export(fbdExport.SelectedPath);
         }
 
         private void OnMapXPosChange(object sender, EventArgs e)
@@ -398,8 +440,66 @@ namespace ValkyrieWorldEditor.Forms
             }
         }
 
+        private void OnMapItemChecked(object sender, ItemCheckEventArgs e)
+        {
+            if (ignoreCheckEvent)
+                return;
 
+            foreach (var map in TileEngine.WorldManager.CurrentWorld.MapList)
+            {
+                if (listMapList.Items[e.Index].ToString() == map.Value.MapName)
+                {
+                    if (e.CurrentValue == CheckState.Unchecked)
+                    {
+                        WorldEditor.SelectedMaps.Add(map.Value);
+                        UpdateSelectedMap();
+                        break;
+                    }
+                    else
+                    {
+                        WorldEditor.SelectedMaps.Remove(map.Value);
+                        UpdateSelectedMap();
+                        break;
+                    }
+                }
+            }
+        }
 
+        private void OnDeleteMapClicked(object sender, EventArgs e)
+        {
+            DialogResult res = MessageBox.Show("Are you sure you want to remove the selected maps?", "WorldEditor", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+            
+            if (res == DialogResult.Yes)
+            {
+                foreach (var map in WorldEditor.SelectedMaps)
+                {
+                    TileEngine.WorldManager.CurrentWorld.MapList.Remove(map.MapName);
+                }
+
+                WorldEditor.SelectedMaps.Clear();
+                RefreshWorldProp(WorldEditor.CurWorld);
+                UpdateSelectedMap();
+                WorldEditor.CurWorld.CalcWorldSize();
+            }
+        }
+
+        private void OnDeleteWorldClicked(object sender, EventArgs e)
+        {
+            if (WorldEditor.CurWorld.Name == "Main")
+            {
+                MessageBox.Show("Cant delete default world!", "WorldEditor", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            DialogResult res = MessageBox.Show("Are you sure you want to remove the current world?", "WorldEditor", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+
+            if (res == DialogResult.Yes)
+            {
+                TileEngine.WorldManager.WorldsList.Remove(WorldEditor.CurWorld.Name);
+                WorldEditor.SetCurWorld("Main");
+                RefreshWorldList(TileEngine.WorldManager);
+            }
+        }
     }
 
     #region EventArgs

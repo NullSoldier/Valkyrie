@@ -13,8 +13,10 @@ namespace ValkyrieLibrary.Maps
 {
     public class WorldManager
     {
+        public String FileName;
+        public String FilePath;
         public Dictionary<String, World> WorldsList;
-
+        
         public World CurrentWorld
         {
             get
@@ -49,46 +51,105 @@ namespace ValkyrieLibrary.Maps
             XmlDocument doc = new XmlDocument();
             doc.Load(WorldConfiguration.FullName);
 
+            this.FileName = WorldConfiguration.Name;
+            this.FilePath = WorldConfiguration.FullName;
+
             XmlNodeList worldNodes = doc.GetElementsByTagName("Worlds");
             foreach (XmlNode worldNode in worldNodes[0].ChildNodes)
             {
-                World w = new World();
-
-                foreach (XmlNode node in worldNode.ChildNodes)
-                {
-                    if (node.Name == "DefaultSpawn")
-                    {
-                        w.DefaultSpawn = node.InnerText;
-                    }
-                    else if (node.Name == "MapLoc")
-                    {
-
-                        string name = string.Empty;
-                        string path = string.Empty;
-                        int x = 0, y = 0;
-
-                        foreach (XmlNode subnode in node.ChildNodes)
-                        {
-                            if (subnode.Name == "Name")
-                                name = subnode.InnerText;
-                            else if (subnode.Name == "FilePath")
-                                path = subnode.InnerText;
-                            else if (subnode.Name == "X")
-                                x = Convert.ToInt32(subnode.InnerText);
-                            else if (subnode.Name == "Y")
-                                y = Convert.ToInt32(subnode.InnerText);
-                        }
-
-                        MapHeader header = new MapHeader(name, path, new MapPoint(x, y));
-                        w.MapList.Add(header.MapName, header);
-                    }
-                }
-
-                var worldName = worldNode.Attributes.GetNamedItem("Name");
-                w.Name = worldName.InnerText;
-                w.CalcWorldSize();
+                World w = new World(worldNode);
                 this.WorldsList.Add(w.Name, w);
             }
+        }
+
+
+        class tempDictTwo
+        {
+            public Dictionary<Map, tempStorage> dict = new Dictionary<Map, tempStorage>();
+        }
+
+        class tempStorage
+        {
+            public String oldTexture;
+            public String oldPath;
+        }
+
+
+        public void Export(String path)
+        {
+            Dictionary<World, tempDictTwo> dict = new Dictionary<World, tempDictTwo>();
+
+            Directory.CreateDirectory(path + "\\Maps");
+            Directory.CreateDirectory(path + "\\Graphics");
+            Directory.CreateDirectory(path + "\\Data");
+
+            foreach (var world in this.WorldsList)
+            {
+                Directory.CreateDirectory(path + "\\Maps\\" + world.Value.Name);
+                Directory.CreateDirectory(path + "\\Graphics\\" + world.Value.Name);
+
+                tempDictTwo td = new tempDictTwo();
+
+                foreach (var map in world.Value.MapList)
+                {
+                    tempStorage t = new tempStorage();
+                    t.oldTexture = map.Value.Map.TextureName;
+                    t.oldPath = map.Value.MapFileLocation;
+
+                    td.dict.Add(map.Value.Map, t);
+
+                    var pictStrings = map.Value.Map.TextureName.Split(new char[] { '\\', '.' });
+                    string imageExt = pictStrings.Last();
+
+                    map.Value.MapFileLocation = world.Value.Name + "\\" +  map.Value.Map.Name + ".xml";
+                    String newTexturePath = world.Value.Name + "\\" + map.Value.Map.Name + "." + imageExt;
+
+                    File.Copy(TileEngine.TextureManager.TextureRoot + "\\" + map.Value.Map.TextureName, path + "\\Graphics\\" + newTexturePath, true);
+                    map.Value.Map.TextureName = newTexturePath;
+
+                    map.Value.Map.Save(path + "\\Maps\\" + map.Value.MapFileLocation);
+                }
+
+                dict.Add(world.Value, td);
+            }
+
+            Save(path + "\\Data\\" + this.FileName);
+
+            foreach (var world in this.WorldsList)
+            {
+                foreach (var map in world.Value.MapList)
+                {
+                    map.Value.Map.TextureName = dict[world.Value].dict[map.Value.Map].oldTexture;
+                    map.Value.MapFileLocation = dict[world.Value].dict[map.Value.Map].oldPath;
+                }
+            }
+        }
+
+        public void Save()
+        {
+            Save(this.FilePath);
+        }
+
+        private void Save(String path)
+        {
+            XmlDocument doc = new XmlDocument();
+
+            XmlElement worlds = doc.CreateElement("Worlds");
+
+            foreach (var w in this.WorldsList)
+            {
+                w.Value.SaveXml(worlds, doc);
+            }
+
+            doc.AppendChild(worlds);
+
+            doc.Save( path );
+        }
+
+        public void CleanUp()
+        {
+            this.WorldsList.Clear();
+            this.curWorld = null;
         }
     }
 }

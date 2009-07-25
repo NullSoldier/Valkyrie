@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using ValkyrieLibrary.Collision;
 using ValkyrieLibrary.Characters;
 using ValkyrieLibrary.Maps;
@@ -23,6 +24,31 @@ namespace ValkyrieLibrary.Maps
             this.DefaultSpawn = "";
             this.Name = "No Name";
             this.WorldSize = new MapPoint(0, 0);
+        }
+
+        public World(XmlNode worldNode)
+        {
+            this.MapList = new Dictionary<string, MapHeader>();
+            this.WorldSize = new MapPoint(0, 0);
+            this.DefaultSpawn = "";
+            this.Name = "No Name";
+
+            foreach (XmlNode node in worldNode.ChildNodes)
+            {
+                if (node.Name == "DefaultSpawn")
+                {
+                    this.DefaultSpawn = node.InnerText;
+                }
+                else if (node.Name == "MapLoc")
+                {
+                    MapHeader header = new MapHeader(node);
+                    this.MapList.Add(header.MapName, header);
+                }
+            }
+
+            var worldName = worldNode.Attributes.GetNamedItem("Name");
+            this.Name = worldName.InnerText;
+            CalcWorldSize();
         }
 
         public ScreenPoint FindStartLocation(String name)
@@ -67,6 +93,26 @@ namespace ValkyrieLibrary.Maps
                 if (ySize > this.WorldSize.Y)
                     this.WorldSize.Y = ySize;
             }
+        }
+
+        public void SaveXml(XmlNode parent, XmlDocument doc)
+        {
+            XmlElement world = doc.CreateElement("World");
+            var worldAtt = doc.CreateAttribute("Name");
+            worldAtt.InnerText = this.Name;
+            world.Attributes.Append(worldAtt);
+
+            XmlElement defSpawn = doc.CreateElement("DefaultSpawn");
+            defSpawn.InnerText = this.DefaultSpawn;
+
+            world.AppendChild(defSpawn);
+
+            foreach (var m in this.MapList)
+            {
+                m.Value.SaveXml(world, doc);
+            }
+
+            parent.AppendChild(world);
         }
     }
 }

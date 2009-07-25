@@ -44,7 +44,7 @@ namespace ValkyrieWorldEditor.Forms
         {
             this.ComponentList = new Dictionary<ComponentID, IEditorComponent>();
             this.ComponentList.Add(ComponentID.Select, new SelectComponent());
-            this.ComponentList.Add(ComponentID.Hand, new HandComponent());
+            this.ComponentList.Add(ComponentID.Hand, new HandComponent(false, true));
             this.ComponentList.Add(ComponentID.Move, new MoveComponent());
             this.Render = new RenderComponent();
 
@@ -154,7 +154,8 @@ namespace ValkyrieWorldEditor.Forms
             Rectangle rect = (TileEngine.Camera.Offset() * -1).ToRect(new Point(Math.Min(this.Width * (int)lastScale, TileEngine.Camera.Screen.Width), Math.Min(this.Height * (int)lastScale, TileEngine.Camera.Screen.Height)));
             Texture2D img = RenderComponent.CreateSelectRectangle(gfxDevice, rect.Width, rect.Height, new Color(255, 0, 0, 125));
 
-            spriteBatch.Draw(img, rect, Color.White);
+            if (img != null)
+                spriteBatch.Draw(img, rect, Color.White);
 
             spriteBatch.End();
 

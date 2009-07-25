@@ -29,6 +29,10 @@ namespace ValkyrieLibrary.Core
         {
         }
 
+        public ScreenPoint(Vector2 vect) : base((int)vect.X, (int)vect.Y)
+        {
+        }
+
         public MapPoint ToMapPoint()
         {
             return new MapPoint(this);

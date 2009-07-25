@@ -1,6 +1,6 @@
 <Map>
-  <Name>PalletTown_HomeOne</Name>
-  <TileSet>Viridian.png</TileSet>
+  <Name>MyHome</Name>
+  <TileSet>PalletTown_HouseOne\MyHome.png</TileSet>
   <MapSize>
     <X>20</X>
     <Y>20</Y>
@@ -39,4 +39,5 @@
       <Dir>South</Dir>
     </Event>
   </Events>
+  <AnimatedTiles />
 </Map>

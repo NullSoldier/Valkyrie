@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ValkyrieLibrary.Core;
 using System.IO;
+using System.Xml;
 using Microsoft.Xna.Framework;
 
 namespace ValkyrieLibrary.Maps
@@ -23,6 +24,26 @@ namespace ValkyrieLibrary.Maps
 			this.MapLocation = point;
 			this.MapFileLocation = filepath;
 		}
+
+        public MapHeader(XmlNode node)
+        {
+            int x = 0, y = 0;
+
+            foreach (XmlNode cnode in node.ChildNodes)
+            {
+                if (cnode.Name == "Name")
+                    this.MapName = cnode.InnerText;
+                else if (cnode.Name == "FilePath")
+                    this.MapFileLocation = cnode.InnerText;
+                else if (cnode.Name == "X")
+                    x = Convert.ToInt32(cnode.InnerText);
+                else if (cnode.Name == "Y")
+                    y = Convert.ToInt32(cnode.InnerText);
+            }
+
+            this.MapLocation = new MapPoint(x, y);
+        }
+
 		#endregion
 
 		public Map Map
@@ -55,6 +76,28 @@ namespace ValkyrieLibrary.Maps
 		{
 			
 		}
+
+        public void SaveXml(XmlNode parent, XmlDocument doc)
+        {
+            XmlElement mapLoc = doc.CreateElement("MapLoc");
+
+            XmlElement n = doc.CreateElement("Name");
+            XmlElement f = doc.CreateElement("FilePath");
+            XmlElement x = doc.CreateElement("X");
+            XmlElement y = doc.CreateElement("Y");
+
+            n.InnerText = this.MapName;
+            f.InnerText = this.MapFileLocation;
+            x.InnerText = String.Format( "{0}", this.MapLocation.X);
+            y.InnerText = String.Format( "{0}", this.MapLocation.Y);
+
+            mapLoc.AppendChild(n);
+            mapLoc.AppendChild(f);
+            mapLoc.AppendChild(x);
+            mapLoc.AppendChild(y);
+
+            parent.AppendChild(mapLoc);
+        }
 
 	}
 }

@@ -294,6 +294,140 @@ namespace ValkyrieLibrary.Maps
   
             return (mapSize.Intersects(worldSize) == true);
         }
+
+        public void Save(String location)
+        {
+            XmlDocument doc = new XmlDocument();
+
+            var mapElement = doc.CreateElement("Map");
+
+            var name = doc.CreateElement("Name");
+            name.InnerText = this.Name;
+
+            var tileset = doc.CreateElement("TileSet");
+            tileset.InnerText = this.TextureName;
+
+            var mapsize = doc.CreateElement("MapSize");
+
+            var mapsizex = doc.CreateElement("X");
+            mapsizex.InnerText = this.MapSize.X.ToString();
+            var mapsizey = doc.CreateElement("Y");
+            mapsizey.InnerText = this.MapSize.Y.ToString();
+
+            var tilepixelsize = doc.CreateElement("TilePixelSize");
+            tilepixelsize.InnerText = this.TileSize.X.ToString();
+
+            // Under Layer
+            var underlayer = doc.CreateElement("UnderLayer");
+
+            var underlayerbuilder = new StringBuilder();
+            for (int i = 0; i < this.UnderLayer.Length; i++)
+            {
+                underlayerbuilder.Append(this.UnderLayer[i]);
+                underlayerbuilder.Append(" ");
+            }
+
+            underlayer.InnerText = underlayerbuilder.ToString();
+
+            // Base Layer
+            var baselayer = doc.CreateElement("BaseLayer");
+
+            var baselayerbuilder = new StringBuilder();
+            for (int i = 0; i < this.BaseLayer.Length; i++)
+            {
+                baselayerbuilder.Append(this.BaseLayer[i]);
+                baselayerbuilder.Append(" ");
+            }
+
+            baselayer.InnerText = baselayerbuilder.ToString();
+
+            // Middle Layer
+            var middlelayer = doc.CreateElement("MiddleLayer");
+
+            var middlelayerbuilder = new StringBuilder();
+            for (int i = 0; i < this.MiddleLayer.Length; i++)
+            {
+                middlelayerbuilder.Append(this.MiddleLayer[i]);
+                middlelayerbuilder.Append(" ");
+            }
+
+            middlelayer.InnerText = middlelayerbuilder.ToString();
+
+            // Top Layer
+            var toplayer = doc.CreateElement("TopLayer");
+
+            var toplayerbuilder = new StringBuilder();
+            for (int i = 0; i < this.TopLayer.Length; i++)
+            {
+                toplayerbuilder.Append(this.TopLayer[i]);
+                toplayerbuilder.Append(" ");
+            }
+
+            toplayer.InnerText = toplayerbuilder.ToString();
+
+            // Collision Layer
+            var collisionLayer = doc.CreateElement("CollisionLayer");
+
+            var collisionlayerbuilder = new StringBuilder();
+            for (int i = 0; i < this.CollisionLayer.Length; i++)
+            {
+                collisionlayerbuilder.Append(this.CollisionLayer[i]);
+                collisionlayerbuilder.Append(" ");
+            }
+
+            collisionLayer.InnerText = collisionlayerbuilder.ToString();
+
+            // Events
+            var eventLayer = doc.CreateElement("Events");
+            foreach (Event e in this.EventList)
+            {
+                var eventNode = doc.CreateElement("Event");
+                e.toXml(doc, eventNode);
+                eventLayer.AppendChild(eventNode);
+            }
+
+            // Animations
+            var animations = doc.CreateElement("AnimatedTiles");
+
+            foreach (var FrameAnimation in this.AnimatedTiles.Values)
+            {
+                var tileNode = doc.CreateElement("AnimatedTile");
+
+                var tileid = doc.CreateElement("TileID");
+                tileid.InnerText = ((FrameAnimation.InitialFrameRect.Y / TileEngine.TileSize) * TileEngine.CurrentMapChunk.TilesPerRow + FrameAnimation.InitialFrameRect.X).ToString();
+
+                var tilerect = doc.CreateElement("TileRect");
+                tilerect.InnerText = string.Format("{0} {1} {2} {3}", FrameAnimation.InitialFrameRect.X, FrameAnimation.InitialFrameRect.Y, FrameAnimation.InitialFrameRect.Width, FrameAnimation.InitialFrameRect.Height);
+
+                var framecount = doc.CreateElement("FrameCount");
+                framecount.InnerText = FrameAnimation.FrameCount.ToString();
+
+                tileNode.AppendChild(tileid);
+                tileNode.AppendChild(tilerect);
+                tileNode.AppendChild(framecount);
+
+                animations.AppendChild(tileNode);
+            }
+
+            // Append children and save
+            mapsize.AppendChild(mapsizex);
+            mapsize.AppendChild(mapsizey);
+
+            mapElement.AppendChild(name);
+            mapElement.AppendChild(tileset);
+            mapElement.AppendChild(mapsize);
+            mapElement.AppendChild(tilepixelsize);
+            mapElement.AppendChild(underlayer);
+            mapElement.AppendChild(baselayer);
+            mapElement.AppendChild(middlelayer);
+            mapElement.AppendChild(toplayer);
+            mapElement.AppendChild(collisionLayer);
+            mapElement.AppendChild(eventLayer);
+            mapElement.AppendChild(animations);
+
+            doc.AppendChild(mapElement);
+			doc.Save(location);
+        }
 	}
 
 

@@ -1,6 +1,6 @@
 <Map>
   <Name>PalletTown</Name>
-  <TileSet>Pallet.png</TileSet>
+  <TileSet>Main\PalletTown.png</TileSet>
   <MapSize>
     <X>24</X>
     <Y>22</Y>
@@ -39,11 +39,5 @@
       <Dir>North</Dir>
     </Event>
   </Events>
-  <AnimatedTiles>
-    <AnimatedTile>
-      <TileID>312</TileID>
-      <TileRect>0 832 32 32</TileRect>
-      <FrameCount>4</FrameCount>
-    </AnimatedTile>
-  </AnimatedTiles>
+  <AnimatedTiles />
 </Map>

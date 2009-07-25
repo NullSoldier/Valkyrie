@@ -1,63 +1,50 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-
-<XnaContent>
-  <Worlds>
-    <World Name="Main">
-      <DefaultSpawn>PalletTown_HouseOne_External</DefaultSpawn>
-      
-      <MapLoc>
-        <Name>Pewter</Name>
-        <FilePath>PewterCity.xml</FilePath>
-        <X>12</X>
-        <Y>0</Y>
-      </MapLoc>
-      
-      <MapLoc>
-        <Name>Route2</Name>
-        <FilePath>Route2.xml</FilePath>
-        <X>24</X>
-        <Y>40</Y>
-      </MapLoc>
-      
-      <MapLoc>
-        <Name>PalletTown</Name>
-        <FilePath>PalletTown.xml</FilePath>
-        <X>24</X>
-        <Y>200</Y>
-      </MapLoc>
-
-      <MapLoc>
-        <Name>Route1</Name>
-        <FilePath>Route1.xml</FilePath>
-        <X>24</X>
-        <Y>160</Y>
-      </MapLoc>
-
-      <MapLoc>
-        <Name>ViridianCity</Name>
-        <FilePath>ViridianCity.xml</FilePath>
-        <X>12</X>
-        <Y>120</Y>
-      </MapLoc>
-
-      <MapLoc>
-        <Name>Route21</Name>
-        <FilePath>Route21.xml</FilePath>
-        <X>24</X>
-        <Y>222</Y>
-      </MapLoc>
-
-    </World>
-    
-    <World Name="PalletTown_HouseOne">
-      <DefaultSpawn>PalletTown_HouseOne_Internal</DefaultSpawn>
-      <MapLoc>
-        <Name>MyHome</Name>
-        <FilePath>PalletTown_House1.xml</FilePath>
-        <X>0</X>
-        <Y>0</Y>
-      </MapLoc>
-    </World>
-  </Worlds>
-
-</XnaContent>
+<Worlds>
+  <World Name="Main">
+    <DefaultSpawn>PalletTown_HouseOne_External</DefaultSpawn>
+    <MapLoc>
+      <Name>Pewter</Name>
+      <FilePath>Main\Pewter.xml</FilePath>
+      <X>12</X>
+      <Y>0</Y>
+    </MapLoc>
+    <MapLoc>
+      <Name>Route2</Name>
+      <FilePath>Main\Route2.xml</FilePath>
+      <X>24</X>
+      <Y>40</Y>
+    </MapLoc>
+    <MapLoc>
+      <Name>PalletTown</Name>
+      <FilePath>Main\PalletTown.xml</FilePath>
+      <X>24</X>
+      <Y>200</Y>
+    </MapLoc>
+    <MapLoc>
+      <Name>Route1</Name>
+      <FilePath>Main\Route1.xml</FilePath>
+      <X>24</X>
+      <Y>160</Y>
+    </MapLoc>
+    <MapLoc>
+      <Name>ViridianCity</Name>
+      <FilePath>Main\ViridianCity.xml</FilePath>
+      <X>12</X>
+      <Y>120</Y>
+    </MapLoc>
+    <MapLoc>
+      <Name>Route21</Name>
+      <FilePath>Main\Route21.xml</FilePath>
+      <X>24</X>
+      <Y>222</Y>
+    </MapLoc>
+  </World>
+  <World Name="PalletTown_HouseOne">
+    <DefaultSpawn>PalletTown_HouseOne_Internal</DefaultSpawn>
+    <MapLoc>
+      <Name>MyHome</Name>
+      <FilePath>PalletTown_HouseOne\MyHome.xml</FilePath>
+      <X>0</X>
+      <Y>0</Y>
+    </MapLoc>
+  </World>
+</Worlds>

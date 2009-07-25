@@ -102,6 +102,7 @@ namespace ValkyrieWorldEditor.Core
             }
 
             TileEngine.WorldManager.CurrentWorld.CalcWorldSize();
+            WorldEditor.MainForm.UpdateSelectedMap();
             WorldEditor.MainForm.UpdateScrollBars();
         }
     }

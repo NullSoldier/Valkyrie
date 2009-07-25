@@ -33,12 +33,19 @@ namespace ValkyrieWorldEditor.Core
 
         public static void LoadUniverse(FileInfo UniLocation)
         {
+            TileEngine.WorldManager.CleanUp();
+
             TileEngine.Configuration["MapRoot"] = UniLocation.Directory.Parent.FullName + "\\Maps";
             TileEngine.Configuration["GraphicsRoot"] = UniLocation.Directory.Parent.FullName + "\\Graphics";
             TileEngine.TextureManager.TextureRoot = TileEngine.Configuration["GraphicsRoot"];
 
             TileEngine.WorldManager.Load(UniLocation);
             MainForm.RefreshWorldList(TileEngine.WorldManager);
+        }
+
+        public static void NewUniverse(String firstWorldName)
+        {
+            AddWorld(firstWorldName);
         }
 
         //this gets call via the main form thus the string
@@ -53,6 +60,41 @@ namespace ValkyrieWorldEditor.Core
         {
             WorldEditor.curMap = map;
             MainForm.RefreshMapProp(WorldEditor.curMap);
+        }
+
+        public static void AddWorld(String name)
+        {
+            TileEngine.WorldManager.CleanUp();
+
+            World w = new World();
+            w.Name = name;
+
+            TileEngine.WorldManager.WorldsList.Add(name, w);
+            MainForm.RefreshWorldList(TileEngine.WorldManager);
+        }
+
+        public static void AddMap(FileInfo fileInfo)
+        {
+            if (WorldEditor.CurWorld == null)
+                return;
+
+            MapPoint size = WorldEditor.CurWorld.WorldSize;
+            MapPoint spawn = new MapPoint(0,0);
+
+            if (size.X > size.Y)
+            {
+                spawn.Y = size.Y;
+            }
+            else
+            {
+                spawn.X = size.X;
+            }
+
+            MapHeader header = new MapHeader(fileInfo.Name, fileInfo.FullName, spawn);
+            WorldEditor.CurWorld.MapList.Add(header.MapName, header);
+            WorldEditor.CurWorld.CalcWorldSize();
+            MainForm.UpdateScrollBars();
+            MainForm.RefreshWorldProp(WorldEditor.CurWorld);
         }
 
 

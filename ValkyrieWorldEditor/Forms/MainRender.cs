@@ -55,7 +55,7 @@ namespace ValkyrieWorldEditor.Forms
 
             this.ComponentList = new Dictionary<ComponentID, IEditorComponent>();
             this.ComponentList.Add(ComponentID.Select, new SelectComponent());
-            this.ComponentList.Add(ComponentID.Hand, new HandComponent());
+            this.ComponentList.Add(ComponentID.Hand, new HandComponent(true, false));
             this.ComponentList.Add(ComponentID.Move, new MoveComponent());
 
             this.MouseDown += this.OnMouseDown_Event;

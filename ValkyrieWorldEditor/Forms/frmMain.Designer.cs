@@ -46,6 +46,9 @@
             this.VerticalScroll = new System.Windows.Forms.VScrollBar();
             this.HorizontalScroll = new System.Windows.Forms.HScrollBar();
             this.groupWorld = new System.Windows.Forms.GroupBox();
+            this.btnDeleteWorld = new System.Windows.Forms.Button();
+            this.btnDeleteMaps = new System.Windows.Forms.Button();
+            this.listMapList = new System.Windows.Forms.CheckedListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cbDefaultSpawn = new System.Windows.Forms.ComboBox();
             this.cbCurWorld = new System.Windows.Forms.ComboBox();
@@ -59,6 +62,7 @@
             this.tbMapName = new System.Windows.Forms.TextBox();
             this.pctSurface = new ValkyrieWorldEditor.Forms.MainRender();
             this.pctPreview = new ValkyrieWorldEditor.Forms.PreviewRender();
+            this.fbdExport = new System.Windows.Forms.FolderBrowserDialog();
             this.toolStrip1.SuspendLayout();
             this.groupWorld.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -253,15 +257,48 @@
             // 
             // groupWorld
             // 
+            this.groupWorld.Controls.Add(this.btnDeleteWorld);
+            this.groupWorld.Controls.Add(this.btnDeleteMaps);
+            this.groupWorld.Controls.Add(this.listMapList);
             this.groupWorld.Controls.Add(this.label1);
             this.groupWorld.Controls.Add(this.cbDefaultSpawn);
             this.groupWorld.Enabled = false;
             this.groupWorld.Location = new System.Drawing.Point(6, 274);
             this.groupWorld.Name = "groupWorld";
-            this.groupWorld.Size = new System.Drawing.Size(187, 80);
+            this.groupWorld.Size = new System.Drawing.Size(187, 213);
             this.groupWorld.TabIndex = 5;
             this.groupWorld.TabStop = false;
             this.groupWorld.Text = "World Properties";
+            // 
+            // btnDeleteWorld
+            // 
+            this.btnDeleteWorld.Location = new System.Drawing.Point(96, 181);
+            this.btnDeleteWorld.Name = "btnDeleteWorld";
+            this.btnDeleteWorld.Size = new System.Drawing.Size(85, 23);
+            this.btnDeleteWorld.TabIndex = 3;
+            this.btnDeleteWorld.Text = "Delete World";
+            this.btnDeleteWorld.UseVisualStyleBackColor = true;
+            this.btnDeleteWorld.Click += new System.EventHandler(this.OnDeleteWorldClicked);
+            // 
+            // btnDeleteMaps
+            // 
+            this.btnDeleteMaps.Location = new System.Drawing.Point(6, 181);
+            this.btnDeleteMaps.Name = "btnDeleteMaps";
+            this.btnDeleteMaps.Size = new System.Drawing.Size(85, 23);
+            this.btnDeleteMaps.TabIndex = 3;
+            this.btnDeleteMaps.Text = "Delete Map(s)";
+            this.btnDeleteMaps.UseVisualStyleBackColor = true;
+            this.btnDeleteMaps.Click += new System.EventHandler(this.OnDeleteMapClicked);
+            // 
+            // listMapList
+            // 
+            this.listMapList.CheckOnClick = true;
+            this.listMapList.FormattingEnabled = true;
+            this.listMapList.Location = new System.Drawing.Point(6, 66);
+            this.listMapList.Name = "listMapList";
+            this.listMapList.Size = new System.Drawing.Size(175, 109);
+            this.listMapList.TabIndex = 2;
+            this.listMapList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.OnMapItemChecked);
             // 
             // label1
             // 
@@ -311,7 +348,7 @@
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.tbMapName);
             this.groupBox1.Enabled = false;
-            this.groupBox1.Location = new System.Drawing.Point(6, 360);
+            this.groupBox1.Location = new System.Drawing.Point(6, 493);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(187, 125);
             this.groupBox1.TabIndex = 8;
@@ -393,6 +430,11 @@
             this.pctPreview.TabIndex = 9;
             this.pctPreview.Texture = null;
             // 
+            // fbdExport
+            // 
+            this.fbdExport.Description = "Please select the games root folder to export to";
+            this.fbdExport.RootFolder = System.Environment.SpecialFolder.MyComputer;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -457,5 +499,9 @@
         private MainRender pctSurface;
         private PreviewRender pctPreview;
         private System.Windows.Forms.ToolStripButton btnMove;
+        private System.Windows.Forms.Button btnDeleteMaps;
+        private System.Windows.Forms.CheckedListBox listMapList;
+        private System.Windows.Forms.Button btnDeleteWorld;
+        private System.Windows.Forms.FolderBrowserDialog fbdExport;
     }
 }

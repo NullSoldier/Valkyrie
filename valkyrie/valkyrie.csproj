@@ -99,9 +99,7 @@
     <Compile Include="States\MenuModule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\PokeWorld.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Data\PokeWorld.xml" />
     <Content Include="Data\TileEngineConfig.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -119,15 +117,13 @@
     <Content Include="Graphics\Route21.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Maps\PalletTown_House2.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Maps\PewterCity.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Maps\Route21.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Maps\Main\palletTown.xml" />
+    <Content Include="Maps\Main\Pewter.xml" />
+    <Content Include="Maps\Main\Route1.xml" />
+    <Content Include="Maps\Main\Route2.xml" />
+    <Content Include="Maps\Main\Route21.xml" />
+    <Content Include="Maps\Main\ViridianCity.xml" />
+    <Content Include="Maps\PalletTown_HouseOne\MyHome.xml" />
     <None Include="Graphics\MaleSprite.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -141,21 +137,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Graphics\Viridian.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Maps\PalletTown.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Maps\PalletTown_House1.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Maps\Route1.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Maps\Route2.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Maps\ViridianCity.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -200,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="States\UI\" />
+    <Folder Include="UI\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
