@@ -233,6 +233,43 @@ namespace ValkyrieLibrary
 			}
 		}
 
+
+        //this is used to draw a map at 0,0 incase we use a custom rendertarget
+        public static void DrawMapLocal(SpriteBatch spriteBatch, MapHeader header)
+        {
+            TileEngine.DrawLayerMapLocal(spriteBatch, header, MapLayers.UnderLayer);
+            TileEngine.DrawLayerMapLocal(spriteBatch, header, MapLayers.BaseLayer);
+            TileEngine.DrawLayerMapLocal(spriteBatch, header, MapLayers.MiddleLayer);
+            TileEngine.DrawLayerMapLocal(spriteBatch, header, MapLayers.TopLayer);  
+        }
+
+        public static void DrawLayerMapLocal(SpriteBatch spriteBatch, MapHeader header, MapLayers layer)
+        {
+            if (spriteBatch == null)
+                throw new ArgumentNullException();
+
+            Map currentMap = header.Map;
+            ScreenPoint camOffset = TileEngine.Camera.Offset();
+            ScreenPoint tileSize = currentMap.TileSize;
+
+
+            for (int y = 0; y < currentMap.MapSize.Y; y++)
+            {
+                for (int x = 0; x < currentMap.MapSize.X; x++)
+                {
+                    ScreenPoint pos = new MapPoint(x, y).ToScreenPoint();
+                    Rectangle des = pos.ToRect(tileSize.ToPoint());
+
+                    Rectangle sourceRectangle = currentMap.GetLayerSourceRect(new MapPoint(x, y), layer);
+
+                    if (sourceRectangle.IsEmpty)
+                        continue;
+
+                    spriteBatch.Draw(currentMap.Texture, des, sourceRectangle, Color.White);
+                }
+            }         
+        }
+
         public static void DrawCharacters(SpriteBatch spriteBatch)
         {
 			TileEngine.Player.Draw(spriteBatch);

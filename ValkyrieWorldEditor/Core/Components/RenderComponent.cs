@@ -108,8 +108,22 @@ namespace ValkyrieWorldEditor.Core
             if (!TileEngine.IsMapLoaded)
                 return;
 
-            TileEngine.DrawEverything(spriteBatch);
+            foreach (var mh in TileEngine.WorldManager.CurrentWorld.MapList)
+            {
+                Rectangle rect = (mh.Value.MapLocation.ToScreenPoint() + TileEngine.Camera.Offset()).ToRect(mh.Value.Map.MapSize.ToScreenPoint().ToPoint());
+                Texture2D img = WorldEditor.GetMapImage(mh.Value);
 
+                if (img != null)
+                {
+                    spriteBatch.Draw(img, rect, Color.White);
+                }
+                else
+                {
+                    TileEngine.DrawMapLocal(spriteBatch, mh.Value);
+                }
+            }
+
+            //TileEngine.DrawEverything(spriteBatch);
 
             foreach (var mh in WorldEditor.SelectedMaps)
             {

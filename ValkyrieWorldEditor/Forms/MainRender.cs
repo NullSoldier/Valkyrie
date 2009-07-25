@@ -136,6 +136,8 @@ namespace ValkyrieWorldEditor.Forms
         {
             gfxDevice.Clear(Color.Gray);
 
+            WorldEditor.GenerateMapImages(gfxDevice);
+
             float lastScale = (float)WorldEditor.Scale;
 
             foreach (var com in this.ComponentList)
