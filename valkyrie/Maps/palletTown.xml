@@ -39,4 +39,11 @@
       <Dir>North</Dir>
     </Event>
   </Events>
+  <AnimatedTiles>
+    <AnimatedTile>
+      <TileID>312</TileID>
+      <TileRect>0 832 32 32</TileRect>
+      <FrameCount>4</FrameCount>
+    </AnimatedTile>
+  </AnimatedTiles>
 </Map>

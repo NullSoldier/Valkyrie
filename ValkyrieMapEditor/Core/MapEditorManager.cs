@@ -150,7 +150,7 @@ namespace ValkyrieMapEditor
 				var tileNode = doc.CreateElement("AnimatedTile");
 				
 				var tileid = doc.CreateElement("TileID");
-				tileid.InnerText = (FrameAnimation.InitialFrameRect.Y * map.MapSize.X + FrameAnimation.InitialFrameRect.X).ToString();
+				tileid.InnerText = ((FrameAnimation.InitialFrameRect.Y / TileEngine.TileSize) * TileEngine.CurrentMapChunk.TilesPerRow + FrameAnimation.InitialFrameRect.X).ToString();
 
 				var tilerect = doc.CreateElement("TileRect");
 				tilerect.InnerText = string.Format("{0} {1} {2} {3}", FrameAnimation.InitialFrameRect.X, FrameAnimation.InitialFrameRect.Y, FrameAnimation.InitialFrameRect.Width, FrameAnimation.InitialFrameRect.Height);

@@ -18,8 +18,13 @@ namespace Valkyrie.Events
             this.Parameters.Add("Entry");
 
             this.Type = "Load";
-            this.ActivationType = ActivationTypes.Collision;
+            this.ActivationType = ActivationTypes.Movement;
         }
+
+		public override bool MeetsCriteria(ActivationTypes activationType)
+		{
+			return (this.ActivationType == activationType);	
+		}
 
         public override void Trigger(BaseCharacter player, Event e)
         {

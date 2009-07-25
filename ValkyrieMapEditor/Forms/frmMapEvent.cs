@@ -88,7 +88,7 @@ namespace ValkyrieMapEditor.Forms
 		private void btnOk_Click(object sender, EventArgs e)
 		{
 			this.Event.Direction = (Directions)Enum.Parse(typeof(Directions), this.inDirection.Text);
-
+			this.Event.Type = ((BaseEventHandler)Activator.CreateInstance((Type)this.inType.SelectedItem)).Type;
 			this.Event.Parameters.Clear();
 			foreach (var Parameter in this.GetParameters())
 				this.Event.Parameters.Add(Parameter.Key, Parameter.Value);

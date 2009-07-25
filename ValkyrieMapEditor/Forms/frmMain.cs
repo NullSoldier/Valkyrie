@@ -21,6 +21,7 @@ namespace ValkyrieMapEditor
 {
 	public partial class frmMain : Form
 	{
+		public static Image TileSheetImage;
 		public bool MapChanged = false;
 		public event EventHandler<ScreenResizedEventArgs> ScreenResized;
 		public event EventHandler<ScrollEventArgs> ScrolledMap;
@@ -105,7 +106,7 @@ namespace ValkyrieMapEditor
             this.lstSettings.Items.Add(new ListViewItem(new string[] { "Tiles Per Row", map.TilesPerRow.ToString() }));
             this.lstSettings.Items.Add(new ListViewItem(new string[] { "Map Size", map.MapSize.ToString() }));
 
-			this.pctTileSurface.Image = Image.FromFile(TileEngine.Configuration["GraphicsRoot"] + "\\" + map.TextureName);
+			this.pctTileSurface.Image = frmMain.TileSheetImage = Image.FromFile(TileEngine.Configuration["GraphicsRoot"] + "\\" + map.TextureName);
 			this.pctTileSurface.Size = this.pctTileSurface.Image.Size;
 			this.pctTileSurface.TileSize = new Point(map.TileSize.X, map.TileSize.Y);
 			this.pctTileSurface.Invalidate();

@@ -29,10 +29,10 @@
 		private void InitializeComponent()
 		{
 			this.lstAnimatedTiles = new System.Windows.Forms.ListView();
-			this.lnkAdd = new System.Windows.Forms.LinkLabel();
-			this.colFrameCount = new System.Windows.Forms.ColumnHeader();
 			this.colTileRect = new System.Windows.Forms.ColumnHeader();
+			this.colFrameCount = new System.Windows.Forms.ColumnHeader();
 			this.colSpeed = new System.Windows.Forms.ColumnHeader();
+			this.lnkAdd = new System.Windows.Forms.LinkLabel();
 			this.SuspendLayout();
 			// 
 			// lstAnimatedTiles
@@ -44,12 +44,31 @@
             this.colTileRect,
             this.colFrameCount,
             this.colSpeed});
+			this.lstAnimatedTiles.FullRowSelect = true;
+			this.lstAnimatedTiles.HideSelection = false;
 			this.lstAnimatedTiles.Location = new System.Drawing.Point(0, 2);
 			this.lstAnimatedTiles.Name = "lstAnimatedTiles";
 			this.lstAnimatedTiles.Size = new System.Drawing.Size(430, 241);
 			this.lstAnimatedTiles.TabIndex = 1;
 			this.lstAnimatedTiles.UseCompatibleStateImageBehavior = false;
 			this.lstAnimatedTiles.View = System.Windows.Forms.View.Details;
+			this.lstAnimatedTiles.ItemActivate += new System.EventHandler(this.lstAnimatedTiles_ItemActivate);
+			this.lstAnimatedTiles.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.lstAnimatedTiles_PreviewKeyDown);
+			// 
+			// colTileRect
+			// 
+			this.colTileRect.Text = "Tile Rectangle";
+			this.colTileRect.Width = 168;
+			// 
+			// colFrameCount
+			// 
+			this.colFrameCount.Text = "Frame Count";
+			this.colFrameCount.Width = 109;
+			// 
+			// colSpeed
+			// 
+			this.colSpeed.Text = "Speed";
+			this.colSpeed.Width = 92;
 			// 
 			// lnkAdd
 			// 
@@ -62,21 +81,7 @@
 			this.lnkAdd.TabIndex = 2;
 			this.lnkAdd.TabStop = true;
 			this.lnkAdd.Text = "Add Animated Tile..";
-			// 
-			// colFrameCount
-			// 
-			this.colFrameCount.Text = "Frame Count";
-			this.colFrameCount.Width = 109;
-			// 
-			// colTileRect
-			// 
-			this.colTileRect.Text = "Tile Rectangle";
-			this.colTileRect.Width = 168;
-			// 
-			// colSpeed
-			// 
-			this.colSpeed.Text = "Speed";
-			this.colSpeed.Width = 92;
+			this.lnkAdd.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkAdd_LinkClicked);
 			// 
 			// frmAnimatedTileManager
 			// 

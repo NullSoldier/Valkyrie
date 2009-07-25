@@ -14,60 +14,8 @@
   <Events>
     <Event>
       <Location>
-        <X>10</X>
-        <Y>4</Y>
-      </Location>
-      <Size>
-        <X>6</X>
-        <Y>1</Y>
-      </Size>
-      <Type>Jump</Type>
-      <Parameters />
-      <Dir>South</Dir>
-    </Event>
-    <Event>
-      <Location>
         <X>2</X>
-        <Y>4</Y>
-      </Location>
-      <Size>
-        <X>6</X>
-        <Y>1</Y>
-      </Size>
-      <Type>Jump</Type>
-      <Parameters />
-      <Dir>South</Dir>
-    </Event>
-    <Event>
-      <Location>
-        <X>2</X>
-        <Y>9</Y>
-      </Location>
-      <Size>
-        <X>6</X>
-        <Y>1</Y>
-      </Size>
-      <Type>Jump</Type>
-      <Parameters />
-      <Dir>South</Dir>
-    </Event>
-    <Event>
-      <Location>
-        <X>4</X>
-        <Y>14</Y>
-      </Location>
-      <Size>
-        <X>6</X>
-        <Y>1</Y>
-      </Size>
-      <Type>Jump</Type>
-      <Parameters />
-      <Dir>South</Dir>
-    </Event>
-    <Event>
-      <Location>
-        <X>2</X>
-        <Y>19</Y>
+        <Y>20</Y>
       </Location>
       <Size>
         <X>2</X>
@@ -80,7 +28,7 @@
     <Event>
       <Location>
         <X>5</X>
-        <Y>19</Y>
+        <Y>20</Y>
       </Location>
       <Size>
         <X>4</X>
@@ -93,23 +41,10 @@
     <Event>
       <Location>
         <X>11</X>
-        <Y>19</Y>
+        <Y>20</Y>
       </Location>
       <Size>
         <X>11</X>
-        <Y>1</Y>
-      </Size>
-      <Type>Jump</Type>
-      <Parameters />
-      <Dir>South</Dir>
-    </Event>
-    <Event>
-      <Location>
-        <X>18</X>
-        <Y>25</Y>
-      </Location>
-      <Size>
-        <X>4</X>
         <Y>1</Y>
       </Size>
       <Type>Jump</Type>
@@ -119,7 +54,7 @@
     <Event>
       <Location>
         <X>2</X>
-        <Y>30</Y>
+        <Y>31</Y>
       </Location>
       <Size>
         <X>4</X>
@@ -132,7 +67,7 @@
     <Event>
       <Location>
         <X>10</X>
-        <Y>30</Y>
+        <Y>31</Y>
       </Location>
       <Size>
         <X>12</X>
@@ -142,5 +77,71 @@
       <Parameters />
       <Dir>South</Dir>
     </Event>
+    <Event>
+      <Location>
+        <X>18</X>
+        <Y>26</Y>
+      </Location>
+      <Size>
+        <X>4</X>
+        <Y>1</Y>
+      </Size>
+      <Type>Jump</Type>
+      <Parameters />
+      <Dir>South</Dir>
+    </Event>
+    <Event>
+      <Location>
+        <X>4</X>
+        <Y>15</Y>
+      </Location>
+      <Size>
+        <X>6</X>
+        <Y>1</Y>
+      </Size>
+      <Type>Jump</Type>
+      <Parameters />
+      <Dir>South</Dir>
+    </Event>
+    <Event>
+      <Location>
+        <X>2</X>
+        <Y>10</Y>
+      </Location>
+      <Size>
+        <X>6</X>
+        <Y>1</Y>
+      </Size>
+      <Type>Jump</Type>
+      <Parameters />
+      <Dir>South</Dir>
+    </Event>
+    <Event>
+      <Location>
+        <X>2</X>
+        <Y>5</Y>
+      </Location>
+      <Size>
+        <X>6</X>
+        <Y>1</Y>
+      </Size>
+      <Type>Jump</Type>
+      <Parameters />
+      <Dir>South</Dir>
+    </Event>
+    <Event>
+      <Location>
+        <X>10</X>
+        <Y>5</Y>
+      </Location>
+      <Size>
+        <X>6</X>
+        <Y>1</Y>
+      </Size>
+      <Type>Jump</Type>
+      <Parameters />
+      <Dir>South</Dir>
+    </Event>
   </Events>
+  <AnimatedTiles />
 </Map>

@@ -11,11 +11,28 @@ namespace ValkyrieMapEditor
 	public class TileBox : PictureBox
 	{
 		public event EventHandler<TileSelectionChangedEventArgs> TileSelectionChanged;
+		public Size MaximumSize = new Size(5, 0);
+		public bool EnforceSize = true;
 
 		public Point TileSize
 		{
 			get { return this.tilesize; }
 			set { this.tilesize = value; }
+		}
+
+		public Rectangle SelectedRect
+		{
+			get
+			{
+				return new Rectangle(this.SelectedPoint.X, this.SelectedPoint.Y,
+					this.EndSelectedPoint.X - this.SelectedPoint.X,
+					this.EndSelectedPoint.Y - this.SelectedPoint.Y);
+			}
+			set
+			{
+				this.SelectedPoint = new Point(value.X, value.Y);
+				this.EndSelectedPoint = new Point(value.Width + value.X, value.Height + value.Y);
+			}
 		}
 
 		public Point SelectedPoint
@@ -82,6 +99,13 @@ namespace ValkyrieMapEditor
 
 			if( ev.Button == MouseButtons.Left)
 				this.EndSelectedPoint = new Point(ev.X / 32, ev.Y / 32);
+
+			if (this.EnforceSize && this.SelectedRect.Width > this.MaximumSize.Width)
+				this.SelectedRect = new Rectangle(this.SelectedRect.X, this.SelectedRect.Y, this.MaximumSize.Width, this.SelectedRect.Height);
+			if (this.EnforceSize && this.SelectedRect.Height > this.MaximumSize.Height)
+				this.SelectedRect = new Rectangle(this.SelectedRect.X, this.SelectedRect.Y, this.SelectedRect.Width, this.MaximumSize.Height);
+
+
 		}
 
 		public void Tile_MouseUp(object sender, MouseEventArgs ev)
