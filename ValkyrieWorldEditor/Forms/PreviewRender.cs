@@ -29,6 +29,9 @@ namespace ValkyrieWorldEditor.Forms
         public RenderComponent Render = null;
         private float lastScale = 0.0f;
 
+        private Texture2D lastSelectImage= null;
+        ScreenPoint lastSelectImageSize = new ScreenPoint(0, 0);
+
         public IEditorComponent CurComponent
         {
             get
@@ -152,10 +155,15 @@ namespace ValkyrieWorldEditor.Forms
             TileEngine.Camera.Scale((float)WorldEditor.Scale);
 
             Rectangle rect = (TileEngine.Camera.Offset() * -1).ToRect(new Point(Math.Min(this.Width * (int)lastScale, TileEngine.Camera.Screen.Width), Math.Min(this.Height * (int)lastScale, TileEngine.Camera.Screen.Height)));
-            Texture2D img = RenderComponent.CreateSelectRectangle(gfxDevice, rect.Width, rect.Height, new Color(255, 0, 0, 125));
 
-            if (img != null)
-                spriteBatch.Draw(img, rect, Color.White);
+            if (lastSelectImage == null || lastSelectImageSize.X != rect.Width || lastSelectImageSize.Y != rect.Height)
+            {
+                lastSelectImage = RenderComponent.CreateSelectRectangle(gfxDevice, rect.Width, rect.Height, new Color(255, 0, 0, 125));
+                lastSelectImageSize = new ScreenPoint(rect.Width, rect.Height);
+            }
+
+            if (lastSelectImage != null)
+                spriteBatch.Draw(lastSelectImage, rect, Color.White);
 
             spriteBatch.End();
 
