@@ -187,7 +187,6 @@ namespace ValkyrieWorldEditor.Core
         }
 
         float deltaFPSTime = 0;
-        double totalElaspedRealTime = 0;
 
         private void Update(float deltaTime)
         {
@@ -197,7 +196,7 @@ namespace ValkyrieWorldEditor.Core
             deltaFPSTime += elapsed;
             if (deltaFPSTime > 1)
             {
-                this.Text = "I am running at  <" + fps.ToString() + "> FPS";
+                this.Text = "WorldEditor  [" + fps.ToString() + " FPS]";
                 deltaFPSTime -= 1;
             }
 

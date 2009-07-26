@@ -43,6 +43,8 @@ namespace ValkyrieMapEditor
         private IEditorComponent curComponent = null;
         public RenderComponent Render = null;
 
+        float deltaFPSTime = 0;
+
         public IEditorComponent CurComponent
         {
             get
@@ -154,8 +156,20 @@ namespace ValkyrieMapEditor
 
         #region Callbacks
 
-		protected override void Update(GameTime gameTime)
-		{
+
+        protected override void Update(GameTime gameTime)
+        {
+            float elapsed = (float)gameTime.ElapsedRealTime.TotalSeconds;
+
+            float fps = 1 / elapsed;
+            deltaFPSTime += elapsed;
+            if (deltaFPSTime > 1)
+            {
+                Window.Title = "MapEditor  [" + fps.ToString() + " FPS]";
+                deltaFPSTime -= 1;
+            }
+
+
             this.Render.Update(gameTime);
             this.CurComponent.Update(gameTime);
 

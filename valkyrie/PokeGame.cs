@@ -81,7 +81,7 @@ namespace ValkyrieLibrary
             deltaFPSTime += elapsed;
             if (deltaFPSTime > 1)
             {
-                Window.Title = "I am running at  <" + fps.ToString() + "> FPS";
+                Window.Title = "PokeGame [" + fps.ToString() + " FPS]";
                 deltaFPSTime -= 1;
             }
 
