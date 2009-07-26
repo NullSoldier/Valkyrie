@@ -127,9 +127,8 @@ namespace ValkyrieWorldEditor.Core
 
             foreach (var mh in WorldEditor.SelectedMaps)
             {
-                Rectangle rect = (mh.MapLocation.ToScreenPoint()+TileEngine.Camera.Offset()).ToRect(mh.Map.MapSize.ToScreenPoint().ToPoint());
-                Texture2D img = CreateSelectRectangle(gfxDevice, rect.Width, rect.Height, new Color(0, 240, 255, 125));
-
+                Rectangle rect = (mh.MapLocation.ToScreenPoint() + TileEngine.Camera.Offset()).ToRect(mh.Map.MapSize.ToScreenPoint().ToPoint());
+                Texture2D img = WorldEditor.GetMapSelectImage(gfxDevice, mh);
                 spriteBatch.Draw(img, rect, Color.White);
             }
         }

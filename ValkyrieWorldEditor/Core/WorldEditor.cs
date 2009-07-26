@@ -29,6 +29,7 @@ namespace ValkyrieWorldEditor.Core
 
         public static List<MapHeader> SelectedMaps= new List<MapHeader>();
         private static Dictionary<Map, Texture2D> imageList = new Dictionary<Map,Texture2D>();
+        private static Dictionary<Map, Texture2D> imageSeclectList = new Dictionary<Map, Texture2D>();
 
         public static void SetScale(double scale)
         {
@@ -144,5 +145,18 @@ namespace ValkyrieWorldEditor.Core
 
             return null;
         }
+
+        public static Texture2D GetMapSelectImage(GraphicsDevice gfxDevice, MapHeader mapHead)
+        {
+            if (!WorldEditor.imageSeclectList.Keys.Contains(mapHead.Map))
+            {
+                Texture2D img = RenderComponent.CreateSelectRectangle(gfxDevice, mapHead.Map.MapSize.ToScreenPoint().X, mapHead.Map.MapSize.ToScreenPoint().Y, new Color(0, 240, 255, 125));
+                WorldEditor.imageSeclectList.Add(mapHead.Map, img);
+            }
+
+            return WorldEditor.imageSeclectList[mapHead.Map];;
+        }
+
+        
     }
 }
