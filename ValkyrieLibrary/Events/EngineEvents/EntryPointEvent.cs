@@ -3,34 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ValkyrieLibrary.Characters;
-using ValkyrieLibrary.Events;
-using Valkyrie.Characters;
 
-namespace Valkyrie.Events
+namespace ValkyrieLibrary.Events.EngineEvents
 {
-	public class SignPostEvent
+	class EntryPointEvent
 		: BaseMapEvent
 	{
-
 		public override string GetType()
 		{
-			return "SignPost";
+			return "EntryPoint";
 		}
 
 		public override void Trigger(BaseCharacter character)
 		{
-			if (character is PokePlayer)
-				((PokePlayer)character).DisplayMessage(this.Parameters["Title"], this.Parameters["Text"]);
+			throw new NotImplementedException();
 		}
 
 		public override IEnumerable<string> GetParameterNames()
 		{
-			return (new string[] {"Title", "Text"}).ToList();
+			// Performance intensive??
+			// Consider changing to property or cache
+			return (new string[] {"Name"}).ToList();
 		}
 
 		public override object Clone()
 		{
-			SignPostEvent clone = new SignPostEvent();
+			EntryPointEvent clone = new EntryPointEvent();
 			clone.Rectangle = this.Rectangle;
 			clone.Activation = this.Activation;
 			clone.Direction = this.Direction;

@@ -1,6 +1,6 @@
 <Worlds>
   <World Name="Main">
-    <DefaultSpawn>PalletTown_HouseOne_External</DefaultSpawn>
+    <DefaultSpawn>PalletTownEntryPoint</DefaultSpawn>
     <MapLoc>
       <Name>Pewter</Name>
       <FilePath>Main\Pewter_Town.xml</FilePath>

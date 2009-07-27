@@ -33,7 +33,7 @@ namespace Valkyrie.Core.Characters
 			if (this.IsMoving)
 				return;
 
-			TileEngine.EventManager.Movement(this);
+			TileEngine.EventManager.HandleEvent(this, ActivationTypes.Movement);
 
 			MapPoint point = Destination.ToMapPoint();
 			

@@ -28,10 +28,10 @@ namespace ValkyrieLibrary
         public static ModuleManager ModuleManager = null;
         public static CollisionManager CollisionManager = null;
         public static WorldManager WorldManager = null;
-        public static EventManager EventManager = null;
+        public static MapEventManager EventManager = null;
 
 		public static int TileSize = 32;
-        public static bool IsMapLoaded { get { return (TileEngine.CurrentMapChunk != null); } }
+        public static bool IsMapLoaded{ get { return (TileEngine.CurrentMapChunk != null); } }
 		
         private static Map currentmapchunk;
         public static Map CurrentMapChunk
@@ -56,6 +56,7 @@ namespace ValkyrieLibrary
 
                     }
                 }
+
                 return TileEngine.currentmapchunk;
             }
         }
@@ -71,7 +72,7 @@ namespace ValkyrieLibrary
             TileEngine.ModuleManager = new ModuleManager();
             TileEngine.Configuration = new Dictionary<string, string>();
             TileEngine.WorldManager = new WorldManager();
-            TileEngine.EventManager = new EventManager();
+            TileEngine.EventManager = new MapEventManager();
 		}
 
         public static void Load(FileInfo Configuration)

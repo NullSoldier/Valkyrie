@@ -19,6 +19,8 @@ using ValkyrieLibrary;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary.Core;
 using ValkyrieMapEditor.Core;
+using System.Reflection;
+using ValkyrieLibrary.Events;
 
 
 namespace ValkyrieMapEditor
@@ -120,6 +122,7 @@ namespace ValkyrieMapEditor
 
 			// Custom loading
 			TileEngine.Initialize(this.Content, this.GraphicsDevice);
+			TileEngine.EventManager.LoadEventTypesFromAssemblies(new Assembly[] { Assembly.GetEntryAssembly(), Assembly.LoadFile(frmMain.ValkyrieGameInstallationAssemblyPath), Assembly.LoadWithPartialName("ValkyrieLibrary") });
 			TileEngine.Viewport = this.GraphicsDevice.Viewport;
             TileEngine.Camera = new BaseCamera(0, 0, 800, 600);
             TileEngine.Load(new FileInfo("Data/TileEngineConfig.xml"));

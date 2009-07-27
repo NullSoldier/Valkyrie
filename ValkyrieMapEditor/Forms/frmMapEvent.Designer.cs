@@ -38,6 +38,8 @@
 			this.lblDirection = new System.Windows.Forms.Label();
 			this.lnkAddParameter = new System.Windows.Forms.LinkLabel();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.lblActivation = new System.Windows.Forms.Label();
+			this.inActivation = new System.Windows.Forms.ComboBox();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -55,7 +57,7 @@
 			// 
 			this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btnOk.Location = new System.Drawing.Point(358, 163);
+			this.btnOk.Location = new System.Drawing.Point(358, 203);
 			this.btnOk.Name = "btnOk";
 			this.btnOk.Size = new System.Drawing.Size(87, 27);
 			this.btnOk.TabIndex = 4;
@@ -67,7 +69,7 @@
 			// 
 			this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnCancel.Location = new System.Drawing.Point(451, 163);
+			this.btnCancel.Location = new System.Drawing.Point(451, 203);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(87, 27);
 			this.btnCancel.TabIndex = 5;
@@ -103,7 +105,7 @@
 			// 
 			this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.btnDelete.DialogResult = System.Windows.Forms.DialogResult.Abort;
-			this.btnDelete.Location = new System.Drawing.Point(15, 163);
+			this.btnDelete.Location = new System.Drawing.Point(15, 203);
 			this.btnDelete.Name = "btnDelete";
 			this.btnDelete.Size = new System.Drawing.Size(87, 27);
 			this.btnDelete.TabIndex = 9;
@@ -117,7 +119,7 @@
 			this.flowParameters.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.flowParameters.Location = new System.Drawing.Point(3, 19);
 			this.flowParameters.Name = "flowParameters";
-			this.flowParameters.Size = new System.Drawing.Size(517, 29);
+			this.flowParameters.Size = new System.Drawing.Size(517, 26);
 			this.flowParameters.TabIndex = 10;
 			// 
 			// lblDirection
@@ -135,7 +137,7 @@
 			this.lnkAddParameter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.lnkAddParameter.AutoSize = true;
 			this.lnkAddParameter.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lnkAddParameter.Location = new System.Drawing.Point(447, 134);
+			this.lnkAddParameter.Location = new System.Drawing.Point(447, 174);
 			this.lnkAddParameter.Name = "lnkAddParameter";
 			this.lnkAddParameter.Size = new System.Drawing.Size(91, 15);
 			this.lnkAddParameter.TabIndex = 12;
@@ -150,19 +152,43 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox1.Controls.Add(this.flowParameters);
 			this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.groupBox1.Location = new System.Drawing.Point(15, 80);
+			this.groupBox1.Location = new System.Drawing.Point(15, 123);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(523, 51);
+			this.groupBox1.Size = new System.Drawing.Size(523, 48);
 			this.groupBox1.TabIndex = 13;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Parameters";
+			// 
+			// lblActivation
+			// 
+			this.lblActivation.AutoSize = true;
+			this.lblActivation.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblActivation.Location = new System.Drawing.Point(12, 86);
+			this.lblActivation.Name = "lblActivation";
+			this.lblActivation.Size = new System.Drawing.Size(67, 15);
+			this.lblActivation.TabIndex = 15;
+			this.lblActivation.Text = "Actviation:";
+			// 
+			// inActivation
+			// 
+			this.inActivation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.inActivation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.inActivation.FormattingEnabled = true;
+			this.inActivation.Location = new System.Drawing.Point(99, 82);
+			this.inActivation.Name = "inActivation";
+			this.inActivation.Size = new System.Drawing.Size(439, 23);
+			this.inActivation.Sorted = true;
+			this.inActivation.TabIndex = 14;
 			// 
 			// frmMapEvent
 			// 
 			this.AcceptButton = this.btnOk;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(545, 202);
+			this.ClientSize = new System.Drawing.Size(545, 242);
+			this.Controls.Add(this.lblActivation);
+			this.Controls.Add(this.inActivation);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.lnkAddParameter);
 			this.Controls.Add(this.lblDirection);
@@ -200,5 +226,7 @@
 		private System.Windows.Forms.Label lblDirection;
 		private System.Windows.Forms.LinkLabel lnkAddParameter;
 		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.Label lblActivation;
+		public System.Windows.Forms.ComboBox inActivation;
     }
 }

@@ -1,6 +1,6 @@
 <Map>
   <Name>Route1</Name>
-  <TileSet>Main\Route1_Route.png</TileSet>
+  <TileSet>Main\Pallet_Town.png</TileSet>
   <MapSize>
     <X>24</X>
     <Y>40</Y>
@@ -13,135 +13,81 @@
   <CollisionLayer>-1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 1 1 1 1 1 1 1 1 -1 -1 -1 -1 1 1 1 1 1 1 1 1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 1 1 1 1 1 1 1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 1 1 -1 -1 -1 -1 -1 -1 1 1 1 1 1 1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 1 1 -1 1 1 1 1 -1 -1 1 1 1 1 1 1 1 1 1 1 1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 1 1 1 1 1 1 1 1 1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 1 1 1 1 1 1 1 1 1 1 -1 -1 -1 -1 -1 -1 1 1 1 1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 1 1 1 1 -1 -1 -1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 1 1 1 1 1 1 1 1 1 1 -1 -1 1 1 1 1 1 1 1 1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 -1 -1 -1 -1 -1 -1 -1 1 -1 -1 1 1 1 1 1 1 1 1 1 1 1 -1 -1 1 1 1 1 1 1 1 1 1 -1 -1 1 1 1 1 1 1 1 1 -1 1 1 -1 -1 1 1 1 1 1 1 1 1 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 </CollisionLayer>
   <Events>
     <Event>
+      <Type>Jump</Type>
+      <Activation>4</Activation>
+      <Dir>South</Dir>
+      <Location>
+        <X>4</X>
+        <Y>15</Y>
+      </Location>
+      <Size>
+        <X>6</X>
+        <Y>1</Y>
+      </Size>
+      <Parameters />
+    </Event>
+    <Event>
+      <Type>Jump</Type>
+      <Activation>4</Activation>
+      <Dir>South</Dir>
+      <Location>
+        <X>2</X>
+        <Y>10</Y>
+      </Location>
+      <Size>
+        <X>6</X>
+        <Y>1</Y>
+      </Size>
+      <Parameters />
+    </Event>
+    <Event>
+      <Type>Jump</Type>
+      <Activation>4</Activation>
+      <Dir>South</Dir>
+      <Location>
+        <X>2</X>
+        <Y>5</Y>
+      </Location>
+      <Size>
+        <X>6</X>
+        <Y>1</Y>
+      </Size>
+      <Parameters />
+    </Event>
+    <Event>
+      <Type>Jump</Type>
+      <Activation>4</Activation>
+      <Dir>South</Dir>
+      <Location>
+        <X>2</X>
+        <Y>31</Y>
+      </Location>
+      <Size>
+        <X>4</X>
+        <Y>1</Y>
+      </Size>
+      <Parameters />
+    </Event>
+    <Event>
+      <Type>Jump</Type>
+      <Activation>4</Activation>
+      <Dir>South</Dir>
       <Location>
         <X>10</X>
-        <Y>4</Y>
-      </Location>
-      <Size>
-        <X>6</X>
-        <Y>1</Y>
-      </Size>
-      <Type>Jump</Type>
-      <Parameters />
-      <Dir>South</Dir>
-    </Event>
-    <Event>
-      <Location>
-        <X>2</X>
-        <Y>4</Y>
-      </Location>
-      <Size>
-        <X>6</X>
-        <Y>1</Y>
-      </Size>
-      <Type>Jump</Type>
-      <Parameters />
-      <Dir>South</Dir>
-    </Event>
-    <Event>
-      <Location>
-        <X>2</X>
-        <Y>9</Y>
-      </Location>
-      <Size>
-        <X>6</X>
-        <Y>1</Y>
-      </Size>
-      <Type>Jump</Type>
-      <Parameters />
-      <Dir>South</Dir>
-    </Event>
-    <Event>
-      <Location>
-        <X>4</X>
-        <Y>14</Y>
-      </Location>
-      <Size>
-        <X>6</X>
-        <Y>1</Y>
-      </Size>
-      <Type>Jump</Type>
-      <Parameters />
-      <Dir>South</Dir>
-    </Event>
-    <Event>
-      <Location>
-        <X>2</X>
-        <Y>19</Y>
-      </Location>
-      <Size>
-        <X>2</X>
-        <Y>1</Y>
-      </Size>
-      <Type>Jump</Type>
-      <Parameters />
-      <Dir>South</Dir>
-    </Event>
-    <Event>
-      <Location>
-        <X>5</X>
-        <Y>19</Y>
-      </Location>
-      <Size>
-        <X>4</X>
-        <Y>1</Y>
-      </Size>
-      <Type>Jump</Type>
-      <Parameters />
-      <Dir>South</Dir>
-    </Event>
-    <Event>
-      <Location>
-        <X>11</X>
-        <Y>19</Y>
-      </Location>
-      <Size>
-        <X>11</X>
-        <Y>1</Y>
-      </Size>
-      <Type>Jump</Type>
-      <Parameters />
-      <Dir>South</Dir>
-    </Event>
-    <Event>
-      <Location>
-        <X>18</X>
-        <Y>25</Y>
-      </Location>
-      <Size>
-        <X>4</X>
-        <Y>1</Y>
-      </Size>
-      <Type>Jump</Type>
-      <Parameters />
-      <Dir>South</Dir>
-    </Event>
-    <Event>
-      <Location>
-        <X>2</X>
-        <Y>30</Y>
-      </Location>
-      <Size>
-        <X>4</X>
-        <Y>1</Y>
-      </Size>
-      <Type>Jump</Type>
-      <Parameters />
-      <Dir>South</Dir>
-    </Event>
-    <Event>
-      <Location>
-        <X>10</X>
-        <Y>30</Y>
+        <Y>31</Y>
       </Location>
       <Size>
         <X>12</X>
         <Y>1</Y>
       </Size>
-      <Type>Jump</Type>
       <Parameters />
-      <Dir>South</Dir>
     </Event>
   </Events>
-  <AnimatedTiles />
+  <AnimatedTiles>
+    <AnimatedTile>
+      <TileID>312</TileID>
+      <TileRect>0 832 32 32</TileRect>
+      <FrameCount>4</FrameCount>
+    </AnimatedTile>
+  </AnimatedTiles>
 </Map>

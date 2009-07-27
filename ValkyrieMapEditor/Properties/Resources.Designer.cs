@@ -67,13 +67,6 @@ namespace ValkyrieMapEditor.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap EditorSelection {
-            get {
-                object obj = ResourceManager.GetObject("EditorSelection", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap imgBaseLayer {
             get {
                 object obj = ResourceManager.GetObject("imgBaseLayer", resourceCulture);
@@ -105,6 +98,13 @@ namespace ValkyrieMapEditor.Properties {
         internal static System.Drawing.Bitmap imgExit {
             get {
                 object obj = ResourceManager.GetObject("imgExit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap imgFilm {
+            get {
+                object obj = ResourceManager.GetObject("imgFilm", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -186,9 +186,23 @@ namespace ValkyrieMapEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap imgSelect {
+            get {
+                object obj = ResourceManager.GetObject("imgSelect", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap imgTopLayer {
             get {
                 object obj = ResourceManager.GetObject("imgTopLayer", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap imgUnderlayer {
+            get {
+                object obj = ResourceManager.GetObject("imgUnderlayer", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -40,7 +40,12 @@ namespace ValkyrieLibrary.Maps
                 this.curWorld = this.WorldsList[Name];
                 TileEngine.ClearCurrentMapChunk();
                 TileEngine.Player.StopMoving();
-                TileEngine.Player.Location = this.curWorld.FindStartLocation(startLoc);
+				
+				if( startLoc == null || startLoc == "Default" )
+					TileEngine.Player.Location = this.curWorld.FindDefaultStartLocation();
+				else
+					TileEngine.Player.Location = this.curWorld.FindStartLocation(startLoc);
+
                 TileEngine.Camera.CenterOnCharacter(TileEngine.Player);
             }
         }

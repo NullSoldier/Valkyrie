@@ -93,10 +93,11 @@
     <Compile Include="Core\Points\BasePoint.cs" />
     <Compile Include="Core\Points\MapPoint.cs" />
     <Compile Include="Core\Points\ScreenPoint.cs" />
-    <Compile Include="Events\Event Handlers\BaseEventHandler.cs" />
-    <Compile Include="Events\EventManager.cs" />
-    <Compile Include="Events\Event.cs" />
-    <Compile Include="Events\Event Handlers\IEventHandler.cs" />
+    <Compile Include="Events\Event\ActivationTypes.cs" />
+    <Compile Include="Events\Event\BaseMapEvent.cs" />
+    <Compile Include="Events\EngineEvents\EntryPointEvent.cs" />
+    <Compile Include="Events\MapEventManager.cs" />
+    <Compile Include="Events\Event\IMapEvent.cs" />
     <Compile Include="Input\KeybindController.cs" />
     <Compile Include="Input\KeyDef.cs" />
     <Compile Include="Maps\MapHandler.cs" />

@@ -29,20 +29,6 @@
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-			this.toolProject = new System.Windows.Forms.ToolStripDropDownButton();
-			this.toolNew = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolOpen = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolSave = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolSaveAs = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolClose = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolView = new System.Windows.Forms.ToolStripDropDownButton();
-			this.currentLayerAndBelowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.allLayersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-			this.dimOtherLayersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolTool = new System.Windows.Forms.ToolStripDropDownButton();
-			this.btnViewSelected = new System.Windows.Forms.ToolStripMenuItem();
-			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.pctTileSurface = new ValkyrieMapEditor.TileBox();
@@ -55,27 +41,40 @@
 			this.pctSurface = new System.Windows.Forms.PictureBox();
 			this.VerticalScroll = new System.Windows.Forms.VScrollBar();
 			this.HorizontalScroll = new System.Windows.Forms.HScrollBar();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+			this.menuStrip = new System.Windows.Forms.MenuStrip();
+			this.toolProject = new System.Windows.Forms.ToolStripDropDownButton();
+			this.toolNew = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolOpen = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolSave = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolSaveAs = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolClose = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolView = new System.Windows.Forms.ToolStripDropDownButton();
+			this.currentLayerAndBelowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.dimOtherLayersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.allLayersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.btnViewSelected = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolTool = new System.Windows.Forms.ToolStripDropDownButton();
+			this.btnAnimatedTileManager = new System.Windows.Forms.ToolStripMenuItem();
+			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripTools = new System.Windows.Forms.ToolStrip();
 			this.btnNew = new System.Windows.Forms.ToolStripButton();
 			this.btnOpen = new System.Windows.Forms.ToolStripButton();
 			this.btnSave = new System.Windows.Forms.ToolStripButton();
-			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.btnUnderLayer = new System.Windows.Forms.ToolStripButton();
 			this.btnBaseLayer = new System.Windows.Forms.ToolStripButton();
 			this.btnMiddleLayer = new System.Windows.Forms.ToolStripButton();
 			this.btnTopLayer = new System.Windows.Forms.ToolStripButton();
 			this.btnCollisionLayer = new System.Windows.Forms.ToolStripButton();
 			this.btnHelp = new System.Windows.Forms.ToolStripButton();
-			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+			this.btnEvent = new System.Windows.Forms.ToolStripButton();
 			this.btnPencil = new System.Windows.Forms.ToolStripButton();
 			this.btnRect = new System.Windows.Forms.ToolStripButton();
 			this.btnFill = new System.Windows.Forms.ToolStripButton();
 			this.btnSelection = new System.Windows.Forms.ToolStripButton();
-			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-			this.menuStrip = new System.Windows.Forms.MenuStrip();
-			this.toolStripTools = new System.Windows.Forms.ToolStrip();
-			this.btnUnderLayer = new System.Windows.Forms.ToolStripButton();
-			this.btnEvent = new System.Windows.Forms.ToolStripButton();
-			this.btnAnimatedTileEditor = new System.Windows.Forms.ToolStripButton();
-			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -91,132 +90,6 @@
 			this.menuStrip.SuspendLayout();
 			this.toolStripTools.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// toolProject
-			// 
-			this.toolProject.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolProject.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolNew,
-            this.toolOpen,
-            this.toolSave,
-            this.toolSaveAs,
-            this.toolClose});
-			this.toolProject.Image = ((System.Drawing.Image)(resources.GetObject("toolProject.Image")));
-			this.toolProject.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolProject.Name = "toolProject";
-			this.toolProject.ShowDropDownArrow = false;
-			this.toolProject.Size = new System.Drawing.Size(48, 19);
-			this.toolProject.Text = "Project";
-			// 
-			// toolNew
-			// 
-			this.toolNew.Image = global::ValkyrieMapEditor.Properties.Resources.imgPage;
-			this.toolNew.Name = "toolNew";
-			this.toolNew.Size = new System.Drawing.Size(114, 22);
-			this.toolNew.Text = "New";
-			this.toolNew.Click += new System.EventHandler(this.toolNew_Click);
-			// 
-			// toolOpen
-			// 
-			this.toolOpen.Image = global::ValkyrieMapEditor.Properties.Resources.imgOpen;
-			this.toolOpen.Name = "toolOpen";
-			this.toolOpen.Size = new System.Drawing.Size(114, 22);
-			this.toolOpen.Text = "Open";
-			this.toolOpen.Click += new System.EventHandler(this.toolOpen_Click);
-			// 
-			// toolSave
-			// 
-			this.toolSave.Enabled = false;
-			this.toolSave.Image = global::ValkyrieMapEditor.Properties.Resources.imgSave;
-			this.toolSave.Name = "toolSave";
-			this.toolSave.Size = new System.Drawing.Size(114, 22);
-			this.toolSave.Text = "Save";
-			this.toolSave.Click += new System.EventHandler(this.toolSave_Click);
-			// 
-			// toolSaveAs
-			// 
-			this.toolSaveAs.Enabled = false;
-			this.toolSaveAs.Image = global::ValkyrieMapEditor.Properties.Resources.imgSaveAs;
-			this.toolSaveAs.Name = "toolSaveAs";
-			this.toolSaveAs.Size = new System.Drawing.Size(114, 22);
-			this.toolSaveAs.Text = "Save As";
-			this.toolSaveAs.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
-			// 
-			// toolClose
-			// 
-			this.toolClose.Image = global::ValkyrieMapEditor.Properties.Resources.imgExit;
-			this.toolClose.Name = "toolClose";
-			this.toolClose.Size = new System.Drawing.Size(114, 22);
-			this.toolClose.Text = "Exit";
-			this.toolClose.Click += new System.EventHandler(this.toolClose_Click);
-			// 
-			// toolView
-			// 
-			this.toolView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.currentLayerAndBelowToolStripMenuItem,
-            this.allLayersToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.dimOtherLayersToolStripMenuItem});
-			this.toolView.Image = ((System.Drawing.Image)(resources.GetObject("toolView.Image")));
-			this.toolView.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolView.Name = "toolView";
-			this.toolView.Size = new System.Drawing.Size(45, 19);
-			this.toolView.Text = "View";
-			// 
-			// currentLayerAndBelowToolStripMenuItem
-			// 
-			this.currentLayerAndBelowToolStripMenuItem.CheckOnClick = true;
-			this.currentLayerAndBelowToolStripMenuItem.Name = "currentLayerAndBelowToolStripMenuItem";
-			this.currentLayerAndBelowToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
-			this.currentLayerAndBelowToolStripMenuItem.Text = "Current Layer and Below";
-			this.currentLayerAndBelowToolStripMenuItem.Click += new System.EventHandler(this.currentLayerAndBelowToolStripMenuItem_Click);
-			// 
-			// allLayersToolStripMenuItem
-			// 
-			this.allLayersToolStripMenuItem.CheckOnClick = true;
-			this.allLayersToolStripMenuItem.Name = "allLayersToolStripMenuItem";
-			this.allLayersToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
-			this.allLayersToolStripMenuItem.Text = "All Layers";
-			this.allLayersToolStripMenuItem.Click += new System.EventHandler(this.allLayersToolStripMenuItem_Click);
-			// 
-			// toolStripSeparator1
-			// 
-			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(200, 6);
-			// 
-			// dimOtherLayersToolStripMenuItem
-			// 
-			this.dimOtherLayersToolStripMenuItem.CheckOnClick = true;
-			this.dimOtherLayersToolStripMenuItem.Name = "dimOtherLayersToolStripMenuItem";
-			this.dimOtherLayersToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
-			this.dimOtherLayersToolStripMenuItem.Text = "Current Layer Only";
-			this.dimOtherLayersToolStripMenuItem.Click += new System.EventHandler(this.dimOtherLayersToolStripMenuItem_Click);
-			// 
-			// toolTool
-			// 
-			this.toolTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-			this.toolTool.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnViewSelected,
-            this.optionsToolStripMenuItem});
-			this.toolTool.Image = ((System.Drawing.Image)(resources.GetObject("toolTool.Image")));
-			this.toolTool.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolTool.Name = "toolTool";
-			this.toolTool.Size = new System.Drawing.Size(49, 19);
-			this.toolTool.Text = "Tools";
-			// 
-			// btnViewSelected
-			// 
-			this.btnViewSelected.Name = "btnViewSelected";
-			this.btnViewSelected.Size = new System.Drawing.Size(190, 22);
-			this.btnViewSelected.Text = "View Selected Graphic";
-			this.btnViewSelected.Click += new System.EventHandler(this.btnViewSelected_Click);
-			// 
-			// optionsToolStripMenuItem
-			// 
-			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-			this.optionsToolStripMenuItem.Text = "Options";
 			// 
 			// splitContainer1
 			// 
@@ -270,6 +143,7 @@
 			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
 			this.pctTileSurface.Name = "pctTileSurface";
 			this.pctTileSurface.SelectedPoint = new System.Drawing.Point(0, 0);
+			this.pctTileSurface.SelectedRect = new System.Drawing.Rectangle(0, 0, 0, 0);
 			this.pctTileSurface.Size = new System.Drawing.Size(173, 134);
 			this.pctTileSurface.TabIndex = 0;
 			this.pctTileSurface.TabStop = false;
@@ -378,6 +252,201 @@
 			this.HorizontalScroll.Visible = false;
 			this.HorizontalScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TileMap_Scroll);
 			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Padding = new System.Windows.Forms.Padding(20);
+			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+			// 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+			// 
+			// statusStrip1
+			// 
+			this.statusStrip1.Location = new System.Drawing.Point(0, 708);
+			this.statusStrip1.Name = "statusStrip1";
+			this.statusStrip1.Size = new System.Drawing.Size(1008, 22);
+			this.statusStrip1.TabIndex = 4;
+			this.statusStrip1.Text = "statusStrip1";
+			// 
+			// menuStrip
+			// 
+			this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolProject,
+            this.toolView,
+            this.toolTool});
+			this.menuStrip.Location = new System.Drawing.Point(0, 0);
+			this.menuStrip.Name = "menuStrip";
+			this.menuStrip.Size = new System.Drawing.Size(1008, 26);
+			this.menuStrip.TabIndex = 5;
+			this.menuStrip.Text = "menuStrip1";
+			// 
+			// toolProject
+			// 
+			this.toolProject.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolProject.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolNew,
+            this.toolOpen,
+            this.toolSave,
+            this.toolSaveAs,
+            this.toolClose});
+			this.toolProject.Image = ((System.Drawing.Image)(resources.GetObject("toolProject.Image")));
+			this.toolProject.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolProject.Name = "toolProject";
+			this.toolProject.ShowDropDownArrow = false;
+			this.toolProject.Size = new System.Drawing.Size(48, 19);
+			this.toolProject.Text = "Project";
+			// 
+			// toolNew
+			// 
+			this.toolNew.Image = global::ValkyrieMapEditor.Properties.Resources.imgPage;
+			this.toolNew.Name = "toolNew";
+			this.toolNew.Size = new System.Drawing.Size(114, 22);
+			this.toolNew.Text = "New";
+			this.toolNew.Click += new System.EventHandler(this.toolNew_Click);
+			// 
+			// toolOpen
+			// 
+			this.toolOpen.Image = global::ValkyrieMapEditor.Properties.Resources.imgOpen;
+			this.toolOpen.Name = "toolOpen";
+			this.toolOpen.Size = new System.Drawing.Size(114, 22);
+			this.toolOpen.Text = "Open";
+			this.toolOpen.Click += new System.EventHandler(this.toolOpen_Click);
+			// 
+			// toolSave
+			// 
+			this.toolSave.Enabled = false;
+			this.toolSave.Image = global::ValkyrieMapEditor.Properties.Resources.imgSave;
+			this.toolSave.Name = "toolSave";
+			this.toolSave.Size = new System.Drawing.Size(114, 22);
+			this.toolSave.Text = "Save";
+			this.toolSave.Click += new System.EventHandler(this.toolSave_Click);
+			// 
+			// toolSaveAs
+			// 
+			this.toolSaveAs.Enabled = false;
+			this.toolSaveAs.Image = global::ValkyrieMapEditor.Properties.Resources.imgSaveAs;
+			this.toolSaveAs.Name = "toolSaveAs";
+			this.toolSaveAs.Size = new System.Drawing.Size(114, 22);
+			this.toolSaveAs.Text = "Save As";
+			this.toolSaveAs.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+			// 
+			// toolClose
+			// 
+			this.toolClose.Image = global::ValkyrieMapEditor.Properties.Resources.imgExit;
+			this.toolClose.Name = "toolClose";
+			this.toolClose.Size = new System.Drawing.Size(114, 22);
+			this.toolClose.Text = "Exit";
+			this.toolClose.Click += new System.EventHandler(this.toolClose_Click);
+			// 
+			// toolView
+			// 
+			this.toolView.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.currentLayerAndBelowToolStripMenuItem,
+            this.dimOtherLayersToolStripMenuItem,
+            this.allLayersToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.btnViewSelected});
+			this.toolView.Image = ((System.Drawing.Image)(resources.GetObject("toolView.Image")));
+			this.toolView.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolView.Name = "toolView";
+			this.toolView.Size = new System.Drawing.Size(45, 19);
+			this.toolView.Text = "View";
+			// 
+			// currentLayerAndBelowToolStripMenuItem
+			// 
+			this.currentLayerAndBelowToolStripMenuItem.Name = "currentLayerAndBelowToolStripMenuItem";
+			this.currentLayerAndBelowToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+			this.currentLayerAndBelowToolStripMenuItem.Text = "Current Layer and Below";
+			this.currentLayerAndBelowToolStripMenuItem.Click += new System.EventHandler(this.currentLayerAndBelowToolStripMenuItem_Click);
+			// 
+			// dimOtherLayersToolStripMenuItem
+			// 
+			this.dimOtherLayersToolStripMenuItem.Name = "dimOtherLayersToolStripMenuItem";
+			this.dimOtherLayersToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+			this.dimOtherLayersToolStripMenuItem.Text = "Current Layer Only";
+			this.dimOtherLayersToolStripMenuItem.Click += new System.EventHandler(this.dimOtherLayersToolStripMenuItem_Click);
+			// 
+			// allLayersToolStripMenuItem
+			// 
+			this.allLayersToolStripMenuItem.Checked = true;
+			this.allLayersToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.allLayersToolStripMenuItem.Name = "allLayersToolStripMenuItem";
+			this.allLayersToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+			this.allLayersToolStripMenuItem.Text = "All Layers";
+			this.allLayersToolStripMenuItem.Click += new System.EventHandler(this.allLayersToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(200, 6);
+			// 
+			// btnViewSelected
+			// 
+			this.btnViewSelected.Checked = true;
+			this.btnViewSelected.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.btnViewSelected.Name = "btnViewSelected";
+			this.btnViewSelected.Size = new System.Drawing.Size(203, 22);
+			this.btnViewSelected.Text = "View Selected Graphic";
+			this.btnViewSelected.Click += new System.EventHandler(this.btnViewSelected_Click);
+			// 
+			// toolTool
+			// 
+			this.toolTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.toolTool.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnAnimatedTileManager,
+            this.optionsToolStripMenuItem});
+			this.toolTool.Image = ((System.Drawing.Image)(resources.GetObject("toolTool.Image")));
+			this.toolTool.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolTool.Name = "toolTool";
+			this.toolTool.Size = new System.Drawing.Size(49, 19);
+			this.toolTool.Text = "Tools";
+			// 
+			// btnAnimatedTileManager
+			// 
+			this.btnAnimatedTileManager.Enabled = false;
+			this.btnAnimatedTileManager.Image = global::ValkyrieMapEditor.Properties.Resources.imgFilm;
+			this.btnAnimatedTileManager.Name = "btnAnimatedTileManager";
+			this.btnAnimatedTileManager.Size = new System.Drawing.Size(198, 22);
+			this.btnAnimatedTileManager.Text = "Animated Tile Manager";
+			this.btnAnimatedTileManager.Click += new System.EventHandler(this.btnAnimatedTileManager_Click);
+			// 
+			// optionsToolStripMenuItem
+			// 
+			this.optionsToolStripMenuItem.Image = global::ValkyrieMapEditor.Properties.Resources.imgCog;
+			this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+			this.optionsToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+			this.optionsToolStripMenuItem.Text = "Options";
+			this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
+			// 
+			// toolStripTools
+			// 
+			this.toolStripTools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnNew,
+            this.btnOpen,
+            this.btnSave,
+            this.toolStripSeparator2,
+            this.btnUnderLayer,
+            this.btnBaseLayer,
+            this.btnMiddleLayer,
+            this.btnTopLayer,
+            this.btnCollisionLayer,
+            this.btnHelp,
+            this.btnEvent,
+            this.toolStripSeparator3,
+            this.btnPencil,
+            this.btnRect,
+            this.btnFill,
+            this.btnSelection});
+			this.toolStripTools.Location = new System.Drawing.Point(0, 26);
+			this.toolStripTools.Name = "toolStripTools";
+			this.toolStripTools.Size = new System.Drawing.Size(1008, 25);
+			this.toolStripTools.TabIndex = 3;
+			this.toolStripTools.Text = "toolStrip1";
+			// 
 			// btnNew
 			// 
 			this.btnNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -412,16 +481,22 @@
 			this.btnSave.Text = "Save Map";
 			this.btnSave.Click += new System.EventHandler(this.toolSave_Click);
 			// 
-			// toolStripSeparator2
+			// btnUnderLayer
 			// 
-			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Padding = new System.Windows.Forms.Padding(20);
-			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+			this.btnUnderLayer.CheckOnClick = true;
+			this.btnUnderLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnUnderLayer.Enabled = false;
+			this.btnUnderLayer.Image = global::ValkyrieMapEditor.Properties.Resources.imgUnderlayer;
+			this.btnUnderLayer.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.btnUnderLayer.Name = "btnUnderLayer";
+			this.btnUnderLayer.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
+			this.btnUnderLayer.Size = new System.Drawing.Size(34, 22);
+			this.btnUnderLayer.Text = "Under Layer";
+			this.btnUnderLayer.Click += new System.EventHandler(this.btnUnderLayer_Click);
 			// 
 			// btnBaseLayer
 			// 
 			this.btnBaseLayer.Checked = true;
-			this.btnBaseLayer.CheckOnClick = true;
 			this.btnBaseLayer.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.btnBaseLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.btnBaseLayer.Enabled = false;
@@ -435,7 +510,6 @@
 			// 
 			// btnMiddleLayer
 			// 
-			this.btnMiddleLayer.CheckOnClick = true;
 			this.btnMiddleLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.btnMiddleLayer.Enabled = false;
 			this.btnMiddleLayer.Image = global::ValkyrieMapEditor.Properties.Resources.imgMiddleLayer;
@@ -448,7 +522,6 @@
 			// 
 			// btnTopLayer
 			// 
-			this.btnTopLayer.CheckOnClick = true;
 			this.btnTopLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.btnTopLayer.Enabled = false;
 			this.btnTopLayer.Image = global::ValkyrieMapEditor.Properties.Resources.imgTopLayer;
@@ -461,7 +534,6 @@
 			// 
 			// btnCollisionLayer
 			// 
-			this.btnCollisionLayer.CheckOnClick = true;
 			this.btnCollisionLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.btnCollisionLayer.Enabled = false;
 			this.btnCollisionLayer.Image = global::ValkyrieMapEditor.Properties.Resources.imgCollision;
@@ -484,10 +556,17 @@
 			this.btnHelp.Text = "Help";
 			this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
 			// 
-			// toolStripSeparator3
+			// btnEvent
 			// 
-			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+			this.btnEvent.AutoSize = false;
+			this.btnEvent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnEvent.Enabled = false;
+			this.btnEvent.Image = global::ValkyrieMapEditor.Properties.Resources.imgLightning;
+			this.btnEvent.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.btnEvent.Name = "btnEvent";
+			this.btnEvent.Size = new System.Drawing.Size(34, 22);
+			this.btnEvent.Text = "Event Mode";
+			this.btnEvent.Click += new System.EventHandler(this.btnEvent_Click);
 			// 
 			// btnPencil
 			// 
@@ -528,100 +607,12 @@
 			// 
 			this.btnSelection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.btnSelection.Enabled = false;
-			this.btnSelection.Image = ((System.Drawing.Image)(resources.GetObject("btnSelection.Image")));
+			this.btnSelection.Image = global::ValkyrieMapEditor.Properties.Resources.imgSelect;
 			this.btnSelection.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnSelection.Name = "btnSelection";
 			this.btnSelection.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
 			this.btnSelection.Size = new System.Drawing.Size(34, 22);
 			this.btnSelection.Text = "Selection";
-			// 
-			// statusStrip1
-			// 
-			this.statusStrip1.Location = new System.Drawing.Point(0, 708);
-			this.statusStrip1.Name = "statusStrip1";
-			this.statusStrip1.Size = new System.Drawing.Size(1008, 22);
-			this.statusStrip1.TabIndex = 4;
-			this.statusStrip1.Text = "statusStrip1";
-			// 
-			// menuStrip
-			// 
-			this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolProject,
-            this.toolView,
-            this.toolTool});
-			this.menuStrip.Location = new System.Drawing.Point(0, 0);
-			this.menuStrip.Name = "menuStrip";
-			this.menuStrip.Size = new System.Drawing.Size(1008, 26);
-			this.menuStrip.TabIndex = 5;
-			this.menuStrip.Text = "menuStrip1";
-			// 
-			// toolStripTools
-			// 
-			this.toolStripTools.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnNew,
-            this.btnOpen,
-            this.btnSave,
-            this.toolStripSeparator2,
-            this.btnUnderLayer,
-            this.btnBaseLayer,
-            this.btnMiddleLayer,
-            this.btnTopLayer,
-            this.btnCollisionLayer,
-            this.btnHelp,
-            this.btnEvent,
-            this.toolStripSeparator3,
-            this.btnPencil,
-            this.btnRect,
-            this.btnFill,
-            this.btnSelection,
-            this.toolStripSeparator4,
-            this.btnAnimatedTileEditor});
-			this.toolStripTools.Location = new System.Drawing.Point(0, 26);
-			this.toolStripTools.Name = "toolStripTools";
-			this.toolStripTools.Size = new System.Drawing.Size(1008, 25);
-			this.toolStripTools.TabIndex = 3;
-			this.toolStripTools.Text = "toolStrip1";
-			// 
-			// btnUnderLayer
-			// 
-			this.btnUnderLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.btnUnderLayer.Enabled = false;
-			this.btnUnderLayer.Image = ((System.Drawing.Image)(resources.GetObject("btnUnderLayer.Image")));
-			this.btnUnderLayer.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.btnUnderLayer.Name = "btnUnderLayer";
-			this.btnUnderLayer.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnUnderLayer.Size = new System.Drawing.Size(34, 22);
-			this.btnUnderLayer.Text = "Under Layer";
-			this.btnUnderLayer.Click += new System.EventHandler(this.btnUnderLayer_Click);
-			// 
-			// btnEvent
-			// 
-			this.btnEvent.AutoSize = false;
-			this.btnEvent.CheckOnClick = true;
-			this.btnEvent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.btnEvent.Enabled = false;
-			this.btnEvent.Image = global::ValkyrieMapEditor.Properties.Resources.imgLightning;
-			this.btnEvent.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.btnEvent.Name = "btnEvent";
-			this.btnEvent.Size = new System.Drawing.Size(34, 22);
-			this.btnEvent.Text = "Event Mode";
-			this.btnEvent.Click += new System.EventHandler(this.btnEvent_Click);
-			// 
-			// btnAnimatedTileEditor
-			// 
-			this.btnAnimatedTileEditor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.btnAnimatedTileEditor.Enabled = false;
-			this.btnAnimatedTileEditor.Image = ((System.Drawing.Image)(resources.GetObject("btnAnimatedTileEditor.Image")));
-			this.btnAnimatedTileEditor.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.btnAnimatedTileEditor.Name = "btnAnimatedTileEditor";
-			this.btnAnimatedTileEditor.Size = new System.Drawing.Size(23, 22);
-			this.btnAnimatedTileEditor.Text = "Animated Tile Manager";
-			this.btnAnimatedTileEditor.Click += new System.EventHandler(this.btnAnimatedTileEditor_Click);
-			// 
-			// toolStripSeparator4
-			// 
-			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
 			// 
 			// frmMain
 			// 
@@ -700,7 +691,6 @@
 		private System.Windows.Forms.ToolStripButton btnRect;
 		private System.Windows.Forms.ToolStripButton btnFill;
 		private System.Windows.Forms.ToolStripButton btnSelection;
-		private System.Windows.Forms.ToolStripMenuItem btnViewSelected;
 		private System.Windows.Forms.MenuStrip menuStrip;
 		private System.Windows.Forms.ToolStrip toolStripTools;
 		private System.Windows.Forms.VScrollBar VerticalScroll;
@@ -708,7 +698,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStripButton btnEvent;
 		private System.Windows.Forms.ToolStripButton btnUnderLayer;
-		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-		private System.Windows.Forms.ToolStripButton btnAnimatedTileEditor;
+		private System.Windows.Forms.ToolStripMenuItem btnAnimatedTileManager;
+		private System.Windows.Forms.ToolStripMenuItem btnViewSelected;
 	}
 }

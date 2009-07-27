@@ -9,41 +9,62 @@ using ValkyrieLibrary.Characters;
 
 namespace ValkyrieLibrary.Events
 {
-    public class Event
-    {
-        public MapPoint Location { get; set; }
-        public MapPoint Size { get; set; }
-        public String Type { get; set; }
-        public Directions Direction { get; set; }
-		public ActivationTypes Activation { get; set; }
+	public interface IMapEvent
+	{
+		// Properties
+		Rectangle Rectangle { get; set; }
+		
+		ActivationTypes Activation { get; set; }
+		Directions Direction { get; set; }
+		
+		Dictionary<String, String> Parameters { get; set; }
 
-        public Dictionary<String, String> Parameters;
+		// Methods
+		string GetType();
+		void Trigger(BaseCharacter character);
+		IEnumerable<String> GetParameterNames();
+	}
+}
 
-        public Event(MapPoint loc, MapPoint size)
-        {
-            Location = loc;
-            Size = size;
-            Type = "";
-			Direction = Directions.North;
-            Parameters = new Dictionary<String, String>();
-        }
+#region Old Code
+/*
+		#region Constructors
+		public MapEvent(MapPoint loc)
+			: this(loc, new MapPoint(1, 1), string.Empty, Directions.Any) { }
 
-        public Event(XmlNode node)
-        {
-            Parameters = new Dictionary<String, String>();
+		public MapEvent(MapPoint loc, MapPoint size)
+			: this(loc, size, string.Empty, Directions.Any) { }
+
+		public MapEvent(MapPoint loc, MapPoint size, string type)
+			: this(loc, size, type, Directions.Any) { }
+
+		public MapEvent(MapPoint location, MapPoint size, string type, Directions direction)
+		{
+			this.Parameters = new Dictionary<String, String>();
+
+			this.Location = location;
+			this.Size = size;
+			this.Type = type;
+			this.Direction = direction;
+		}
+
+		public MapEvent(XmlNode node)
+		{
+			Parameters = new Dictionary<String, String>();
 
 			foreach (XmlNode cnode in node.ChildNodes)
 			{
-                switch (cnode.Name)
-                {
-                    case "Type": Type = cnode.InnerText; break;
-                    case "Dir": Direction = (Directions)Enum.Parse(typeof(Directions), cnode.InnerText); break;
-                    case "Parameters": LoadParms(cnode); break;
-                    case "Location": Location = new MapPoint(cnode); break;
-                    case "Size": Size = new MapPoint(cnode); break;
-                }
-            }
-        }
+				switch (cnode.Name)
+				{
+					case "Type": Type = cnode.InnerText; break;
+					case "Dir": Direction = (Directions)Enum.Parse(typeof(Directions), cnode.InnerText); break;
+					case "Parameters": LoadParms(cnode); break;
+					case "Location": Location = new MapPoint(cnode); break;
+					case "Size": Size = new MapPoint(cnode); break;
+				}
+			}
+		}
+		#endregion
 
         public void LoadParms(XmlNode root)
         {
@@ -66,7 +87,7 @@ namespace ValkyrieLibrary.Events
             }
         }
 
-        public void Copy(Event e)
+        public void Copy(MapEvent e)
         {
             this.Type = e.Type;
             this.Location = e.Location;
@@ -85,22 +106,7 @@ namespace ValkyrieLibrary.Events
 
         public bool IsSameFacing(Directions facing)
         {
-            if (this.Direction == Directions.Any)
-                return true;
-
-            if (facing == Directions.North && this.Direction == Directions.North)
-                return true;
-
-			if (facing == Directions.South && this.Direction == Directions.South)
-                return true;
-
-            if (facing == Directions.West && this.Direction == Directions.West)
-                return true;
-
-            if (facing == Directions.East && this.Direction == Directions.East)
-                return true;
-
-            return false;
+			return (this.Direction == Directions.Any || facing == this.Direction);
         }
 
         public void toXml(XmlDocument doc, XmlElement parent)
@@ -141,4 +147,5 @@ namespace ValkyrieLibrary.Events
             parent.AppendChild(dir);
         }
     }
-}
+		 */
+#endregion

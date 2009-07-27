@@ -9,21 +9,27 @@ using System.Windows.Forms;
 using ValkyrieLibrary.Events;
 using ValkyrieLibrary.Characters;
 using ValkyrieMapEditor.Properties;
+using ValkyrieLibrary;
 
 namespace ValkyrieMapEditor.Forms
 {
     public partial class frmMapEvent : Form
     {
-		public Event Event
+		public BaseMapEvent Event
 		{
 			get { return this.pevent; }
 			set { this.pevent = value; }
 		}
 
 		private int InitialHeight = 0;
-		private Event pevent;
+		private BaseMapEvent pevent;
 
-        public frmMapEvent(Event e)
+		// For new events
+		public frmMapEvent()
+		{
+		}
+
+        public frmMapEvent(BaseMapEvent e)
         {
             InitializeComponent();
 
@@ -36,7 +42,9 @@ namespace ValkyrieMapEditor.Forms
 		private void frmMapEvent_Load(object sender, EventArgs e)
 		{
 			// Event Handler types
-			this.inType.DataSource = frmMain.EventHandlerTypes;
+			foreach(var type in TileEngine.EventManager.EventTypes.Values)
+				this.inType.Items.Add(type);
+
 			this.inType.DisplayMember = "Name";
 			this.inType.SelectedIndex = 0;
 
@@ -48,6 +56,15 @@ namespace ValkyrieMapEditor.Forms
 
 			this.inDirection.SelectedIndex = 0;
 
+			// Activation
+			values = Enum.GetNames(typeof(ActivationTypes));
+
+			for (int i = 0; i < values.Length; i++)
+				this.inActivation.Items.Add(values[i]);
+
+			this.inActivation.SelectedIndex = 0;
+
+			// Display events
 			this.DisplayEvent();
 		}
 
@@ -55,14 +72,13 @@ namespace ValkyrieMapEditor.Forms
         {
 			if (this.Event != null)
 			{
-				foreach(var type in frmMain.EventHandlerTypes)
-				{
-					var handler = (BaseEventHandler)Activator.CreateInstance(type, false);
+				this.inType.SelectedItem = this.Event.GetType();
 
-					if (this.Event.Type == handler.Type)
-					{
-						inType.SelectedItem = type;
-					}
+				// Set manually
+				for (int i = 0; i < this.inActivation.Items.Count; i++)
+				{
+					if(inActivation.Items[i].ToString() == this.Event.Activation.ToString())
+						this.inActivation.SelectedIndex = i;
 				}
 
 				// Wtf won't set selected value?? Do it manually
@@ -73,8 +89,10 @@ namespace ValkyrieMapEditor.Forms
 				}
 
 				foreach (var Parameter in this.Event.Parameters)
-					this.AddParameter(Parameter.Key, Parameter.Value, false);
+					this.AddParameter(Parameter.Key, Parameter.Value, true);
 			}
+
+			this.inType.SelectedIndexChanged += inType_SelectedIndexChanged;
 
 			this.ResizeWindow();
         }
@@ -87,9 +105,13 @@ namespace ValkyrieMapEditor.Forms
 
 		private void btnOk_Click(object sender, EventArgs e)
 		{
+			if( this.Event == null)
+				this.Event = (BaseMapEvent)Activator.CreateInstance((Type)this.inType.SelectedItem);
+
 			this.Event.Direction = (Directions)Enum.Parse(typeof(Directions), this.inDirection.Text);
-			this.Event.Type = ((BaseEventHandler)Activator.CreateInstance((Type)this.inType.SelectedItem)).Type;
-			this.Event.Parameters.Clear();
+			this.Event.Activation = (ActivationTypes)Enum.Parse(typeof(ActivationTypes), this.inActivation.SelectedItem.ToString());
+
+			this.Event.Parameters = new Dictionary<string, string>();
 			foreach (var Parameter in this.GetParameters())
 				this.Event.Parameters.Add(Parameter.Key, Parameter.Value);
 
@@ -175,14 +197,33 @@ namespace ValkyrieMapEditor.Forms
 				{
 					if (subcontrol is TextBox && (string)subcontrol.Tag == "Name")
 						Key = ((TextBox)subcontrol).Text;
-					else if (subcontrol is TextBox && (string)subcontrol.Tag == "Name") 
+					else if (subcontrol is TextBox && (string)subcontrol.Tag == "Value") 
 						Value = ((TextBox)subcontrol).Text;
-
-					yield return new KeyValuePair<string, string>(Key, Value);
 				}
 
 				yield return new KeyValuePair<string, string>(Key, Value);
 			}
+		}
+
+		private void inType_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (this.inType.SelectedItem == null)
+				return;
+
+			this.ClearParameters();
+
+			Type type =  (Type)this.inType.SelectedItem;
+
+			var mapevent = (BaseMapEvent)Activator.CreateInstance(type);
+
+			foreach (String param in mapevent.GetParameterNames())
+				this.AddParameter(param, string.Empty, true);
+
+		}
+
+		private void ClearParameters()
+		{
+			this.flowParameters.Controls.Clear();
 		}
     }
 }

@@ -25,7 +25,7 @@ namespace ValkyrieLibrary.Maps
         public int[] TopLayer { get; set; }
         public int[] CollisionLayer { get; set; }
 
-        public List<Event> EventList;
+        public List<BaseMapEvent> EventList;
         public MapPoint MapSize { get; set; }
         public ScreenPoint TileSize { get; set; }
         public String TextureName { get; set; }
@@ -61,7 +61,7 @@ namespace ValkyrieLibrary.Maps
             this.MiddleLayer = new int[0];
             this.TopLayer = new int[0];
             this.CollisionLayer = new int[0];
-            this.EventList = new List<Event>();
+            this.EventList = new List<BaseMapEvent>();
 			this.AnimatedTiles = new Dictionary<int, FrameAnimation>();
 		}
 
@@ -240,7 +240,19 @@ namespace ValkyrieLibrary.Maps
 				}
 				else if (innerNodes[i].Name == "Events")
 				{
-					TileEngine.EventManager.LoadEvents(this, innerNodes[i]);
+					if (this.EventList.Count > 0) // Already loaded? Don't load again
+						continue;
+
+					var root = innerNodes[i];
+
+					XmlNodeList events = root.ChildNodes;
+
+					foreach (XmlNode node in events)
+					{
+						this.EventList.Add(TileEngine.EventManager.LoadEventFromXml(node));
+					}
+
+					TileEngine.EventManager.LoadEvents(this);
 				}
 			}
 
@@ -379,11 +391,9 @@ namespace ValkyrieLibrary.Maps
 
             // Events
             var eventLayer = doc.CreateElement("Events");
-            foreach (Event e in this.EventList)
+            foreach (BaseMapEvent e in this.EventList)
             {
-                var eventNode = doc.CreateElement("Event");
-                e.toXml(doc, eventNode);
-                eventLayer.AppendChild(eventNode);
+				eventLayer.AppendChild(TileEngine.EventManager.EventToXmlNode(e, doc));
             }
 
             // Animations

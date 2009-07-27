@@ -58,17 +58,17 @@
 			// colTileRect
 			// 
 			this.colTileRect.Text = "Tile Rectangle";
-			this.colTileRect.Width = 168;
+			this.colTileRect.Width = 253;
 			// 
 			// colFrameCount
 			// 
 			this.colFrameCount.Text = "Frame Count";
-			this.colFrameCount.Width = 109;
+			this.colFrameCount.Width = 86;
 			// 
 			// colSpeed
 			// 
 			this.colSpeed.Text = "Speed";
-			this.colSpeed.Width = 92;
+			this.colSpeed.Width = 61;
 			// 
 			// lnkAdd
 			// 

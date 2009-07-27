@@ -99,7 +99,9 @@
     <Compile Include="States\MenuModule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\PokeWorld.xml" />
+    <None Include="Data\PokeWorld.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Data\TileEngineConfig.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -108,36 +110,36 @@
     <Content Include="Data\keys.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Graphics\PalletTown_HouseTwo.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Graphics\Pewter.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Graphics\Route21.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Maps\Main\palletTown.xml" />
-    <Content Include="Maps\Main\Pewter.xml" />
-    <Content Include="Maps\Main\Route1.xml" />
-    <Content Include="Maps\Main\Route2.xml" />
-    <Content Include="Maps\Main\Route21.xml" />
-    <Content Include="Maps\Main\ViridianCity.xml" />
-    <Content Include="Maps\PalletTown_HouseOne\MyHome.xml" />
-    <None Include="Graphics\MaleSprite.png">
+    <None Include="Graphics\Main\Pallet_House_01.png">
+    </None>
+    <None Include="Graphics\Main\Pallet_Town.png">
+    </None>
+    <None Include="Graphics\Main\Pewter_Town.png">
+    </None>
+    <None Include="Graphics\Main\Route21_Route.png">
+    </None>
+    <None Include="Graphics\Main\Route2_Route.png">
+    </None>
+    <None Include="Graphics\Main\Viridian_Town.png">
+    </None>
+    <None Include="Maps\Main\Pallet_Town.xml">
+    </None>
+    <None Include="Maps\Main\Pewter_Town.xml">
+    </None>
+    <None Include="Maps\Main\Route1_Route.xml">
+    </None>
+    <None Include="Maps\Main\Route21_Route.xml">
+    </None>
+    <None Include="Maps\Main\Route2_Route.xml">
+    </None>
+    <None Include="Maps\Main\Viridian_Town.xml">
+    </None>
+    <None Include="Maps\Pallet_House_01\Pallet_House_01.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Graphics\Pallet.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Include="Graphics\MaleSprite.png">
     </None>
     <None Include="Graphics\PokeBackground.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Graphics\Route2.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Graphics\Viridian.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -192,4 +194,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(ProjectDir)\Graphics" "$(TargetDir)\Graphics" /S /Y /I
+xcopy "$(ProjectDir)\Maps" "$(TargetDir)\Maps" /S /Y /I
+
+xcopy "$(ProjectDir)\Graphics" "$(SolutionDir)ValkyrieMapEditor\bin\x86\Debug\Graphics" /S /Y /I</PostBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using ValkyrieLibrary.Animation;
 using ValkyrieLibrary;
+using ValkyrieMapEditor.Properties;
 
 namespace ValkyrieMapEditor.Forms
 {
@@ -22,9 +23,13 @@ namespace ValkyrieMapEditor.Forms
 		{
 			InitializeComponent();
 
+			this.Icon = Icon.FromHandle(Resources.imgFilm.GetHicon());
+
 			this.Tile = animation;
 
 			this.inTilePane.Initialize(); // Set it up
+			this.inTilePane.MaximumSize = new Size(TileEngine.CurrentMapChunk.MapSize.X, 0);
+			this.inTilePane.EnforceSize = true;
 			this.inTilePane.Image = frmMain.TileSheetImage;
 			this.inTilePane.Size = this.inTilePane.Image.Size;
 			this.inTilePane.TileSize = new Point(TileEngine.TileSize, TileEngine.TileSize);

@@ -26,7 +26,7 @@ namespace ValkyrieMapEditor
 		public event EventHandler<ScreenResizedEventArgs> ScreenResized;
 		public event EventHandler<ScrollEventArgs> ScrolledMap;
 
-		public string ValkyrieGameInstallationAssemblyPath = @"C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\valkyrie\bin\x86\Debug\valkyrie.exe";
+		public static string ValkyrieGameInstallationAssemblyPath = @"C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\valkyrie\bin\x86\Debug\valkyrie.exe";
 		public static List<Type> EventHandlerTypes;
 
 		public frmMain()
@@ -38,7 +38,7 @@ namespace ValkyrieMapEditor
 			this.pctTileSurface.Initialize();
 			this.pctTileSurface.TileSelectionChanged += this.SelectionChanged;
 
-			this.CollectEventHandlers(Assembly.LoadFile(this.ValkyrieGameInstallationAssemblyPath));
+			//this.CollectEventHandlers(Assembly.LoadFile(this.ValkyrieGameInstallationAssemblyPath));
 		}
 
 		private void frmMain_Load(object sender, EventArgs e)
@@ -54,7 +54,7 @@ namespace ValkyrieMapEditor
 
 		public void CollectEventHandlers(Assembly assembly)
 		{
-			var Types = assembly.GetTypes().Where(p => p.IsSubclassOf(typeof(BaseEventHandler)));
+			var Types = assembly.GetTypes().Where(p => p.IsSubclassOf(typeof(BaseMapEvent)));
 
 			List<Type> ehandlers = new List<Type>();
 
@@ -88,9 +88,15 @@ namespace ValkyrieMapEditor
         public void LoadMap(FileInfo MapLocation)
         {
 			TileEngine.TextureManager.ClearCache();
+			TileEngine.EventManager.ClearEventCache();
 
 			var map = MapEditorManager.LoadMap(MapLocation);
-			MapEditorManager.SetWorldMap(MapEditorManager.LoadMap(MapLocation));
+			MapEditorManager.SetWorldMap(map);
+
+			this.Text = String.Format("{0} - {1}",
+				MapLocation.Name.Substring(0, MapLocation.Name.Length - MapLocation.Extension.Length).Replace('_', ' '),
+				"Valkyrie Map Editor");
+
 			this.RefreshMapProperties(map);
 
 			this.UpdateScrollBars();
@@ -113,7 +119,7 @@ namespace ValkyrieMapEditor
 
 			this.UpdateScrollBars(true);
 
-			this.btnAnimatedTileEditor.Enabled = true;
+			this.btnAnimatedTileManager.Enabled = true;
 			this.btnMapProperties.Enabled = true;
 			this.toolSave.Enabled = true;
 			this.toolSaveAs.Enabled = true;
@@ -183,6 +189,8 @@ namespace ValkyrieMapEditor
 
 		private void btnUnderLayer_Click(object sender, EventArgs e)
 		{
+			this.btnUnderLayer.Checked = true;
+
 			this.btnBaseLayer.Checked = false;
 			this.btnMiddleLayer.Checked = false;
 			this.btnTopLayer.Checked = false;
@@ -195,6 +203,8 @@ namespace ValkyrieMapEditor
 
         private void btnBaseLayer_Click(object sender, EventArgs e)
         {
+			this.btnBaseLayer.Checked = true;
+
 			this.btnUnderLayer.Checked = false;
             this.btnMiddleLayer.Checked = false;
             this.btnTopLayer.Checked = false;
@@ -207,6 +217,8 @@ namespace ValkyrieMapEditor
 
         private void btnMiddleLayer_Click(object sender, EventArgs e)
         {
+			this.btnMiddleLayer.Checked = true;
+
 			this.btnUnderLayer.Checked = false;
             this.btnBaseLayer.Checked = false;
             this.btnTopLayer.Checked = false;
@@ -219,6 +231,8 @@ namespace ValkyrieMapEditor
 
         private void btnTopLayer_Click(object sender, EventArgs e)
         {
+			this.btnTopLayer.Checked = true;
+
 			this.btnUnderLayer.Checked = false;
             this.btnBaseLayer.Checked = false;
             this.btnMiddleLayer.Checked = false;
@@ -309,12 +323,6 @@ namespace ValkyrieMapEditor
 			}
 		}
 
-		private void btnViewSelected_Click(object sender, EventArgs e)
-		{
-			this.btnViewSelected.Checked = !this.btnViewSelected.Checked;
-			this.pctTileSurface.DisplayTileSelection = this.btnViewSelected.Checked;
-		}
-
 		public void SelectionChanged(object sender, TileSelectionChangedEventArgs ev)
 		{
 			MapEditorManager.SelectedTilesRect = new Microsoft.Xna.Framework.Rectangle(
@@ -349,6 +357,8 @@ namespace ValkyrieMapEditor
 
         private void btnEvent_Click(object sender, EventArgs e)
         {
+			this.btnEvent.Checked = true;
+
             this.btnBaseLayer.Checked = false;
             this.btnMiddleLayer.Checked = false;
             this.btnTopLayer.Checked = false;
@@ -375,6 +385,8 @@ namespace ValkyrieMapEditor
 
         private void allLayersToolStripMenuItem_Click(object sender, EventArgs e)
         {
+			this.allLayersToolStripMenuItem.Checked = true;
+
             currentLayerAndBelowToolStripMenuItem.Checked = false;
             dimOtherLayersToolStripMenuItem.Checked = false;
             MapEditorManager.ViewMode = ViewMode.All;
@@ -382,6 +394,8 @@ namespace ValkyrieMapEditor
 
         private void currentLayerAndBelowToolStripMenuItem_Click(object sender, EventArgs e)
         {
+			this.currentLayerAndBelowToolStripMenuItem.Checked = true;
+
             allLayersToolStripMenuItem.Checked = false;
             dimOtherLayersToolStripMenuItem.Checked = false;
 
@@ -390,14 +404,30 @@ namespace ValkyrieMapEditor
 
         private void dimOtherLayersToolStripMenuItem_Click(object sender, EventArgs e)
         {
+			this.dimOtherLayersToolStripMenuItem.Checked = true;
+
             allLayersToolStripMenuItem.Checked = false;
             currentLayerAndBelowToolStripMenuItem.Checked = false;
             MapEditorManager.ViewMode = ViewMode.Dim;
         }
 
-		private void btnAnimatedTileEditor_Click(object sender, EventArgs e)
+		private void btnViewSelected_Click(object sender, EventArgs e)
+		{
+			this.btnViewSelected.Checked = !this.btnViewSelected.Checked;
+			this.pctTileSurface.DisplayTileSelection = this.btnViewSelected.Checked;
+
+			this.pctTileSurface.Invalidate();
+		}
+
+		private void btnAnimatedTileManager_Click(object sender, EventArgs e)
 		{
 			frmAnimatedTileManager dialog = new frmAnimatedTileManager(TileEngine.CurrentMapChunk);
+			dialog.ShowDialog(this);
+		}
+
+		private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			frmOptions dialog = new frmOptions();
 			dialog.ShowDialog(this);
 		}
     }

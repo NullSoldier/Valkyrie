@@ -8,6 +8,7 @@ using ValkyrieLibrary.Characters;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary.Events;
 using ValkyrieLibrary.Core;
+using ValkyrieLibrary.Events.EngineEvents;
 
 namespace ValkyrieLibrary.Maps
 {
@@ -51,30 +52,63 @@ namespace ValkyrieLibrary.Maps
             CalcWorldSize();
         }
 
+		public ScreenPoint FindDefaultStartLocation()
+		{
+			return this.FindStartLocation(this.DefaultSpawn);
+		}
+
         public ScreenPoint FindStartLocation(String name)
         {
-            if (name == "Default")
+			// Keep a static cache of this for optimization
+			string EntryPointType = ((BaseMapEvent)Activator.CreateInstance(typeof(EntryPointEvent))).GetType();
+
+			foreach (var mapHeader in MapList)
+			{
+				foreach (BaseMapEvent e in mapHeader.Value.Map.EventList)
+				{
+					if (e.GetType() != EntryPointType)
+						continue;
+
+					String eName = e.Parameters["Name"];
+
+					if (eName == name)
+					{
+						ScreenPoint point = (new MapPoint(e.Rectangle.X, e.Rectangle.Y) + mapHeader.Value.MapLocation).ToScreenPoint();
+						return point;
+					}
+			
+				}
+			}
+
+			return new ScreenPoint(0, 0);
+
+
+			#region OldCode
+			/*
+			if (name == "Default")
                 name = DefaultSpawn;
 
             foreach (var mapHeader in MapList)
             {
-                foreach (Event e in mapHeader.Value.Map.EventList)
+                foreach (BaseMapEvent e in mapHeader.Value.Map.EventList)
                 {
-                    if (e.Type != "Load")
+                    if (e.GetType() != ((BaseMapEvent)Activator.CreateInstance(typeof(EntryPointEvent))).GetType() )
                         continue;
 
                     String eName = e.Parameters["Name"];
 
                     if (eName == name)
-                        return e.Location.ToScreenPoint() + mapHeader.Value.MapLocation.ToScreenPoint();
+                        return new ScreenPoint(e.Rectangle.X, e.Rectangle.Y) + mapHeader.Value.MapLocation.ToScreenPoint();
                 }
             }
 
             if (name != DefaultSpawn)
                 return FindStartLocation(DefaultSpawn);
 
-            return new ScreenPoint(0,0);
-        }
+            return new ScreenPoint(0,0)
+			 */
+			#endregion
+		}
 
 
         public void CalcWorldSize()

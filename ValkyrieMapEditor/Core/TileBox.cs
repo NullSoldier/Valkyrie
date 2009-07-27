@@ -11,8 +11,8 @@ namespace ValkyrieMapEditor
 	public class TileBox : PictureBox
 	{
 		public event EventHandler<TileSelectionChangedEventArgs> TileSelectionChanged;
-		public Size MaximumSize = new Size(5, 0);
-		public bool EnforceSize = true;
+		public Size MaximumSize = new Size(0, 0);
+		public bool EnforceSize = false;
 
 		public Point TileSize
 		{
@@ -80,6 +80,8 @@ namespace ValkyrieMapEditor
 			this.MouseMove += this.Tile_MouseMove;
 			this.MouseUp += this.Tile_MouseUp;
 
+			this.DisplayTileSelection = true;
+
 			//this.MouseClick += this.MouseClicked;
 		}
 
@@ -142,6 +144,9 @@ namespace ValkyrieMapEditor
 				return;
 
 			pe.Graphics.DrawImage(this.Image, new Rectangle(0, 0, this.Image.Size.Width, this.Image.Size.Height));
+
+			if (!this.DisplayTileSelection)
+				return;
 
 			Brush currentBrush = Brushes.Black;
 			int limit = 4;

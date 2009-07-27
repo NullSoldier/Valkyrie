@@ -17,6 +17,7 @@ using ValkyrieLibrary.Events;
 using Valkyrie.Events;
 using Valkyrie.Core;
 using Valkyrie.States;
+using System.Reflection;
 
 namespace ValkyrieLibrary
 {
@@ -39,15 +40,11 @@ namespace ValkyrieLibrary
         protected override void Initialize()
         {
             TileEngine.Initialize(this.Content, this.GraphicsDevice);
+			TileEngine.EventManager.LoadEventTypesFromAssemblies( new Assembly[] {Assembly.GetEntryAssembly(), Assembly.LoadWithPartialName("ValkyrieLibrary")});
             TileEngine.Viewport = this.GraphicsDevice.Viewport;
             TileEngine.Camera = new PokeCamera(0, 0, 800, 600);
 			TileEngine.CollisionManager = new PokeCollisionManager();
 			TileEngine.TileSize = 32;
-
-			// Events
-			TileEngine.EventManager.AddEventHandler(new SignPostEvent());
-			TileEngine.EventManager.AddEventHandler(new JumpEvent());
-			TileEngine.EventManager.AddEventHandler(new LoadEvent());
 
             base.Initialize();
         }

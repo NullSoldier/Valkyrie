@@ -62,6 +62,7 @@ namespace Valkyrie.States
             this.KeybindController.AddKey(Keys.Up, "MoveUp");
             this.KeybindController.AddKey(Keys.Down, "MoveDown");
             this.KeybindController.AddKey(Keys.Right, "MoveRight");
+
             this.KeybindController.KeyAction += this.GameModule_KeyPressed;
         }
 

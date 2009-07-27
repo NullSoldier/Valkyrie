@@ -95,10 +95,10 @@ namespace Valkyrie.Characters
 
 					if (!this.IsJumping && !TileEngine.CollisionManager.CheckCollision(this, this.MovingDestination))
 					{
-						if (!TileEngine.EventManager.Collision(this))
+						if (!TileEngine.EventManager.HandleEvent(this, ActivationTypes.Collision))
 						{
 							this.StopMoving();
-							TileEngine.EventManager.Collision((BaseCharacter)this);
+							TileEngine.EventManager.HandleEvent((BaseCharacter)this, ActivationTypes.Collision);
 						}
 					}
 					else
@@ -119,8 +119,10 @@ namespace Valkyrie.Characters
 		#region Game Methods
 		public void AButton()
         {
-            if (TileEngine.EventManager.Action(this))
+            if (TileEngine.EventManager.HandleEvent((BaseCharacter)this, ActivationTypes.Activate))
                 return;
+
+			// Do other things?
         }
 
         public override void Action(String type)

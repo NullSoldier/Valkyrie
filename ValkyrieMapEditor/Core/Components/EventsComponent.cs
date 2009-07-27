@@ -74,23 +74,23 @@ namespace ValkyrieMapEditor.Core
             MapPoint point = new MapPoint(SelectedPoint.X - xOffset, SelectedPoint.Y - yOffset);
             MapPoint size = new MapPoint(this.EndSelectedPoint.X - this.SelectedPoint.X, this.EndSelectedPoint.Y - this.SelectedPoint.Y);
 
-            Event e = TileEngine.EventManager.GetEventInRect(point, size);
+            BaseMapEvent e = TileEngine.EventManager.GetEventInRect(point, size);
 
 			if (e != null)
 			{
 				SelectedPoint = e.Location.ToPoint();
 				EndSelectedPoint = (e.Location + e.Size).ToPoint();
 			}
-			else
-				e = new Event(point, size);
 
 			frmMapEvent dialog = new frmMapEvent(e);
 			DialogResult result = dialog.ShowDialog();
 
 			e = dialog.Event;
+			if( e != null)
+				e.Rectangle = new Rectangle(point.X, point.Y, size.X, size.Y);
 
 			if (result == DialogResult.OK)
-                TileEngine.EventManager.SetEvent(e);
+                TileEngine.EventManager.SetOrAddEvent(e);
 
 			else if (result == DialogResult.Abort)
                 TileEngine.EventManager.DelEvent(e);
@@ -136,7 +136,7 @@ namespace ValkyrieMapEditor.Core
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (Event e in TileEngine.CurrentMapChunk.EventList)
+            foreach (BaseMapEvent e in TileEngine.CurrentMapChunk.EventList)
             {
 
                 Point newLoc = new Point((int)TileEngine.Camera.MapOffset.X + (int)TileEngine.Camera.CameraOffset.X + (e.Location.X * TileEngine.CurrentMapChunk.TileSize.X),
@@ -151,7 +151,7 @@ namespace ValkyrieMapEditor.Core
                     spriteBatch.Draw(border, destRectangle, new Rectangle(0, 0, border.Width, border.Height), Color.White);
                 }
 
-                spriteBatch.DrawString(EditorXNA.font, e.Type, new Vector2(newLoc.X + 10, newLoc.Y + 10), Color.AliceBlue);
+                spriteBatch.DrawString(EditorXNA.font, e.GetType(), new Vector2(newLoc.X + 10, newLoc.Y + 10), Color.AliceBlue);
             }
 
             if (!Cancel)
