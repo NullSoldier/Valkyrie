@@ -91,6 +91,7 @@
     <Compile Include="Core\PokeMessage.cs" />
     <Compile Include="Events\JumpEvent.cs" />
     <Compile Include="Events\LoadEvent.cs" />
+    <Compile Include="Events\RickRollEvent.cs" />
     <Compile Include="Events\SignPostEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />

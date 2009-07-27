@@ -372,6 +372,8 @@ namespace ValkyrieMapEditor
 
         private void btnCollisionLayer_Click(object sender, EventArgs e)
         {
+			this.btnCollisionLayer.Checked = true;
+
             this.btnBaseLayer.Checked = false;
             this.btnMiddleLayer.Checked = false;
             this.btnTopLayer.Checked = false;

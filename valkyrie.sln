@@ -15,16 +15,16 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D79942AD-2D2A-4DE4-A4C8-3D8243214961}.Debug|x86.ActiveCfg = Debug|x86
-		{D79942AD-2D2A-4DE4-A4C8-3D8243214961}.Debug|x86.Build.0 = Debug|x86
+		{D79942AD-2D2A-4DE4-A4C8-3D8243214961}.Debug|x86.ActiveCfg = Release|x86
+		{D79942AD-2D2A-4DE4-A4C8-3D8243214961}.Debug|x86.Build.0 = Release|x86
 		{D79942AD-2D2A-4DE4-A4C8-3D8243214961}.Release|x86.ActiveCfg = Release|x86
 		{D79942AD-2D2A-4DE4-A4C8-3D8243214961}.Release|x86.Build.0 = Release|x86
 		{E85239D8-04E9-4881-8A96-2C8AA0FF9F19}.Debug|x86.ActiveCfg = Debug|x86
 		{E85239D8-04E9-4881-8A96-2C8AA0FF9F19}.Debug|x86.Build.0 = Debug|x86
 		{E85239D8-04E9-4881-8A96-2C8AA0FF9F19}.Release|x86.ActiveCfg = Release|x86
 		{E85239D8-04E9-4881-8A96-2C8AA0FF9F19}.Release|x86.Build.0 = Release|x86
-		{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}.Debug|x86.ActiveCfg = Debug|x86
-		{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}.Debug|x86.Build.0 = Debug|x86
+		{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}.Debug|x86.ActiveCfg = Release|x86
+		{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}.Debug|x86.Build.0 = Release|x86
 		{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}.Release|x86.ActiveCfg = Release|x86
 		{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}.Release|x86.Build.0 = Release|x86
 		{8FF8ADB0-C7F7-4D9D-B18D-A287CAE829B9}.Debug|x86.ActiveCfg = Debug|x86

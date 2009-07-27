@@ -30,7 +30,10 @@ namespace Valkyrie.Characters
                 this.Animations.Add("WalkNorth", new FrameAnimation(new Rectangle(0, 0, 28, 42), 3));
                 this.Animations.Add("WalkEast", new FrameAnimation(new Rectangle(0, 42, 28, 42), 3));
                 this.Animations.Add("WalkSouth", new FrameAnimation(new Rectangle(0, 84, 28, 42), 3));
-                this.Animations.Add("WalkWest", new FrameAnimation(new Rectangle(0, 126, 28, 42), 3));
+				this.Animations.Add("WalkWest", new FrameAnimation(new Rectangle(0, 126, 28, 42), 3));
+				
+				this.Animations.Add("Jump", new FrameAnimation(new Rectangle(0, 168, 27, 56), 1));
+			
 			}
 		}
 
@@ -144,6 +147,8 @@ namespace Valkyrie.Characters
         {
             this.IsJumping = true;
 
+			this.CurrentAnimationName = "Jump";
+
             ScreenPoint dest = new ScreenPoint(TileEngine.Player.Location.X, TileEngine.Player.Location.Y);
             ScreenPoint newDest = dest + (new ScreenPoint(this.GetLookPoint().ToMapPoint().X * 2, this.GetLookPoint().ToMapPoint().Y) * 2);
             this.MovingDestination = newDest;
@@ -184,7 +189,11 @@ namespace Valkyrie.Characters
 
 		public override void StopMoving()
 		{
-			this.IsJumping = false;
+			if (this.IsJumping)
+			{
+				this.CurrentAnimationName = this.Direction.ToString();
+				this.IsJumping = false;
+			}
 
 			base.StopMoving();
 		}

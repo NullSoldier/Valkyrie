@@ -31,6 +31,20 @@
         </Parameter>
       </Parameters>
     </Event>
+    <Event>
+      <Type>RickRoll</Type>
+      <Activation>0</Activation>
+      <Dir>Any</Dir>
+      <Location>
+        <X>16</X>
+        <Y>16</Y>
+      </Location>
+      <Size>
+        <X>1</X>
+        <Y>1</Y>
+      </Size>
+      <Parameters />
+    </Event>
   </Events>
   <AnimatedTiles>
     <AnimatedTile>
