@@ -13,7 +13,7 @@ namespace ValkyrieLibrary.Events
 {
     public class MapEventManager
     {
-		private readonly Dictionary<Map, List<BaseMapEvent>> events = new Dictionary<Map, List<BaseMapEvent>>();
+		public readonly Dictionary<Map, List<BaseMapEvent>> events = new Dictionary<Map, List<BaseMapEvent>>();
 		public Dictionary<string, Type> EventTypes = new Dictionary<string, Type>(); // string type to type
 
 		public void AddEvent(BaseMapEvent mapevent)

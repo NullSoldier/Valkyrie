@@ -14,7 +14,8 @@ using Valkyrie.Core.Characters;
 
 namespace Valkyrie.Characters
 {
-	class PokePlayer : PokeCharacter
+	class PokePlayer
+		: PokeCharacter
 	{
 		public bool IsJumping = false;
 
@@ -33,7 +34,7 @@ namespace Valkyrie.Characters
 				this.Animations.Add("WalkWest", new FrameAnimation(new Rectangle(0, 126, 28, 42), 3));
 				
 				this.Animations.Add("Jump", new FrameAnimation(new Rectangle(0, 168, 27, 56), 1));
-			
+				this.Animations.Add("Spin", new FrameAnimation(new Rectangle(0, 224, 28, 41), 4, 0.1f));			
 			}
 		}
 
@@ -112,8 +113,13 @@ namespace Valkyrie.Characters
 					this.LastMoveTime = 0;
 				}
 
+				// Reached destination
 				if (this.Location == this.MovingDestination)
+				{
+					this.OnReachedDestination(EventArgs.Empty);
+
 					this.StopMoving();
+				}
 			}
 
 			base.Update(gameTime);

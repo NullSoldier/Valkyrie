@@ -7,7 +7,8 @@ using ValkyrieLibrary.Core;
 
 namespace ValkyrieMapEditor.Core
 {
-	class MapEditorPlayer : BaseCharacter
+	class MapEditorPlayer
+		: BaseCharacter
 	{
 		public MapEditorPlayer()
 		{

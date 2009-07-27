@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using ValkyrieLibrary.Events;
 
-namespace ValkyrieLibrary.Events
+namespace Valkyrie.Events
 {
 	class RickRollEvent
 		: BaseMapEvent

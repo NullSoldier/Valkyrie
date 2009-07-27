@@ -13,13 +13,13 @@ namespace Valkyrie.Core.Characters
 	/// <summary>
 	/// A class used for coupling the basic logic for any character in Pokemon Online
 	/// </summary>
-	class PokeCharacter : BaseCharacter
+	class PokeCharacter
+		: BaseCharacter
 	{
 		public Genders Gender;
 
 		public float MoveDelay = 0.002f;
 		public float LastMoveTime = 0;
-		public int Speed = 2;
 
 		public bool IsMoving = false;
 
@@ -33,10 +33,10 @@ namespace Valkyrie.Core.Characters
 			if (this.IsMoving)
 				return;
 
+			MapPoint point = Destination.ToMapPoint();
+
 			TileEngine.EventManager.HandleEvent(this, ActivationTypes.Movement);
 
-			MapPoint point = Destination.ToMapPoint();
-			
 			// Convert to a map point and then back to a screen point which should result in the map points screenpoint origin
 			this.MovingDestination = Destination.ToMapPoint().ToScreenPoint();
 

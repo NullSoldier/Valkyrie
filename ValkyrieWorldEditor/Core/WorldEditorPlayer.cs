@@ -7,7 +7,8 @@ using ValkyrieLibrary.Core;
 
 namespace ValkyrieWorldEditor.Core
 {
-    class WorldEditorPlayer : BaseCharacter
+    class WorldEditorPlayer
+		: BaseCharacter
     {
         public WorldEditorPlayer()
         {

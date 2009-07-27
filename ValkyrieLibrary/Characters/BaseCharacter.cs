@@ -15,13 +15,26 @@ namespace ValkyrieLibrary.Characters
 {
     public abstract class BaseCharacter : ICollidable
     {
+		// Callbacks
+		#region C# Workaround bullshit
+		public event EventHandler ReachedDestination;
+
+		public virtual void OnReachedDestination(EventArgs e)
+		{
+			var handler = this.ReachedDestination;
+			if (handler != null) handler(this, e);
+		}
+		#endregion
+
         public bool Animating = false;
 
         public String Name;
         public Texture2D Sprite;
         public ScreenPoint Location;
         public ScreenPoint MovingDestination;
+		public int Speed = 2;
         public Directions Direction;
+		public int Density = 1;
         public Dictionary<string, FrameAnimation> Animations;
         public String CurrentAnimationName;
 		public FrameAnimation CurrentAnimation{get { return this.Animations[this.CurrentAnimationName]; }}

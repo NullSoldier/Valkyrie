@@ -90,6 +90,7 @@
     <Compile Include="Core\Characters\PokePlayer.cs" />
     <Compile Include="Core\PokeMessage.cs" />
     <Compile Include="Events\JumpEvent.cs" />
+    <Compile Include="Events\JumpPadEvent.cs" />
     <Compile Include="Events\LoadEvent.cs" />
     <Compile Include="Events\RickRollEvent.cs" />
     <Compile Include="Events\SignPostEvent.cs" />
@@ -111,6 +112,8 @@
     <Content Include="Data\keys.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Graphics\Main\Cinnibar_Island.png" />
+    <Content Include="Maps\Main\Cinnibar_Island.xml" />
     <None Include="Graphics\Main\Pallet_House_01.png">
     </None>
     <None Include="Graphics\Main\Pallet_Town.png">
@@ -183,7 +186,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="States\UI\" />
     <Folder Include="UI\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
