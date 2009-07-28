@@ -87,6 +87,7 @@
     <Compile Include="Animation\FrameAnimation.cs" />
     <Compile Include="Characters\BaseCharacter.cs" />
     <Compile Include="Characters\MoveDirection.cs" />
+    <Compile Include="Check.cs" />
     <Compile Include="Core\BaseCamera.cs" />
     <Compile Include="Collision\ICollidable.cs" />
     <Compile Include="Collision\ICollisionManager.cs" />

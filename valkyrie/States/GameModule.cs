@@ -44,8 +44,12 @@ namespace Valkyrie.States
             spriteBatch.GraphicsDevice.Viewport = TileEngine.Camera.Viewport;
             spriteBatch.GraphicsDevice.Clear(Color.Black);
 
+			spriteBatch.Begin();
+
             TileEngine.DrawAllLayers(spriteBatch, true);
             TileEngine.DrawOverlay(spriteBatch);
+
+			spriteBatch.End();
         }
 
         public void Load()

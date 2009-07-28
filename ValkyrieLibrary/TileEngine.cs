@@ -1,34 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using ValkyrieLibrary;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Xml;
-using ValkyrieLibrary.Collision;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using ValkyrieLibrary.Characters;
-using ValkyrieLibrary.Maps;
-using ValkyrieLibrary.Events;
+using ValkyrieLibrary.Collision;
 using ValkyrieLibrary.Core;
+using ValkyrieLibrary.Events;
+using ValkyrieLibrary.Maps;
 
 namespace ValkyrieLibrary
 {
 	public static class TileEngine
 	{
         public static Viewport Viewport;
-        public static BaseCamera Camera = null;
-        public static Dictionary<string, string> Configuration = null;
-        public static BaseCharacter Player = null;
+        public static BaseCamera Camera;
+        public static Dictionary<string, string> Configuration;
+        public static BaseCharacter Player;
 
-        public static TextureManager TextureManager = null;
-        public static ModuleManager ModuleManager = null;
-        public static CollisionManager CollisionManager = null;
-        public static WorldManager WorldManager = null;
-        public static MapEventManager EventManager = null;
+        public static TextureManager TextureManager;
+        public static ModuleManager ModuleManager;
+        public static CollisionManager CollisionManager;
+        public static WorldManager WorldManager;
+        public static MapEventManager EventManager;
 
 		public static int TileSize = 32;
         public static bool IsMapLoaded{ get { return (TileEngine.CurrentMapChunk != null); } }
@@ -48,7 +46,7 @@ namespace ValkyrieLibrary
                         MapPoint playerLoc = TileEngine.Player.Location.ToMapPoint();
                         Rectangle mapSize = map.MapLocation.ToRect(map.Map.MapSize.ToPoint());
 
-                        if (mapSize.Contains(playerLoc.ToPoint()) == true)
+                        if (mapSize.Contains (playerLoc.ToPoint()))
                         {
                             TileEngine.currentmapchunk = map.Map;
                             break;
@@ -61,12 +59,11 @@ namespace ValkyrieLibrary
             }
         }
 
-        static TileEngine()
-        {
-        }
-
 		public static void Initialize(ContentManager content, GraphicsDevice device)
 		{
+			Check.NullArgument (content, "content");
+			Check.NullArgument (device, "device");
+
 			TileEngine.TextureManager = new TextureManager(content, device, "Graphics");
 			TileEngine.Player = null; // Cannot assign to abstract class, removed player
             TileEngine.ModuleManager = new ModuleManager();
@@ -75,8 +72,10 @@ namespace ValkyrieLibrary
             TileEngine.EventManager = new MapEventManager();
 		}
 
-        public static void Load(FileInfo Configuration)
+        public static void Load (FileInfo Configuration)
         {
+        	Check.NullArgument (Configuration, "Configuration");
+
             XmlDocument doc = new XmlDocument();
             doc.Load(Configuration.FullName);
             
@@ -95,8 +94,6 @@ namespace ValkyrieLibrary
                 TileEngine.ModuleManager.PushModuleToScreen(TileEngine.Configuration["DefaultModule"]);
         }
 
-
-
 		public static void ClearCurrentMapChunk()
 		{
 			TileEngine.currentmapchunk = null;
@@ -104,6 +101,8 @@ namespace ValkyrieLibrary
 
 		public static Point GlobalPixelPointToLocal(MapPoint localpoint)
 		{
+			Check.NullArgument (localpoint, "localpoint");
+
             int x = localpoint.X - (TileEngine.WorldManager.CurrentWorld.MapList[TileEngine.CurrentMapChunk.Name].MapLocation.X - TileEngine.CurrentMapChunk.TileSize.X);
             int y = localpoint.Y - (TileEngine.WorldManager.CurrentWorld.MapList[TileEngine.CurrentMapChunk.Name].MapLocation.Y - TileEngine.CurrentMapChunk.TileSize.Y);
 
@@ -112,13 +111,15 @@ namespace ValkyrieLibrary
 
 		public static MapPoint GlobalTilePointToLocal(MapPoint localpoint)
 		{
-            MapPoint temp = localpoint - TileEngine.WorldManager.CurrentWorld.MapList[TileEngine.CurrentMapChunk.Name].MapLocation;
-            return temp;
+			Check.NullArgument (localpoint, "localpoint");
 
+            return localpoint - TileEngine.WorldManager.CurrentWorld.MapList[TileEngine.CurrentMapChunk.Name].MapLocation;
 		}
 
 		public static void Update(GameTime time)
 		{
+			Check.NullArgument (time, "time");
+
 			// Run tile engine logic here
             ModuleManager.CurrentModule.Tick(time);
 
@@ -135,16 +136,23 @@ namespace ValkyrieLibrary
 		#region Draw Methods
         public static void Draw(SpriteBatch spriteBatch, GameTime gameTime)
 		{
+        	Check.NullArgument (spriteBatch, "spriteBatch");
+        	Check.NullArgument (gameTime, "gameTime");
+
             TileEngine.ModuleManager.CurrentModule.Draw(spriteBatch, gameTime);
 		}
 
         public static void DrawLayerMap(SpriteBatch spriteBatch, MapLayers layer)
         {
+        	Check.NullArgument (spriteBatch, "spriteBatch");
+
             DrawLayerMap(spriteBatch, layer, Color.White);
         }
 
         public static void DrawLayerMap(SpriteBatch spriteBatch, MapLayers layer, Color tint)
         {
+        	Check.NullArgument (spriteBatch, "spriteBatch");
+
             foreach (var header in TileEngine.WorldManager.CurrentWorld.MapList.Values)
             {
                 if (!header.Map.IsVisableToPlayer())
@@ -156,6 +164,8 @@ namespace ValkyrieLibrary
 
         public static void DrawEverything(SpriteBatch spriteBatch)
 		{
+        	Check.NullArgument (spriteBatch, "spriteBatch");
+
             if (TileEngine.WorldManager.CurrentWorld == null)
                 return;
 
@@ -167,8 +177,10 @@ namespace ValkyrieLibrary
                 TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.TopLayer);
             }
 		}
-		public static void DrawAllLayers(SpriteBatch spriteBatch, bool drawcharacters)
+		public static void DrawAllLayers(SpriteBatch spriteBatch, bool drawCharacters)
 		{
+			Check.NullArgument (spriteBatch, "spriteBatch");
+
             if (TileEngine.WorldManager.CurrentWorld == null)
                 return;
 
@@ -181,11 +193,11 @@ namespace ValkyrieLibrary
                 TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.BaseLayer);
                 TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.MiddleLayer);
 
-                if (!drawcharacters)
+                if (!drawCharacters)
                     TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.TopLayer);
             }
 
-			if (drawcharacters)
+			if (drawCharacters)
             {
 				TileEngine.DrawCharacters(spriteBatch);
 
@@ -201,18 +213,19 @@ namespace ValkyrieLibrary
 
         public static void DrawLayerMap(SpriteBatch spriteBatch, MapHeader header, MapLayers layer)
         {
+        	Check.NullArgument (spriteBatch, "spriteBatch");
+
             DrawLayerMap(spriteBatch, header, layer, Color.White);
         }
 
         public static void DrawLayerMap(SpriteBatch spriteBatch, MapHeader header, MapLayers layer, Color tint)
 		{
-			if (spriteBatch == null)
-				throw new ArgumentNullException();
+        	Check.NullArgument (spriteBatch, "spriteBatch");
+        	Check.NullArgument (header, "header");
 
 			Map currentMap = header.Map;
             ScreenPoint camOffset = TileEngine.Camera.Offset();
             ScreenPoint tileSize = currentMap.TileSize;
-
 
 			for (int y = 0; y < currentMap.MapSize.Y; y++)
 			{
@@ -238,6 +251,9 @@ namespace ValkyrieLibrary
         //this is used to draw a map at 0,0 incase we use a custom rendertarget
         public static void DrawMapLocal(SpriteBatch spriteBatch, MapHeader header)
         {
+			Check.NullArgument (spriteBatch, "spriteBatch");
+			Check.NullArgument (header, "header");
+
             TileEngine.DrawLayerMapLocal(spriteBatch, header, MapLayers.UnderLayer);
             TileEngine.DrawLayerMapLocal(spriteBatch, header, MapLayers.BaseLayer);
             TileEngine.DrawLayerMapLocal(spriteBatch, header, MapLayers.MiddleLayer);
@@ -246,13 +262,12 @@ namespace ValkyrieLibrary
 
         public static void DrawLayerMapLocal(SpriteBatch spriteBatch, MapHeader header, MapLayers layer)
         {
-            if (spriteBatch == null)
-                throw new ArgumentNullException();
+            Check.NullArgument (spriteBatch, "spriteBatch");
+			Check.NullArgument (header, "header");
 
             Map currentMap = header.Map;
             ScreenPoint camOffset = TileEngine.Camera.Offset();
             ScreenPoint tileSize = currentMap.TileSize;
-
 
             for (int y = 0; y < currentMap.MapSize.Y; y++)
             {
@@ -273,16 +288,18 @@ namespace ValkyrieLibrary
 
         public static void DrawCharacters(SpriteBatch spriteBatch)
         {
+			Check.NullArgument (spriteBatch, "spriteBatch");
+
 			TileEngine.Player.Draw(spriteBatch);
         }
 
         public static void DrawOverlay(SpriteBatch spriteBatch)
         {
+			Check.NullArgument (spriteBatch, "spriteBatch");
+
             TileEngine.Player.DrawOverlay(spriteBatch);
         }
 
 		#endregion
 	}
-
 }
-
