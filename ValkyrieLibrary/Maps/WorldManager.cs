@@ -8,7 +8,6 @@ using System.IO;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Maps;
 
-
 namespace ValkyrieLibrary.Maps
 {
     public class WorldManager
@@ -16,42 +15,33 @@ namespace ValkyrieLibrary.Maps
         public String FileName;
         public String FilePath;
         public Dictionary<String, World> WorldsList;
-        
-        public World CurrentWorld
-        {
-            get
-            {
-                return curWorld;
-            }
-        }
 
-        private World curWorld;
+    	public World CurrentWorld { get; private set; }
 
-        public WorldManager()
+    	public WorldManager()
         {
             this.WorldsList = new Dictionary<String, World>();
-            this.curWorld = null;
+            this.CurrentWorld = null;
         }
 
-        public void SetWorld(String Name, String startLoc)
+        public void SetWorld(String name, String startLoc)
         {
-            if (this.WorldsList.ContainsKey(Name))
-            {
-                this.curWorld = this.WorldsList[Name];
-                TileEngine.ClearCurrentMapChunk();
-                TileEngine.Player.StopMoving();
-				
-				if( startLoc == null || startLoc == "Default" )
-					TileEngine.Player.Location = this.curWorld.FindDefaultStartLocation();
-				else
-					TileEngine.Player.Location = this.curWorld.FindStartLocation(startLoc);
+        	if (!this.WorldsList.ContainsKey(name))
+        		return;
 
-                TileEngine.Camera.CenterOnCharacter(TileEngine.Player);
-            }
+        	this.CurrentWorld = this.WorldsList[name];
+        	TileEngine.ClearCurrentMapChunk();
+        	TileEngine.Player.StopMoving();
+				
+        	if( startLoc == null || startLoc == "Default" )
+        		TileEngine.Player.Location = this.CurrentWorld.FindDefaultStartLocation();
+        	else
+        		TileEngine.Player.Location = this.CurrentWorld.FindStartLocation(startLoc);
+
+        	TileEngine.Camera.CenterOnCharacter(TileEngine.Player);
         }
 
-
-        public void Load(FileInfo WorldConfiguration)
+        public void Load (FileInfo WorldConfiguration)
         {
             XmlDocument doc = new XmlDocument();
             doc.Load(WorldConfiguration.FullName);
@@ -67,7 +57,6 @@ namespace ValkyrieLibrary.Maps
             }
         }
 
-
         class tempDictTwo
         {
             public Dictionary<Map, tempStorage> dict = new Dictionary<Map, tempStorage>();
@@ -79,19 +68,18 @@ namespace ValkyrieLibrary.Maps
             public String oldPath;
         }
 
-
         public void Export(String path)
         {
             Dictionary<World, tempDictTwo> dict = new Dictionary<World, tempDictTwo>();
 
-            Directory.CreateDirectory(path + "\\Maps");
-            Directory.CreateDirectory(path + "\\Graphics");
-            Directory.CreateDirectory(path + "\\Data");
+            Directory.CreateDirectory(path.PathCombine("Maps"));
+            Directory.CreateDirectory(path.PathCombine("Graphics"));
+            Directory.CreateDirectory(path.PathCombine("Data"));
 
             foreach (var world in this.WorldsList)
             {
-                Directory.CreateDirectory(path + "\\Maps\\" + world.Value.Name);
-                Directory.CreateDirectory(path + "\\Graphics\\" + world.Value.Name);
+                Directory.CreateDirectory(path.PathCombine("Maps").PathCombine(world.Value.Name));
+                Directory.CreateDirectory(path.PathCombine("Graphics").PathCombine(world.Value.Name));
 
                 tempDictTwo td = new tempDictTwo();
 
@@ -112,13 +100,13 @@ namespace ValkyrieLibrary.Maps
                     File.Copy(TileEngine.TextureManager.TextureRoot + "\\" + map.Value.Map.TextureName, path + "\\Graphics\\" + newTexturePath, true);
                     map.Value.Map.TextureName = newTexturePath;
 
-                    map.Value.Map.Save(path + "\\Maps\\" + map.Value.MapFileLocation);
+                    map.Value.Map.Save(path.PathCombine("Maps").PathCombine(map.Value.MapFileLocation));
                 }
 
                 dict.Add(world.Value, td);
             }
 
-            Save(path + "\\Data\\" + this.FileName);
+            Save(path.PathCombine("Data").PathCombine(this.FileName));
 
             foreach (var world in this.WorldsList)
             {
@@ -155,7 +143,7 @@ namespace ValkyrieLibrary.Maps
         {
 			// I think this should be named Clear cache as a standard
             this.WorldsList.Clear();
-            this.curWorld = null;
+            this.CurrentWorld = null;
         }
     }
 }
