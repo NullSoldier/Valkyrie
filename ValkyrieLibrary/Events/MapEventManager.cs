@@ -155,6 +155,9 @@ namespace ValkyrieLibrary.Events
 				}
 			}
 
+			if ( !this.EventTypes.ContainsKey(type) )
+				throw new ArgumentException("Event type does not exist in the currently loaded assemblies. Did you load the engines event types from the assemblies using event manager method \"public void LoadEventTypesFromAssemblies(Assembly[] assemblies)\"?");
+
 			BaseMapEvent newEvent = (BaseMapEvent)Activator.CreateInstance(this.EventTypes[type]);
 			newEvent.Direction = dir;
 			newEvent.Parameters = parameters;

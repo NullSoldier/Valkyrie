@@ -74,6 +74,7 @@ namespace ValkyrieWorldEditor.Forms
         {
             // Custom loading
             TileEngine.Initialize(this.content, gfxDevice);
+			//TileEngine.EventManager.LoadEventTypesFromAssemblies();
             TileEngine.Viewport = gfxDevice.Viewport;
             TileEngine.Camera = new BaseCamera(0, 0, this.Width, this.Height);
             TileEngine.Load(new FileInfo("Data/TileEngineConfig.xml"));

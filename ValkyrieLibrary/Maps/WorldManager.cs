@@ -153,6 +153,7 @@ namespace ValkyrieLibrary.Maps
 
         public void CleanUp()
         {
+			// I think this should be named Clear cache as a standard
             this.WorldsList.Clear();
             this.curWorld = null;
         }

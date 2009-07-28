@@ -40,7 +40,9 @@ namespace Valkyrie.Characters
 
 		public override void Draw(SpriteBatch spriteBatch)
         {
+			//spriteBatch.Begin();
 			spriteBatch.Draw(this.Sprite, this.DrawScreenLocation, Animations[this.CurrentAnimationName].FrameRectangle, Color.White);
+			//spriteBatch.End();
 		}
 
 		public Vector2 DrawScreenLocation
