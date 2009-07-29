@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C# Express 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Valkyrie", "valkyrie\Valkyrie.csproj", "{D79942AD-2D2A-4DE4-A4C8-3D8243214961}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValkyrieMapEditor", "ValkyrieMapEditor\ValkyrieMapEditor.csproj", "{E85239D8-04E9-4881-8A96-2C8AA0FF9F19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValkyrieLibrary", "ValkyrieLibrary\ValkyrieLibrary.csproj", "{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValkyrieWorldEditor", "ValkyrieWorldEditor\ValkyrieWorldEditor.csproj", "{8FF8ADB0-C7F7-4D9D-B18D-A287CAE829B9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D79942AD-2D2A-4DE4-A4C8-3D8243214961}.Debug|x86.ActiveCfg = Release|x86
+		{D79942AD-2D2A-4DE4-A4C8-3D8243214961}.Debug|x86.Build.0 = Release|x86
+		{D79942AD-2D2A-4DE4-A4C8-3D8243214961}.Release|x86.ActiveCfg = Release|x86
+		{D79942AD-2D2A-4DE4-A4C8-3D8243214961}.Release|x86.Build.0 = Release|x86
+		{E85239D8-04E9-4881-8A96-2C8AA0FF9F19}.Debug|x86.ActiveCfg = Debug|x86
+		{E85239D8-04E9-4881-8A96-2C8AA0FF9F19}.Debug|x86.Build.0 = Debug|x86
+		{E85239D8-04E9-4881-8A96-2C8AA0FF9F19}.Release|x86.ActiveCfg = Release|x86
+		{E85239D8-04E9-4881-8A96-2C8AA0FF9F19}.Release|x86.Build.0 = Release|x86
+		{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}.Debug|x86.ActiveCfg = Release|x86
+		{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}.Debug|x86.Build.0 = Release|x86
+		{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}.Release|x86.ActiveCfg = Release|x86
+		{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}.Release|x86.Build.0 = Release|x86
+		{8FF8ADB0-C7F7-4D9D-B18D-A287CAE829B9}.Debug|x86.ActiveCfg = Debug|x86
+		{8FF8ADB0-C7F7-4D9D-B18D-A287CAE829B9}.Debug|x86.Build.0 = Debug|x86
+		{8FF8ADB0-C7F7-4D9D-B18D-A287CAE829B9}.Release|x86.ActiveCfg = Release|x86
+		{8FF8ADB0-C7F7-4D9D-B18D-A287CAE829B9}.Release|x86.Build.0 = Release|x86
+		{FB1DB1C1-1842-4A27-BE25-013F47C42725}.Debug|x86.ActiveCfg = Debug|x86
+		{FB1DB1C1-1842-4A27-BE25-013F47C42725}.Release|x86.ActiveCfg = Release|x86
+		{C7B51154-8C19-4B4B-9641-9BB2A6E3A624}.Debug|x86.ActiveCfg = Debug|x86
+		{C7B51154-8C19-4B4B-9641-9BB2A6E3A624}.Release|x86.ActiveCfg = Release|x86
+		{EEEE4B56-4384-4735-B583-D662919FFE4D}.Debug|x86.ActiveCfg = Debug|x86
+		{EEEE4B56-4384-4735-B583-D662919FFE4D}.Release|x86.ActiveCfg = Release|x86
+		{DC6E0088-8354-40D2-BF3C-D6323250DDC4}.Debug|x86.ActiveCfg = Debug|x86
+		{DC6E0088-8354-40D2-BF3C-D6323250DDC4}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

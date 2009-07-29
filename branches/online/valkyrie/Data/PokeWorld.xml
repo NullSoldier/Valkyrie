@@ -1,0 +1,57 @@
+<Worlds>
+  <World Name="Main">
+    <DefaultSpawn>PalletTownEntryPoint</DefaultSpawn>
+    <MapLoc>
+      <Name>Pewter</Name>
+      <FilePath>Main\Pewter_Town.xml</FilePath>
+      <X>12</X>
+      <Y>0</Y>
+    </MapLoc>
+    <MapLoc>
+      <Name>Route2</Name>
+      <FilePath>Main\Route2_Route.xml</FilePath>
+      <X>24</X>
+      <Y>40</Y>
+    </MapLoc>
+    <MapLoc>
+      <Name>PalletTown</Name>
+      <FilePath>Main\Pallet_Town.xml</FilePath>
+      <X>24</X>
+      <Y>200</Y>
+    </MapLoc>
+    <MapLoc>
+      <Name>Route1</Name>
+      <FilePath>Main\Route1_Route.xml</FilePath>
+      <X>24</X>
+      <Y>160</Y>
+    </MapLoc>
+    <MapLoc>
+      <Name>ViridianCity</Name>
+      <FilePath>Main\Viridian_Town.xml</FilePath>
+      <X>12</X>
+      <Y>120</Y>
+    </MapLoc>
+    <MapLoc>
+      <Name>Route21</Name>
+      <FilePath>Main\Route21_Route.xml</FilePath>
+      <X>24</X>
+      <Y>222</Y>
+    </MapLoc>
+    <MapLoc>
+      <Name>Cinnibar_Island</Name>
+      <FilePath>Main\Cinnibar_Island.xml</FilePath>
+      <X>24</X>
+      <Y>318</Y>
+    </MapLoc>
+  </World>
+  
+  <World Name="Pallet_House">
+    <DefaultSpawn>PalletTown_HouseOne_Internal</DefaultSpawn>
+    <MapLoc>
+      <Name>Pallet_House_01</Name>
+      <FilePath>Pallet_House_01\PalleT_House_01.xml</FilePath>
+      <X>0</X>
+      <Y>0</Y>
+    </MapLoc>
+  </World>
+</Worlds>
