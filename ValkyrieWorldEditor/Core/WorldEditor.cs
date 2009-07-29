@@ -40,9 +40,9 @@ namespace ValkyrieWorldEditor.Core
         {
             TileEngine.WorldManager.CleanUp();
 
-            TileEngine.Configuration["MapRoot"] = UniLocation.Directory.Parent.FullName + "\\Maps";
-            TileEngine.Configuration["GraphicsRoot"] = UniLocation.Directory.Parent.FullName + "\\Graphics";
-            TileEngine.TextureManager.TextureRoot = TileEngine.Configuration["GraphicsRoot"];
+            TileEngine.Configuration[TileEngineConfigurationName.MapRoot] = Path.Combine (UniLocation.Directory.Parent.FullName, "Maps");
+            TileEngine.Configuration[TileEngineConfigurationName.GraphicsRoot] = Path.Combine (UniLocation.Directory.Parent.FullName, "Graphics");
+            TileEngine.TextureManager.TextureRoot = TileEngine.Configuration[TileEngineConfigurationName.GraphicsRoot];
 
             TileEngine.WorldManager.Load(UniLocation);
             MainForm.RefreshWorldList(TileEngine.WorldManager);

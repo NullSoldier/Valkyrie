@@ -68,18 +68,20 @@ namespace ValkyrieLibrary.Maps
             public String oldPath;
         }
 
-        public void Export(String path)
+        public void Export(string dir)
         {
+			DirectoryInfo exportDir = new DirectoryInfo(dir);
+
             Dictionary<World, tempDictTwo> dict = new Dictionary<World, tempDictTwo>();
 
-            Directory.CreateDirectory(path.PathCombine("Maps"));
-            Directory.CreateDirectory(path.PathCombine("Graphics"));
-            Directory.CreateDirectory(path.PathCombine("Data"));
+        	var maps = exportDir.CreateSubdirectory("Maps");
+        	var graphics = exportDir.CreateSubdirectory("Graphics");
+        	var data = exportDir.CreateSubdirectory("Data");
 
             foreach (var world in this.WorldsList)
             {
-                Directory.CreateDirectory(path.PathCombine("Maps").PathCombine(world.Value.Name));
-                Directory.CreateDirectory(path.PathCombine("Graphics").PathCombine(world.Value.Name));
+            	maps.CreateSubdirectory(world.Value.Name);
+            	graphics.CreateSubdirectory(world.Value.Name);
 
                 tempDictTwo td = new tempDictTwo();
 
@@ -94,19 +96,20 @@ namespace ValkyrieLibrary.Maps
                     var pictStrings = map.Value.Map.TextureName.Split(new char[] { '\\', '.' });
                     string imageExt = pictStrings.Last();
 
-                    map.Value.MapFileLocation = world.Value.Name + "\\" +  map.Value.Map.Name + ".xml";
-                    String newTexturePath = world.Value.Name + "\\" + map.Value.Map.Name + "." + imageExt;
 
-                    File.Copy(TileEngine.TextureManager.TextureRoot + "\\" + map.Value.Map.TextureName, path + "\\Graphics\\" + newTexturePath, true);
+                    map.Value.MapFileLocation = Path.Combine (world.Value.Name, map.Value.Map.Name + ".xml");
+                    String newTexturePath = Path.Combine (world.Value.Name, map.Value.Map.Name + "." + imageExt);
+
+                    File.Copy(Path.Combine (TileEngine.TextureManager.TextureRoot, map.Value.Map.TextureName), Path.Combine (graphics.FullName, newTexturePath), true);
                     map.Value.Map.TextureName = newTexturePath;
 
-                    map.Value.Map.Save(path.PathCombine("Maps").PathCombine(map.Value.MapFileLocation));
+					map.Value.Map.Save(Path.Combine(maps.FullName, map.Value.MapFileLocation));
                 }
 
                 dict.Add(world.Value, td);
             }
 
-            Save(path.PathCombine("Data").PathCombine(this.FileName));
+        	Save(Path.Combine(data.FullName, this.FileName));
 
             foreach (var world in this.WorldsList)
             {

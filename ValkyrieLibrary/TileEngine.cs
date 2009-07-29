@@ -19,7 +19,6 @@ namespace ValkyrieLibrary
 	{
         public static Viewport Viewport;
         public static BaseCamera Camera;
-        public static Dictionary<string, string> Configuration;
         public static BaseCharacter Player;
 
         public static TextureManager TextureManager;
@@ -31,6 +30,11 @@ namespace ValkyrieLibrary
 		public static int TileSize = 32;
         public static bool IsMapLoaded{ get { return (TileEngine.CurrentMapChunk != null); } }
 		
+		public static TileEngineConfiguration Configuration
+		{
+			get; set;
+		}
+
         private static Map currentmapchunk;
         public static Map CurrentMapChunk
         {
@@ -67,31 +71,34 @@ namespace ValkyrieLibrary
 			TileEngine.TextureManager = new TextureManager(content, device, "Graphics");
 			TileEngine.Player = null; // Cannot assign to abstract class, removed player
             TileEngine.ModuleManager = new ModuleManager();
-            TileEngine.Configuration = new Dictionary<string, string>();
+            TileEngine.Configuration = null;
             TileEngine.WorldManager = new WorldManager();
             TileEngine.EventManager = new MapEventManager();
 		}
 
-        public static void Load (FileInfo Configuration)
+        public static void Load (FileInfo configuration)
         {
-        	Check.NullArgument (Configuration, "Configuration");
+        	Check.NullArgument (configuration, "configuration");
 
             XmlDocument doc = new XmlDocument();
-            doc.Load(Configuration.FullName);
+            doc.Load(configuration.FullName);
             
-            XmlNodeList nodes = doc.GetElementsByTagName("Config");
-            foreach (XmlNode node in nodes[0].ChildNodes)
-            {
-                if (TileEngine.Configuration.ContainsKey(node.Name))
-                    TileEngine.Configuration[node.Name] = node.InnerText;
-                else
-                    TileEngine.Configuration.Add(node.Name, node.InnerText);
-            }
+			XmlNodeList nodes = doc.GetElementsByTagName("Config");
+        	TileEngine.Configuration =
+        		new TileEngineConfiguration(nodes[0].ChildNodes.OfType<XmlNode>().ToDictionary(x => (TileEngineConfigurationName)Enum.Parse (typeof(TileEngineConfigurationName), x.Name), x => x.InnerText));
+			
+			//foreach (XmlNode node in nodes[0].ChildNodes)
+			//{
+			//    if (TileEngine.Configuration.ContainsKey(node.Name))
+			//        TileEngine.Configuration[node.Name] = node.InnerText;
+			//    else
+			//        TileEngine.Configuration.Add (node.Name, node.InnerText);
+			//}
 
-            TileEngine.TextureManager.TextureRoot = TileEngine.Configuration["GraphicsRoot"];
+            TileEngine.TextureManager.TextureRoot = TileEngine.Configuration[TileEngineConfigurationName.GraphicsRoot];
 
-            if( TileEngine.Configuration.ContainsKey("DefaultModule") )
-                TileEngine.ModuleManager.PushModuleToScreen(TileEngine.Configuration["DefaultModule"]);
+            if( TileEngine.Configuration.ContainsKey(TileEngineConfigurationName.DefaultModule) )
+                TileEngine.ModuleManager.PushModuleToScreen(TileEngine.Configuration[TileEngineConfigurationName.DefaultModule]);
         }
 
 		public static void ClearCurrentMapChunk()

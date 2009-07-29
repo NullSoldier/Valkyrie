@@ -115,6 +115,9 @@ namespace ValkyrieWorldEditor.Core
 
         private void MoveCameraTo(MouseEventArgs e)
         {
+			if (TileEngine.WorldManager.CurrentWorld == null)
+				return;
+
             ScreenPoint pos = new ScreenPoint(e.X, e.Y) * this.Scale + new ScreenPoint(TileEngine.Camera.CameraOffset);
             ScreenPoint screenSize = new ScreenPoint(TileEngine.Camera.Screen.Width, TileEngine.Camera.Screen.Height);
             ScreenPoint mapSize = TileEngine.WorldManager.CurrentWorld.WorldSize.ToScreenPoint() - screenSize;

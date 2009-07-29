@@ -68,7 +68,7 @@ namespace ValkyrieLibrary.Maps
 		public void Load()
 		{
 			this.map = new Map();
-			this.map.LoadMap(new FileInfo(Path.Combine(TileEngine.Configuration["MapRoot"], this.MapFileLocation)));
+			this.map.LoadMap(new FileInfo(Path.Combine(TileEngine.Configuration[TileEngineConfigurationName.MapRoot], this.MapFileLocation)));
 			this.map.Name = this.MapName;
 		}
 

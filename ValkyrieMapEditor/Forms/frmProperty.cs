@@ -72,13 +72,13 @@ namespace ValkyrieMapEditor
 
 			// Copy it over
 			FileInfo TileSet = new FileInfo(this.inTileSet.Text);
-			FileInfo tmp = new FileInfo(Path.Combine(Environment.CurrentDirectory, TileEngine.Configuration["GraphicsRoot"]));			
+			FileInfo tmp = new FileInfo(Path.Combine(Environment.CurrentDirectory, TileEngine.Configuration[TileEngineConfigurationName.GraphicsRoot]));			
 
 			if (TileSet.FullName != (tmp.FullName + TileSet.Name))
 			{
 				var result = MessageBox.Show("Would you like to copy this tile set to the local directory this will override any previous tilesheets with that name?", "Copy Tileset", MessageBoxButtons.YesNo);
 				if (result == DialogResult.Yes)
-					TileSet.CopyTo(Path.Combine(Path.Combine(Environment.CurrentDirectory, TileEngine.Configuration["GraphicsRoot"]), TileSet.Name), true);
+					TileSet.CopyTo(Path.Combine(Path.Combine(Environment.CurrentDirectory, TileEngine.Configuration[TileEngineConfigurationName.GraphicsRoot]), TileSet.Name), true);
 			}
 
 			this.map.TextureName = TileSet.Name;

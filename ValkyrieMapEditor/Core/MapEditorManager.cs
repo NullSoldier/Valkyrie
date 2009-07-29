@@ -42,7 +42,7 @@ namespace ValkyrieMapEditor
 			get
 			{
 				if (TileEngine.IsMapLoaded)
-					return new FileInfo(Path.Combine(Environment.CurrentDirectory, Path.Combine(TileEngine.Configuration["GraphicsRoot"], TileEngine.CurrentMapChunk.TextureName)));
+					return new FileInfo(Path.Combine(Environment.CurrentDirectory, Path.Combine(TileEngine.Configuration[TileEngineConfigurationName.GraphicsRoot], TileEngine.CurrentMapChunk.TextureName)));
 				else
 					return new FileInfo(String.Empty);
 			}
