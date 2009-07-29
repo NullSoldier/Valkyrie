@@ -14,10 +14,10 @@ namespace Valkyrie.States
 {
     public class MenuModule : IModule
     {
-        KeybindController KeyManager;
+        KeybindController keyManager;
 		TitleScreenState state = TitleScreenState.CopyrightIn;
 
-		FrameAnimation grass = new FrameAnimation(new Rectangle(0, 0, 240, 160), 3, 0.06f);
+    	readonly FrameAnimation grass = new FrameAnimation(new Rectangle(0, 0, 240, 160), 3, 0.06f);
 		
 		int currentAlpha = 0;
 		int alphaIncrement = 5;
@@ -33,7 +33,7 @@ namespace Valkyrie.States
 
         public void Tick(GameTime gameTime)
         {
-            KeyManager.Update();
+            keyManager.Update();
 
 			this.sincelast += gameTime.ElapsedRealTime.TotalMilliseconds;
 
@@ -129,9 +129,9 @@ namespace Valkyrie.States
 			TileEngine.TextureManager.AddTexture(@"Intro\GrassValley.png");
 			TileEngine.TextureManager.AddTexture(@"Intro\GrassSky.png");
 
-            this.KeyManager = new KeybindController();
-            this.KeyManager.AddKey(Keys.Enter, "MainMenuEnter");
-            this.KeyManager.KeyAction += MainMenu_KeyPressed;
+            this.keyManager = new KeybindController();
+            this.keyManager.AddKey(Keys.Enter, "MainMenuEnter");
+            this.keyManager.KeyAction += MainMenu_KeyPressed;
 
 			this.currentAlpha = 0;
         }
@@ -153,7 +153,7 @@ namespace Valkyrie.States
 
         #endregion
 
-        public void MainMenu_KeyPressed(object sender, KeyPressedEventArgs e)
+        public void MainMenu_KeyPressed (object sender, KeyPressedEventArgs e)
         {
             if (e.KeyPressed == Keys.Enter)
             {
