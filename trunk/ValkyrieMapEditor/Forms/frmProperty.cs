@@ -76,9 +76,16 @@ namespace ValkyrieMapEditor
 
 			if (TileSet.FullName != (tmp.FullName + TileSet.Name))
 			{
-				var result = MessageBox.Show("Would you like to copy this tile set to the local directory this will override any previous tilesheets with that name?", "Copy Tileset", MessageBoxButtons.YesNo);
-				if (result == DialogResult.Yes)
-					TileSet.CopyTo(Path.Combine(Path.Combine(Environment.CurrentDirectory, TileEngine.Configuration[TileEngineConfigurationName.GraphicsRoot]), TileSet.Name), true);
+				try
+				{
+					var result = MessageBox.Show("Would you like to copy this tile set to the local directory this will override any previous tilesheets with that name?", "Copy Tileset", MessageBoxButtons.YesNo);
+					if (result == DialogResult.Yes)
+						TileSet.CopyTo(Path.Combine(Path.Combine(Environment.CurrentDirectory, TileEngine.Configuration[TileEngineConfigurationName.GraphicsRoot]), TileSet.Name), true);
+				}
+				catch (IOException)
+				{
+					MessageBox.Show(String.Format("Could not copy the image {0} to the target directory.", TileSet.Name), "Error", MessageBoxButtons.OK);
+				}
 			}
 
 			this.map.TextureName = TileSet.Name;

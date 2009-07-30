@@ -77,20 +77,33 @@ namespace ValkyrieMapEditor
             newMap.TextureName = oldMap.TextureName;
             newMap.Texture = TileEngine.TextureManager.GetTexture(newMap.TextureName);
 
-			newMap.UnderLayer = new int[oldMap.MapSize.X * oldMap.MapSize.Y];
-            newMap.BaseLayer = new int[oldMap.MapSize.X * oldMap.MapSize.Y];
-            newMap.MiddleLayer = new int[oldMap.MapSize.X * oldMap.MapSize.Y];
-            newMap.TopLayer = new int[oldMap.MapSize.X * oldMap.MapSize.Y];
-			newMap.CollisionLayer = new int[oldMap.MapSize.X * oldMap.MapSize.Y];
+			newMap.UnderLayer = new int[newMap.MapSize.X * newMap.MapSize.Y];
+			newMap.BaseLayer = new int[newMap.MapSize.X * newMap.MapSize.Y];
+			newMap.MiddleLayer = new int[newMap.MapSize.X * newMap.MapSize.Y];
+			newMap.TopLayer = new int[newMap.MapSize.X * newMap.MapSize.Y];
+			newMap.CollisionLayer = new int[newMap.MapSize.X * newMap.MapSize.Y];
 
-            for (int i = 0; i < (oldMap.MapSize.X * oldMap.MapSize.Y); i++)
-            {
-				newMap.UnderLayer[i] = ((i < oldMap.UnderLayer.Length) ? oldMap.UnderLayer[i] : -1);
-                newMap.BaseLayer[i] = ((i < oldMap.BaseLayer.Length) ? oldMap.BaseLayer[i] : -1);
-                newMap.MiddleLayer[i] = ((i < oldMap.MiddleLayer.Length) ? oldMap.MiddleLayer[i] : -1);
-                newMap.TopLayer[i] = ((i < oldMap.TopLayer.Length) ? oldMap.TopLayer[i] : -1);
-				newMap.CollisionLayer[i] = ((i < oldMap.CollisionLayer.Length) ? oldMap.CollisionLayer[i] : -1);
-            }
+			// Initialize to -1 for optimization. The engine doesn't render -1
+			for (int i = 0; i < (newMap.MapSize.X * newMap.MapSize.Y); i++)
+			{
+				newMap.UnderLayer[i] = -1;
+				newMap.BaseLayer[i] = -1;
+				newMap.MiddleLayer[i] = -1;
+				newMap.TopLayer[i] = -1;
+				newMap.CollisionLayer[i] = -1;
+			}
+
+			// Copy over the -1 initialized engine
+			for (int x = 0; x < newMap.MapSize.X; x++)
+			{
+				for (int y = 0; y < newMap.MapSize.Y; y++)
+				{
+				/*	newMap.BaseLayer[i] = ((i < oldMap.BaseLayer.Length) ? oldMap.BaseLayer[i] : -1);
+					newMap.MiddleLayer[i] = ((i < oldMap.MiddleLayer.Length) ? oldMap.MiddleLayer[i] : -1);
+					newMap.TopLayer[i] = ((i < oldMap.TopLayer.Length) ? oldMap.TopLayer[i] : -1);
+					newMap.CollisionLayer[i] = ((i < oldMap.CollisionLayer.Length) ? oldMap.CollisionLayer[i] : -1);*/
+				}
+			}
 
             return newMap;
         }

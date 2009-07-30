@@ -71,23 +71,34 @@ namespace ValkyrieMapEditor.Core
             int xOffset = (int)TileEngine.Camera.MapOffset.X / 32 + (int)TileEngine.Camera.CameraOffset.X;
             int yOffset = (int)TileEngine.Camera.MapOffset.Y / 32 + (int)TileEngine.Camera.CameraOffset.Y;
 
-            MapPoint point = new MapPoint(SelectedPoint.X - xOffset, SelectedPoint.Y - yOffset);
-            MapPoint size = new MapPoint(this.EndSelectedPoint.X - this.SelectedPoint.X, this.EndSelectedPoint.Y - this.SelectedPoint.Y);
+			MapPoint point = new MapPoint(SelectedPoint.X + xOffset, SelectedPoint.Y + yOffset);
 
-            BaseMapEvent e = TileEngine.EventManager.GetEventInRect(point, size);
+            BaseMapEvent e = TileEngine.EventManager.GetEventInRect(point, new BasePoint(1, 1));
 
+			bool newEvent = false;
 			if (e != null)
 			{
 				SelectedPoint = e.Location.ToPoint();
 				EndSelectedPoint = (e.Location + e.Size).ToPoint();
 			}
+			else
+			{
+				newEvent = true;
+			}
+
+			MapPoint size = new MapPoint(this.EndSelectedPoint.X - this.SelectedPoint.X, this.EndSelectedPoint.Y - this.SelectedPoint.Y);
 
 			frmMapEvent dialog = new frmMapEvent(e);
 			DialogResult result = dialog.ShowDialog();
 
 			e = dialog.Event;
-			if( e != null)
-				e.Rectangle = new Rectangle(point.X, point.Y, size.X, size.Y);
+			if (e != null)
+			{
+				if(!newEvent)
+					e.Rectangle = new Rectangle(e.Rectangle.X, e.Rectangle.Y, size.X, size.Y);
+				else
+					e.Rectangle = new Rectangle(point.X, point.Y, size.X, size.Y);
+			}
 
 			if (result == DialogResult.OK)
                 TileEngine.EventManager.SetOrAddEvent(e);

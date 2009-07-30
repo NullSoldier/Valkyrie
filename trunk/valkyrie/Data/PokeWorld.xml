@@ -4,43 +4,49 @@
     <MapLoc>
       <Name>Pewter</Name>
       <FilePath>Main\Pewter_Town.xml</FilePath>
-      <X>12</X>
+      <X>63</X>
       <Y>0</Y>
     </MapLoc>
     <MapLoc>
       <Name>Route2</Name>
       <FilePath>Main\Route2_Route.xml</FilePath>
-      <X>24</X>
+      <X>75</X>
       <Y>40</Y>
     </MapLoc>
     <MapLoc>
       <Name>PalletTown</Name>
       <FilePath>Main\Pallet_Town.xml</FilePath>
-      <X>24</X>
+      <X>75</X>
       <Y>200</Y>
     </MapLoc>
     <MapLoc>
       <Name>Route1</Name>
       <FilePath>Main\Route1_Route.xml</FilePath>
-      <X>24</X>
+      <X>75</X>
       <Y>160</Y>
     </MapLoc>
     <MapLoc>
       <Name>ViridianCity</Name>
       <FilePath>Main\Viridian_Town.xml</FilePath>
-      <X>12</X>
+      <X>63</X>
       <Y>120</Y>
+    </MapLoc>
+    <MapLoc>
+      <Name>Route22</Name>
+      <FilePath>Main\Route22_Route.xml</FilePath>
+      <X>15</X>
+      <Y>129</Y>
     </MapLoc>
     <MapLoc>
       <Name>Route21</Name>
       <FilePath>Main\Route21_Route.xml</FilePath>
-      <X>24</X>
+      <X>75</X>
       <Y>222</Y>
     </MapLoc>
     <MapLoc>
       <Name>Cinnibar_Island</Name>
       <FilePath>Main\Cinnibar_Island.xml</FilePath>
-      <X>24</X>
+      <X>75</X>
       <Y>318</Y>
     </MapLoc>
   </World>

@@ -112,8 +112,18 @@
     <Content Include="Data\keys.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Graphics\Intro\Cline.png" />
+    <Content Include="Graphics\Intro\Copyright.png" />
+    <Content Include="Graphics\Intro\GrassOverlay.png" />
+    <Content Include="Graphics\Intro\GrassSky.png" />
+    <Content Include="Graphics\Intro\GrassValley.png" />
+    <Content Include="Graphics\Intro\IntroSprites.png" />
+    <Content Include="Graphics\Intro\PokemonSprites.png" />
+    <Content Include="Graphics\Intro\SideGrass.png" />
     <Content Include="Graphics\Main\Cinnibar_Island.png" />
+    <Content Include="Graphics\Main\Route22_Route.png" />
     <Content Include="Maps\Main\Cinnibar_Island.xml" />
+    <Content Include="Maps\Main\Route22_Route.xml" />
     <None Include="Graphics\Main\Pallet_House_01.png">
     </None>
     <None Include="Graphics\Main\Pallet_Town.png">

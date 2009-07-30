@@ -26,7 +26,7 @@ namespace ValkyrieMapEditor
 		public event EventHandler<ScreenResizedEventArgs> ScreenResized;
 		public event EventHandler<ScrollEventArgs> ScrolledMap;
 
-		public static string ValkyrieGameInstallationAssemblyPath = @"C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\valkyrie\bin\x86\Debug\valkyrie.exe";
+		public static string ValkyrieGameInstallationAssemblyPath = @"C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\valkyrie\bin\x86\Debug\valkyrie.exe";
 		public static List<Type> EventHandlerTypes;
 
 		public frmMain()

@@ -68,6 +68,45 @@
       </Size>
       <Parameters />
     </Event>
+    <Event>
+      <Type>JumpPad</Type>
+      <Activation>16</Activation>
+      <Dir>Any</Dir>
+      <Location>
+        <X>3</X>
+        <Y>18</Y>
+      </Location>
+      <Size>
+        <X>1</X>
+        <Y>1</Y>
+      </Size>
+      <Parameters>
+        <Parameter>
+          <Name>Name</Name>
+          <Value>
+          </Value>
+        </Parameter>
+      </Parameters>
+    </Event>
+    <Event>
+      <Type>EntryPoint</Type>
+      <Activation>0</Activation>
+      <Dir>Any</Dir>
+      <Location>
+        <X>3</X>
+        <Y>0</Y>
+      </Location>
+      <Size>
+        <X>1</X>
+        <Y>1</Y>
+      </Size>
+      <Parameters>
+        <Parameter>
+          <Name>Name</Name>
+          <Value>JumpPadTarget02</Value>
+        </Parameter>
+      </Parameters>
+    </Event>
   </Events>
   <AnimatedTiles>
     <AnimatedTile>

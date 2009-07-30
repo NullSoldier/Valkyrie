@@ -42,7 +42,7 @@ namespace ValkyrieMapEditor.Forms
 		private void frmMapEvent_Load(object sender, EventArgs e)
 		{
 			// Event Handler types
-			foreach(var type in TileEngine.EventManager.EventTypes.Values)
+			foreach (var type in TileEngine.EventManager.EventTypes.Values)
 				this.inType.Items.Add(type);
 
 			this.inType.DisplayMember = "Name";
@@ -72,12 +72,12 @@ namespace ValkyrieMapEditor.Forms
         {
 			if (this.Event != null)
 			{
-				this.inType.SelectedItem = this.Event.GetType();
+				this.inType.SelectedItem = TileEngine.EventManager.EventTypes[Event.GetType()];
 
 				// Set manually
 				for (int i = 0; i < this.inActivation.Items.Count; i++)
 				{
-					if(inActivation.Items[i].ToString() == this.Event.Activation.ToString())
+					if (inActivation.Items[i].ToString() == this.Event.Activation.ToString())
 						this.inActivation.SelectedIndex = i;
 				}
 
@@ -88,11 +88,18 @@ namespace ValkyrieMapEditor.Forms
 						this.inDirection.SelectedIndex = i;
 				}
 
+				this.ClearParameters();
+
 				foreach (var Parameter in this.Event.Parameters)
 					this.AddParameter(Parameter.Key, Parameter.Value, true);
+
+				this.ResizeWindow();
 			}
 
 			this.inType.SelectedIndexChanged += inType_SelectedIndexChanged;
+
+			if( this.Event == null )
+				this.inType_SelectedIndexChanged(this, EventArgs.Empty);
 
 			this.ResizeWindow();
         }
@@ -218,6 +225,8 @@ namespace ValkyrieMapEditor.Forms
 
 			foreach (String param in mapevent.GetParameterNames())
 				this.AddParameter(param, string.Empty, true);
+
+			this.ResizeWindow();
 
 		}
 
