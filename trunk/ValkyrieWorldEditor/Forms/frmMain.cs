@@ -16,6 +16,8 @@ namespace ValkyrieWorldEditor.Forms
 {
     public partial class frmMain : XNARenderForm
     {
+		public static string ValkyrieGameInstallationAssemblyPath = @"C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\valkyrie\bin\x86\Debug\valkyrie.exe";
+
         public event EventHandler<ScreenResizedEventArgs> ScreenResized;
         public event EventHandler<ScrollEventArgs> ScrolledMap;
 

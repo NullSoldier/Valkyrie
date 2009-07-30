@@ -19,6 +19,7 @@ using ValkyrieLibrary.Maps;
 using ValkyrieLibrary.Core;
 using ValkyrieWorldEditor.Core;
 using ValkyrieWorldEditor.Forms;
+using System.Reflection;
 
 namespace ValkyrieWorldEditor.Forms
 {
@@ -74,6 +75,7 @@ namespace ValkyrieWorldEditor.Forms
         {
             // Custom loading
             TileEngine.Initialize(this.content, gfxDevice);
+			TileEngine.EventManager.LoadEventTypesFromAssemblies(new Assembly[] { Assembly.GetEntryAssembly(), Assembly.LoadFile(frmMain.ValkyrieGameInstallationAssemblyPath), Assembly.LoadWithPartialName("ValkyrieLibrary") });
 			//TileEngine.EventManager.LoadEventTypesFromAssemblies();
             TileEngine.Viewport = gfxDevice.Viewport;
             TileEngine.Camera = new BaseCamera(0, 0, this.Width, this.Height);

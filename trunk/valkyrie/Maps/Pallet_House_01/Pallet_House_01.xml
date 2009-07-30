@@ -1,6 +1,6 @@
 <Map>
   <Name>Pallet_House_01</Name>
-  <TileSet>Pallet_House_01\PalletTown_House_01.png</TileSet>
+  <TileSet>Pallet_House\Pallet_House_01.png</TileSet>
   <MapSize>
     <X>20</X>
     <Y>20</Y>

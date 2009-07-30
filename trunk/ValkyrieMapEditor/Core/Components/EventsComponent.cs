@@ -71,7 +71,7 @@ namespace ValkyrieMapEditor.Core
             int xOffset = (int)TileEngine.Camera.MapOffset.X / 32 + (int)TileEngine.Camera.CameraOffset.X;
             int yOffset = (int)TileEngine.Camera.MapOffset.Y / 32 + (int)TileEngine.Camera.CameraOffset.Y;
 
-			MapPoint point = new MapPoint(SelectedPoint.X + xOffset, SelectedPoint.Y + yOffset);
+			MapPoint point = new MapPoint(SelectedPoint.X + (xOffset * -1), SelectedPoint.Y + (yOffset * -1));
 
             BaseMapEvent e = TileEngine.EventManager.GetEventInRect(point, new BasePoint(1, 1));
 
