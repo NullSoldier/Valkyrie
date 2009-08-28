@@ -12,6 +12,8 @@ using ValkyrieLibrary.Collision;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Events;
 using ValkyrieLibrary.Maps;
+using ValkyrieLibrary.Input;
+using Gablarski.Network;
 
 namespace ValkyrieLibrary
 {
@@ -26,6 +28,13 @@ namespace ValkyrieLibrary
         public static CollisionManager CollisionManager;
         public static WorldManager WorldManager;
         public static MapEventManager EventManager;
+		public static IMovementManager MovementManager;
+
+		public static NetworkClientConnection NetworkManager;
+		public static Dictionary<uint, BaseCharacter> NetworkPlayerCache;
+		public static uint NetworkID = 0;
+		
+		//public static KeybindController KeyManager;
 
 		public static int TileSize = 32;
         public static bool IsMapLoaded{ get { return (TileEngine.CurrentMapChunk != null); } }
@@ -73,7 +82,9 @@ namespace ValkyrieLibrary
             TileEngine.ModuleManager = new ModuleManager();
             TileEngine.Configuration = null;
             TileEngine.WorldManager = new WorldManager();
-            TileEngine.EventManager = new MapEventManager();
+			TileEngine.NetworkManager = new NetworkClientConnection();
+			TileEngine.NetworkPlayerCache = new Dictionary<uint, BaseCharacter>();
+
 		}
 
         public static void Load (FileInfo configuration)
@@ -128,7 +139,7 @@ namespace ValkyrieLibrary
 			Check.NullArgument (time, "time");
 
 			// Run tile engine logic here
-            ModuleManager.CurrentModule.Tick(time);
+            ModuleManager.CurrentModule.Update(time);
 
             if (TileEngine.WorldManager.CurrentWorld == null)
                 return;
@@ -298,6 +309,9 @@ namespace ValkyrieLibrary
 			Check.NullArgument (spriteBatch, "spriteBatch");
 
 			TileEngine.Player.Draw(spriteBatch);
+
+			foreach (BaseCharacter player in TileEngine.NetworkPlayerCache.Values)
+				player.Draw(spriteBatch);
         }
 
         public static void DrawOverlay(SpriteBatch spriteBatch)
@@ -305,6 +319,7 @@ namespace ValkyrieLibrary
 			Check.NullArgument (spriteBatch, "spriteBatch");
 
             TileEngine.Player.DrawOverlay(spriteBatch);
+			
         }
 
 		#endregion

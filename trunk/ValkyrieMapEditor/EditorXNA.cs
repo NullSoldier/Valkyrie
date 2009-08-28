@@ -122,12 +122,12 @@ namespace ValkyrieMapEditor
 
 			// Custom loading
 			TileEngine.Initialize(this.Content, this.GraphicsDevice);
-			TileEngine.EventManager.LoadEventTypesFromAssemblies(new Assembly[] { Assembly.GetEntryAssembly(), Assembly.LoadFile(frmMain.ValkyrieGameInstallationAssemblyPath), Assembly.LoadWithPartialName("ValkyrieLibrary") });
 			TileEngine.Viewport = this.GraphicsDevice.Viewport;
             TileEngine.Camera = new BaseCamera(0, 0, 800, 600);
             TileEngine.Load(new FileInfo("Data/TileEngineConfig.xml"));
 			TileEngine.Camera.CenterOriginOnPoint(new Point(0, 0));
 			TileEngine.Player = new MapEditorPlayer();
+			TileEngine.EventManager = new MapEventManager(frmMain.Assemblies);
 			
 			this.SelectionSprite = Texture2D.FromFile(this.GraphicsDevice, "Graphics/EditorSelection.png");
 

@@ -89,6 +89,7 @@
     <Compile Include="Core\PokeCollisionManager.cs" />
     <Compile Include="Core\Characters\PokePlayer.cs" />
     <Compile Include="Core\PokeMessage.cs" />
+    <Compile Include="Core\PokeMovementManager.cs" />
     <Compile Include="Events\JumpEvent.cs" />
     <Compile Include="Events\JumpPadEvent.cs" />
     <Compile Include="Events\LoadEvent.cs" />
@@ -194,6 +195,10 @@
       <Project>{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}</Project>
       <Name>ValkyrieLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ValkyrieServerLibrary\ValkyrieServerLibrary.csproj">
+      <Project>{D085B565-015D-474B-BA0E-AE3986F3506F}</Project>
+      <Name>ValkyrieServerLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="UI\" />
@@ -211,6 +216,8 @@
     <PostBuildEvent>xcopy "$(ProjectDir)\Graphics" "$(TargetDir)\Graphics" /S /Y /I
 xcopy "$(ProjectDir)\Maps" "$(TargetDir)\Maps" /S /Y /I
 
-xcopy "$(ProjectDir)\Graphics" "$(SolutionDir)ValkyrieMapEditor\bin\x86\Debug\Graphics" /S /Y /I</PostBuildEvent>
+xcopy "$(ProjectDir)\Graphics" "$(SolutionDir)ValkyrieMapEditor\bin\x86\Debug\Graphics" /S /Y /I
+
+xcopy "$(TargetPath)" "$(SolutionDir)ValkyrieMapEditor\bin\x86\Debug" /S /Y /I</PostBuildEvent>
   </PropertyGroup>
 </Project>

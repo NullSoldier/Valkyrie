@@ -25,7 +25,7 @@ namespace ValkyrieLibrary.Maps
         public int[] TopLayer { get; set; }
         public int[] CollisionLayer { get; set; }
 
-        public List<BaseMapEvent> EventList;
+        public List<IMapEvent> EventList;
         public MapPoint MapSize { get; set; }
         public ScreenPoint TileSize { get; set; }
         public String TextureName { get; set; }
@@ -61,7 +61,7 @@ namespace ValkyrieLibrary.Maps
             this.MiddleLayer = new int[0];
             this.TopLayer = new int[0];
             this.CollisionLayer = new int[0];
-            this.EventList = new List<BaseMapEvent>();
+            this.EventList = new List<IMapEvent>();
 			this.AnimatedTiles = new Dictionary<int, FrameAnimation>();
 		}
 
@@ -391,7 +391,7 @@ namespace ValkyrieLibrary.Maps
 
             // Events
             var eventLayer = doc.CreateElement("Events");
-            foreach (BaseMapEvent e in this.EventList)
+			foreach (IMapEvent e in this.EventList)
             {
 				eventLayer.AppendChild(TileEngine.EventManager.EventToXmlNode(e, doc));
             }

@@ -7,18 +7,15 @@ using ValkyrieLibrary.Core;
 
 namespace ValkyrieLibrary.Characters
 {
-    public enum MoveDirection
-    {
-        // 8 Directional movement
-        North = 0,
-        South,
-        East,
-        West,
-        NorthEast,
-        NorthWest,
-        SouthEast,
-        SouthWest
-    }
+	[Flags]
+	public enum Directions
+	{
+		Any = 0,
+		North = 2,
+		East = 4,
+		South = 8,
+		West = 16
+	}
 
 	public static class DirectionsHelper
 	{

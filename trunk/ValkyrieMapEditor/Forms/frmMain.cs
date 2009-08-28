@@ -16,6 +16,7 @@ using ValkyrieLibrary;
 using System.Reflection;
 using ValkyrieLibrary.Events;
 using ValkyrieMapEditor.Forms;
+using ValkyrieMapEditor.Core;
 
 namespace ValkyrieMapEditor
 {
@@ -26,8 +27,9 @@ namespace ValkyrieMapEditor
 		public event EventHandler<ScreenResizedEventArgs> ScreenResized;
 		public event EventHandler<ScrollEventArgs> ScrolledMap;
 
-		public static string ValkyrieGameInstallationAssemblyPath = @"C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\valkyrie\bin\x86\Debug\valkyrie.exe";
+		private string ValkyrieGameInstallationAssemblyPath = @"C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\valkyrie\bin\x86\Debug\valkyrie.exe";
 		public static List<Type> EventHandlerTypes;
+		public static Assembly[] Assemblies;
 
 		public frmMain()
 		{
@@ -38,8 +40,10 @@ namespace ValkyrieMapEditor
 			this.pctTileSurface.Initialize();
 			this.pctTileSurface.TileSelectionChanged += this.SelectionChanged;
 
-			//this.CollectEventHandlers(Assembly.LoadFile(this.ValkyrieGameInstallationAssemblyPath));
+			frmMain.Assemblies = new Assembly[] { Assembly.GetEntryAssembly(), Assembly.Load("ValkyrieLibrary"), Assembly.LoadFrom(this.ValkyrieGameInstallationAssemblyPath) };
+			frmMain.EventHandlerTypes = EventTypeLoader.LoadImplementers<IMapEvent>(frmMain.Assemblies).ToList();			
 		}
+
 
 		private void frmMain_Load(object sender, EventArgs e)
 		{
@@ -50,18 +54,6 @@ namespace ValkyrieMapEditor
 		private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			Application.Exit();
-		}
-
-		public void CollectEventHandlers(Assembly assembly)
-		{
-			var Types = assembly.GetTypes().Where(p => p.IsSubclassOf(typeof(BaseMapEvent)));
-
-			List<Type> ehandlers = new List<Type>();
-
-			foreach (var handler in Types)
-				ehandlers.Add(handler);
-
-			frmMain.EventHandlerTypes = ehandlers;
 		}
 
 		public IntPtr getDrawSurface()

@@ -9,21 +9,27 @@ using System.Diagnostics;
 using Valkyrie.Characters;
 using ValkyrieLibrary;
 using ValkyrieLibrary.Maps;
+using Microsoft.Xna.Framework;
 
 namespace Valkyrie.Events
 {
+	
 	public class JumpPadEvent
-		: BaseMapEvent
+		: IMapEvent
 	{
+		public Rectangle Rectangle { get; set; }
+		public Dictionary<string, string> Parameters { get; set; }
+		public ActivationTypes Activation { get; set; }
+		public Directions Direction { get; set; }
 
-		public override string GetType()
+		public string GetStringType()
 		{
 			return "JumpPad";
 		}
 
-		public override void Trigger(BaseCharacter character)
+		public void Trigger(BaseCharacter character)
 		{
-			if (!(character is PokePlayer)) return;
+			/*if (!(character is PokePlayer)) return;
 
 			BasePoint tmpDest = new BasePoint(0, 0);
 			Map tmpMap = TileEngine.CurrentMapChunk;
@@ -37,10 +43,10 @@ namespace Valkyrie.Events
 
 				foreach (var mapevent in TileEngine.EventManager.events[map])
 				{
-					if (mapevent.GetType() == "EntryPoint" &&
+					if (mapevent.GetStringType() == "EntryPoint" &&
 						mapevent.Parameters["Name"] == this.Parameters["DestinationName"])
 					{
-						tmpDest = mapevent.Location;
+						tmpDest = new BasePoint(mapevent.Rectangle.Y, mapevent.Rectangle.Y);
 						tmpMap = map;
 
 						found = true;
@@ -62,16 +68,16 @@ namespace Valkyrie.Events
 			ScreenPoint destination = new MapPoint(tmpDest.X + TileEngine.WorldManager.CurrentWorld.MapList[tmpMap.Name].MapLocation.X,
 				tmpDest.Y + TileEngine.WorldManager.CurrentWorld.MapList[tmpMap.Name].MapLocation.Y).ToScreenPoint();
 
-			player.Move(destination);
+			player.Move(destination);*/
 
 		}
 
-		public override IEnumerable<string> GetParameterNames()
+		public IEnumerable<string> GetParameterNames()
 		{
-			return (new string[] { "DestinationName", "Speed" }).ToList();
+			return new string[] { "DestinationName", "Speed" };
 		}
 
-		public override object Clone()
+		public object Clone()
 		{
 			JumpPadEvent clone = new JumpPadEvent();
 			clone.Rectangle = this.Rectangle;
@@ -84,6 +90,7 @@ namespace Valkyrie.Events
 
 		public void OnCharacterLanded(object sender, EventArgs e)
 		{
+			/*
 			if (!(sender is PokePlayer)) return;
 
 			PokePlayer player = (PokePlayer)sender;
@@ -92,6 +99,7 @@ namespace Valkyrie.Events
 			player.Speed = 2;
 			player.CurrentAnimationName = player.Direction.ToString();
 			player.ReachedDestination -= this.OnCharacterLanded;
+		  */
 		}
 	}
 }

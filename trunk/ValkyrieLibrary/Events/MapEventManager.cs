@@ -13,15 +13,20 @@ namespace ValkyrieLibrary.Events
 {
     public class MapEventManager
     {
-		public readonly Dictionary<Map, List<BaseMapEvent>> events = new Dictionary<Map, List<BaseMapEvent>>();
-		public Dictionary<string, Type> EventTypes = new Dictionary<string, Type>(); // string type to type
+		public MapEventManager(IEnumerable<Assembly> assemblies)
+		{
+			this.Assemblies = assemblies.ToList();
+		}
 
-		public void AddEvent(BaseMapEvent mapevent)
+		public readonly Dictionary<Map, List<IMapEvent>> events = new Dictionary<Map, List<IMapEvent>>();
+		public readonly IEnumerable<Assembly> Assemblies;
+
+		public void AddEvent(IMapEvent mapevent)
 		{
 			this.events[TileEngine.CurrentMapChunk].Add(mapevent);
 		}
 
-		public void RemoveEvent(BaseMapEvent mapevent)
+		public void RemoveEvent(IMapEvent mapevent)
 		{
 			this.events[TileEngine.CurrentMapChunk].Remove(mapevent);
 		}
@@ -30,7 +35,6 @@ namespace ValkyrieLibrary.Events
 		{
 			this.events.Clear();
 		}
-
 
 		public bool HandleEvent(BaseCharacter player, ActivationTypes activation)
 		{
@@ -53,30 +57,12 @@ namespace ValkyrieLibrary.Events
 		}
 
 		#region MapEvent Management Methods
-		public void LoadEventTypesFromAssemblies(Assembly[] assemblies)
-		{
-			Dictionary<String, Type> tmpTypes = new Dictionary<string, Type>();
-
-			for (int i = 0; i < assemblies.Length; i++)
-			{
-				var types = assemblies[i].GetTypes().Where(p => p.IsSubclassOf(typeof(BaseMapEvent)));
-
-				foreach (var mapevent in types)
-				{
-					var newObj = (BaseMapEvent)Activator.CreateInstance(mapevent);
-					tmpTypes.Add(newObj.GetType(), mapevent);
-				}
-			}
-
-			this.EventTypes = tmpTypes;		
-		}
-
-		public BaseMapEvent GetEventInRect(BasePoint loc, BasePoint size)
+		public IMapEvent GetEventInRect(BasePoint loc, BasePoint size)
 		{
 			return this.GetEventInRect(new Rectangle(loc.X, loc.Y, size.X, size.Y));
 		}
 
-		public BaseMapEvent GetEventInRect(Rectangle rect)
+		public IMapEvent GetEventInRect(Rectangle rect)
 		{
 			for(int x = rect.X; x < (rect.X + rect.Width); x++)
 			{
@@ -103,24 +89,24 @@ namespace ValkyrieLibrary.Events
 			#endregion
 		}
 
-		public BaseMapEvent GetEvent(MapPoint location)
+		public IMapEvent GetEvent(MapPoint location)
 		{
 			return this.events[TileEngine.CurrentMapChunk].Where(ev => ev.Rectangle.Contains(location.ToPoint())).FirstOrDefault();
 		}
 
-		public void SetOrAddEvent(BaseMapEvent e)
+		public void SetOrAddEvent(IMapEvent e)
 		{
 			if (this.events[TileEngine.CurrentMapChunk].Contains(e))
 			{
 				int index = this.events[TileEngine.CurrentMapChunk].IndexOf(e);
 
-				this.events[TileEngine.CurrentMapChunk][index] = (BaseMapEvent)e.Clone();
+				this.events[TileEngine.CurrentMapChunk][index] = (IMapEvent)e.Clone();
 			}
 			else
 				this.events[TileEngine.CurrentMapChunk].Add(e);
 		}
 
-		public void DelEvent(BaseMapEvent e)
+		public void DelEvent(IMapEvent e)
 		{
 			this.events[TileEngine.CurrentMapChunk].Remove(e);
 		}
@@ -133,7 +119,7 @@ namespace ValkyrieLibrary.Events
 
 		// bleh
 
-		public BaseMapEvent LoadEventFromXml(XmlNode node)
+		public IMapEvent LoadEventFromXml(XmlNode node)
 		{
 			string type = string.Empty;
 			Directions dir = Directions.Any;
@@ -155,10 +141,7 @@ namespace ValkyrieLibrary.Events
 				}
 			}
 
-			if ( !this.EventTypes.ContainsKey(type) )
-				throw new ArgumentException("Event type does not exist in the currently loaded assemblies. Did you load the engines event types from the assemblies using event manager method \"public void LoadEventTypesFromAssemblies(Assembly[] assemblies)\"?");
-
-			BaseMapEvent newEvent = (BaseMapEvent)Activator.CreateInstance(this.EventTypes[type]);
+			IMapEvent newEvent = this.CreateEventFromString(type); var assemblytype = Assembly.GetEntryAssembly().GetType(type);
 			newEvent.Direction = dir;
 			newEvent.Parameters = parameters;
 			newEvent.Rectangle = new Rectangle(location.X, location.Y, size.X, size.Y);
@@ -167,7 +150,30 @@ namespace ValkyrieLibrary.Events
 			return newEvent;
 		}
 
-		public XmlNode EventToXmlNode(BaseMapEvent mapevent, XmlDocument doc)
+		/// <summary>
+		/// Gets an instance of the type from the qualified assembly name provided
+		/// </summary>
+		/// <param name="qualifiedassemblyname">An Assembly.FullyQualifiedName that references a type</param>
+		/// <returns></returns>
+		private IMapEvent CreateEventFromString(string typename)
+		{
+			Type type = null;
+
+			foreach (Assembly assembly in this.Assemblies)
+			{
+				type = assembly.GetType(typename);
+				
+				if (type != null)
+					break;
+			}
+
+			if(type == null)
+				throw new Exception("Type has not been found in any of the referenced assembly. The map cannot load the event.");
+
+			return (IMapEvent)Activator.CreateInstance(type, true);
+		}
+
+		public XmlNode EventToXmlNode(IMapEvent mapevent, XmlDocument doc)
 		{
 			XmlElement xmlevent = doc.CreateElement("Event");
 
@@ -179,7 +185,7 @@ namespace ValkyrieLibrary.Events
 			new MapPoint(mapevent.Rectangle.Width, mapevent.Rectangle.Height).ToXml(doc, size);
 
             XmlElement type = doc.CreateElement("Type");
-            type.InnerText = mapevent.GetType();
+			type.InnerText = mapevent.GetType().FullName;
 
             XmlElement dir = doc.CreateElement("Dir");
             dir.InnerText = mapevent.Direction.ToString();

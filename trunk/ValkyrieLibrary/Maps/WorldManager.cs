@@ -28,10 +28,10 @@ namespace ValkyrieLibrary.Maps
         {
         	if (!this.WorldsList.ContainsKey(name))
         		return;
-
+			 
         	this.CurrentWorld = this.WorldsList[name];
         	TileEngine.ClearCurrentMapChunk();
-        	TileEngine.Player.StopMoving();
+        	//TileEngine.Player.StopMoving();
 				
         	if( startLoc == null || startLoc == "Default" )
         		TileEngine.Player.Location = this.CurrentWorld.FindDefaultStartLocation();

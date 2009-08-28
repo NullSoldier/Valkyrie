@@ -10,19 +10,22 @@ using ValkyrieLibrary.Characters;
 namespace ValkyrieLibrary.Events
 {
 	public interface IMapEvent
+		: ICloneable
 	{
 		// Properties
 		Rectangle Rectangle { get; set; }
 		
 		ActivationTypes Activation { get; set; }
 		Directions Direction { get; set; }
-		
+	
 		Dictionary<String, String> Parameters { get; set; }
+	
 
 		// Methods
-		string GetType();
+		string GetStringType();
 		void Trigger(BaseCharacter character);
-		IEnumerable<String> GetParameterNames();
+		
+		IEnumerable<string> GetParameterNames();
 	}
 }
 

@@ -17,9 +17,8 @@ namespace Valkyrie.Characters
 	class PokePlayer
 		: PokeCharacter
 	{
-		public bool IsJumping = false;
-
 		public PokePlayer()
+			: base()
 		{
 			if (this.Gender == Genders.Male)
 			{
@@ -36,13 +35,15 @@ namespace Valkyrie.Characters
 				this.Animations.Add("Jump", new FrameAnimation(new Rectangle(0, 168, 27, 56), 1));
 				this.Animations.Add("Spin", new FrameAnimation(new Rectangle(0, 224, 28, 41), 4, 0.1f));			
 			}
+
+			this.Name = "NullSoldier";
+			this.CurrentAnimationName = "South";
 		}
 
 		public override void Draw(SpriteBatch spriteBatch)
         {
-			//spriteBatch.Begin();
 			spriteBatch.Draw(this.Sprite, this.DrawScreenLocation, Animations[this.CurrentAnimationName].FrameRectangle, Color.White);
-			//spriteBatch.End();
+			spriteBatch.DrawString(PokeGame.font, this.Name, this.DrawScreenLocation, Color.Black);
 		}
 
 		public Vector2 DrawScreenLocation
@@ -58,72 +59,6 @@ namespace Valkyrie.Characters
 
 		public override void Update(GameTime gameTime)
 		{
-			if (!this.IsMoving && this.CurrentAnimationName.Contains("Walk"))
-				this.CurrentAnimationName = this.CurrentAnimationName.Substring(4, this.CurrentAnimationName.Length - 4);
-
-			if (this.IsMoving)
-			{
-				this.LastMoveTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-				if (this.LastMoveTime >= this.MoveDelay)
-				{
-					int x = this.Location.X;
-					int y = this.Location.Y;
-
-					if (this.Location.X < this.MovingDestination.X)
-					{
-						if (x + this.Speed > this.MovingDestination.X)
-							x = this.MovingDestination.X;
-						else
-							x += this.Speed;
-					}
-					else if (this.Location.X > this.MovingDestination.X)
-					{
-						if (x - this.Speed < this.MovingDestination.X)
-							x = this.MovingDestination.X;
-						else
-							x -= this.Speed;
-					}
-
-					if (this.Location.Y < this.MovingDestination.Y)
-					{
-						if (y + this.Speed > this.MovingDestination.Y)
-							y = this.MovingDestination.Y;
-						else
-							y += this.Speed;
-					}
-					else if (this.Location.Y > this.MovingDestination.Y)
-					{
-						if (y - this.Speed < this.MovingDestination.Y)
-							y = this.MovingDestination.Y;
-						else
-							y -= this.Speed;
-					}
-
-					if (!this.IsJumping && !TileEngine.CollisionManager.CheckCollision(this, this.MovingDestination))
-					{
-						if (!TileEngine.EventManager.HandleEvent(this, ActivationTypes.Collision))
-						{
-							this.StopMoving();
-							TileEngine.EventManager.HandleEvent((BaseCharacter)this, ActivationTypes.Collision);
-						}
-					}
-					else
-					{
-						this.Location = new ScreenPoint(x, y);
-					}
-
-					this.LastMoveTime = 0;
-				}
-
-				// Reached destination
-				if (this.Location == this.MovingDestination)
-				{
-					this.OnReachedDestination(EventArgs.Empty);
-
-					this.StopMoving();
-				}
-			}
-
 			base.Update(gameTime);
 		}
 
@@ -132,80 +67,20 @@ namespace Valkyrie.Characters
         {
             if (TileEngine.EventManager.HandleEvent((BaseCharacter)this, ActivationTypes.Activate))
                 return;
-
-			// Do other things?
         }
 
-        public override void Action(String type)
-        {
-            switch (type)
-            {
-                case "AButton":
-                    AButton();
-                    break;
-            }
-		}
-
-		public void DisplayMessage(String title, String msg)
+		public override void Action(String type)
 		{
-			throw new NotSupportedException();
+			switch (type)
+			{
+				case "AButton":
+					AButton();
+					break;
+			}
 		}
 
-		public void JumpWall()
-        {
-            this.IsJumping = true;
-
-			this.CurrentAnimationName = "Jump";
-
-            ScreenPoint dest = new ScreenPoint(TileEngine.Player.Location.X, TileEngine.Player.Location.Y);
-            ScreenPoint newDest = dest + (new ScreenPoint(this.GetLookPoint().ToMapPoint().X * 2, this.GetLookPoint().ToMapPoint().Y) * 2);
-            this.MovingDestination = newDest;
-        }
 		#endregion
 
-		#region Moving Methods
-		public override void Move(ScreenPoint Destination)
-		{
-			if (this.IsMoving)
-				return;
-
-			Directions tmpDirection = this.Location.ToPoint().RelativeDirection(Destination.ToPoint());
-
-			if (tmpDirection == Directions.North)
-			{
-				this.CurrentAnimationName = "WalkNorth";
-				Direction = Directions.North;
-			}
-			else if (tmpDirection == Directions.East)
-			{
-				this.CurrentAnimationName = "WalkEast";
-				Direction = Directions.East;
-			}
-			else if (tmpDirection == Directions.South)
-			{
-				this.CurrentAnimationName = "WalkSouth";
-				Direction = Directions.South;
-			}
-			else if (tmpDirection == Directions.West)
-			{
-				this.CurrentAnimationName = "WalkWest";
-				Direction = Directions.West;
-			}
-
-			base.Move(Destination);
-		}
-
-		public override void StopMoving()
-		{
-			if (this.IsJumping)
-			{
-				this.CurrentAnimationName = this.Direction.ToString();
-				this.IsJumping = false;
-			}
-
-			base.StopMoving();
-		}
-		#endregion
 	}
 
 	public static class HelperMethods

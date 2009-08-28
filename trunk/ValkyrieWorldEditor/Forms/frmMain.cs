@@ -262,8 +262,9 @@ namespace ValkyrieWorldEditor.Forms
 
                     foreach (var e in map.Value.Map.EventList)
                     {
-                        if (e.GetType() == "EntryPoint")
+                        if (e.GetStringType() == "EntryPoint")
                             cbDefaultSpawn.Items.Add(e.Parameters["Name"]);
+
                     }
                 }
 

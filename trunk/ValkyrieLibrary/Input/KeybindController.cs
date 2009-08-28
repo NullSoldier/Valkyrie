@@ -13,14 +13,16 @@ namespace ValkyrieLibrary.Input
 
 		private Dictionary<Keys, KeyDef> KeyDefCollection = new Dictionary<Keys, KeyDef> ();
 
-		public Keys[] LastKeys;
-		public Keys[] CrntKeys;
+		public Keys[] CurrentKeys = new Keys[0];
+		public Keys[] LastKeys = new Keys[0];
 
 		//public delegate void KeyPressed(object sender,/*   ???  */);
 		// Note that EventHandler is a built in delegate
 		// To define custom arguments you just create your own and use it instead
 		// Which is what I did
 
+		public event EventHandler<KeyPressedEventArgs> KeyDown;
+		public event EventHandler<KeyPressedEventArgs> KeyUp;
 		public event EventHandler<KeyPressedEventArgs> KeyAction;
 
 		public string GetKeyAction (Keys key)
@@ -109,37 +111,44 @@ namespace ValkyrieLibrary.Input
 
 		public void Update ()
 		{
-			KeyboardState KeyState = Keyboard.GetState ();
+			KeyboardState KeyState = Keyboard.GetState();
 
-			CrntKeys = KeyState.GetPressedKeys ();
+			CurrentKeys = KeyState.GetPressedKeys ();
 
-			foreach (Keys key in CrntKeys)
+			foreach (Keys key in CurrentKeys)
 			{
-				if (!IsDir (key) && LastKeys != null)
-				{
-					bool doBreak = false;
-
-					foreach (Keys lastKey in LastKeys)
-					{
-						if (key == lastKey)
-						{
-							doBreak = true;
-							break;
-						}
-					}
-
-					if (doBreak)
-						break;
-				}
-
+				// Key Pressed
 				if (KeyDefCollection.ContainsKey (key))
 				{
-					//event
-					KeyAction (this, new KeyPressedEventArgs (key, KeyDefCollection[key].Action));
+					var handler = this.KeyAction;
+					if(handler != null )
+						this.KeyAction (this, new KeyPressedEventArgs (key, KeyDefCollection[key].Action));
 				}
 
+				// Key Down
+				if (KeyState.IsKeyDown(key)
+					&& this.KeyDefCollection.ContainsKey(key))
+				{
+					var handler = this.KeyDown;
+					if(handler != null )
+						this.KeyDown(this, new KeyPressedEventArgs(key, KeyDefCollection[key].Action));
+				}
 			}
-			LastKeys = CrntKeys;
+
+			foreach (Keys key in this.LastKeys)
+			{
+				if(!this.CurrentKeys.Contains(key))
+				{
+					if (!this.KeyDefCollection.ContainsKey(key))
+						continue;
+
+					var handler = this.KeyUp;
+					if (handler != null)
+						this.KeyUp(this, new KeyPressedEventArgs(key, KeyDefCollection[key].Action));
+				}
+			}
+
+			LastKeys = CurrentKeys;
 		}
 
 	}

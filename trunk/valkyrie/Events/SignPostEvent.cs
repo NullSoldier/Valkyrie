@@ -8,11 +8,11 @@ using Valkyrie.Characters;
 
 namespace Valkyrie.Events
 {
-	public class SignPostEvent
+	/*public class SignPostEvent
 		: BaseMapEvent
 	{
 
-		public override string GetType()
+		public override string GetStringType()
 		{
 			return "SignPost";
 		}
@@ -38,5 +38,5 @@ namespace Valkyrie.Events
 
 			return clone;
 		}
-	}
+	}*/
 }

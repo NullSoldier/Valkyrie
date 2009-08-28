@@ -9,6 +9,10 @@ namespace ValkyrieLibrary.Collision
 {
 	public interface ICollidable
 	{
+		event EventHandler Collided;
+		void OnCollided(object sender, EventArgs e);
+
 		ScreenPoint GetLocation();
+		int Density { get; set; }
 	}
 }

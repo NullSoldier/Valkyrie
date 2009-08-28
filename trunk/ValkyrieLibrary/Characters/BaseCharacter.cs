@@ -13,34 +13,15 @@ using ValkyrieLibrary.Core;
 
 namespace ValkyrieLibrary.Characters
 {
-    public abstract class BaseCharacter : ICollidable
-    {
-		// Callbacks
-		#region C# Workaround bullshit
-		public event EventHandler ReachedDestination;
+    public abstract class BaseCharacter
+		: IMapObject
+	{
+		public Texture2D Sprite { get; set; }
 
-		public virtual void OnReachedDestination(EventArgs e)
-		{
-			var handler = this.ReachedDestination;
-			if (handler != null) handler(this, e);
-		}
-		#endregion
-
-        public bool Animating = false;
-
-        public String Name;
-        public Texture2D Sprite;
-        public ScreenPoint Location;
-        public ScreenPoint MovingDestination;
-		public int Speed = 2;
-        public Directions Direction;
-		public int Density = 1;
-        public Dictionary<string, FrameAnimation> Animations;
-        public String CurrentAnimationName;
+		public bool Animating { get; set; }
+		public Dictionary<string, FrameAnimation> Animations { get; set; }
+		public String CurrentAnimationName { get; set; }
 		public FrameAnimation CurrentAnimation{get { return this.Animations[this.CurrentAnimationName]; }}
-
-        public MapPoint TileLocation { get { return this.Location.ToMapPoint(); } }
-        public MapPoint MapLocation { get { return TileEngine.GlobalTilePointToLocal(TileLocation); } }
 
 		public Vector2 DrawScreenLocation
 		{
@@ -55,9 +36,6 @@ namespace ValkyrieLibrary.Characters
 
         public BaseCharacter()
         {
-            this.CurrentAnimationName = "South";
-            this.Name = "NullSoldier";
-
             this.Animations = new Dictionary<string, FrameAnimation>();
             this.Animating = false;
             this.Direction = Directions.South;
@@ -65,35 +43,16 @@ namespace ValkyrieLibrary.Characters
             this.Sprite = null;
         }
 
-        public virtual void StopMoving()
-        {
+		public abstract void DrawOverlay(SpriteBatch spriteBatch);
 
-        }
-
-        public virtual void DrawOverlay(SpriteBatch spriteBatch)
-        {
-        }
-
-        public virtual void Move(ScreenPoint Destination)
-        {
-        }
-
-        public virtual void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
-        {
-		}
+		public abstract void Draw(SpriteBatch spriteBatch);
 
 		public virtual void Update(GameTime gameTime)
 		{
             this.CurrentAnimation.Update(gameTime);
 		}
 
-        public virtual void Action(String type) 
-        { 
-        }
-
-        public virtual void DisplayMessage(String title, String msg)
-        {
-        }
+		public abstract void Action(String type);
 
         public MapPoint GetLookPoint()
         {
@@ -114,29 +73,95 @@ namespace ValkyrieLibrary.Characters
             return point;
         }
 
-        #region ICollidable Members
+        #region IPositionable Members
+		
+		public MapPoint LastMapLocation { get; set; }
+		public MapPoint MapLocation { get { return TileEngine.GlobalTilePointToLocal(TileLocation); } }
 
-        public ScreenPoint GetLocation()
-        {
-            return this.Location;
-        }
+		public ScreenPoint Location
+		{
+			get { return this.location; }
+			set
+			{
+				this.LastMapLocation = value.ToMapPoint();
+				this.location = value;
+			}
+		}
 
+		public MapPoint TileLocation { get { return this.Location.ToMapPoint(); } }
+
+		private ScreenPoint location;
         #endregion
-    }
+
+		#region IMovable Members
+
+		public void OnStartedMoving(object sender, EventArgs ev)
+		{
+			var handler = this.StartedMoving;
+
+			if (handler != null)
+				this.StartedMoving(this, ev);
+		}
+
+		public void OnStoppedMoving(object sender, EventArgs ev)
+		{
+			var handler = this.StoppedMoving;
+
+			if (handler != null)
+				this.StoppedMoving(this, ev);
+		}
+
+		public void OnTileLocationChanged(object sender, EventArgs ev)
+		{
+			this.TileLocationChanged(sender, ev);
+		}
+
+		public event EventHandler StartedMoving;
+		public event EventHandler StoppedMoving;
+		public event EventHandler TileLocationChanged;
+
+		public bool IsMoving { get; set; }
+		public bool IgnoreMoveInput { get; set; }
+
+		public Directions Direction { get; set; }
+
+		public MapPoint LastMapPoint { get; set; }
+		public float LastMoveTime { get; set; }
+		public float MoveDelay { get; set; }
+		public float Speed { get; set; }
+
+		public bool EndAfterMovementReached { get; set; }
+		public ScreenPoint MovingDestination { get; set; }
+
+		public bool IsMovable { get; set; }
+
+		#endregion
+
+		#region ICollidable Members
+
+		public int Density { get; set; }
+		public event EventHandler Collided;
+
+		public void OnCollided(object sender, EventArgs e)
+		{
+			var handler = this.Collided;
+
+			if (handler != null)
+				handler(this, EventArgs.Empty);
+		}
+
+		public ScreenPoint GetLocation()
+		{
+			return this.Location;
+		}
+
+		#endregion
+	}
 
 	public enum Genders
 	{
 		Male,
 		Female,
 		None
-	}
-
-	public enum Directions
-	{
-		Any=0,
-		North=2,
-		East=4,
-		South=8,
-		West=16
 	}
 }

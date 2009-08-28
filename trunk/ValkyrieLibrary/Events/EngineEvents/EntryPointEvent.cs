@@ -3,30 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ValkyrieLibrary.Characters;
+using Microsoft.Xna.Framework;
 
 namespace ValkyrieLibrary.Events.EngineEvents
 {
-	class EntryPointEvent
-		: BaseMapEvent
+	public class EntryPointEvent
+		: IMapEvent
 	{
-		public override string GetType()
+		public Dictionary<string, string> Parameters { get; set; }
+		public Directions Direction { get; set; }
+		public ActivationTypes Activation { get; set; }
+
+		public Rectangle Rectangle { get; set; }
+
+		public string GetStringType()
 		{
 			return "EntryPoint";
 		}
 
-		public override void Trigger(BaseCharacter character)
+		public void Trigger(BaseCharacter character)
 		{
 			throw new NotImplementedException();
 		}
 
-		public override IEnumerable<string> GetParameterNames()
+		public IEnumerable<string> GetParameterNames()
 		{
 			// Performance intensive??
 			// Consider changing to property or cache
 			return (new string[] {"Name"}).ToList();
 		}
 
-		public override object Clone()
+		public object Clone()
 		{
 			EntryPointEvent clone = new EntryPointEvent();
 			clone.Rectangle = this.Rectangle;

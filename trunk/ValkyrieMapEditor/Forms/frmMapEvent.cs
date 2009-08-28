@@ -15,21 +15,19 @@ namespace ValkyrieMapEditor.Forms
 {
     public partial class frmMapEvent : Form
     {
-		public BaseMapEvent Event
+		public IMapEvent Event
 		{
 			get { return this.pevent; }
 			set { this.pevent = value; }
 		}
 
 		private int InitialHeight = 0;
-		private BaseMapEvent pevent;
+		private IMapEvent pevent;
 
 		// For new events
-		public frmMapEvent()
-		{
-		}
+		public frmMapEvent() { }
 
-        public frmMapEvent(BaseMapEvent e)
+		public frmMapEvent(IMapEvent e)
         {
             InitializeComponent();
 
@@ -42,7 +40,7 @@ namespace ValkyrieMapEditor.Forms
 		private void frmMapEvent_Load(object sender, EventArgs e)
 		{
 			// Event Handler types
-			foreach (var type in TileEngine.EventManager.EventTypes.Values)
+			foreach (var type in frmMain.EventHandlerTypes)
 				this.inType.Items.Add(type);
 
 			this.inType.DisplayMember = "Name";
@@ -72,14 +70,7 @@ namespace ValkyrieMapEditor.Forms
         {
 			if (this.Event != null)
 			{
-				this.inType.SelectedItem = TileEngine.EventManager.EventTypes[Event.GetType()];
-
-				// Set manually
-				for (int i = 0; i < this.inActivation.Items.Count; i++)
-				{
-					if (inActivation.Items[i].ToString() == this.Event.Activation.ToString())
-						this.inActivation.SelectedIndex = i;
-				}
+				this.inType.SelectedItem = this.Event.GetType();
 
 				// Wtf won't set selected value?? Do it manually
 				for (int i = 0; i < this.inDirection.Items.Count; i++)
@@ -92,7 +83,7 @@ namespace ValkyrieMapEditor.Forms
 
 				foreach (var Parameter in this.Event.Parameters)
 					this.AddParameter(Parameter.Key, Parameter.Value, true);
-
+				
 				this.ResizeWindow();
 			}
 
@@ -113,14 +104,17 @@ namespace ValkyrieMapEditor.Forms
 		private void btnOk_Click(object sender, EventArgs e)
 		{
 			if( this.Event == null)
-				this.Event = (BaseMapEvent)Activator.CreateInstance((Type)this.inType.SelectedItem);
+				this.Event = (IMapEvent)Activator.CreateInstance((Type)this.inType.SelectedItem);
 
 			this.Event.Direction = (Directions)Enum.Parse(typeof(Directions), this.inDirection.Text);
 			this.Event.Activation = (ActivationTypes)Enum.Parse(typeof(ActivationTypes), this.inActivation.SelectedItem.ToString());
 
 			this.Event.Parameters = new Dictionary<string, string>();
 			foreach (var Parameter in this.GetParameters())
-				this.Event.Parameters.Add(Parameter.Key, Parameter.Value);
+			{
+				if(!String.IsNullOrEmpty(Parameter.Key))
+					this.Event.Parameters.Add(Parameter.Key, Parameter.Value);
+			}
 
 			this.Close();
 		}
@@ -203,9 +197,9 @@ namespace ValkyrieMapEditor.Forms
 				foreach (Control subcontrol in control.Controls)
 				{
 					if (subcontrol is TextBox && (string)subcontrol.Tag == "Name")
-						Key = ((TextBox)subcontrol).Text;
-					else if (subcontrol is TextBox && (string)subcontrol.Tag == "Value") 
-						Value = ((TextBox)subcontrol).Text;
+						Key = ((TextBox)subcontrol).Text.Trim();
+					else if (subcontrol is TextBox && (string)subcontrol.Tag == "Value")
+						Value = ((TextBox)subcontrol).Text.Trim();
 				}
 
 				yield return new KeyValuePair<string, string>(Key, Value);
@@ -221,10 +215,18 @@ namespace ValkyrieMapEditor.Forms
 
 			Type type =  (Type)this.inType.SelectedItem;
 
-			var mapevent = (BaseMapEvent)Activator.CreateInstance(type);
+			var mapevent = (IMapEvent)Activator.CreateInstance(type);
 
-			foreach (String param in mapevent.GetParameterNames())
-				this.AddParameter(param, string.Empty, true);
+			var parameters = mapevent.GetParameterNames();
+			if (parameters.Count() > 0)
+			{
+				foreach (String param in mapevent.GetParameterNames())
+					this.AddParameter(param, string.Empty, true);
+			}
+			else
+			{
+				this.AddParameter(string.Empty, string.Empty, false);
+			}
 
 			this.ResizeWindow();
 

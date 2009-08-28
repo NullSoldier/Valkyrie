@@ -9,7 +9,7 @@ namespace ValkyrieLibrary
 {
     public interface IModule
     {
-        void Tick(GameTime gameTime);
+        void Update(GameTime gameTime);
         void Draw(SpriteBatch spriteBatch, GameTime gameTime);
         void Load();
         void Unload();

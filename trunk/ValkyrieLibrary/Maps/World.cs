@@ -60,54 +60,24 @@ namespace ValkyrieLibrary.Maps
         public ScreenPoint FindStartLocation(String name)
         {
 			// Keep a static cache of this for optimization
-			string EntryPointType = ((BaseMapEvent)Activator.CreateInstance(typeof(EntryPointEvent))).GetType();
+			//string EntryPointType = ((BaseMapEvent)Activator.CreateInstance(typeof(EntryPointEvent))).GetType();
 
 			foreach (var mapHeader in MapList)
 			{
-				foreach (BaseMapEvent e in mapHeader.Value.Map.EventList)
+				foreach (IMapEvent e in mapHeader.Value.Map.EventList)
 				{
-					if (e.GetType() != EntryPointType)
+					if ( !(e is EntryPointEvent) || !e.Parameters.ContainsKey("Name"))
 						continue;
 
-					String eName = e.Parameters["Name"];
-
-					if (eName == name)
+					if (name == e.Parameters["Name"])
 					{
 						ScreenPoint point = (new MapPoint(e.Rectangle.X, e.Rectangle.Y) + mapHeader.Value.MapLocation).ToScreenPoint();
 						return point;
-					}
-			
+					}			
 				}
 			}
 
 			return new ScreenPoint(0, 0);
-
-
-			#region OldCode
-			/*
-			if (name == "Default")
-                name = DefaultSpawn;
-
-            foreach (var mapHeader in MapList)
-            {
-                foreach (BaseMapEvent e in mapHeader.Value.Map.EventList)
-                {
-                    if (e.GetType() != ((BaseMapEvent)Activator.CreateInstance(typeof(EntryPointEvent))).GetType() )
-                        continue;
-
-                    String eName = e.Parameters["Name"];
-
-                    if (eName == name)
-                        return new ScreenPoint(e.Rectangle.X, e.Rectangle.Y) + mapHeader.Value.MapLocation.ToScreenPoint();
-                }
-            }
-
-            if (name != DefaultSpawn)
-                return FindStartLocation(DefaultSpawn);
-
-            return new ScreenPoint(0,0)
-			 */
-			#endregion
 		}
 
 

@@ -17,6 +17,9 @@ namespace Valkyrie.Core
 
 		public override bool CheckCollision(ICollidable Source, ScreenPoint Destination)
 		{
+			if (Source.Density == 0)
+				return true;
+
 			MapPoint tilePoint = TileEngine.GlobalTilePointToLocal(Destination.ToMapPoint());
 
 			if (!TileEngine.CurrentMapChunk.TilePointInMapLocal(tilePoint))

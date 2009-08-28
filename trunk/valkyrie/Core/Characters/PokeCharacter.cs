@@ -16,35 +16,23 @@ namespace Valkyrie.Core.Characters
 	class PokeCharacter
 		: BaseCharacter
 	{
-		public Genders Gender;
+		// Character properties
+		public String Name { get; set; }
+		public Genders Gender { get; set; }
 
-		public float MoveDelay = 0.002f;
-		public float LastMoveTime = 0;
-
-		public bool IsMoving = false;
+		public PokeCharacter()
+		{
+			this.Animating = false;
+			this.Speed = 2;
+			this.MoveDelay = 0.002f;
+			this.LastMoveTime = 0;
+			this.IsMoving = false;
+			this.Density = 1;
+		}
 
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			spriteBatch.Draw(this.Sprite, new Vector2(this.Location.X, this.Location.Y), Animations[this.CurrentAnimationName].FrameRectangle, Color.White);
-		}
-
-		public override void Move(ScreenPoint Destination)
-		{
-			if (this.IsMoving)
-				return;
-
-			MapPoint point = Destination.ToMapPoint();
-
-			TileEngine.EventManager.HandleEvent(this, ActivationTypes.Movement);
-
-			// Convert to a map point and then back to a screen point which should result in the map points screenpoint origin
-			this.MovingDestination = Destination.ToMapPoint().ToScreenPoint();
-
-			// Clear the chunk when moving across boundries
-			if (!TileEngine.CurrentMapChunk.TilePointInMapGlobal(new MapPoint(point.X, point.Y)))
-				TileEngine.ClearCurrentMapChunk();
-
-			this.IsMoving = true;
 		}
 
 		public override void DrawOverlay(SpriteBatch spriteBatch)
@@ -54,14 +42,5 @@ namespace Valkyrie.Core.Characters
 		public override void Action(string type)
 		{
 		}
-
-		public override void StopMoving()
-		{
-			this.IsMoving = false;
-			this.MovingDestination = new ScreenPoint(0, 0); // eh?
-			this.LastMoveTime = 0;
-		}
-
-
 	}
 }

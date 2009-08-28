@@ -73,13 +73,13 @@ namespace ValkyrieMapEditor.Core
 
 			MapPoint point = new MapPoint(SelectedPoint.X + (xOffset * -1), SelectedPoint.Y + (yOffset * -1));
 
-            BaseMapEvent e = TileEngine.EventManager.GetEventInRect(point, new BasePoint(1, 1));
+			IMapEvent e = TileEngine.EventManager.GetEventInRect(point, new BasePoint(1, 1));
 
 			bool newEvent = false;
 			if (e != null)
 			{
-				SelectedPoint = e.Location.ToPoint();
-				EndSelectedPoint = (e.Location + e.Size).ToPoint();
+				SelectedPoint = new Point(e.Rectangle.X, e.Rectangle.Y);
+				EndSelectedPoint = new Point(e.Rectangle.X + e.Rectangle.Width, e.Rectangle.Y + e.Rectangle.Height);
 			}
 			else
 			{
@@ -147,22 +147,22 @@ namespace ValkyrieMapEditor.Core
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (BaseMapEvent e in TileEngine.CurrentMapChunk.EventList)
+			foreach (IMapEvent e in TileEngine.CurrentMapChunk.EventList)
             {
 
-                Point newLoc = new Point((int)TileEngine.Camera.MapOffset.X + (int)TileEngine.Camera.CameraOffset.X + (e.Location.X * TileEngine.CurrentMapChunk.TileSize.X),
-                     (int)TileEngine.Camera.MapOffset.Y + (int)TileEngine.Camera.CameraOffset.Y + (e.Location.Y * TileEngine.CurrentMapChunk.TileSize.Y));
+                Point newLoc = new Point((int)TileEngine.Camera.MapOffset.X + (int)TileEngine.Camera.CameraOffset.X + (e.Rectangle.X * TileEngine.CurrentMapChunk.TileSize.X),
+					 (int)TileEngine.Camera.MapOffset.Y + (int)TileEngine.Camera.CameraOffset.Y + (e.Rectangle.Y * TileEngine.CurrentMapChunk.TileSize.Y));
 
-  
-                Texture2D border = CreateBorderRectangle(e.Size.X * 32, e.Size.Y * 32);
+
+				Texture2D border = CreateBorderRectangle(e.Rectangle.Width * 32, e.Rectangle.Height * 32);
 
                 if (border != null)
                 {
-                    Rectangle destRectangle = new Rectangle(newLoc.X, newLoc.Y, e.Size.X * 32, e.Size.Y * 32);
+                    Rectangle destRectangle = new Rectangle(newLoc.X, newLoc.Y, e.Rectangle.Width * 32, e.Rectangle.Height * 32);
                     spriteBatch.Draw(border, destRectangle, new Rectangle(0, 0, border.Width, border.Height), Color.White);
                 }
 
-                spriteBatch.DrawString(EditorXNA.font, e.GetType(), new Vector2(newLoc.X + 10, newLoc.Y + 10), Color.AliceBlue);
+                spriteBatch.DrawString(EditorXNA.font, e.GetStringType(), new Vector2(newLoc.X + 10, newLoc.Y + 10), Color.AliceBlue);
             }
 
             if (!Cancel)

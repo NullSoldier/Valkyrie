@@ -4,29 +4,35 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using ValkyrieLibrary.Events;
+using ValkyrieLibrary.Characters;
+using Microsoft.Xna.Framework;
 
 namespace Valkyrie.Events
 {
 	class RickRollEvent
-		: BaseMapEvent
+		: IMapEvent
 	{
+		public Rectangle Rectangle { get; set; }
+		public ActivationTypes Activation { get; set; }
+		public Dictionary<string, string> Parameters { get; set; }
+		public Directions Direction { get; set; }
 
-		public override string GetType()
+		public string GetStringType()
 		{
 			return "RickRoll";
 		}
 
-		public override void Trigger(ValkyrieLibrary.Characters.BaseCharacter character)
+		public void Trigger(BaseCharacter character)
 		{
 			Process.Start("http://www.youtube.com/watch?v=Yu_moia-oVI");
 		}
 
-		public override IEnumerable<string> GetParameterNames()
+		public IEnumerable<string> GetParameterNames()
 		{
 			return new List<string>();
 		}
 
-		public override object Clone()
+		public object Clone()
 		{
 			RickRollEvent clone = new RickRollEvent();
 			clone.Rectangle = this.Rectangle;

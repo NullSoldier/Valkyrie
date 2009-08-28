@@ -6,31 +6,37 @@ using ValkyrieLibrary.Characters;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary;
 using ValkyrieLibrary.Events;
+using Microsoft.Xna.Framework;
 
 namespace Valkyrie.Events
 {
 	public class LoadEvent
-		: BaseMapEvent
+		: IMapEvent
 	{
-		public override string GetType()
+		public Rectangle Rectangle { get; set; }
+		public ActivationTypes Activation { get; set; }
+		public Dictionary<string, string> Parameters { get; set; }
+		public Directions Direction { get; set; }
+
+		public string GetStringType()
 		{
 			return "Load";
 		}
 
-		public override void Trigger(BaseCharacter character)
+		public void Trigger(BaseCharacter character)
 		{
 			String name = this.Parameters["World"];
-			String pos = this.Parameters["Entry"];
+			String pos = this.Parameters["EntryPointName"];
 
 			TileEngine.WorldManager.SetWorld(name, pos);
 		}
 
-		public override IEnumerable<string> GetParameterNames()
+		public IEnumerable<string> GetParameterNames()
 		{
-			return (new string[] { "Name", "World", "EntryPointName" }).ToList();
+			return new string[] { "Name", "World", "EntryPointName" };
 		}
 
-		public override object Clone()
+		public object Clone()
 		{
 			LoadEvent clone = new LoadEvent();
 			clone.Rectangle = this.Rectangle;

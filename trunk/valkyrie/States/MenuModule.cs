@@ -54,7 +54,7 @@ namespace Valkyrie.States
 
 		#region IModule Members
 
-		public void Tick(GameTime gameTime)
+		public void Update(GameTime gameTime)
 		{
 			KeyManager.Update();
 

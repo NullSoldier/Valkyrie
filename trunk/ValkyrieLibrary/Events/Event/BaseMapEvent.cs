@@ -8,9 +8,11 @@ using Microsoft.Xna.Framework;
 
 namespace ValkyrieLibrary.Events
 {
+	/*
 	public abstract class BaseMapEvent
-		: IMapEvent, ICloneable
+		: ICloneable
 	{
+		
 		public BaseMapEvent() { }
 
 		public BaseMapEvent(MapPoint location, MapPoint size)
@@ -29,7 +31,7 @@ namespace ValkyrieLibrary.Events
 		public Directions Direction { get; set; }
 		public Dictionary<String, String> Parameters { get; set; }
 
-		public abstract string GetType();
+		public abstract string GetStringType();
 		public abstract void Trigger(BaseCharacter character);
 		public abstract IEnumerable<string> GetParameterNames();
 
@@ -52,4 +54,5 @@ namespace ValkyrieLibrary.Events
 
 		#endregion
 	}
+		 */
 }
