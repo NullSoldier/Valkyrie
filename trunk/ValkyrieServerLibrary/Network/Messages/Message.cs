@@ -13,7 +13,8 @@ namespace Gablarski.Messages
 		Disconnect = 9,
 
 		LocationData = 11,
-		PlayerRequest = 19
+		PlayerRequest = 19,
+		PlayerInfoRequest = 21
 	}
 
 	public enum ServerMessageType
@@ -21,7 +22,8 @@ namespace Gablarski.Messages
 	{
 		LoginFailed = 13,
 		LoginSuccess = 15,
-		PlayerUpdate = 17
+		PlayerUpdate = 17,
+		PlayerInfo = 23
 	}
 
 	public abstract class Message<TMessage>

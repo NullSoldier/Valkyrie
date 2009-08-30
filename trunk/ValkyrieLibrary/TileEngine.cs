@@ -21,7 +21,22 @@ namespace ValkyrieLibrary
 	{
         public static Viewport Viewport;
         public static BaseCamera Camera;
-        public static BaseCharacter Player;
+		public static BaseCharacter Player
+		{
+			get { return TileEngine.player; }
+			set
+			{
+				if(TileEngine.player != null)
+					TileEngine.player.TileLocationChanged -= TileEngine.PlayerTileLocationChanged;
+
+				TileEngine.player = value;
+
+				if(TileEngine.player != null)
+					TileEngine.player.TileLocationChanged += TileEngine.PlayerTileLocationChanged;
+			}
+		}
+
+		private static BaseCharacter player;
 
         public static TextureManager TextureManager;
         public static ModuleManager ModuleManager;
@@ -29,6 +44,7 @@ namespace ValkyrieLibrary
         public static WorldManager WorldManager;
         public static MapEventManager EventManager;
 		public static IMovementManager MovementManager;
+		public static GraphicsDevice GraphicsDevice;
 
 		public static NetworkClientConnection NetworkManager;
 		public static Dictionary<uint, BaseCharacter> NetworkPlayerCache;
@@ -38,7 +54,7 @@ namespace ValkyrieLibrary
 
 		public static int TileSize = 32;
         public static bool IsMapLoaded{ get { return (TileEngine.CurrentMapChunk != null); } }
-		
+
 		public static TileEngineConfiguration Configuration
 		{
 			get; set;
@@ -84,7 +100,7 @@ namespace ValkyrieLibrary
             TileEngine.WorldManager = new WorldManager();
 			TileEngine.NetworkManager = new NetworkClientConnection();
 			TileEngine.NetworkPlayerCache = new Dictionary<uint, BaseCharacter>();
-
+			TileEngine.GraphicsDevice = device;
 		}
 
         public static void Load (FileInfo configuration)
@@ -112,6 +128,16 @@ namespace ValkyrieLibrary
                 TileEngine.ModuleManager.PushModuleToScreen(TileEngine.Configuration[TileEngineConfigurationName.DefaultModule]);
         }
 
+		public static void Unload()
+		{
+			foreach (IModule module in TileEngine.ModuleManager.Modules.Values)
+			{
+				module.Unload();
+			}
+
+			TileEngine.NetworkManager.Disconnect();
+		}
+
 		public static void ClearCurrentMapChunk()
 		{
 			TileEngine.currentmapchunk = null;
@@ -132,6 +158,11 @@ namespace ValkyrieLibrary
 			Check.NullArgument (localpoint, "localpoint");
 
             return localpoint - TileEngine.WorldManager.CurrentWorld.MapList[TileEngine.CurrentMapChunk.Name].MapLocation;
+		}
+
+		private static void PlayerTileLocationChanged(object sender, EventArgs e)
+		{
+			TileEngine.ClearCurrentMapChunk();
 		}
 
 		public static void Update(GameTime time)

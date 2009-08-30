@@ -25,6 +25,7 @@ using ValkyrieLibrary.Network;
 using Valkyrie.Characters;
 using ValkyrieServerLibrary.Network.Messages.Valkyrie;
 using ValkyrieLibrary.Characters;
+using ValkyrieLibrary.States;
 
 namespace ValkyrieLibrary
 {
@@ -32,75 +33,19 @@ namespace ValkyrieLibrary
     /// This is the main type for your game
     /// </summary>
     public class PokeGame
-		: Microsoft.Xna.Framework.Game
+		: Game
     {
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
 		public static SpriteFont font;
 
         public PokeGame()
-        {
+        {	
             graphics = new GraphicsDeviceManager(this);
 			graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
         }
-
-		private void TestConnected(object sender, EventArgs ev)
-		{
-			LoginMessage msg = new LoginMessage();
-			msg.Username = "testuser";
-			msg.Password = "testpassword";
-
-			TileEngine.NetworkManager.Send(msg);
-		}
-
-		private void TestDisconnected(object sender, EventArgs ev)
-		{
-			Environment.Exit(0);
-		}		
-
-		public void TestMessageReceived(object sender, MessageReceivedEventArgs ev)
-		{
-			if (ev.Message is LoginSuccessMessage)
-			{
-				TileEngine.NetworkID = ((LoginSuccessMessage)ev.Message).NetworkIDAssigned;
-
-				TileEngine.NetworkManager.Send(new PlayerRequestListMessage());
-			}
-			else if (ev.Message is PlayerUpdateMessage)
-			{
-				var message = (PlayerUpdateMessage)ev.Message;
-				
-				if(message.Action == PlayerUpdateAction.Add)
-				{
-					PokePlayer player = new PokePlayer();
-					player.Sprite = TileEngine.TextureManager.GetTexture("MaleSprite.png");
-
-					TileEngine.NetworkPlayerCache.Add(message.NetworkID, player);
-				}
-				else
-				{
-					TileEngine.NetworkPlayerCache.Remove(message.NetworkID);
-				}
-			}
-			else if (ev.Message is LocationUpdateMessage)
-			{
-				var message = (LocationUpdateMessage)ev.Message;
-
-				if (!TileEngine.NetworkPlayerCache.ContainsKey(message.NetworkID))
-					return; // Throw exception or get player data
-
-				UInt32 NID = message.NetworkID;
-				int x = message.X;
-				int y = message.Y;
-				string animation = message.Animation;
-
-				TileEngine.NetworkPlayerCache[NID].Location = new ScreenPoint(x, y);
-				TileEngine.NetworkPlayerCache[NID].CurrentAnimationName = animation;
-			}
-
-		}
 
         protected override void Initialize()
         {
@@ -113,17 +58,6 @@ namespace ValkyrieLibrary
 			TileEngine.EventManager = new MapEventManager(new Assembly[] { Assembly.GetEntryAssembly(), Assembly.Load("ValkyrieLibrary") });
 			TileEngine.TileSize = 32;
 
-			TileEngine.NetworkManager.Connected += this.TestConnected;
-			TileEngine.NetworkManager.Disconnected += this.TestDisconnected;
-			TileEngine.NetworkManager.MessageReceived += this.TestMessageReceived;
-			TileEngine.NetworkManager.Connect(new IPEndPoint(IPAddress.Parse("173.65.132.130"), 6112));
-
-			LoginMessage msg = new LoginMessage();
-			msg.Username = "testuser";
-			msg.Password = "testpassword";
-
-			TileEngine.NetworkManager.Send(msg);
-
             base.Initialize();
         }
 
@@ -135,6 +69,7 @@ namespace ValkyrieLibrary
 
             TileEngine.ModuleManager.AddModule(new MenuModule(), "Menu");
             TileEngine.ModuleManager.AddModule(new GameModule(), "Game");
+			TileEngine.ModuleManager.AddModule(new LoginModule(), "Login");
 
             TileEngine.Load(new FileInfo("Data/TileEngineConfig.xml"));
 			TileEngine.WorldManager.Load(new FileInfo("Data/PokeWorld.xml"));
@@ -142,7 +77,7 @@ namespace ValkyrieLibrary
 
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+			TileEngine.Unload();
         }
 
         float deltaFPSTime = 0;

@@ -78,6 +78,7 @@ namespace Gablarski.Messages
 
 				Func<MessageBase> dctord = (Func<MessageBase>)dctor.CreateDelegate (typeof (Func<MessageBase>));
 				MessageBase dud = dctord();
+
 				messageTypes.Add (dud.MessageTypeCode, dctord);
 			}
 

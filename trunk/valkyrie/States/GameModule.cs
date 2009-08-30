@@ -15,11 +15,19 @@ using ValkyrieLibrary.Input;
 using Valkyrie.Characters;
 using System.Diagnostics;
 using ValkyrieLibrary.Core.Messages;
+using ValkyrieLibrary.Network;
+using Gablarski;
+using ValkyrieServerLibrary.Network.Messages.Valkyrie;
+using System.Runtime.InteropServices;
 
 namespace Valkyrie.States
 {
-    public class GameModule : IModule
+    public class GameModule
+		: IModule
     {
+		[DllImport("user32.dll", CharSet = CharSet.Auto)]
+		public static extern uint MessageBox(IntPtr hWnd, String text, String caption, uint type);
+
         private bool Loaded = false;
         private KeybindController KeybindController = new KeybindController();
 
@@ -34,16 +42,25 @@ namespace Valkyrie.States
 
         public void Update(GameTime gameTime)
         {
+			if (!this.Loaded)
+				return;
+
 			TileEngine.Camera.CenterOnPoint(new ScreenPoint(TileEngine.Player.Location.X + (TileEngine.Player.CurrentAnimation.FrameRectangle.Width / 2), TileEngine.Player.Location.Y + (TileEngine.Player.CurrentAnimation.FrameRectangle.Height / 2)));
 
             this.KeybindController.Update();
 
 			TileEngine.Player.Update(gameTime);
+			foreach (PokePlayer player in TileEngine.NetworkPlayerCache.Values)
+				player.Update(gameTime);
+
 			TileEngine.MovementManager.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
+			if (!this.Loaded)
+				return;
+
             spriteBatch.GraphicsDevice.Viewport = TileEngine.Camera.Viewport;
             spriteBatch.GraphicsDevice.Clear(Color.Black);
 
@@ -57,13 +74,7 @@ namespace Valkyrie.States
 
         public void Load()
         {
-            // Player
-			PokePlayer player = new PokePlayer();
-			player.Gender = Genders.Male;
-			player.Sprite = TileEngine.TextureManager.GetTexture("MaleSprite.png");
-			TileEngine.Player = player;
-
-			TileEngine.WorldManager.SetWorld("Main", "Default");
+			TileEngine.WorldManager.SetWorld("Main", "Default", false);
 
             this.KeybindController.AddKey(Keys.Left, "MoveLeft");
             this.KeybindController.AddKey(Keys.Up, "MoveUp");
@@ -73,13 +84,79 @@ namespace Valkyrie.States
             this.KeybindController.KeyDown += this.GameModule_KeyDown;
 			this.KeybindController.KeyUp += this.GameModule_KeyUp;
 
+			TileEngine.NetworkManager.MessageReceived += this.Game_MessageReceived;
+			TileEngine.NetworkManager.Send(new PlayerRequestListMessage());
+
 			TileEngine.Player.StartedMoving += this.GameModule_StartedMoving;
 			TileEngine.Player.StoppedMoving += this.GameModule_StoppedMoving;
 			TileEngine.Player.TileLocationChanged += this.GameModule_TileLocationChanged;
 			TileEngine.Player.Collided += this.GameModule_Collided;
 
 			TileEngine.Player.TileLocationChanged += TestTileLocationChanged;
+
+			this.Loaded = true;
         }
+
+		public void Game_MessageReceived(object sender, MessageReceivedEventArgs ev)
+		{
+			try
+			{
+				if (ev.Message is PlayerUpdateMessage)
+				{
+					var message = (PlayerUpdateMessage)ev.Message;
+
+					if (message.Action == PlayerUpdateAction.Add)
+					{
+						PokePlayer player = new PokePlayer();
+						player.Loaded = false;
+
+						TileEngine.NetworkPlayerCache.Add(message.NetworkID, player);
+
+						PlayerRequestMessage msg = new PlayerRequestMessage();
+						msg.NetworkID = message.NetworkID;
+
+						TileEngine.NetworkManager.Send(msg);
+					}
+					else
+					{
+						TileEngine.NetworkPlayerCache.Remove(message.NetworkID);
+					}
+				}
+				else if (ev.Message is PlayerInfoMessage)
+				{
+					PlayerInfoMessage message = (PlayerInfoMessage)ev.Message;
+
+					PokePlayer player = (PokePlayer)TileEngine.NetworkPlayerCache[message.NetworkID];
+
+					player.Sprite = TileEngine.TextureManager.GetTexture("MaleSprite.png");
+					player.Name = message.Name;
+					player.CurrentAnimationName = message.Animation;
+					player.Location = new ScreenPoint(message.Location.X, message.Location.Y);
+
+					if(!player.Loaded)
+						player.Loaded = true;
+				}
+				else if (ev.Message is LocationUpdateMessage)
+				{
+					var message = (LocationUpdateMessage)ev.Message;
+
+					if (!TileEngine.NetworkPlayerCache.ContainsKey(message.NetworkID))
+						return; // Throw exception or get player data
+
+					UInt32 NID = message.NetworkID;
+					int x = message.X;
+					int y = message.Y;
+					string animation = message.Animation;
+
+					TileEngine.NetworkPlayerCache[NID].Location = new ScreenPoint(x, y);
+					TileEngine.NetworkPlayerCache[NID].CurrentAnimationName = animation;
+				}
+			}
+			catch (System.Exception ex)
+			{
+				MessageBox(new IntPtr(0), ex.Message + Environment.NewLine + Environment.NewLine + ex.StackTrace, "Error!", 0);
+			}
+		}
 
 		public void TestTileLocationChanged(object sender, EventArgs e)
 		{
@@ -95,7 +172,7 @@ namespace Valkyrie.States
 
         public void Unload()
         {
-            throw new NotImplementedException();
+            
         }
 
         public void Activate()

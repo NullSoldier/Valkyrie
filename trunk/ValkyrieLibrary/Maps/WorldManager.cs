@@ -24,7 +24,7 @@ namespace ValkyrieLibrary.Maps
             this.CurrentWorld = null;
         }
 
-        public void SetWorld(String name, String startLoc)
+        public void SetWorld(String name, String startLoc, bool UseStartLocation)
         {
         	if (!this.WorldsList.ContainsKey(name))
         		return;
@@ -32,11 +32,14 @@ namespace ValkyrieLibrary.Maps
         	this.CurrentWorld = this.WorldsList[name];
         	TileEngine.ClearCurrentMapChunk();
         	//TileEngine.Player.StopMoving();
-				
-        	if( startLoc == null || startLoc == "Default" )
-        		TileEngine.Player.Location = this.CurrentWorld.FindDefaultStartLocation();
-        	else
-        		TileEngine.Player.Location = this.CurrentWorld.FindStartLocation(startLoc);
+
+			if (UseStartLocation)
+			{
+				if (startLoc == null || startLoc == "Default")
+					TileEngine.Player.Location = this.CurrentWorld.FindDefaultStartLocation();
+				else
+					TileEngine.Player.Location = this.CurrentWorld.FindStartLocation(startLoc);
+			}
 
         	TileEngine.Camera.CenterOnCharacter(TileEngine.Player);
         }

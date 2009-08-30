@@ -28,7 +28,7 @@ namespace Valkyrie.Events
 			String name = this.Parameters["World"];
 			String pos = this.Parameters["EntryPointName"];
 
-			TileEngine.WorldManager.SetWorld(name, pos);
+			TileEngine.WorldManager.SetWorld(name, pos, true);
 		}
 
 		public IEnumerable<string> GetParameterNames()

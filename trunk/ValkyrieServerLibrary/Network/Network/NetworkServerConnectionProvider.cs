@@ -60,7 +60,9 @@ namespace Gablarski.Network
 
 			Trace.WriteLineIf (VerboseTracing, "[Network] Stopped listening to port " + port);
 
-			udp.Close();
+			if(udp != null)
+				udp.Close();
+
 			tcpListener.Stop();
 
 			if (this.listenerThread != null)

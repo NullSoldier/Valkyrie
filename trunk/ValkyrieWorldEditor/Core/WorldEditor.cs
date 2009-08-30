@@ -56,7 +56,7 @@ namespace ValkyrieWorldEditor.Core
         //this gets call via the main form thus the string
         public static void SetCurWorld(String worldName)
         {
-            TileEngine.WorldManager.SetWorld(worldName, "Default");
+            TileEngine.WorldManager.SetWorld(worldName, "Default", false);
             MainForm.RefreshWorldProp(WorldEditor.CurWorld);
         }
 

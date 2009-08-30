@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Network\CharacterDetails.cs" />
     <Compile Include="Network\GameServerClient.cs" />
     <Compile Include="Network\Messages\ClientMessage.cs" />
     <Compile Include="Network\Messages\Message.cs" />
@@ -59,7 +60,9 @@
     <Compile Include="Network\Messages\Valkyrie\LoginFailedMessage.cs" />
     <Compile Include="Network\Messages\Valkyrie\LoginMessage.cs" />
     <Compile Include="Network\Messages\Valkyrie\LoginSuccessMessage.cs" />
+    <Compile Include="Network\Messages\Valkyrie\PlayerInfoMessage.cs" />
     <Compile Include="Network\Messages\Valkyrie\PlayerRequestListMessage.cs" />
+    <Compile Include="Network\Messages\Valkyrie\PlayerRequestMessage.cs" />
     <Compile Include="Network\Messages\Valkyrie\PlayerUpdateMessage.cs" />
     <Compile Include="Network\Misc\AES.cs" />
     <Compile Include="Network\Misc\ByteArrayExtensions.cs" />

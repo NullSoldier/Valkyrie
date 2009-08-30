@@ -7,8 +7,13 @@ namespace ValkyrieLibrary
 {
     public class ModuleManager
     {
-        public IModule CurrentModule { get; private set; }
-        private Dictionary<string, IModule> Modules;
+		public IModule CurrentModule
+		{
+			get;
+			private set;
+		}
+
+        public readonly Dictionary<string, IModule> Modules;
         
         public ModuleManager()
         {
@@ -24,9 +29,12 @@ namespace ValkyrieLibrary
         {
             if (!this.Modules.ContainsKey(name))
                 throw new ArgumentException("That Module does not exist or is not loaded into the module cache.");
-            
-            this.CurrentModule = this.Modules[name];
-            this.CurrentModule.Activate();
+
+			if (this.CurrentModule != null)
+				this.CurrentModule.Deactivate();
+
+			this.CurrentModule = this.Modules[name];
+			this.CurrentModule.Activate();
         }
     }
 }

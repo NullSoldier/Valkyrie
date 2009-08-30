@@ -17,9 +17,17 @@ namespace Valkyrie.Characters
 	class PokePlayer
 		: PokeCharacter
 	{
+		public bool Loaded
+		{
+			get;
+			set;
+		}
+
 		public PokePlayer()
 			: base()
 		{
+			this.Loaded = false;
+
 			if (this.Gender == Genders.Male)
 			{
                 this.Animations.Add("North", new FrameAnimation(new Rectangle(56, 0, 28, 42), 1));
@@ -36,14 +44,17 @@ namespace Valkyrie.Characters
 				this.Animations.Add("Spin", new FrameAnimation(new Rectangle(0, 224, 28, 41), 4, 0.1f));			
 			}
 
-			this.Name = "NullSoldier";
+			this.Name = "NULL";
 			this.CurrentAnimationName = "South";
 		}
 
 		public override void Draw(SpriteBatch spriteBatch)
         {
-			spriteBatch.Draw(this.Sprite, this.DrawScreenLocation, Animations[this.CurrentAnimationName].FrameRectangle, Color.White);
-			spriteBatch.DrawString(PokeGame.font, this.Name, this.DrawScreenLocation, Color.Black);
+			if (this.Loaded)
+			{
+				spriteBatch.Draw(this.Sprite, this.DrawScreenLocation, Animations[this.CurrentAnimationName].FrameRectangle, Color.White);
+				spriteBatch.DrawString(PokeGame.font, this.Name, new Vector2(this.DrawScreenLocation.X - (PokeGame.font.MeasureString(this.Name).X / 2) + 16, this.DrawScreenLocation.Y - 15), Color.Black);
+			}
 		}
 
 		public Vector2 DrawScreenLocation
@@ -59,7 +70,10 @@ namespace Valkyrie.Characters
 
 		public override void Update(GameTime gameTime)
 		{
-			base.Update(gameTime);
+			if (this.Loaded)
+			{
+				base.Update(gameTime);
+			}
 		}
 
 		#region Game Methods

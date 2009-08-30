@@ -128,7 +128,7 @@ namespace ValkyrieMapEditor
             w.MapList.Add(map.Name, header);
 
             TileEngine.WorldManager.WorldsList.Add(map.Name, w);
-            TileEngine.WorldManager.SetWorld(map.Name, null);
+            TileEngine.WorldManager.SetWorld(map.Name, null, false);
             TileEngine.Camera.CenterOriginOnPoint(0, 0);
 		}
     }

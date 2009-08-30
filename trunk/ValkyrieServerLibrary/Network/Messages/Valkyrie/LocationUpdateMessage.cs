@@ -5,6 +5,7 @@ using System.Text;
 using Gablarski.Messages;
 using System.Drawing;
 using Gablarski;
+using ValkyrieServerLibrary.Network.Messages.Valkyrie;
 
 namespace ValkyrieLibrary.Core.Messages
 {

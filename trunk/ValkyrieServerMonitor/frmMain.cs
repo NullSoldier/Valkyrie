@@ -104,18 +104,57 @@ namespace ValkyrieServerMonitor
 			if (ev.Message is LocationUpdateMessage)
 				this.Message_UpdateLocation(ev.Connection, (LocationUpdateMessage)ev.Message);
 			if (ev.Message is PlayerRequestListMessage)
-				this.Message_PlayerRequest(ev.Connection, (PlayerRequestListMessage)ev.Message);
+				this.Message_PlayerListRequest(ev.Connection, (PlayerRequestListMessage)ev.Message);
+			if (ev.Message is PlayerRequestMessage)
+				this.Message_PlayerRequest(ev.Connection, (PlayerRequestMessage)ev.Message);
 		}
 
 		private void Connection_Disconnected(object sender, ConnectionEventArgs ev)
 		{
+			if (this.players.ContainsKey(ev.Connection))
+			{
+				this.gameserver.SaveCharacterDetails(this.players[ev.Connection]);
+
+				PlayerUpdateMessage msg = new PlayerUpdateMessage();
+				msg.Action = PlayerUpdateAction.Remove;
+				msg.NetworkID = this.players[ev.Connection].NetworkID;
+				msg.CharacterName = this.players[ev.Connection].Name;
+
+				foreach (NetworkPlayer player in this.players.Values)
+				{
+					player.Connection.Send(msg);
+				}
+
+				this.players.Remove(ev.Connection);
+			}
+
 			this.Trace("Connection disconnected.");
 		}
 
 		#region MessageReceived Methods
-		private void Message_PlayerRequest(IConnection connection, PlayerRequestListMessage message)
+		private void Message_PlayerRequest(IConnection connection, PlayerRequestMessage message)
 		{
-			this.Trace("Sent players to " + this.players[connection].Name);
+			uint id = message.NetworkID;
+
+			// Optimization needed
+			// Change the players dictionary from Dictionary<Connection, NetworkPlayer>
+			// to Dictionary<NetworkID(uint32), NetworkPlayer>
+			NetworkPlayer player = this.players.Values.Where(p => p.NetworkID == id).FirstOrDefault();
+
+			PlayerInfoMessage msg = new PlayerInfoMessage();
+			msg.Location = player.Location;
+			msg.Animation = player.Animation;
+			msg.Name = player.Name;
+			msg.Moving = player.Moving;
+			msg.NetworkID = player.NetworkID;
+			msg.TileSheet = player.TileSheet;
+
+			connection.Send(msg);
+		}
+
+		private void Message_PlayerListRequest(IConnection connection, PlayerRequestListMessage message)
+		{
+			//this.Trace("Sent players to " + this.players[connection].Name);
 
 			foreach (var player in this.players.Values)
 			{
@@ -128,14 +167,17 @@ namespace ValkyrieServerMonitor
 				msg.Action = PlayerUpdateAction.Add;
 
 				connection.Send(msg);
-				this.Trace("Sent player " + player.Name + " to " + this.players[connection].Name);
+				//this.Trace("Sent player " + player.Name + " to " + this.players[connection].Name);
 			}
 		}
 
 		private void Message_UpdateLocation(IConnection connection, LocationUpdateMessage message)
 		{
-			//this.Trace("Movement packet received from " + this.players[connection].Name);
-
+			NetworkPlayer netplayer = this.players[connection];
+		
+			netplayer.Animation = message.Animation;
+			netplayer.Location = message.Location;
+			
 			foreach (var player in this.players.Values)
 			{
 				if (player.Connection != connection)
@@ -145,8 +187,8 @@ namespace ValkyrieServerMonitor
 
 		private void Message_LoginMessage(IConnection connection, LoginMessage message)
 		{
-			bool result = this.gameserver.AuthenticateLogin(message.Username, message.Password);
-			if (!result)
+			var accountid = this.gameserver.AuthenticateLogin(message.Username, message.Password);
+			if (accountid <= 0)
 			{
 				// Login failed, send fail message and do not continue logging them in
 				LoginFailedMessage failmsg = new LoginFailedMessage(ConnectionRejectedReason.BadLogin);
@@ -154,12 +196,21 @@ namespace ValkyrieServerMonitor
 				return;
 			}
 
+			CharacterDetails details = this.gameserver.GetCharacterDetails(accountid);
+			if (details == null)
+			{
+				this.Trace("Character details requested not found in database!");
+			}
+
 			// Create player
 			NetworkPlayer player = new NetworkPlayer();
+			player.AccountID = accountid;
 			player.NetworkID = ++this.LastNetworkID;
 			player.Connection = connection;
-			player.Location = new Point(0, 0);
-			player.Name = "Player #" + player.NetworkID;
+			player.Location = new Point(details.MapLocation.X * 32, details.MapLocation.Y * 32);
+			player.Name = details.Name;
+			player.Animation = "South"; // Change to save direction we were facing when logged out!
+			player.TileSheet = details.TileSheet;
 			
 			// Send them authentication ID
 			var msg = new LoginSuccessMessage();
@@ -170,7 +221,7 @@ namespace ValkyrieServerMonitor
 
 			// Update other players
 			var updatemsg = new PlayerUpdateMessage();
-			updatemsg.CharacterName = "Player #" + this.LastNetworkID;
+			updatemsg.CharacterName = player.Name;
 			updatemsg.NetworkID = this.LastNetworkID;
 			updatemsg.Action = PlayerUpdateAction.Add;
 

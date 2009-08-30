@@ -16,6 +16,12 @@ namespace ValkyrieLibrary.Network
 			set;
 		}
 
+		public uint AccountID
+		{
+			get;
+			set;
+		}
+
 		public uint NetworkID
 		{
 			get;
@@ -29,6 +35,24 @@ namespace ValkyrieLibrary.Network
 		}
 
 		public Point Location
+		{
+			get;
+			set;
+		}
+
+		public bool Moving
+		{
+			get;
+			set;
+		}
+
+		public string Animation
+		{
+			get;
+			set;
+		}
+
+		public string TileSheet
 		{
 			get;
 			set;
