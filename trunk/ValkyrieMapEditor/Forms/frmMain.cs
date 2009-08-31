@@ -27,7 +27,7 @@ namespace ValkyrieMapEditor
 		public event EventHandler<ScreenResizedEventArgs> ScreenResized;
 		public event EventHandler<ScrollEventArgs> ScrolledMap;
 
-		private string ValkyrieGameInstallationAssemblyPath = @"C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\valkyrie\bin\x86\Debug\valkyrie.exe";
+		private string ValkyrieGameInstallationAssemblyPath = Path.Combine(Directory.GetCurrentDirectory(), "valkyrie.exe");
 		public static List<Type> EventHandlerTypes;
 		public static Assembly[] Assemblies;
 
@@ -69,6 +69,8 @@ namespace ValkyrieMapEditor
 		private void toolOpen_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog openDialog = new OpenFileDialog();
+			openDialog.DefaultExt = ".xml";
+			openDialog.Filter = "Valkyrie Maps|*.xml";
 			
             var result = openDialog.ShowDialog(this);
             if (result == DialogResult.Cancel)
@@ -293,6 +295,9 @@ namespace ValkyrieMapEditor
 			if (TileEngine.IsMapLoaded)
 			{
 				SaveFileDialog dialog = new SaveFileDialog();
+				dialog.DefaultExt = ".xml";
+				dialog.Filter = "Valkyrie Maps|*.xml";
+
 				var result = dialog.ShowDialog();
 
 				if (result == DialogResult.None || result == DialogResult.Cancel)

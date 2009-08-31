@@ -10,6 +10,7 @@ namespace ValkyrieLibrary.Characters
 	public interface IMovementManager
 	{
 		void Move(IMapObject movable, ScreenPoint destination);
+		void Move(IMapObject movable, ScreenPoint destination, Boolean fireevent);
 
 		void BeginMove(IMapObject movable, Directions direction);
 		void EndMove(IMapObject movable, Boolean fireevent);
@@ -20,6 +21,6 @@ namespace ValkyrieLibrary.Characters
 	public enum MovementType
 	{
 		Destination,
-		TileBased
+		TileBased,
 	}
 }

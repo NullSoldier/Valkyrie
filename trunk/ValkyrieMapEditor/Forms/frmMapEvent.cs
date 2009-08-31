@@ -79,6 +79,12 @@ namespace ValkyrieMapEditor.Forms
 						this.inDirection.SelectedIndex = i;
 				}
 
+				for (int i = 0; i < this.inActivation.Items.Count; i++)
+				{
+					if(inActivation.Items[i].ToString() == this.Event.Activation.ToString())
+						this.inActivation.SelectedIndex = i;
+				}
+
 				this.ClearParameters();
 
 				foreach (var Parameter in this.Event.Parameters)

@@ -35,12 +35,11 @@ namespace Valkyrie.Events
 			player.IgnoreMoveInput = true;
 			player.StartedMoving += this.Event_StartedMoving;
 			player.StoppedMoving += this.Event_StoppedMoving;
-			player.EndAfterMovementReached = true;
 			
 			ScreenPoint dest = new ScreenPoint(TileEngine.Player.Location.X, TileEngine.Player.Location.Y);
             ScreenPoint newDest = dest + (new ScreenPoint(player.GetLookPoint().ToMapPoint().X * 2, player.GetLookPoint().ToMapPoint().Y) * 2);
 
-			TileEngine.MovementManager.Move(character, newDest);
+			TileEngine.MovementManager.Move(character, newDest, false);
 		}
 
 		public IEnumerable<string> GetParameterNames()

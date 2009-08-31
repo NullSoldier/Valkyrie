@@ -20,6 +20,7 @@ using ValkyrieLibrary.Core;
 using ValkyrieWorldEditor.Core;
 using ValkyrieWorldEditor.Forms;
 using System.Reflection;
+using ValkyrieLibrary.Events;
 
 namespace ValkyrieWorldEditor.Forms
 {
@@ -82,6 +83,8 @@ namespace ValkyrieWorldEditor.Forms
             TileEngine.Load(new FileInfo("Data/TileEngineConfig.xml"));
             TileEngine.Camera.CenterOriginOnPoint(new Point(0, 0));
             TileEngine.Player = new WorldEditorPlayer();
+
+			TileEngine.EventManager = new MapEventManager(frmMain.Assemblies);
         }
 
         public override void Update(float gameTime)

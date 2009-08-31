@@ -102,6 +102,7 @@
     <Compile Include="Core\Characters\PokePlayer.cs" />
     <Compile Include="Core\PokeMessage.cs" />
     <Compile Include="Core\PokeMovementManager.cs" />
+    <Compile Include="Core\PokeMovementManagerNew.cs" />
     <Compile Include="Events\JumpEvent.cs" />
     <Compile Include="Events\JumpPadEvent.cs" />
     <Compile Include="Events\LoadEvent.cs" />
@@ -138,14 +139,15 @@
     <Content Include="Graphics\Intro\PokemonSprites.png" />
     <Content Include="Graphics\Intro\SideGrass.png" />
     <Content Include="Graphics\Main\Cinnibar_Island.png" />
+    <Content Include="Graphics\Main\Fuschia_Town.png" />
     <Content Include="Graphics\Main\Route22_Route.png" />
+    <Content Include="Graphics\Pallet_House\Pallet_House_01.png" />
     <Content Include="Maps\Main\Cinnibar_Island.xml" />
+    <Content Include="Maps\Main\Fuschia_Town.xml" />
     <Content Include="Maps\Main\Route22_Route.xml" />
     <Content Include="Media\PokemonIntro.avi">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Graphics\Main\Pallet_House_01.png">
-    </None>
     <None Include="Graphics\Main\Pallet_Town.png">
     </None>
     <None Include="Graphics\Main\Pewter_Town.png">

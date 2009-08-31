@@ -40,11 +40,17 @@ namespace ValkyrieLibrary.States
 
 		public void Update(GameTime gameTime)
 		{
+			if (!this.Loaded)
+				return;
+
 			this.keycontroller.Update();
 		}
 
 		public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
 		{
+			if (!this.Loaded)
+				return;
+
 			spriteBatch.Begin();
 			spriteBatch.Draw(this.Background, TileEngine.Camera.Screen, Color.White);
 			spriteBatch.End();

@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace ValkyrieMapEditor
 {
@@ -13,7 +15,9 @@ namespace ValkyrieMapEditor
 		static void Main(string[] args)
 		{
 			frmMain form = new frmMain();
-			
+
+			if (!Debugger.IsAttached)
+				AppDomain.CurrentDomain.UnhandledException += Program.Program_UnhandledException;
 
 			using (EditorXNA game = new EditorXNA(form.getDrawSurface(), form.getDrawTilesSurface()))
 			{
@@ -27,6 +31,11 @@ namespace ValkyrieMapEditor
                 form.Show();
 				game.Run(); 
 			}
+		}
+
+		static void Program_UnhandledException(object sender, UnhandledExceptionEventArgs ev)
+		{
+			MessageBox.Show(((Exception)ev.ExceptionObject).Message + Environment.NewLine + Environment.NewLine + ((Exception)ev.ExceptionObject).StackTrace, "Error!", MessageBoxButtons.OK);
 		}
 
 	}

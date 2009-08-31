@@ -38,10 +38,14 @@ namespace ValkyrieLibrary.Events
 
 		public bool HandleEvent(BaseCharacter player, ActivationTypes activation)
 		{
-			BasePoint pos = player.MapLocation;
+			BasePoint pos = new BasePoint(player.MapLocation.X, player.MapLocation.Y);
 
 			if (activation == ActivationTypes.Activate || activation == ActivationTypes.Collision)
-				pos += player.GetLookPoint();
+			{
+				BasePoint newpt = player.GetLookPoint();
+				pos = new BasePoint(pos.X + newpt.X, pos.Y + newpt.Y);
+
+			}
 
 			IMapEvent mapevent = GetEvent(new MapPoint(pos.X, pos.Y));
 

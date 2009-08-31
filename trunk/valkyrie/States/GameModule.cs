@@ -80,6 +80,7 @@ namespace Valkyrie.States
             this.KeybindController.AddKey(Keys.Up, "MoveUp");
             this.KeybindController.AddKey(Keys.Down, "MoveDown");
             this.KeybindController.AddKey(Keys.Right, "MoveRight");
+			this.KeybindController.AddKey(Keys.Q, "Noclip");
 
             this.KeybindController.KeyDown += this.GameModule_KeyDown;
 			this.KeybindController.KeyUp += this.GameModule_KeyUp;
@@ -211,6 +212,8 @@ namespace Valkyrie.States
 			PokePlayer player = (PokePlayer)sender;
 
 			player.CurrentAnimationName = player.Direction.ToString();
+
+			this.TestTileLocationChanged(this, EventArgs.Empty);
 		}
 
         public void GameModule_KeyDown(object sender, KeyPressedEventArgs ev)
@@ -251,10 +254,17 @@ namespace Valkyrie.States
 
 		public void GameModule_KeyUp(object sender, KeyPressedEventArgs ev)
 		{
-			if (!TileEngine.Player.IgnoreMoveInput)
+			if (ev.KeyPressed == Keys.Q)
+				TileEngine.Player.Density = Convert.ToInt32(!(TileEngine.Player.Density == 1));
+			else
 			{
-				if (this.IsDir(ev.KeyPressed))
-					TileEngine.MovementManager.EndMove(TileEngine.Player, true);
+				if (!TileEngine.Player.IgnoreMoveInput)
+				{
+					if (this.IsDir(ev.KeyPressed))
+					{
+						TileEngine.MovementManager.EndMove(TileEngine.Player, true);
+					}
+				}
 			}
 		}
 

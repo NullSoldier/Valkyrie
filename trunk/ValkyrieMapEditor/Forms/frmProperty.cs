@@ -171,6 +171,8 @@ namespace ValkyrieMapEditor
         private void btnBrowseTileSet_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
+			dialog.Filter = "Compatable Valkyrie Format (*.png)|*.png";
+
             DialogResult result = dialog.ShowDialog(this);
 			
 			if (result == DialogResult.Cancel || result == DialogResult.None)

@@ -11,12 +11,15 @@ using ValkyrieWorldEditor.Core;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Maps;
 using ValkyrieLibrary;
+using System.Reflection;
+using ValkyrieLibrary.Events;
 
 namespace ValkyrieWorldEditor.Forms
 {
     public partial class frmMain : XNARenderForm
     {
 		public static string ValkyrieGameInstallationAssemblyPath = @"C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\valkyrie\bin\x86\Debug\valkyrie.exe";
+		public static Assembly[] Assemblies = new Assembly[0];
 
         public event EventHandler<ScreenResizedEventArgs> ScreenResized;
         public event EventHandler<ScrollEventArgs> ScrolledMap;
@@ -40,6 +43,9 @@ namespace ValkyrieWorldEditor.Forms
             this.ScrolledMap += this.pctPreview.Scrolled;
 
             this.pctPreview.Cursor = System.Windows.Forms.Cursors.Hand;
+
+			frmMain.Assemblies = new Assembly[] { Assembly.GetEntryAssembly(), Assembly.Load("ValkyrieLibrary"), Assembly.LoadFrom(frmMain.ValkyrieGameInstallationAssemblyPath) };
+			TileEngine.EventManager = new MapEventManager(frmMain.Assemblies);
         }
 
         public void UpdateScrollBars()

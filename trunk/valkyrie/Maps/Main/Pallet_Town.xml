@@ -33,7 +33,7 @@
     </Event>
     <Event>
       <Type>Valkyrie.Events.JumpPadEvent</Type>
-      <Activation>16</Activation>
+      <Activation>4</Activation>
       <Dir>Any</Dir>
       <Location>
         <X>5</X>

@@ -29,7 +29,7 @@ namespace Valkyrie.Events
 
 		public void Trigger(BaseCharacter character)
 		{
-			/*if (!(character is PokePlayer)) return;
+			if (!(character is PokePlayer)) return;
 
 			BasePoint tmpDest = new BasePoint(0, 0);
 			Map tmpMap = TileEngine.CurrentMapChunk;
@@ -46,7 +46,7 @@ namespace Valkyrie.Events
 					if (mapevent.GetStringType() == "EntryPoint" &&
 						mapevent.Parameters["Name"] == this.Parameters["DestinationName"])
 					{
-						tmpDest = new BasePoint(mapevent.Rectangle.Y, mapevent.Rectangle.Y);
+						tmpDest = new BasePoint(mapevent.Rectangle.X, mapevent.Rectangle.Y);
 						tmpMap = map;
 
 						found = true;
@@ -56,19 +56,18 @@ namespace Valkyrie.Events
 			}
 
 			PokePlayer player = (PokePlayer)character;
-			player.StopMoving();
 
-			player.ReachedDestination += this.OnCharacterLanded;
+			player.StoppedMoving += this.OnStoppedMoving;
+			player.StartedMoving += this.OnStartedMoving;
 			player.CurrentAnimationName = "Spin";
 			player.Speed = Convert.ToInt32(this.Parameters["Speed"]);
 			player.Density = 0;
-			player.IsJumping = true;
 			
 			// Need methods to convert from local coordinents into global
 			ScreenPoint destination = new MapPoint(tmpDest.X + TileEngine.WorldManager.CurrentWorld.MapList[tmpMap.Name].MapLocation.X,
 				tmpDest.Y + TileEngine.WorldManager.CurrentWorld.MapList[tmpMap.Name].MapLocation.Y).ToScreenPoint();
 
-			player.Move(destination);*/
+			TileEngine.MovementManager.Move(player, destination, true);
 
 		}
 
@@ -88,18 +87,22 @@ namespace Valkyrie.Events
 			return clone;
 		}
 
-		public void OnCharacterLanded(object sender, EventArgs e)
+		public void OnStartedMoving(object sender, EventArgs e)
 		{
-			/*
+
+			((PokePlayer)sender).CurrentAnimationName = "Spin";
+		}
+
+		public void OnStoppedMoving(object sender, EventArgs e)
+		{
 			if (!(sender is PokePlayer)) return;
 
 			PokePlayer player = (PokePlayer)sender;
-			player.IsJumping = false;
 			player.Density = 1;
 			player.Speed = 2;
 			player.CurrentAnimationName = player.Direction.ToString();
-			player.ReachedDestination -= this.OnCharacterLanded;
-		  */
+			player.StoppedMoving -= this.OnStoppedMoving;
+			player.StartedMoving -= this.OnStartedMoving;
 		}
 	}
 }

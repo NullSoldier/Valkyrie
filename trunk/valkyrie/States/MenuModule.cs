@@ -29,8 +29,13 @@ namespace Valkyrie.States
 		{
 			this.KeyManager.Update();
 
-			if(this.Loaded)
+			if (this.Loaded)
+			{
 				this.player.Update();
+
+				if (this.player.CurrentPosition == this.player.Duration)
+					this.player.CurrentPosition = 0;
+			}
 		}
 
 		public void Draw(SpriteBatch spriteBatch, GameTime gameTime)

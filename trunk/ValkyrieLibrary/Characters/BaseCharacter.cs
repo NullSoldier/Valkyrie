@@ -61,13 +61,13 @@ namespace ValkyrieLibrary.Characters
             if (this.Direction == Directions.North)
                 point = new MapPoint(0, -1);
 
-            if (this.Direction == Directions.South)
+            else if (this.Direction == Directions.South)
                 point = new MapPoint(0, 1);
 
-            if (this.Direction == Directions.West)
+            else if (this.Direction == Directions.West)
                 point = new MapPoint(-1, 0);
 
-            if (this.Direction == Directions.East)
+            else if (this.Direction == Directions.East)
                 point = new MapPoint(1, 0);
 
             return point;

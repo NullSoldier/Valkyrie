@@ -15,12 +15,12 @@ namespace ValkyrieLibrary.Core
 	{
 		public OrderedDictionary <IMapObject, MovementType> MovableCache = new OrderedDictionary <IMapObject, MovementType> ();
 
-		private void RemoveMapObject(IMapObject value)
+		public void RemoveMapObject(IMapObject value)
 		{
 			this.MovableCache.Remove(value);
 		}
 
-		private void AddMapObject(IMapObject value, MovementType movement)
+		public void AddMapObject(IMapObject value, MovementType movement)
 		{
 			this.MovableCache.Add(value, movement);
 			//if (this.MovableCache.ContainsKey(value))
@@ -30,9 +30,14 @@ namespace ValkyrieLibrary.Core
 
 		public void Move(IMapObject movable, ScreenPoint destination)
 		{
+			this.Move(movable, destination, false);
+		}
+
+		public void Move(IMapObject movable, ScreenPoint destination, bool fireevent)
+		{
 			if (movable.IsMoving)
 			{
-				this.EndMove(movable, false);
+				this.EndMove(movable, fireevent);
 				this.RemoveMapObject(movable);
 			}
 
