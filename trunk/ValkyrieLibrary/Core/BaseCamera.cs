@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Characters;
+using System.Threading;
 
 namespace ValkyrieLibrary
 {
@@ -15,6 +16,26 @@ namespace ValkyrieLibrary
 		public Vector2 MapOffset;
 		public Vector2 CameraOffset;
 		public Viewport Viewport;
+		public bool ManualControl = false;
+		private GameTime time
+		{
+			get;
+			set;
+		}
+
+		public void Update(GameTime gameTime)
+		{
+			this.time = gameTime;
+		}
+
+		public event EventHandler TweenFinished;
+
+		public void OnTweenFinished(object sender, EventArgs e)
+		{
+			var handler = this.TweenFinished;
+			if(handler != null)
+				handler(this, e);
+		}
 
         private Stack<BaseCamera> camStack;
 
@@ -103,10 +124,37 @@ namespace ValkyrieLibrary
 			this.MapOffset.Y += (this.Screen.Height / 2);
 		}
 
-		public void Tween(Point startPoint, Point endPoint, float Milliseconds)
+		/// <summary>
+		/// Tween the camera between two ScreenPoints
+		/// </summary>
+		/// <param name="startPoint">The starting point of the camera.</param>
+		/// <param name="endPoint">The ending point that the camera should tween to.</param>
+		/// <param name="time">How long in milliseconsd it should take to tween.</param>
+		public void Tween(ScreenPoint startPoint, ScreenPoint endPoint, float time)
 		{
-			throw new NotSupportedException();
+			float x_speed = ((endPoint.X - startPoint.X) / time);
+			float y_speed = ((endPoint.Y - startPoint.Y) / time);
+				
+			Thread thread = new Thread((ParameterizedThreadStart)this.TweenWorker);
+			thread.IsBackground = false;
+			thread.Name = "Tween worker thread.";
+			thread.Start(new object[] {startPoint, endPoint, x_speed, y_speed} );
 		}
+
+		private void TweenWorker(object argument)
+		{
+			var arguments = (object[])argument;
+
+			ScreenPoint start = (ScreenPoint)arguments[0];
+			ScreenPoint end = (ScreenPoint)arguments[1];
+
+			float xspeed = (float)arguments[2];
+			float yspeed = (float)arguments[3];
+
+			// Eh, not working
+			this.OnTweenFinished(this, EventArgs.Empty);
+		}
+
 
 		public void Quake(int Magnitude)
 		{

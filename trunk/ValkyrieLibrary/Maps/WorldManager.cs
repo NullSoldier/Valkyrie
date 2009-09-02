@@ -41,7 +41,8 @@ namespace ValkyrieLibrary.Maps
 					TileEngine.Player.Location = this.CurrentWorld.FindStartLocation(startLoc);
 			}
 
-        	TileEngine.Camera.CenterOnCharacter(TileEngine.Player);
+			if(!TileEngine.Camera.ManualControl)
+        		TileEngine.Camera.CenterOnCharacter(TileEngine.Player);
         }
 
         public void Load (FileInfo WorldConfiguration)

@@ -152,6 +152,9 @@ namespace ValkyrieLibrary.Core
 
 				foreach (var movable in toberemoved)
 				{
+					if (movable.Location.Y == 6718)
+						Debugger.Break();
+
 					if (collided.Contains(movable))
 					{
 						movable.IsMoving = false;

@@ -38,13 +38,14 @@ namespace ValkyrieLibrary
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
 		public static SpriteFont font;
+		private float deltaFPSTime = 0;
 
         public PokeGame()
         {	
             graphics = new GraphicsDeviceManager(this);
 			graphics.ApplyChanges();
 
-            Content.RootDirectory = "Content";
+            Content.RootDirectory = "Content";			
         }
 
         protected override void Initialize()
@@ -80,25 +81,8 @@ namespace ValkyrieLibrary
 			TileEngine.Unload();
         }
 
-        float deltaFPSTime = 0;
-
-
         protected override void Update(GameTime gameTime)
         {
-            float elapsed = (float)gameTime.ElapsedRealTime.TotalSeconds;
-
-            float fps = 1 / elapsed;
-            deltaFPSTime += elapsed;
-            if (deltaFPSTime > 1)
-            {
-                Window.Title = "PokeGame [" + fps.ToString() + " FPS]";
-                deltaFPSTime -= 1;
-            }
-
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-
 			TileEngine.Update(gameTime);
 
             base.Update(gameTime);
@@ -106,6 +90,16 @@ namespace ValkyrieLibrary
 
         protected override void Draw(GameTime gameTime)
         {
+			float elapsed = (float)gameTime.ElapsedRealTime.TotalSeconds;
+
+			float fps = 1 / elapsed;
+			deltaFPSTime += elapsed;
+			if (deltaFPSTime > 1)
+			{
+				Window.Title = "PokeGame [" + fps.ToString() + " FPS]";
+				deltaFPSTime -= 1;
+			}
+
 			TileEngine.Draw(spriteBatch, gameTime);
 
             base.Draw(gameTime);

@@ -52,7 +52,8 @@ namespace ValkyrieLibrary.States
 				return;
 
 			spriteBatch.Begin();
-			spriteBatch.Draw(this.Background, TileEngine.Camera.Screen, Color.White);
+			if(!this.Background.IsDisposed)
+				spriteBatch.Draw(this.Background, TileEngine.Camera.Screen, Color.White);
 			spriteBatch.End();
 		}
 

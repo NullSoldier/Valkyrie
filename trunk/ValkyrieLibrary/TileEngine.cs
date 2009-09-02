@@ -171,6 +171,7 @@ namespace ValkyrieLibrary
 
 			// Run tile engine logic here
             ModuleManager.CurrentModule.Update(time);
+			TileEngine.Camera.Update(time);
 
             if (TileEngine.WorldManager.CurrentWorld == null)
                 return;

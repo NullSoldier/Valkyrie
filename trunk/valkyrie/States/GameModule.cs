@@ -45,7 +45,8 @@ namespace Valkyrie.States
 			if (!this.Loaded)
 				return;
 
-			TileEngine.Camera.CenterOnPoint(new ScreenPoint(TileEngine.Player.Location.X + (TileEngine.Player.CurrentAnimation.FrameRectangle.Width / 2), TileEngine.Player.Location.Y + (TileEngine.Player.CurrentAnimation.FrameRectangle.Height / 2)));
+			if(!TileEngine.Camera.ManualControl)
+				TileEngine.Camera.CenterOnPoint(new ScreenPoint(TileEngine.Player.Location.X + (TileEngine.Player.CurrentAnimation.FrameRectangle.Width / 2), TileEngine.Player.Location.Y + (TileEngine.Player.CurrentAnimation.FrameRectangle.Height / 2)));
 
             this.KeybindController.Update();
 
@@ -218,52 +219,53 @@ namespace Valkyrie.States
 
         public void GameModule_KeyDown(object sender, KeyPressedEventArgs ev)
         {
-            if (this.IsDir(ev.KeyPressed))
-            {
-                UpdateDirection(ev.KeyPressed);
-            }
-
-            switch (ev.Action)
-            {
-                case "AButton":
-                case "BButton":
-					TileEngine.MovementManager.Move(TileEngine.Player, new ScreenPoint(10, 10));
-                    TileEngine.Player.Action(ev.Action);
-                    return;
-            }
-
-			if (!TileEngine.Player.IgnoreMoveInput)
+			if (this.IsDir(ev.KeyPressed))
 			{
-				switch (this.KeybindController.GetKeyAction(CrntDir))
+				UpdateDirection(ev.KeyPressed);
+			
+				if (!TileEngine.Player.IgnoreMoveInput)
 				{
-					case "MoveUp":
-						TileEngine.MovementManager.BeginMove(TileEngine.Player, Directions.North);
-						break;
-					case "MoveDown":
-						TileEngine.MovementManager.BeginMove(TileEngine.Player, Directions.South);
-						break;
-					case "MoveLeft":
-						TileEngine.MovementManager.BeginMove(TileEngine.Player, Directions.West);
-						break;
-					case "MoveRight":
-						TileEngine.MovementManager.BeginMove(TileEngine.Player, Directions.East);
-						break;
+					switch (this.KeybindController.GetKeyAction(CrntDir))
+					{
+						case "MoveUp":
+							TileEngine.MovementManager.BeginMove(TileEngine.Player, Directions.North);
+							break;
+						case "MoveDown":
+							TileEngine.MovementManager.BeginMove(TileEngine.Player, Directions.South);
+							break;
+						case "MoveLeft":
+							TileEngine.MovementManager.BeginMove(TileEngine.Player, Directions.West);
+							break;
+						case "MoveRight":
+							TileEngine.MovementManager.BeginMove(TileEngine.Player, Directions.East);
+							break;
+					}
 				}
 			}
         }
 
 		public void GameModule_KeyUp(object sender, KeyPressedEventArgs ev)
 		{
-			if (ev.KeyPressed == Keys.Q)
-				TileEngine.Player.Density = Convert.ToInt32(!(TileEngine.Player.Density == 1));
-			else
+			// Did we activate?
+			switch (ev.Action)
 			{
-				if (!TileEngine.Player.IgnoreMoveInput)
+				case "Noclip":
+					TileEngine.Player.Density = Convert.ToInt32(!(TileEngine.Player.Density == 1));
+					return;
+				case "AButton":
+				case "BButton":
+					TileEngine.Player.Action(ev.Action);
+					return;
+				default:
+					break;
+			}
+
+			// Check other pressed keys
+			if (!TileEngine.Player.IgnoreMoveInput)
+			{
+				if (this.IsDir(ev.KeyPressed))
 				{
-					if (this.IsDir(ev.KeyPressed))
-					{
-						TileEngine.MovementManager.EndMove(TileEngine.Player, true);
-					}
+					TileEngine.MovementManager.EndMove(TileEngine.Player, true);
 				}
 			}
 		}

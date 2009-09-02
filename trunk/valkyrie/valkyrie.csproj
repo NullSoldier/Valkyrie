@@ -103,6 +103,7 @@
     <Compile Include="Core\PokeMessage.cs" />
     <Compile Include="Core\PokeMovementManager.cs" />
     <Compile Include="Core\PokeMovementManagerNew.cs" />
+    <Compile Include="Events\CinematicsTestEvent.cs" />
     <Compile Include="Events\JumpEvent.cs" />
     <Compile Include="Events\JumpPadEvent.cs" />
     <Compile Include="Events\LoadEvent.cs" />
@@ -116,6 +117,8 @@
     <Compile Include="States\MenuModule.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Content\Content.contentproj" />
+    <None Include="Content\GameTextFont.spritefont" />
     <None Include="Data\PokeWorld.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -140,10 +143,22 @@
     <Content Include="Graphics\Intro\SideGrass.png" />
     <Content Include="Graphics\Main\Cinnibar_Island.png" />
     <Content Include="Graphics\Main\Fuschia_Town.png" />
+    <Content Include="Graphics\Main\Route12_Route.png" />
+    <Content Include="Graphics\Main\Route13_route.png" />
+    <Content Include="Graphics\Main\Route14_Route.png" />
+    <Content Include="Graphics\Main\Route15_Route.png" />
+    <Content Include="Graphics\Main\Route20_Route_01.png" />
+    <Content Include="Graphics\Main\Route20_Route_02.png" />
     <Content Include="Graphics\Main\Route22_Route.png" />
     <Content Include="Graphics\Pallet_House\Pallet_House_01.png" />
     <Content Include="Maps\Main\Cinnibar_Island.xml" />
     <Content Include="Maps\Main\Fuschia_Town.xml" />
+    <Content Include="Maps\Main\Route12_Route.xml" />
+    <Content Include="Maps\Main\Route13_Route.xml" />
+    <Content Include="Maps\Main\Route14_Route.xml" />
+    <Content Include="Maps\Main\Route15_Route.xml" />
+    <Content Include="Maps\Main\Route20_Route_01.xml" />
+    <Content Include="Maps\Main\Route20_route_02.xml" />
     <Content Include="Maps\Main\Route22_Route.xml" />
     <Content Include="Media\PokemonIntro.avi">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

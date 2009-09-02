@@ -52,9 +52,52 @@
     <MapLoc>
       <Name>Fuschia_Town</Name>
       <FilePath>Main\Fuschia_Town.xml</FilePath>
-      <X>99</X>
-      <Y>290</Y>
+      <X>207</X>
+      <Y>239</Y>
     </MapLoc>
+    
+    <MapLoc>
+      <Name>Route15_Route</Name>
+      <FilePath>Main\Route15_Route.xml</FilePath>
+      <X>255</X>
+      <Y>248</Y>  
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route14_Route</Name>
+      <FilePath>Main\Route14_Route.xml</FilePath>
+      <X>327</X>
+      <Y>208</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route13_Route</Name>
+      <FilePath>Main\Route13_Route.xml</FilePath>
+      <X>351</X>
+      <Y>208</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route12_Route</Name>
+      <FilePath>Main\Route12_Route.xml</FilePath>
+      <X>399</X>
+      <Y>88</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route20_Route_01</Name>
+      <FilePath>Main\Route20_Route_01.xml</FilePath>
+      <X>99</X>
+      <Y>318</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route20_Route_02</Name>
+      <FilePath>Main\Route20_Route_02.xml</FilePath>
+      <X>219</X>
+      <Y>278</Y>
+    </MapLoc>
+    
   </World>
   
   

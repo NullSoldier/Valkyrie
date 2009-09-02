@@ -115,6 +115,8 @@ namespace ValkyrieServerMonitor
 			{
 				this.gameserver.SaveCharacterDetails(this.players[ev.Connection]);
 
+				this.Trace(string.Format("{0} has logged out, connection closed.", this.players[ev.Connection].Name));
+
 				PlayerUpdateMessage msg = new PlayerUpdateMessage();
 				msg.Action = PlayerUpdateAction.Remove;
 				msg.NetworkID = this.players[ev.Connection].NetworkID;
@@ -128,7 +130,6 @@ namespace ValkyrieServerMonitor
 				this.players.Remove(ev.Connection);
 			}
 
-			this.Trace("Connection disconnected.");
 		}
 
 		#region MessageReceived Methods
