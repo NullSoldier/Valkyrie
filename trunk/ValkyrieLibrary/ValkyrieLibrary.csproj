@@ -85,6 +85,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation\FrameAnimation.cs" />
+    <Compile Include="Camera\ICameraEffect.cs" />
+    <Compile Include="Camera\QuakeEffect.cs" />
+    <Compile Include="Camera\TweenEffect.cs" />
     <Compile Include="Characters\BaseCharacter.cs" />
     <Compile Include="Characters\IMovable.cs" />
     <Compile Include="Characters\IMovementManager.cs" />
@@ -157,9 +160,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ValkyrieServerLibrary\ValkyrieServerLibrary.csproj">
-      <Project>{D085B565-015D-474B-BA0E-AE3986F3506F}</Project>
-      <Name>ValkyrieServerLibrary</Name>
+    <ProjectReference Include="..\ValkyrieNetwork\ValkyrieNetwork.csproj">
+      <Project>{6B5AF197-5051-4543-AEDC-691332649E1B}</Project>
+      <Name>ValkyrieNetwork</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -135,7 +135,8 @@ namespace ValkyrieLibrary
 				module.Unload();
 			}
 
-			TileEngine.NetworkManager.Disconnect();
+			if(TileEngine.NetworkManager.IsConnected)
+				TileEngine.NetworkManager.Disconnect();
 		}
 
 		public static void ClearCurrentMapChunk()
@@ -170,8 +171,8 @@ namespace ValkyrieLibrary
 			Check.NullArgument (time, "time");
 
 			// Run tile engine logic here
-            ModuleManager.CurrentModule.Update(time);
 			TileEngine.Camera.Update(time);
+            ModuleManager.CurrentModule.Update(time);
 
             if (TileEngine.WorldManager.CurrentWorld == null)
                 return;

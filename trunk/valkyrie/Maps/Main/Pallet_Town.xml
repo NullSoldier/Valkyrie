@@ -55,20 +55,6 @@
       </Parameters>
     </Event>
     <Event>
-      <Type>Valkyrie.Events.JumpEvent</Type>
-      <Activation>4</Activation>
-      <Dir>South</Dir>
-      <Location>
-        <X>5</X>
-        <Y>11</Y>
-      </Location>
-      <Size>
-        <X>4</X>
-        <Y>1</Y>
-      </Size>
-      <Parameters />
-    </Event>
-    <Event>
       <Type>ValkyrieLibrary.Events.CinematicsTestEvent</Type>
       <Activation>0</Activation>
       <Dir>Any</Dir>
@@ -83,18 +69,31 @@
       <Parameters />
     </Event>
     <Event>
-      <Type>Valkyrie.Events.RickRollEvent</Type>
-      <Activation>0</Activation>
-      <Dir>Any</Dir>
+      <Type>Valkyrie.Events.LoadEvent</Type>
+      <Activation>4</Activation>
+      <Dir>North</Dir>
       <Location>
-        <X>16</X>
-        <Y>16</Y>
+        <X>15</X>
+        <Y>7</Y>
       </Location>
       <Size>
         <X>1</X>
         <Y>1</Y>
       </Size>
-      <Parameters />
+      <Parameters>
+        <Parameter>
+          <Name>Name</Name>
+          <Value>ExitPalletHouse</Value>
+        </Parameter>
+        <Parameter>
+          <Name>World</Name>
+          <Value>Pallet_House</Value>
+        </Parameter>
+        <Parameter>
+          <Name>EntryPointName</Name>
+          <Value>PalletHouseDoor_01</Value>
+        </Parameter>
+      </Parameters>
     </Event>
   </Events>
   <AnimatedTiles>

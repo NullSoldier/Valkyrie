@@ -101,62 +101,59 @@ namespace Valkyrie.States
 
 		public void Game_MessageReceived(object sender, MessageReceivedEventArgs ev)
 		{
-			try
+
+			if (ev.Message is PlayerUpdateMessage)
 			{
-				if (ev.Message is PlayerUpdateMessage)
+				var message = (PlayerUpdateMessage)ev.Message;
+
+				if (message.Action == PlayerUpdateAction.Add)
 				{
-					var message = (PlayerUpdateMessage)ev.Message;
+					PokePlayer player = new PokePlayer();
+					player.Loaded = false;
 
-					if (message.Action == PlayerUpdateAction.Add)
-					{
-						PokePlayer player = new PokePlayer();
-						player.Loaded = false;
+					TileEngine.NetworkPlayerCache.Add(message.NetworkID, player);
 
-						TileEngine.NetworkPlayerCache.Add(message.NetworkID, player);
+					PlayerRequestMessage msg = new PlayerRequestMessage();
+					msg.RequestedPlayerNetworkID = message.NetworkID;
 
-						PlayerRequestMessage msg = new PlayerRequestMessage();
-						msg.NetworkID = message.NetworkID;
-
-						TileEngine.NetworkManager.Send(msg);
-					}
-					else
-					{
-						TileEngine.NetworkPlayerCache.Remove(message.NetworkID);
-					}
+					TileEngine.NetworkManager.Send(msg);
 				}
-				else if (ev.Message is PlayerInfoMessage)
+				else
 				{
-					PlayerInfoMessage message = (PlayerInfoMessage)ev.Message;
-
-					PokePlayer player = (PokePlayer)TileEngine.NetworkPlayerCache[message.NetworkID];
-
-					player.Sprite = TileEngine.TextureManager.GetTexture("MaleSprite.png");
-					player.Name = message.Name;
-					player.CurrentAnimationName = message.Animation;
-					player.Location = new ScreenPoint(message.Location.X, message.Location.Y);
-
-					if(!player.Loaded)
-						player.Loaded = true;
-				}
-				else if (ev.Message is LocationUpdateMessage)
-				{
-					var message = (LocationUpdateMessage)ev.Message;
-
-					if (!TileEngine.NetworkPlayerCache.ContainsKey(message.NetworkID))
-						return; // Throw exception or get player data
-
-					UInt32 NID = message.NetworkID;
-					int x = message.X;
-					int y = message.Y;
-					string animation = message.Animation;
-
-					TileEngine.NetworkPlayerCache[NID].Location = new ScreenPoint(x, y);
-					TileEngine.NetworkPlayerCache[NID].CurrentAnimationName = animation;
+					TileEngine.NetworkPlayerCache.Remove(message.NetworkID);
 				}
 			}
-			catch (System.Exception ex)
+			else if (ev.Message is PlayerInfoMessage)
 			{
-				MessageBox(new IntPtr(0), ex.Message + Environment.NewLine + Environment.NewLine + ex.StackTrace, "Error!", 0);
+				PlayerInfoMessage message = (PlayerInfoMessage)ev.Message;
+
+				if(!TileEngine.NetworkPlayerCache.ContainsKey(message.NetworkID))
+					throw new IndexOutOfRangeException("Player does not exist in the network cache.");
+
+				PokePlayer player = (PokePlayer)TileEngine.NetworkPlayerCache[message.NetworkID];
+
+				player.Sprite = TileEngine.TextureManager.GetTexture("MaleSprite.png");
+				player.Name = message.Name;
+				player.CurrentAnimationName = message.Animation;
+				player.Location = new ScreenPoint(message.Location.X, message.Location.Y);
+
+				if(!player.Loaded)
+					player.Loaded = true;
+			}
+			else if (ev.Message is LocationUpdateMessage)
+			{
+				var message = (LocationUpdateMessage)ev.Message;
+
+				if (!TileEngine.NetworkPlayerCache.ContainsKey(message.NetworkID))
+					throw new IndexOutOfRangeException("Player does not exist in the network cache.");
+
+				UInt32 NID = message.NetworkID;
+				int x = message.X;
+				int y = message.Y;
+				string animation = message.Animation;
+
+				TileEngine.NetworkPlayerCache[NID].Location = new ScreenPoint(x, y);
+				TileEngine.NetworkPlayerCache[NID].CurrentAnimationName = animation;
 			}
 		}
 

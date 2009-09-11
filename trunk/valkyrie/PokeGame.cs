@@ -26,19 +26,25 @@ using Valkyrie.Characters;
 using ValkyrieServerLibrary.Network.Messages.Valkyrie;
 using ValkyrieLibrary.Characters;
 using ValkyrieLibrary.States;
+using System.Runtime.InteropServices;
 
 namespace ValkyrieLibrary
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
+	
     public class PokeGame
 		: Game
     {
+		[DllImport("user32.dll", CharSet = CharSet.Auto)]
+		public static extern uint MessageBox(IntPtr hWnd, String text, String caption, uint type);
+
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
 		public static SpriteFont font;
 		private float deltaFPSTime = 0;
+		public bool ExitingGame = false;
 
         public PokeGame()
         {	
@@ -59,6 +65,8 @@ namespace ValkyrieLibrary
 			TileEngine.EventManager = new MapEventManager(new Assembly[] { Assembly.GetEntryAssembly(), Assembly.Load("ValkyrieLibrary") });
 			TileEngine.TileSize = 32;
 
+			TileEngine.NetworkManager.Disconnected += NetworkDisconnected;
+
             base.Initialize();
         }
 
@@ -78,6 +86,7 @@ namespace ValkyrieLibrary
 
         protected override void UnloadContent()
         {
+			this.ExitingGame = true;
 			TileEngine.Unload();
         }
 
@@ -104,5 +113,16 @@ namespace ValkyrieLibrary
 
             base.Draw(gameTime);
         }
+
+		public void NetworkDisconnected(object sender, ConnectionEventArgs ev)
+		{
+			if(this.ExitingGame)
+				return;
+
+			MessageBox(new IntPtr(0), "Connection to server lost.", "Disconnected", 0);
+
+			TileEngine.Unload();
+			this.Exit();
+		}
     }
 }

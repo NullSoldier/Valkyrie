@@ -66,5 +66,26 @@ namespace ValkyrieServerMonitor.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        internal static System.Drawing.Bitmap imgOptions {
+            get {
+                object obj = ResourceManager.GetObject("imgOptions", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap imgServer {
+            get {
+                object obj = ResourceManager.GetObject("imgServer", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap imgServerChart {
+            get {
+                object obj = ResourceManager.GetObject("imgServerChart", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

@@ -38,7 +38,27 @@
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>bin\x64\Release\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NHibernate, Version=2.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\FluentNHibernate\tools\NHibernate\NHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="Npgsql, Version=2.0.5.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\Npgsql.dll</HintPath>
@@ -58,54 +78,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Network\CharacterDetails.cs" />
-    <Compile Include="Network\GameServerClient.cs" />
-    <Compile Include="Network\Messages\ClientMessage.cs" />
-    <Compile Include="Network\Messages\Message.cs" />
-    <Compile Include="Network\Messages\MessageBase.cs" />
-    <Compile Include="Network\Messages\ServerMessage.cs" />
-    <Compile Include="Network\Messages\Valkyrie\LocationUpdateMessage.cs" />
-    <Compile Include="Network\Messages\Valkyrie\LoginFailedMessage.cs" />
-    <Compile Include="Network\Messages\Valkyrie\LoginMessage.cs" />
-    <Compile Include="Network\Messages\Valkyrie\LoginSuccessMessage.cs" />
-    <Compile Include="Network\Messages\Valkyrie\PlayerInfoMessage.cs" />
-    <Compile Include="Network\Messages\Valkyrie\PlayerRequestListMessage.cs" />
-    <Compile Include="Network\Messages\Valkyrie\PlayerRequestMessage.cs" />
-    <Compile Include="Network\Messages\Valkyrie\PlayerUpdateMessage.cs" />
-    <Compile Include="Network\Misc\AES.cs" />
-    <Compile Include="Network\Misc\ByteArrayExtensions.cs" />
-    <Compile Include="Network\Misc\ByteArrayValueReader.cs" />
-    <Compile Include="Network\Misc\en-US.Designer.cs" />
-    <Compile Include="Network\Misc\Extensions.cs" />
-    <Compile Include="Network\Misc\GenericResult.cs" />
-    <Compile Include="Network\Misc\IClientConnection.cs" />
-    <Compile Include="Network\Misc\IConnection.cs" />
-    <Compile Include="Network\Misc\IConnectionProvider.cs" />
-    <Compile Include="Network\Misc\INotifyCollectionChanged.cs" />
-    <Compile Include="Network\Misc\IValueReader.cs" />
-    <Compile Include="Network\Misc\IValueWriter.cs" />
-    <Compile Include="Network\Misc\LoginResult.cs" />
-    <Compile Include="Network\Misc\MediaType.cs" />
-    <Compile Include="Network\Misc\ModuleLoader.cs" />
-    <Compile Include="Network\Misc\MutableLookup.cs" />
-    <Compile Include="Network\Misc\OrderedDictionary.cs" />
-    <Compile Include="Network\Misc\Permission.cs" />
-    <Compile Include="Network\Misc\ProviderUtils.cs" />
-    <Compile Include="Network\Misc\ReadOnlyDictionary.cs" />
-    <Compile Include="Network\Misc\ServerInfo.cs" />
-    <Compile Include="Network\Misc\StreamValueReader.cs" />
-    <Compile Include="Network\Misc\StreamValueWriter.cs" />
-    <Compile Include="Network\Misc\UserInfo.cs" />
-    <Compile Include="Network\NetworkPlayer.cs" />
-    <Compile Include="Network\Network\NetworkClientConnection.cs" />
-    <Compile Include="Network\Network\NetworkServerConnection.cs" />
-    <Compile Include="Network\Network\NetworkServerConnectionProvider.cs" />
-    <Compile Include="Network\Network\SocketValueWriter.cs" />
-    <Compile Include="Network\Server\ConnectionCollection.cs" />
-    <Compile Include="Network\Server\IPermissionsProvider.cs" />
-    <Compile Include="Network\Server\IUserProvider.cs" />
-    <Compile Include="Network\Server\ServerSettings.cs" />
+    <Compile Include="Core\DefaultServerSettings.cs" />
+    <Compile Include="Entities\Account.cs" />
+    <Compile Include="Entities\Character.cs" />
+    <Compile Include="Core\GameServerSettings.cs" />
+    <Compile Include="Core\NetworkPlayer.cs" />
+    <Compile Include="Core\NetworkPlayerCache.cs" />
+    <Compile Include="ValkryieGameServer.MessageHandling.cs" />
+    <Compile Include="ValkyrieGameServer.cs" />
+    <Compile Include="Mappings\AccountMap.cs" />
+    <Compile Include="Mappings\CharacterMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FluentNHibernate\src\FluentNHibernate\FluentNHibernate.csproj">
+      <Project>{529145D5-6CC3-4016-89B5-826563024AF1}</Project>
+      <Name>FluentNHibernate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ValkyrieLibrary\ValkyrieLibrary.csproj">
+      <Project>{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}</Project>
+      <Name>ValkyrieLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ValkyrieNetwork\ValkyrieNetwork.csproj">
+      <Project>{6B5AF197-5051-4543-AEDC-691332649E1B}</Project>
+      <Name>ValkyrieNetwork</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Classes\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

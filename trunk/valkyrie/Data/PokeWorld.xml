@@ -25,24 +25,28 @@
       <X>75</X>
       <Y>160</Y>
     </MapLoc>
+    
     <MapLoc>
       <Name>ViridianCity</Name>
       <FilePath>Main\Viridian_Town.xml</FilePath>
       <X>63</X>
       <Y>120</Y>
     </MapLoc>
+
     <MapLoc>
       <Name>Route22</Name>
       <FilePath>Main\Route22_Route.xml</FilePath>
       <X>15</X>
       <Y>129</Y>
     </MapLoc>
+    
     <MapLoc>
       <Name>Route21</Name>
       <FilePath>Main\Route21_Route.xml</FilePath>
       <X>75</X>
       <Y>222</Y>
     </MapLoc>
+    
     <MapLoc>
       <Name>Cinnibar_Island</Name>
       <FilePath>Main\Cinnibar_Island.xml</FilePath>
@@ -54,6 +58,27 @@
       <FilePath>Main\Fuschia_Town.xml</FilePath>
       <X>207</X>
       <Y>239</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route18_Route</Name>
+      <FilePath>Main\Route18_Route.xml</FilePath>
+      <X>145</X>
+      <Y>248</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route17_Route</Name>
+      <FilePath>Main\Route17_Route.xml</FilePath>
+      <X>142</X>
+      <Y>88</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route16_Route</Name>
+      <FilePath>Main\Route16_Route.xml</FilePath>
+      <X>142</X>
+      <Y>68</Y>
     </MapLoc>
     
     <MapLoc>
@@ -97,6 +122,20 @@
       <X>219</X>
       <Y>278</Y>
     </MapLoc>
+
+    <MapLoc>
+      <Name>Route3_Route</Name>
+      <FilePath>Main\Route3_Route.xml</FilePath>
+      <X>111</X>
+      <Y>11</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route4_Route_01</Name>
+      <FilePath>Main\Route4_Route_01.xml</FilePath>
+      <X>171</X>
+      <Y>-9</Y>
+    </MapLoc>-->
     
   </World>
   

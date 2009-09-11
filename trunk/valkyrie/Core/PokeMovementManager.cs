@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using ValkyrieLibrary.Core.Collections;
 using ValkyrieLibrary.Core.Messages;
 using Valkyrie.Characters;
+using System.Diagnostics;
 
 namespace ValkyrieLibrary.Core
 {
@@ -87,6 +88,9 @@ namespace ValkyrieLibrary.Core
 					return;
 				}
 			}
+
+			if ((movable.Location.Y % 32) != 0)
+				Debugger.Break();
 
 			movable.IsMoving = false;
 			movable.EndAfterMovementReached = false;

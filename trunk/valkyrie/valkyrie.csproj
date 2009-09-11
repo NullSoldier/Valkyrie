@@ -74,10 +74,6 @@
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
-    <Reference Include="SeeSharp.Xna.Video, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\SeeSharp.Xna.Video.dll</HintPath>
-    </Reference>
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
@@ -147,9 +143,16 @@
     <Content Include="Graphics\Main\Route13_route.png" />
     <Content Include="Graphics\Main\Route14_Route.png" />
     <Content Include="Graphics\Main\Route15_Route.png" />
+    <Content Include="Graphics\Main\Route16_Route.png" />
+    <Content Include="Graphics\Main\Route17_Route.png" />
+    <Content Include="Graphics\Main\Route18_Route.png" />
     <Content Include="Graphics\Main\Route20_Route_01.png" />
     <Content Include="Graphics\Main\Route20_Route_02.png" />
     <Content Include="Graphics\Main\Route22_Route.png" />
+    <Content Include="Graphics\Main\Route3_Route.png">
+    </Content>
+    <Content Include="Graphics\Main\Route4_Route_01.png">
+    </Content>
     <Content Include="Graphics\Pallet_House\Pallet_House_01.png" />
     <Content Include="Maps\Main\Cinnibar_Island.xml" />
     <Content Include="Maps\Main\Fuschia_Town.xml" />
@@ -157,9 +160,16 @@
     <Content Include="Maps\Main\Route13_Route.xml" />
     <Content Include="Maps\Main\Route14_Route.xml" />
     <Content Include="Maps\Main\Route15_Route.xml" />
+    <Content Include="Maps\Main\Route16_Route.xml" />
+    <Content Include="Maps\Main\Route17_Route.xml" />
+    <Content Include="Maps\Main\Route18_Route.xml" />
     <Content Include="Maps\Main\Route20_Route_01.xml" />
     <Content Include="Maps\Main\Route20_route_02.xml" />
     <Content Include="Maps\Main\Route22_Route.xml" />
+    <Content Include="Maps\Main\Route3_Route.xml">
+    </Content>
+    <Content Include="Maps\Main\Route4_Route_01.xml">
+    </Content>
     <Content Include="Media\PokemonIntro.avi">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -241,9 +251,9 @@
       <Project>{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}</Project>
       <Name>ValkyrieLibrary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ValkyrieServerLibrary\ValkyrieServerLibrary.csproj">
-      <Project>{D085B565-015D-474B-BA0E-AE3986F3506F}</Project>
-      <Name>ValkyrieServerLibrary</Name>
+    <ProjectReference Include="..\ValkyrieNetwork\ValkyrieNetwork.csproj">
+      <Project>{6B5AF197-5051-4543-AEDC-691332649E1B}</Project>
+      <Name>ValkyrieNetwork</Name>
     </ProjectReference>
     <ProjectReference Include="..\ValkyrieVideo\ValkyrieVideo.csproj">
       <Project>{50F8D7CB-D35B-45E3-824B-35BA03F7D3E6}</Project>
@@ -266,8 +276,8 @@
     <PostBuildEvent>xcopy "$(ProjectDir)\Graphics" "$(TargetDir)\Graphics" /S /Y /I
 xcopy "$(ProjectDir)\Maps" "$(TargetDir)\Maps" /S /Y /I
 
-xcopy "$(ProjectDir)\Graphics" "$(SolutionDir)ValkyrieMapEditor\bin\x86\Debug\Graphics" /S /Y /I
+xcopy "$(ProjectDir)\Graphics" "$(SolutionDir)ValkyrieMapEditor\$(OutDir)\Graphics" /S /Y /I
 
-xcopy "$(TargetPath)" "$(SolutionDir)ValkyrieMapEditor\bin\x86\Debug" /S /Y /I</PostBuildEvent>
+xcopy "$(TargetPath)" "$(SolutionDir)ValkyrieMapEditor\$(OutDir)" /S /Y /I</PostBuildEvent>
   </PropertyGroup>
 </Project>

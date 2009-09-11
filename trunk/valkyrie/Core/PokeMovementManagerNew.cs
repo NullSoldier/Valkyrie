@@ -81,10 +81,10 @@ namespace ValkyrieLibrary.Core
 
 			movable.IsMoving = true;
 			movable.Direction = direction;
-
-			this.AddToCache(movable, MovementType.TileBased);
 			
 			this.InternalMove(movable, this.GetDestinationFromDirection(movable, movable.Direction));
+			
+			this.AddToCache(movable, MovementType.TileBased);
 
 			movable.OnStartedMoving(this, EventArgs.Empty);
 		}
@@ -106,6 +106,9 @@ namespace ValkyrieLibrary.Core
 					return;
 				}
 			}
+
+			if ((movable.Location.Y % 32) != 0)
+				movable.IsMoving = false;
 
 			movable.IsMoving = false;
 			movable.IgnoreMoveInput = false;
@@ -152,9 +155,6 @@ namespace ValkyrieLibrary.Core
 
 				foreach (var movable in toberemoved)
 				{
-					if (movable.Location.Y == 6718)
-						Debugger.Break();
-
 					if (collided.Contains(movable))
 					{
 						movable.IsMoving = false;
@@ -270,9 +270,9 @@ namespace ValkyrieLibrary.Core
 			ScreenPoint collision = new ScreenPoint(destination.X, destination.Y);
 
 			if (movable.Direction == Directions.South)
-				collision = new ScreenPoint(destination.X, destination.Y + 32);
+				collision = new ScreenPoint(destination.X, destination.Y + 32 - (int)movable.Speed);
 			else if (movable.Direction == Directions.East)
-				collision = new ScreenPoint(destination.X + 32, destination.Y);
+				collision = new ScreenPoint(destination.X + 32 - (int)movable.Speed, destination.Y);
 
 			if (!TileEngine.CollisionManager.CheckCollision(movable, collision))
 			{

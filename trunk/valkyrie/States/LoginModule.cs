@@ -20,6 +20,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using ValkyrieLibrary.Characters;
 using Microsoft.Xna.Framework.Content;
+using System.Threading;
 
 namespace ValkyrieLibrary.States
 {
@@ -33,6 +34,7 @@ namespace ValkyrieLibrary.States
 		private Texture2D Background;
 		private bool Loaded;
 		private KeybindController keycontroller;
+		private bool drawing = false;
 
 		private bool connecting = false;
 		
@@ -51,10 +53,13 @@ namespace ValkyrieLibrary.States
 			if (!this.Loaded)
 				return;
 
+			this.drawing = true;
+
 			spriteBatch.Begin();
-			if(!this.Background.IsDisposed)
-				spriteBatch.Draw(this.Background, TileEngine.Camera.Screen, Color.White);
+			spriteBatch.Draw(this.Background, TileEngine.Camera.Screen, Color.White);
 			spriteBatch.End();
+
+			this.drawing = false;
 		}
 
 		public void Load()
@@ -72,9 +77,12 @@ namespace ValkyrieLibrary.States
 		{
 			if (this.Loaded)
 			{
-				TileEngine.TextureManager.ClearFromCache(this.backgroundfile);
-
 				this.Loaded = false;
+
+				while (this.drawing)
+					Thread.Sleep(1); // Wait for the module to finish drawing to dispose the textures
+
+				TileEngine.TextureManager.ClearFromCache(this.backgroundfile);
 			}
 		}
 
@@ -120,6 +128,9 @@ namespace ValkyrieLibrary.States
 				catch (SocketException)
 				{
 					// Failed to connect
+					TileEngine.NetworkManager.Disconnected -= this.TestDisconnected;
+					TileEngine.NetworkManager.MessageReceived -= this.TestMessageReceived;
+
 					MessageBox(new IntPtr(0), "Cannot connect to server.", "Server down", 0);
 					this.connecting = false;
 					return;
@@ -144,7 +155,7 @@ namespace ValkyrieLibrary.States
 				TileEngine.NetworkID = ((LoginSuccessMessage)ev.Message).NetworkIDAssigned;
 
 				PlayerRequestMessage msg = new PlayerRequestMessage();
-				msg.NetworkID = TileEngine.NetworkID;
+				msg.RequestedPlayerNetworkID = TileEngine.NetworkID;
 
 				TileEngine.NetworkManager.Send(msg);
 			}
@@ -153,7 +164,7 @@ namespace ValkyrieLibrary.States
 				LoginFailedMessage msg = (LoginFailedMessage)ev.Message;
 
 				if (msg.Reason == ConnectionRejectedReason.BadLogin)
-					MessageBox(new IntPtr(0), "Inccorrect username or password.", "Login Failed", 0);
+					MessageBox(new IntPtr(0), "Incorrect username or password.", "Login Failed", 0);
 
 				this.connecting = false;
 			}
@@ -163,11 +174,18 @@ namespace ValkyrieLibrary.States
 				if (msg.NetworkID != TileEngine.NetworkID)
 					return;
 
+				TileEngine.NetworkManager.Disconnected -= this.TestDisconnected;
+				TileEngine.NetworkManager.MessageReceived -= this.TestMessageReceived;
+
 				// Get character info
 				PokePlayer player = new PokePlayer();
 				player.Gender = Genders.Male;
 				player.Sprite = TileEngine.TextureManager.GetTexture(msg.TileSheet);
-				player.Location = new ScreenPoint(msg.Location.X, msg.Location.Y);
+				
+				if ((msg.Location.Y % 32) != 0) 
+					player.Location = new ScreenPoint(msg.Location.X, msg.Location.Y);
+				else
+					player.Location = new ScreenPoint(msg.Location.X, msg.Location.Y);
 				player.CurrentAnimationName = msg.Animation;
 				player.Name = msg.Name;
 				player.Loaded = true;

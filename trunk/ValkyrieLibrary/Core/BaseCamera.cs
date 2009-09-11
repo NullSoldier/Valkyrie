@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ValkyrieLibrary.Core;
 using ValkyrieLibrary.Characters;
 using System.Threading;
+using ValkyrieLibrary.Camera;
 
 namespace ValkyrieLibrary
 {
@@ -17,24 +18,33 @@ namespace ValkyrieLibrary
 		public Vector2 CameraOffset;
 		public Viewport Viewport;
 		public bool ManualControl = false;
-		private GameTime time
-		{
-			get;
-			set;
-		}
+		public List<ICameraEffect> Effects = new List<ICameraEffect>();
+		public event EventHandler<EffectFinishedEventArgs> EffectFinished;
 
 		public void Update(GameTime gameTime)
 		{
-			this.time = gameTime;
-		}
+			List<ICameraEffect> removed = new List<ICameraEffect>();
 
-		public event EventHandler TweenFinished;
+			lock (this.Effects)
+			{
+				foreach (var effect in this.Effects)
+				{
+					effect.Update(gameTime);
+					effect.Draw(this);
 
-		public void OnTweenFinished(object sender, EventArgs e)
-		{
-			var handler = this.TweenFinished;
-			if(handler != null)
-				handler(this, e);
+					if (effect.Finished)
+						removed.Add(effect);
+				}
+
+				foreach (var effect in removed)
+				{
+					var handler = this.EffectFinished;
+					if (handler != null)
+						handler(this, new EffectFinishedEventArgs(effect));
+
+					this.Effects.Remove(effect);
+				}
+			}
 		}
 
         private Stack<BaseCamera> camStack;
@@ -116,12 +126,15 @@ namespace ValkyrieLibrary
 		}
 
 		public void CenterOnPoint(ScreenPoint Point)
-		{			
-			this.MapOffset.X = Point.X * -1;
-			this.MapOffset.X += (this.Screen.Width / 2);
+		{
+			int prepvaluex = Point.X * -1;
+			prepvaluex += (this.Screen.Width / 2);
 
-			this.MapOffset.Y = Point.Y * -1;
-			this.MapOffset.Y += (this.Screen.Height / 2);
+			int prepvaluey = Point.Y * -1;
+			prepvaluey += (this.Screen.Height / 2);
+
+			Vector2 loc = new Vector2(prepvaluex, prepvaluey);
+			this.MapOffset = loc;
 		}
 
 		/// <summary>
@@ -129,37 +142,47 @@ namespace ValkyrieLibrary
 		/// </summary>
 		/// <param name="startPoint">The starting point of the camera.</param>
 		/// <param name="endPoint">The ending point that the camera should tween to.</param>
-		/// <param name="time">How long in milliseconsd it should take to tween.</param>
-		public void Tween(ScreenPoint startPoint, ScreenPoint endPoint, float time)
+		/// <param name="time">How long in milliseconds it should take to tween.</param>
+		public void Tween(ScreenPoint startpoint, ScreenPoint endpoint, int time)
 		{
-			float x_speed = ((endPoint.X - startPoint.X) / time);
-			float y_speed = ((endPoint.Y - startPoint.Y) / time);
-				
-			Thread thread = new Thread((ParameterizedThreadStart)this.TweenWorker);
-			thread.IsBackground = false;
-			thread.Name = "Tween worker thread.";
-			thread.Start(new object[] {startPoint, endPoint, x_speed, y_speed} );
+			TweenEffect effect = new TweenEffect(startpoint, endpoint, time);
+
+			lock (this.Effects)
+			{
+				this.Effects.Add(effect);
+			}
 		}
 
-		private void TweenWorker(object argument)
+		/// <summary>
+		/// Tweens the camera to a destination starting at the cameras current location
+		/// </summary>
+		/// <param name="endPoint">The ending point that the camera should tween to.</param>
+		/// <param name="time">How long in milliseconds it should take to tween.</param>
+		public void Tween(ScreenPoint endpoint, int time)
 		{
-			var arguments = (object[])argument;
+			TweenEffect effect = new TweenEffect(this, endpoint, time);
 
-			ScreenPoint start = (ScreenPoint)arguments[0];
-			ScreenPoint end = (ScreenPoint)arguments[1];
-
-			float xspeed = (float)arguments[2];
-			float yspeed = (float)arguments[3];
-
-			// Eh, not working
-			this.OnTweenFinished(this, EventArgs.Empty);
+			lock (this.Effects)
+			{
+				this.Effects.Add(effect);
+			}
 		}
 
-
-		public void Quake(int Magnitude)
+		/// <summary>
+		/// Shake the camera around it's current location
+		/// </summary>
+		/// <param name="Magnitude">A magnitude value of which the camera will be shaken.</param>
+		/// <param name="time">How long in milliseconds it should quake for.</param>
+		public void Quake(int magnitude, int time, int speeddelay)
 		{
-			throw new NotSupportedException();
+			QuakeEffect effect = new QuakeEffect(this, magnitude, time, speeddelay);
+
+			lock (this.Effects)
+			{
+				this.Effects.Add(effect);
+			}
 		}
+
 		#endregion
 
         public void Scale(double scale)

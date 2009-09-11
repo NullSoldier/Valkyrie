@@ -162,17 +162,6 @@ namespace ValkyrieMapEditor
 
         protected override void Update(GameTime gameTime)
         {
-            float elapsed = (float)gameTime.ElapsedRealTime.TotalSeconds;
-
-            float fps = 1 / elapsed;
-            deltaFPSTime += elapsed;
-            if (deltaFPSTime > 1)
-            {
-                Window.Title = "MapEditor  [" + fps.ToString() + " FPS]";
-                deltaFPSTime -= 1;
-            }
-
-
             this.Render.Update(gameTime);
             this.CurComponent.Update(gameTime);
 
@@ -218,6 +207,16 @@ namespace ValkyrieMapEditor
 
 		protected override void Draw(GameTime gameTime)
 		{
+			float elapsed = (float)gameTime.ElapsedRealTime.TotalSeconds;
+
+			float fps = 1 / elapsed;
+			deltaFPSTime += elapsed;
+			if (deltaFPSTime > 1)
+			{
+				Window.Title = "MapEditor  [" + fps.ToString() + " FPS]";
+				deltaFPSTime -= 1;
+			}
+
 			GraphicsDevice.Clear(Color.Gray);
 
             this.spriteBatch.Begin();

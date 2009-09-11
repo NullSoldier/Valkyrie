@@ -7,6 +7,7 @@ using System.Threading;
 using Valkyrie.Core;
 using Microsoft.Xna.Framework;
 using ValkyrieLibrary.Core;
+using ValkyrieLibrary.Camera;
 
 namespace ValkyrieLibrary.Events
 {
@@ -53,10 +54,10 @@ namespace ValkyrieLibrary.Events
 			TileEngine.Camera.Scale(0.9);
 			//character.IgnoreMoveInput = true;
 
-			/*Thread thread = new Thread((ParameterizedThreadStart)this.StartCinematics);
-			thread.IsBackground = false;
-			thread.Name = "Event Cinematics Test Thread";
-			thread.Start(character);*/
+			//Thread thread = new Thread((ParameterizedThreadStart)this.StartCinematics);
+			//thread.IsBackground = false;
+			//thread.Name = "Event Cinematics Test Thread";
+			//thread.Start(character);
 		}
 
 		public IEnumerable<string> GetParameterNames()
@@ -81,21 +82,45 @@ namespace ValkyrieLibrary.Events
 
 		#endregion
 
+		private int stage = 0;
+		private BaseCharacter character;
+		private PokeCamera camera;
+
 		private void StartCinematics(object argument)
 		{
-			BaseCharacter character = (BaseCharacter)argument;
+			this.stage = 0;
+			this.character = (BaseCharacter)argument;
+			this.camera = (PokeCamera)TileEngine.Camera;
 
-			PokeCamera camera = (PokeCamera)TileEngine.Camera;
 			camera.ManualControl = true;
-
-			camera.TweenFinished += this.Camera_TweenFinished;
-			camera.Tween(character.Location, new ScreenPoint(character.Location.X + 15, character.Location.Y + 200), 5000);
+			camera.EffectFinished += this.Camera_EffectFinished;
+			camera.Tween(new ScreenPoint(((int)camera.MapOffset.X * -1) + 280, (int)(camera.MapOffset.Y * -1) - 2000), 8000);
 		}
 
-		private void Camera_TweenFinished(object sender, EventArgs e)
+		private void SecondStage()
+		{
+			camera.Quake(20, 4000, 70);
+		}
+
+		private void FinishCinematic()
+		{
+			this.camera.ManualControl = false;
+			this.character.IgnoreMoveInput = false;
+		}
+
+		private void Camera_EffectFinished(object sender, EffectFinishedEventArgs e)
 		{
 			PokeCamera camera = (PokeCamera)sender;
-			camera.ManualControl = false;
+
+			if (this.stage == 0 && (e.Effect is TweenEffect))
+			{
+				stage++;
+				Thread.Sleep(5000);
+				this.SecondStage();
+			}
+
+			if (this.stage == 1 && (e.Effect is QuakeEffect))
+				this.FinishCinematic();
 		}
 	}
 }
