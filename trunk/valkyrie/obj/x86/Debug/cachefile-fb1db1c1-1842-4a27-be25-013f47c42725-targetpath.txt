@@ -1,3 +1,0 @@
-Content\GameTextFont.xnb
-Content\PokemonIntro.xnb
-Content\PokemonIntro.wmv

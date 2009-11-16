@@ -1,9 +1,0 @@
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieEngine\bin\x86\Debug\ValkyrieEngine.dll
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieEngine\bin\x86\Debug\ValkyrieEngine.pdb
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieEngine\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieEngine\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieEngine\obj\x86\Debug\ValkyrieEngine.dll
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieEngine\obj\x86\Debug\ValkyrieEngine.pdb
-C:\Users\jasons\Desktop\Project Valkyrie\trunk\ValkyrieEngine\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\jasons\Desktop\Project Valkyrie\trunk\ValkyrieEngine\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-C:\Users\jasons\Desktop\Project Valkyrie\trunk\ValkyrieEngine\obj\x86\Debug\ValkyrieEngine.pdb
