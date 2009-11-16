@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
-using ValkyrieLibrary.Events;
-using ValkyrieLibrary.Characters;
+using Valkyrie.Library.Events;
 using Microsoft.Xna.Framework;
+using Valkyrie.Engine.Characters;
+using Valkyrie.Engine.Events;
 
 namespace Valkyrie.Events
 {
@@ -17,22 +18,22 @@ namespace Valkyrie.Events
 		public Dictionary<string, string> Parameters { get; set; }
 		public Directions Direction { get; set; }
 
-		public string GetStringType()
+		public string GetStringType ()
 		{
 			return "RickRoll";
 		}
 
-		public void Trigger(BaseCharacter character)
+		public void Trigger (BaseCharacter character)
 		{
 			Process.Start("http://www.youtube.com/watch?v=Yu_moia-oVI");
 		}
 
-		public IEnumerable<string> GetParameterNames()
+		public IEnumerable<string> GetParameterNames ()
 		{
 			return new List<string>();
 		}
 
-		public object Clone()
+		public object Clone ()
 		{
 			RickRollEvent clone = new RickRollEvent();
 			clone.Rectangle = this.Rectangle;

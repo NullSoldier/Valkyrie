@@ -23,6 +23,9 @@ namespace ValkyrieGameServerConsole
 			if(!Debugger.IsAttached)
 				AppDomain.CurrentDomain.UnhandledException += Program.Program_UnhandledException;
 
+			Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
+			Trace.Refresh();
+
 			Program.ServerThread = new Thread(Program.StartServerA);
 			Program.ServerThread.Name = "Server Thread";
 			Program.ServerThread.IsBackground = true;
@@ -49,6 +52,9 @@ namespace ValkyrieGameServerConsole
 		public static void StartServerA()
 		{
 			Program.server = new ValkyrieGameServer(new DefaultGameServerSettings());
+			Program.server.UserLoggedIn += Server_UserLoggedIn;
+			Program.server.UserLoggedOut += Server_UserLoggedOut;
+
 			Program.server.Start();
 			Console.WriteLine("Server started successfully.");
 		}
@@ -56,6 +62,22 @@ namespace ValkyrieGameServerConsole
 		private static void Program_UnhandledException(object sender, UnhandledExceptionEventArgs ev)
 		{
 			MessageBox(new IntPtr(0), ((Exception)ev.ExceptionObject).Message + Environment.NewLine + Environment.NewLine + ((Exception)ev.ExceptionObject).StackTrace, "Error!", 0);
+		}
+
+		public static void Server_UserLoggedIn (object sender, UserEventArgs ev)
+		{
+			if(ev.Player != null)
+				Trace.WriteLine(string.Format("User {0} has logged in.", ev.Player.Character.Name));
+			else
+				Trace.WriteLine(string.Format("NULL User has logged in.", ev.Player.Character.Name));			
+		}
+
+		public static void Server_UserLoggedOut (object sender, UserEventArgs ev)
+		{
+			if(ev.Player != null)
+				Trace.WriteLine(string.Format("User {0} has logged out.", ev.Player.Character.Name));
+			else
+				Trace.WriteLine(string.Format("NULL User has logged out.", ev.Player.Character.Name));
 		}
 	}
 }

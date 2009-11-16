@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Reflection.Emit;
-using ValkyrieLibrary.Core.Messages;
+using Valkyrie.Library.Core.Messages;
 
 namespace Gablarski.Messages
 {

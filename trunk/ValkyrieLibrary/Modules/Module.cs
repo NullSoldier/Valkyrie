@@ -5,9 +5,9 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ValkyrieLibrary
+namespace Valkyrie.Library
 {
-    public interface IModule
+    public interface IModuleLibrary
     {
         void Update(GameTime gameTime);
         void Draw(SpriteBatch spriteBatch, GameTime gameTime);

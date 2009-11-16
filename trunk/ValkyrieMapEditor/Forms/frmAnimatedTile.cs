@@ -6,8 +6,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using ValkyrieLibrary.Animation;
-using ValkyrieLibrary;
+using Valkyrie.Library.Animation;
+using Valkyrie.Library;
 using ValkyrieMapEditor.Properties;
 
 namespace ValkyrieMapEditor.Forms

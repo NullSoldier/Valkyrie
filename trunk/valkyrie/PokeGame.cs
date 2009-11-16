@@ -1,71 +1,89 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
-using ValkyrieLibrary.Core;
 using System.IO;
-using ValkyrieLibrary.Maps;
-using ValkyrieLibrary.Events;
-using Valkyrie.Core;
-using Valkyrie.States;
+using System.Linq;
 using System.Reflection;
-using Gablarski.Network;
-using System.Net;
-using Gablarski;
-using ValkyrieLibrary.Core.Messages;
-using ValkyrieLibrary.Network;
-using Valkyrie.Characters;
-using ValkyrieServerLibrary.Network.Messages.Valkyrie;
-using ValkyrieLibrary.Characters;
-using ValkyrieLibrary.States;
 using System.Runtime.InteropServices;
+using System.Xml;
+using Gablarski;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Valkyrie.Core;
+using Valkyrie.Engine;
+using Valkyrie.Library;
+using Valkyrie.Providers;
+using Valkyrie.Modules;
+using Valkyrie.Engine.Providers;
+using Valkyrie.Library.Providers;
+using Microsoft.Xna.Framework.Media;
+using Valkyrie.Library.Managers;
 
-namespace ValkyrieLibrary
+namespace Valkyrie
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
 	
-    public class PokeGame
-		: Game
+    public class PokeGame : Game
     {
-		[DllImport("user32.dll", CharSet = CharSet.Auto)]
-		public static extern uint MessageBox(IntPtr hWnd, String text, String caption, uint type);
+		#region Constructors
 
-        public GraphicsDeviceManager graphics;
-        public SpriteBatch spriteBatch;
-		public static SpriteFont font;
-		private float deltaFPSTime = 0;
-		public bool ExitingGame = false;
-
-        public PokeGame()
-        {	
-            graphics = new GraphicsDeviceManager(this);
+		public PokeGame ()
+		{
+			graphics = new GraphicsDeviceManager(this);
 			graphics.ApplyChanges();
 
-            Content.RootDirectory = "Content";			
-        }
+			Content.RootDirectory = "Content";
+		}
+
+		#endregion
+
+		#region Public Properties & Methods
+
+		public ValkyrieEngine Engine { get; set; }
+
+		public GraphicsDeviceManager graphics { get; set; }
+		public SpriteBatch spriteBatch { get; set; }
+		public static SpriteFont font { get; set; }
+
+		public bool ExitingGame
+		{
+			get { return this.exitinggame; }
+			set { this.exitinggame = value; }
+		}
+
+		public void NetworkDisconnected (object sender, ConnectionEventArgs ev)
+		{
+			if(this.ExitingGame)
+				return;
+
+			MessageBox(new IntPtr(0), "Connection to server lost.", "Disconnected", 0);
+
+			this.Engine.Unload();
+			this.Exit();
+		}
+
+		#endregion
+
+		private float deltaFPSTime = 0;
+		private bool exitinggame = false;
+
+		private EngineConfiguration LoadEngineConfiguration ()
+		{
+			FileInfo info = new FileInfo(Path.Combine(Environment.CurrentDirectory, "Data/TileEngineConfig.xml"));
+			if(!info.Exists)
+				throw new FileNotFoundException("Engine config is missing from data directory!");
+
+			XmlDocument doc = new XmlDocument();
+			doc.Load(info.FullName);
+
+			XmlNodeList nodes = doc.GetElementsByTagName("Config");
+
+			return new EngineConfiguration(nodes[0].ChildNodes.OfType<XmlNode>().ToDictionary(x => (EngineConfigurationName)Enum.Parse(typeof(EngineConfigurationName), x.Name), x => x.InnerText));
+		}
 
         protected override void Initialize()
         {
-            TileEngine.Initialize(this.Content, this.GraphicsDevice);
-			//TileEngine.EventManager.LoadEventTypesFromAssemblies( new Assembly[] {Assembly.GetEntryAssembly(), Assembly.LoadWithPartialName("ValkyrieLibrary")});
-            TileEngine.Viewport = this.GraphicsDevice.Viewport;
-            TileEngine.Camera = new PokeCamera(0, 0, 800, 600);
-			TileEngine.CollisionManager = new PokeCollisionManager();
-			TileEngine.MovementManager = new PokeMovementManagerNew();
-			TileEngine.EventManager = new MapEventManager(new Assembly[] { Assembly.GetEntryAssembly(), Assembly.Load("ValkyrieLibrary") });
-			TileEngine.TileSize = 32;
-
-			TileEngine.NetworkManager.Disconnected += NetworkDisconnected;
+			this.Engine = new ValkyrieEngine(this.LoadEngineConfiguration());
 
             base.Initialize();
         }
@@ -76,53 +94,64 @@ namespace ValkyrieLibrary
 
 			PokeGame.font = Content.Load<SpriteFont>("GameTextFont");
 
-            TileEngine.ModuleManager.AddModule(new MenuModule(), "Menu");
-            TileEngine.ModuleManager.AddModule(new GameModule(), "Game");
-			TileEngine.ModuleManager.AddModule(new LoginModule(), "Login");
+			ValkyrieWorldManager worldmanager = new ValkyrieWorldManager(new Assembly[] { Assembly.GetExecutingAssembly(), Assembly.Load("ValkyrieLibrary") });
+			ValkyrieTextureManager texturemanager = new ValkyrieTextureManager(this.Content, this.GraphicsDevice);
 
-            TileEngine.Load(new FileInfo("Data/TileEngineConfig.xml"));
-			TileEngine.WorldManager.Load(new FileInfo("Data/PokeWorld.xml"));
+			this.Engine.Load(new ValkyrieSceneProvider(),
+				new ValkyrieEventProvider(),
+				new PokeNetworkProvider(),
+				new PokeSoundProvider(),
+				new ValkyrieModuleProvider(),
+				new ValkyrieMovementProvider(),
+				new ValkyrieCollisionProvider(),
+				worldmanager,
+				texturemanager);
+
+			this.Engine.ModuleProvider.AddModule(new MenuModule(Content.Load<Video>("PokemonIntro")));
+			this.Engine.ModuleProvider.AddModule(new LoginModule());
+			this.Engine.ModuleProvider.AddModule(new GameModule(this.GraphicsDevice));
+
+			this.Engine.ModuleProvider.PushModule("Menu");
         }
 
         protected override void UnloadContent()
         {
 			this.ExitingGame = true;
-			TileEngine.Unload();
+
+			this.Engine.Unload();
         }
 
         protected override void Update(GameTime gameTime)
         {
-			TileEngine.Update(gameTime);
+			this.Engine.Update(gameTime);
 
             base.Update(gameTime);
         }
 
-        protected override void Draw(GameTime gameTime)
-        {
+		protected override void Draw (GameTime gameTime)
+		{
+			/* Render FPS */
 			float elapsed = (float)gameTime.ElapsedRealTime.TotalSeconds;
 
 			float fps = 1 / elapsed;
 			deltaFPSTime += elapsed;
-			if (deltaFPSTime > 1)
+			if(deltaFPSTime > 1)
 			{
 				Window.Title = "PokeGame [" + fps.ToString() + " FPS]";
 				deltaFPSTime -= 1;
 			}
 
-			TileEngine.Draw(spriteBatch, gameTime);
+			/* Draw the game */
+			this.Engine.Draw(spriteBatch, gameTime);
 
-            base.Draw(gameTime);
-        }
-
-		public void NetworkDisconnected(object sender, ConnectionEventArgs ev)
-		{
-			if(this.ExitingGame)
-				return;
-
-			MessageBox(new IntPtr(0), "Connection to server lost.", "Disconnected", 0);
-
-			TileEngine.Unload();
-			this.Exit();
+			base.Draw(gameTime);
 		}
-    }
+
+		#region Statics & Internals
+
+		[DllImport("user32.dll", CharSet = CharSet.Auto)]
+		public static extern uint MessageBox (IntPtr hWnd, String text, String caption, uint type);
+
+		#endregion
+	}
 }

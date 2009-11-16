@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ValkyrieLibrary.Characters;
-using ValkyrieLibrary.Core;
-using ValkyrieLibrary;
-using ValkyrieLibrary.Events;
+using Valkyrie.Library.Core;
+using Valkyrie.Library;
+using Valkyrie.Library.Events;
 using Microsoft.Xna.Framework;
+using Valkyrie.Engine.Events;
+using Valkyrie.Engine.Characters;
 
 namespace Valkyrie.Events
 {
@@ -18,25 +19,25 @@ namespace Valkyrie.Events
 		public Dictionary<string, string> Parameters { get; set; }
 		public Directions Direction { get; set; }
 
-		public string GetStringType()
+		public string GetStringType ()
 		{
 			return "Load";
 		}
 
-		public void Trigger(BaseCharacter character)
+		public void Trigger (BaseCharacter character)
 		{
 			String name = this.Parameters["World"];
 			String pos = this.Parameters["EntryPointName"];
 
-			TileEngine.WorldManager.SetWorld(name, pos, true);
+			throw new NotImplementedException();
 		}
 
-		public IEnumerable<string> GetParameterNames()
+		public IEnumerable<string> GetParameterNames ()
 		{
 			return new string[] { "Name", "World", "EntryPointName" };
 		}
 
-		public object Clone()
+		public object Clone ()
 		{
 			LoadEvent clone = new LoadEvent();
 			clone.Rectangle = this.Rectangle;

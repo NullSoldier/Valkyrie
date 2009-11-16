@@ -14,7 +14,9 @@ namespace Gablarski.Messages
 
 		LocationData = 11,
 		PlayerRequest = 19,
-		PlayerInfoRequest = 21
+		PlayerInfoRequest = 21,
+		PlayerStartMoving = 29,
+		PlayerStopMoving = 31
 	}
 
 	public enum ServerMessageType
@@ -25,7 +27,9 @@ namespace Gablarski.Messages
 		PlayerUpdate = 17,
 		PlayerInfo = 23,
 		LocationReceived = 25,
-		ConnectionRejected = 27
+		ConnectionRejected = 27,
+		PlayerStartedMoving = 33,
+		PlayerStoppedMoving = 35,
 	}
 
 	public abstract class Message<TMessage>

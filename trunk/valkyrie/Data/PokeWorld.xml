@@ -1,141 +1,141 @@
 <Worlds>
-  <World Name="Main">
+  <World Name="Kanto">
     <DefaultSpawn>PalletTownEntryPoint</DefaultSpawn>
     <MapLoc>
-      <Name>Pewter</Name>
-      <FilePath>Main\Pewter_Town.xml</FilePath>
+      <Name>Pewter_Town</Name>
+      <Uri>Main\Pewter_Town.xml</Uri>
       <X>63</X>
       <Y>0</Y>
     </MapLoc>
     <MapLoc>
-      <Name>Route2</Name>
-      <FilePath>Main\Route2_Route.xml</FilePath>
+      <Name>Route2_Route</Name>
+      <Uri>Main\Route2_Route.xml</Uri>
       <X>75</X>
       <Y>40</Y>
     </MapLoc>
     <MapLoc>
-      <Name>PalletTown</Name>
-      <FilePath>Main\Pallet_Town.xml</FilePath>
+      <Name>Pallet_Town</Name>
+      <Uri>Main\Pallet_Town.xml</Uri>
       <X>75</X>
       <Y>200</Y>
     </MapLoc>
     <MapLoc>
-      <Name>Route1</Name>
-      <FilePath>Main\Route1_Route.xml</FilePath>
+      <Name>Route1_Route</Name>
+      <Uri>Main\Route1_Route.xml</Uri>
       <X>75</X>
       <Y>160</Y>
     </MapLoc>
     
     <MapLoc>
-      <Name>ViridianCity</Name>
-      <FilePath>Main\Viridian_Town.xml</FilePath>
+      <Name>Viridian_Town</Name>
+      <Uri>Main\Viridian_Town.xml</Uri>
       <X>63</X>
       <Y>120</Y>
     </MapLoc>
 
     <MapLoc>
-      <Name>Route22</Name>
-      <FilePath>Main\Route22_Route.xml</FilePath>
+      <Name>Route22_Route</Name>
+      <Uri>Main\Route22_Route.xml</Uri>
       <X>15</X>
       <Y>129</Y>
     </MapLoc>
     
     <MapLoc>
-      <Name>Route21</Name>
-      <FilePath>Main\Route21_Route.xml</FilePath>
+      <Name>Route21_Route</Name>
+      <Uri>Main\Route21_Route.xml</Uri>
       <X>75</X>
       <Y>222</Y>
     </MapLoc>
     
     <MapLoc>
       <Name>Cinnibar_Island</Name>
-      <FilePath>Main\Cinnibar_Island.xml</FilePath>
+      <Uri>Main\Cinnibar_Island.xml</Uri>
       <X>75</X>
       <Y>318</Y>
     </MapLoc>
     <MapLoc>
       <Name>Fuschia_Town</Name>
-      <FilePath>Main\Fuschia_Town.xml</FilePath>
+      <Uri>Main\Fuschia_Town.xml</Uri>
       <X>207</X>
       <Y>239</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route18_Route</Name>
-      <FilePath>Main\Route18_Route.xml</FilePath>
+      <Uri>Main\Route18_Route.xml</Uri>
       <X>145</X>
       <Y>248</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route17_Route</Name>
-      <FilePath>Main\Route17_Route.xml</FilePath>
+      <Uri>Main\Route17_Route.xml</Uri>
       <X>142</X>
       <Y>88</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route16_Route</Name>
-      <FilePath>Main\Route16_Route.xml</FilePath>
+      <Uri>Main\Route16_Route.xml</Uri>
       <X>142</X>
       <Y>68</Y>
     </MapLoc>
     
     <MapLoc>
       <Name>Route15_Route</Name>
-      <FilePath>Main\Route15_Route.xml</FilePath>
+      <Uri>Main\Route15_Route.xml</Uri>
       <X>255</X>
       <Y>248</Y>  
     </MapLoc>
 
     <MapLoc>
       <Name>Route14_Route</Name>
-      <FilePath>Main\Route14_Route.xml</FilePath>
+      <Uri>Main\Route14_Route.xml</Uri>
       <X>327</X>
       <Y>208</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route13_Route</Name>
-      <FilePath>Main\Route13_Route.xml</FilePath>
+      <Uri>Main\Route13_Route.xml</Uri>
       <X>351</X>
       <Y>208</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route12_Route</Name>
-      <FilePath>Main\Route12_Route.xml</FilePath>
+      <Uri>Main\Route12_Route.xml</Uri>
       <X>399</X>
       <Y>88</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route20_Route_01</Name>
-      <FilePath>Main\Route20_Route_01.xml</FilePath>
+      <Uri>Main\Route20_Route_01.xml</Uri>
       <X>99</X>
       <Y>318</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route20_Route_02</Name>
-      <FilePath>Main\Route20_Route_02.xml</FilePath>
+      <Uri>Main\Route20_Route_02.xml</Uri>
       <X>219</X>
       <Y>278</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route3_Route</Name>
-      <FilePath>Main\Route3_Route.xml</FilePath>
+      <Uri>Main\Route3_Route.xml</Uri>
       <X>111</X>
       <Y>11</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route4_Route_01</Name>
-      <FilePath>Main\Route4_Route_01.xml</FilePath>
+      <Uri>Main\Route4_Route_01.xml</Uri>
       <X>171</X>
       <Y>-9</Y>
-    </MapLoc>-->
+    </MapLoc>
     
   </World>
   
@@ -144,7 +144,7 @@
     <DefaultSpawn>PalletTown_HouseOne_Internal</DefaultSpawn>
     <MapLoc>
       <Name>Pallet_House_01</Name>
-      <FilePath>Pallet_House_01\PalleT_House_01.xml</FilePath>
+      <Uri>Pallet_House_01\PalleT_House_01.xml</Uri>
       <X>0</X>
       <Y>0</Y>
     </MapLoc>

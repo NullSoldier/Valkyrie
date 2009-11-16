@@ -11,13 +11,13 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
-using ValkyrieLibrary.Core;
+using Valkyrie.Library.Core;
 using System.IO;
-using ValkyrieLibrary;
+using Valkyrie.Library;
 using System.Windows.Forms;
-using ValkyrieLibrary.Maps;
+using Valkyrie.Library.Maps;
 using ValkyrieMapEditor.Forms;
-using ValkyrieLibrary.Events;
+using Valkyrie.Library.Events;
 
 namespace ValkyrieMapEditor.Core
 {

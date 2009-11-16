@@ -6,17 +6,18 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using ValkyrieLibrary.Core;
+using Valkyrie.Library.Core;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using ValkyrieMapEditor.Properties;
 using System.Threading;
-using ValkyrieLibrary.Maps;
-using ValkyrieLibrary;
+using Valkyrie.Library.Maps;
+using Valkyrie.Library;
 using System.Reflection;
-using ValkyrieLibrary.Events;
+using Valkyrie.Library.Events;
 using ValkyrieMapEditor.Forms;
 using ValkyrieMapEditor.Core;
+using Valkyrie.Library.Maps.MapProvider;
 
 namespace ValkyrieMapEditor
 {
@@ -84,7 +85,7 @@ namespace ValkyrieMapEditor
 			TileEngine.TextureManager.ClearCache();
 			TileEngine.EventManager.ClearEventCache();
 
-			var map = MapEditorManager.LoadMap(MapLocation);
+			var map = MapEditorManager.LoadMap(MapLocation, new XMLMapProvider());
 			MapEditorManager.SetWorldMap(map);
 
 			this.Text = String.Format("{0} - {1}",

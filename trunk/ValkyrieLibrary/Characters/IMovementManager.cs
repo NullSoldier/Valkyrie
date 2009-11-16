@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ValkyrieLibrary.Core;
+using Valkyrie.Library.Core;
 using Microsoft.Xna.Framework;
 
-namespace ValkyrieLibrary.Characters
+namespace Valkyrie.Library.Characters
 {
 	public interface IMovementManager
 	{
@@ -14,6 +14,7 @@ namespace ValkyrieLibrary.Characters
 
 		void BeginMove(IMapObject movable, Directions direction);
 		void EndMove(IMapObject movable, Boolean fireevent);
+		void EndMoveFunctional (IMapObject movable);
 
 		void Update(GameTime time);
 	}

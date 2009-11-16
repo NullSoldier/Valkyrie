@@ -1,4 +1,5 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectGuid>{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -6,12 +7,18 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ValkyrieLibrary</RootNamespace>
+    <RootNamespace>Valkyrie.Library</RootNamespace>
     <AssemblyName>ValkyrieLibrary</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
+    <XnaFrameworkVersion>v3.1</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
     <XnaCrossPlatformGroupID>37241442-cdf5-4f44-b00f-00fa50399f7e</XnaCrossPlatformGroupID>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,7 +31,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -54,14 +60,8 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Xna.Framework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
-      <Private>False</Private>
-      <SpecificVersion>True</SpecificVersion>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Game, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
-      <Private>False</Private>
-      <SpecificVersion>True</SpecificVersion>
-    </Reference>
+    <Reference Include="Microsoft.Xna.Framework, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d" />
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d" />
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
@@ -84,47 +84,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Animation\FrameAnimation.cs" />
-    <Compile Include="Camera\ICameraEffect.cs" />
-    <Compile Include="Camera\QuakeEffect.cs" />
-    <Compile Include="Camera\TweenEffect.cs" />
-    <Compile Include="Characters\BaseCharacter.cs" />
-    <Compile Include="Characters\IMovable.cs" />
-    <Compile Include="Characters\IMovementManager.cs" />
-    <Compile Include="Characters\IPositionable.cs" />
-    <Compile Include="Characters\MoveDirection.cs" />
-    <Compile Include="Check.cs" />
-    <Compile Include="Core\BaseCamera.cs" />
-    <Compile Include="Collision\ICollidable.cs" />
-    <Compile Include="Collision\ICollisionManager.cs" />
-    <Compile Include="Core\Collections\IOrderedDictionary.cs" />
-    <Compile Include="Core\Collections\OrderedDictionary.cs" />
-    <Compile Include="Core\EventTypeLoader.cs" />
-    <Compile Include="Core\IMapObject.cs" />
-    <Compile Include="Core\Points\BasePoint.cs" />
-    <Compile Include="Core\Points\MapPoint.cs" />
-    <Compile Include="Core\Points\ScreenPoint.cs" />
-    <Compile Include="Events\Event\ActivationTypes.cs" />
-    <Compile Include="Events\Event\BaseMapEvent.cs" />
-    <Compile Include="Events\EngineEvents\EntryPointEvent.cs" />
-    <Compile Include="Events\MapEventManager.cs" />
-    <Compile Include="Events\Event\IMapEvent.cs" />
-    <Compile Include="Input\KeybindController.cs" />
-    <Compile Include="Input\KeyDef.cs" />
-    <Compile Include="Maps\MapHandler.cs" />
-    <Compile Include="Maps\MapHeader.cs" />
-    <Compile Include="Maps\MapLayers.cs" />
-    <Compile Include="Maps\World.cs" />
-    <Compile Include="Maps\WorldManager.cs" />
-    <Compile Include="Modules\ModuleManager.cs" />
-    <Compile Include="Maps\Map.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Modules\Module.cs" />
-    <Compile Include="Core\TextureManager.cs" />
-    <Compile Include="TileEngine.cs" />
-    <Compile Include="TileEngineConfiguration.cs">
+    <Compile Include="Camera\QuakeEffect.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Camera\TweenEffect.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Camera\ValkyrieCamera.cs" />
+    <Compile Include="Events\EntryPointEvent.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Managers\ValkyrieTextureManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\ValkyrieCollisionProvider.cs" />
+    <Compile Include="Providers\ValkyrieEventProvider.cs" />
+    <Compile Include="Providers\ValkyrieModuleProvider.cs" />
+    <Compile Include="Providers\ValkyrieMovementProvider.cs" />
+    <Compile Include="Providers\ValkyrieSceneProvider.cs" />
+    <Compile Include="Providers\XMLMapProvider.cs" />
+    <Compile Include="Providers\XMLWorldProvider.cs" />
+    <Compile Include="Managers\ValkyrieWorldManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <NestedContentProject Include="Content\Content.contentproj">
@@ -133,6 +112,11 @@
     </NestedContentProject>
   </ItemGroup>
   <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
       <Visible>False</Visible>
       <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
@@ -148,18 +132,27 @@
       <ProductName>.NET Framework 3.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
       <Visible>False</Visible>
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Xna.Framework.3.0">
+    <BootstrapperPackage Include="Microsoft.Xna.Framework.3.1">
       <Visible>False</Visible>
-      <ProductName>Microsoft XNA Framework Redistributable 3.0</ProductName>
+      <ProductName>Microsoft XNA Framework Redistributable 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ValkyrieEngine\ValkyrieEngine.csproj">
+      <Project>{12722697-BA6D-4EED-8E90-50C6094AA407}</Project>
+      <Name>ValkyrieEngine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ValkyrieNetwork\ValkyrieNetwork.csproj">
       <Project>{6B5AF197-5051-4543-AEDC-691332649E1B}</Project>
       <Name>ValkyrieNetwork</Name>

@@ -5,10 +5,12 @@ using System.Text;
 using System.Xml;
 using System.IO;
 
-using ValkyrieLibrary.Core;
-using ValkyrieLibrary.Maps;
+using Valkyrie.Library.Core;
+using Valkyrie.Library.Maps;
+using Valkyrie.Library.Maps.MapProvider;
+using Valkyrie.Library.Events;
 
-namespace ValkyrieLibrary.Maps
+namespace Valkyrie.Library.Maps
 {
     public class WorldManager
     {
@@ -45,7 +47,30 @@ namespace ValkyrieLibrary.Maps
         		TileEngine.Camera.CenterOnCharacter(TileEngine.Player);
         }
 
-        public void Load (FileInfo WorldConfiguration)
+		public int GetGlobalLayerValue (string WorldName, MapPoint globalpoint, MapLayers layer)
+		{
+			foreach(var header in this.WorldsList[WorldName].MapList.Values)
+			{
+				if(header.MapLocation.ToRect(header.Map.MapSize.ToPoint()).Contains(globalpoint.ToPoint()))
+				{
+					return header.Map.GetLayerValue(header.MapLocation - globalpoint, layer);
+				}
+			}
+
+			return 0;
+		}
+
+		public void Load (FileInfo WorldConfiguration)
+		{
+			this.Load(WorldConfiguration, new XMLMapProvider(), null);
+		}
+
+		public void Load (FileInfo WorldConfiguration, IMapProvider mapprovider)
+		{
+			this.Load(WorldConfiguration, mapprovider, null);
+		}
+
+        public void Load (FileInfo WorldConfiguration, IMapProvider mapprovider, MapEventManager eventmanager)
         {
             XmlDocument doc = new XmlDocument();
             doc.Load(WorldConfiguration.FullName);
@@ -56,8 +81,10 @@ namespace ValkyrieLibrary.Maps
             XmlNodeList worldNodes = doc.GetElementsByTagName("Worlds");
             foreach (XmlNode worldNode in worldNodes[0].ChildNodes)
             {
-                World w = new World(worldNode);
-                this.WorldsList.Add(w.Name, w);
+                World world = new World();
+				world.Load(worldNode, mapprovider, eventmanager);
+
+                this.WorldsList.Add(world.Name, world);
             }
         }
 
@@ -74,6 +101,8 @@ namespace ValkyrieLibrary.Maps
 
         public void Export(string dir)
         {
+			throw new NotImplementedException();
+
 			DirectoryInfo exportDir = new DirectoryInfo(dir);
 
             Dictionary<World, tempDictTwo> dict = new Dictionary<World, tempDictTwo>();
@@ -107,7 +136,7 @@ namespace ValkyrieLibrary.Maps
                     File.Copy(Path.Combine (TileEngine.TextureManager.TextureRoot, map.Value.Map.TextureName), Path.Combine (graphics.FullName, newTexturePath), true);
                     map.Value.Map.TextureName = newTexturePath;
 
-					map.Value.Map.Save(Path.Combine(maps.FullName, map.Value.MapFileLocation));
+					//map.Value.Map.Save(Path.Combine(maps.FullName, map.Value.MapFileLocation));
                 }
 
                 dict.Add(world.Value, td);

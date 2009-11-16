@@ -7,9 +7,9 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using ValkyrieLibrary.Core;
-using ValkyrieLibrary.Maps;
-using ValkyrieLibrary;
+using Valkyrie.Library.Core;
+using Valkyrie.Library.Maps;
+using Valkyrie.Library;
 using ValkyrieWorldEditor.Forms;
 
 namespace ValkyrieWorldEditor.Core
@@ -68,11 +68,11 @@ namespace ValkyrieWorldEditor.Core
             MapHeader mh = null;
             MapPoint pos = (new ScreenPoint(e.X, e.Y) * (this.Scale) - TileEngine.Camera.Offset()).ToMapPoint();
 
-            foreach (var m in TileEngine.WorldManager.CurrentWorld.MapList)
+            foreach (MapHeader header in TileEngine.WorldManager.CurrentWorld.MapList.Values)
             {
-                if (m.Value.Map.TilePointInMapGlobal(pos))
+                if (header.TilePointInMapGlobal(pos))
                 {
-                    mh = m.Value;
+                    mh = header;
                     break;
                 }
             }

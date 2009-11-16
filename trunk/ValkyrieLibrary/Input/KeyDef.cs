@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace ValkyrieLibrary.Input
+namespace Valkyrie.Library.Input
 {
     class KeyDef
     {    

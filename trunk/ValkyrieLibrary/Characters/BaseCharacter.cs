@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ValkyrieLibrary.Animation;
-using ValkyrieLibrary.Events;
-using ValkyrieLibrary.Collision;
-using ValkyrieLibrary.Characters;
-using ValkyrieLibrary.Maps;
-using ValkyrieLibrary.Core;
+using Valkyrie.Library.Animation;
+using Valkyrie.Library.Events;
+using Valkyrie.Library.Collision;
+using Valkyrie.Library.Characters;
+using Valkyrie.Library.Maps;
+using Valkyrie.Library.Core;
 
-namespace ValkyrieLibrary.Characters
+namespace Valkyrie.Library.Characters
 {
     public abstract class BaseCharacter
 		: IMapObject
@@ -100,7 +100,7 @@ namespace ValkyrieLibrary.Characters
 			var handler = this.StartedMoving;
 
 			if (handler != null)
-				this.StartedMoving(this, ev);
+				handler(this, ev);
 		}
 
 		public void OnStoppedMoving(object sender, EventArgs ev)
@@ -108,12 +108,15 @@ namespace ValkyrieLibrary.Characters
 			var handler = this.StoppedMoving;
 
 			if (handler != null)
-				this.StoppedMoving(this, ev);
+				handler(this, ev);
 		}
 
 		public void OnTileLocationChanged(object sender, EventArgs ev)
 		{
-			this.TileLocationChanged(sender, ev);
+			var handler = this.TileLocationChanged;
+
+			if(handler != null)
+				handler(sender, ev);
 		}
 
 		public event EventHandler StartedMoving;
@@ -153,6 +156,11 @@ namespace ValkyrieLibrary.Characters
 		public ScreenPoint GetLocation()
 		{
 			return this.Location;
+		}
+
+		public string GetWorld ()
+		{
+			return TileEngine.WorldManager.CurrentWorld.Name;
 		}
 
 		#endregion

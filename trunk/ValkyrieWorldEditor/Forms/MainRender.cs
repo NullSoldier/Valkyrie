@@ -14,13 +14,13 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
 
-using ValkyrieLibrary;
-using ValkyrieLibrary.Maps;
-using ValkyrieLibrary.Core;
+using Valkyrie.Library;
+using Valkyrie.Library.Maps;
+using Valkyrie.Library.Core;
 using ValkyrieWorldEditor.Core;
 using ValkyrieWorldEditor.Forms;
 using System.Reflection;
-using ValkyrieLibrary.Events;
+using Valkyrie.Library.Events;
 
 namespace ValkyrieWorldEditor.Forms
 {

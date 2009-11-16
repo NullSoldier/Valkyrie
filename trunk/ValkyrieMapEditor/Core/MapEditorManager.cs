@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using ValkyrieLibrary.Core;
+using Valkyrie.Library.Core;
 using System.Xml;
 using Microsoft.Xna.Framework;
-using ValkyrieLibrary.Maps;
-using ValkyrieLibrary.Events;
-using ValkyrieLibrary;
+using Valkyrie.Library.Maps;
+using Valkyrie.Library.Events;
+using Valkyrie.Library;
+using Valkyrie.Library.Maps.MapProvider;
 
 namespace ValkyrieMapEditor
 {
@@ -53,18 +54,145 @@ namespace ValkyrieMapEditor
 
         public static void SaveMap(Map map, FileInfo location)
 		{
-            map.Save(location.FullName);
+			XmlDocument doc = new XmlDocument();
+
+			var mapElement = doc.CreateElement("Map");
+
+			var name = doc.CreateElement("Name");
+			name.InnerText = map.Name;
+
+			var tileset = doc.CreateElement("TileSet");
+			tileset.InnerText = map.TextureName;
+
+			var mapsize = doc.CreateElement("MapSize");
+
+			var mapsizex = doc.CreateElement("X");
+			mapsizex.InnerText = map.MapSize.X.ToString();
+			var mapsizey = doc.CreateElement("Y");
+			mapsizey.InnerText = map.MapSize.Y.ToString();
+
+			var tilepixelsize = doc.CreateElement("TilePixelSize");
+			tilepixelsize.InnerText = map.TileSize.X.ToString();
+
+			// Under Layer
+			var underlayer = doc.CreateElement("UnderLayer");
+
+			var underlayerbuilder = new StringBuilder();
+			for(int i = 0; i < map.UnderLayer.Length; i++)
+			{
+				underlayerbuilder.Append(map.UnderLayer[i]);
+				underlayerbuilder.Append(" ");
+			}
+
+			underlayer.InnerText = underlayerbuilder.ToString();
+
+			// Base Layer
+			var baselayer = doc.CreateElement("BaseLayer");
+
+			var baselayerbuilder = new StringBuilder();
+			for(int i = 0; i < map.BaseLayer.Length; i++)
+			{
+				baselayerbuilder.Append(map.BaseLayer[i]);
+				baselayerbuilder.Append(" ");
+			}
+
+			baselayer.InnerText = baselayerbuilder.ToString();
+
+			// Middle Layer
+			var middlelayer = doc.CreateElement("MiddleLayer");
+
+			var middlelayerbuilder = new StringBuilder();
+			for(int i = 0; i < map.MiddleLayer.Length; i++)
+			{
+				middlelayerbuilder.Append(map.MiddleLayer[i]);
+				middlelayerbuilder.Append(" ");
+			}
+
+			middlelayer.InnerText = middlelayerbuilder.ToString();
+
+			// Top Layer
+			var toplayer = doc.CreateElement("TopLayer");
+
+			var toplayerbuilder = new StringBuilder();
+			for(int i = 0; i < map.TopLayer.Length; i++)
+			{
+				toplayerbuilder.Append(map.TopLayer[i]);
+				toplayerbuilder.Append(" ");
+			}
+
+			toplayer.InnerText = toplayerbuilder.ToString();
+
+			// Collision Layer
+			var collisionLayer = doc.CreateElement("CollisionLayer");
+
+			var collisionlayerbuilder = new StringBuilder();
+			for(int i = 0; i < map.CollisionLayer.Length; i++)
+			{
+				collisionlayerbuilder.Append(map.CollisionLayer[i]);
+				collisionlayerbuilder.Append(" ");
+			}
+
+			collisionLayer.InnerText = collisionlayerbuilder.ToString();
+
+			// Events
+			var eventLayer = doc.CreateElement("Events");
+			foreach(IMapEvent e in map.EventList)
+			{
+				eventLayer.AppendChild(TileEngine.EventManager.EventToXmlNode(e, doc));
+			}
+
+			// Animations
+			var animations = doc.CreateElement("AnimatedTiles");
+
+			foreach(var FrameAnimation in map.AnimatedTiles.Values)
+			{
+				var tileNode = doc.CreateElement("AnimatedTile");
+
+				var tileid = doc.CreateElement("TileID");
+				tileid.InnerText = ((FrameAnimation.InitialFrameRect.Y / TileEngine.TileSize) * TileEngine.CurrentMapChunk.TilesPerRow + FrameAnimation.InitialFrameRect.X).ToString();
+
+				var tilerect = doc.CreateElement("TileRect");
+				tilerect.InnerText = string.Format("{0} {1} {2} {3}", FrameAnimation.InitialFrameRect.X, FrameAnimation.InitialFrameRect.Y, FrameAnimation.InitialFrameRect.Width, FrameAnimation.InitialFrameRect.Height);
+
+				var framecount = doc.CreateElement("FrameCount");
+				framecount.InnerText = FrameAnimation.FrameCount.ToString();
+
+				tileNode.AppendChild(tileid);
+				tileNode.AppendChild(tilerect);
+				tileNode.AppendChild(framecount);
+
+				animations.AppendChild(tileNode);
+			}
+
+			// Append children and save
+			mapsize.AppendChild(mapsizex);
+			mapsize.AppendChild(mapsizey);
+
+			mapElement.AppendChild(name);
+			mapElement.AppendChild(tileset);
+			mapElement.AppendChild(mapsize);
+			mapElement.AppendChild(tilepixelsize);
+			mapElement.AppendChild(underlayer);
+			mapElement.AppendChild(baselayer);
+			mapElement.AppendChild(middlelayer);
+			mapElement.AppendChild(toplayer);
+			mapElement.AppendChild(collisionLayer);
+			mapElement.AppendChild(eventLayer);
+			mapElement.AppendChild(animations);
+
+			doc.AppendChild(mapElement);
+			doc.Save(location.FullName);
+
 			MapEditorManager.CurrentMapLocation = location;
 		}
 
-        public static Map LoadMap(FileInfo location)
+        public static Map LoadMap(FileInfo location, IMapProvider provider)
         {
-            Map newMap = new Map();
-            newMap.LoadMap(location);
-
 			MapEditorManager.CurrentMapLocation = location;
 
-            return newMap;
+            return provider.GetMap(location, TileEngine.EventManager);
+
+			//location.FullName.Substring(0, location.FullName.Length - location.Name.Length)
         }
 
         public static Map ApplySettings(Map oldMap)
@@ -130,6 +258,12 @@ namespace ValkyrieMapEditor
             TileEngine.WorldManager.WorldsList.Add(map.Name, w);
             TileEngine.WorldManager.SetWorld(map.Name, null, false);
             TileEngine.Camera.CenterOriginOnPoint(0, 0);
+		}
+
+		public int GetTileSetValue (MapPoint point)
+		{
+			// Returns the TileID of a tile in the tile set using it's X, and Y coordinents
+			return (point.Y * this.TilesPerRow + point.X);
 		}
     }
 

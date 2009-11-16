@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using Microsoft.Xna.Framework;
-using ValkyrieLibrary.Characters;
-using ValkyrieLibrary.Core;
-using ValkyrieLibrary.Maps;
+using Valkyrie.Library.Characters;
+using Valkyrie.Library.Core;
+using Valkyrie.Library.Maps;
 using System.Reflection;
 
-namespace ValkyrieLibrary.Events
+namespace Valkyrie.Library.Events
 {
     public class MapEventManager
     {
@@ -145,7 +145,10 @@ namespace ValkyrieLibrary.Events
 				}
 			}
 
-			IMapEvent newEvent = this.CreateEventFromString(type); var assemblytype = Assembly.GetEntryAssembly().GetType(type);
+			IMapEvent newEvent = this.CreateEventFromString(type);
+			
+			var assemblytype = Assembly.GetEntryAssembly().GetType(type);
+			
 			newEvent.Direction = dir;
 			newEvent.Parameters = parameters;
 			newEvent.Rectangle = new Rectangle(location.X, location.Y, size.X, size.Y);

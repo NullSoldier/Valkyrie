@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Gablarski.Messages;
 
-namespace ValkyrieLibrary.Network
+namespace Valkyrie.Library.Network
 {
 	public enum PlayerUpdateAction
 	{

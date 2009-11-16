@@ -1,5 +1,5 @@
 <Map>
-  <Name>Route2</Name>
+  <Name>Route2_Route</Name>
   <TileSet>Main\Route2_Route.png</TileSet>
   <MapSize>
     <X>24</X>
@@ -123,6 +123,114 @@
         <Y>1</Y>
       </Size>
       <Parameters />
+    </Event>
+    <Event>
+      <Type>Valkyrie.Events.JumpEvent</Type>
+      <Activation>4</Activation>
+      <Dir>South</Dir>
+      <Location>
+        <X>16</X>
+        <Y>32</Y>
+      </Location>
+      <Size>
+        <X>3</X>
+        <Y>1</Y>
+      </Size>
+      <Parameters />
+    </Event>
+    <Event>
+      <Type>Valkyrie.Events.JumpEvent</Type>
+      <Activation>4</Activation>
+      <Dir>South</Dir>
+      <Location>
+        <X>20</X>
+        <Y>32</Y>
+      </Location>
+      <Size>
+        <X>2</X>
+        <Y>1</Y>
+      </Size>
+      <Parameters />
+    </Event>
+    <Event>
+      <Type>Valkyrie.Events.JumpEvent</Type>
+      <Activation>4</Activation>
+      <Dir>South</Dir>
+      <Location>
+        <X>16</X>
+        <Y>37</Y>
+      </Location>
+      <Size>
+        <X>3</X>
+        <Y>1</Y>
+      </Size>
+      <Parameters />
+    </Event>
+    <Event>
+      <Type>Valkyrie.Events.JumpEvent</Type>
+      <Activation>4</Activation>
+      <Dir>South</Dir>
+      <Location>
+        <X>20</X>
+        <Y>37</Y>
+      </Location>
+      <Size>
+        <X>2</X>
+        <Y>1</Y>
+      </Size>
+      <Parameters />
+    </Event>
+    <Event>
+      <Type>Valkyrie.Events.JumpEvent</Type>
+      <Activation>4</Activation>
+      <Dir>South</Dir>
+      <Location>
+        <X>20</X>
+        <Y>51</Y>
+      </Location>
+      <Size>
+        <X>2</X>
+        <Y>1</Y>
+      </Size>
+      <Parameters />
+    </Event>
+    <Event>
+      <Type>Valkyrie.Library.Events.EntryPointEvent</Type>
+      <Activation>16</Activation>
+      <Dir>Any</Dir>
+      <Location>
+        <X>18</X>
+        <Y>47</Y>
+      </Location>
+      <Size>
+        <X>1</X>
+        <Y>1</Y>
+      </Size>
+      <Parameters>
+        <Parameter>
+          <Name>Name</Name>
+          <Value>ViridianBottomPoint</Value>
+        </Parameter>
+      </Parameters>
+    </Event>
+    <Event>
+      <Type>Valkyrie.Library.Events.EntryPointEvent</Type>
+      <Activation>16</Activation>
+      <Dir>Any</Dir>
+      <Location>
+        <X>18</X>
+        <Y>41</Y>
+      </Location>
+      <Size>
+        <X>1</X>
+        <Y>1</Y>
+      </Size>
+      <Parameters>
+        <Parameter>
+          <Name>Name</Name>
+          <Value>ViridianTopPoint</Value>
+        </Parameter>
+      </Parameters>
     </Event>
   </Events>
   <AnimatedTiles>

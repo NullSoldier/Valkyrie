@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Gablarski.Messages;
-using ValkyrieLibrary.Core.Messages;
+using Valkyrie.Library.Core.Messages;
 using System.Drawing;
 
 namespace ValkyrieServerLibrary.Network.Messages.Valkyrie

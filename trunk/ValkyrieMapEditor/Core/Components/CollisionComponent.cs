@@ -5,9 +5,9 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ValkyrieLibrary.Core;
-using ValkyrieLibrary.Maps;
-using ValkyrieLibrary;
+using Valkyrie.Library.Core;
+using Valkyrie.Library.Maps;
+using Valkyrie.Library;
 
 namespace ValkyrieMapEditor.Core
 {

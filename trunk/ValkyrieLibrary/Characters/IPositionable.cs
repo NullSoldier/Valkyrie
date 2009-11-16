@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ValkyrieLibrary.Core;
+using Valkyrie.Library.Core;
 
-namespace ValkyrieLibrary.Characters
+namespace Valkyrie.Library.Characters
 {
 	public interface IPositionable
 	{

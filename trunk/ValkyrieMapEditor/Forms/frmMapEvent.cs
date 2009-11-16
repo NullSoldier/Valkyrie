@@ -6,10 +6,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using ValkyrieLibrary.Events;
-using ValkyrieLibrary.Characters;
+using Valkyrie.Library.Events;
+using Valkyrie.Library.Characters;
 using ValkyrieMapEditor.Properties;
-using ValkyrieLibrary;
+using Valkyrie.Library;
 
 namespace ValkyrieMapEditor.Forms
 {

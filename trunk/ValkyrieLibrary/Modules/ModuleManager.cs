@@ -3,38 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ValkyrieLibrary
+namespace Valkyrie.Library
 {
-    public class ModuleManager
-    {
-		public IModule CurrentModule
+	public class ModuleManager
+	{
+		public IModuleLibrary CurrentModule
 		{
 			get;
 			private set;
 		}
 
-        public readonly Dictionary<string, IModule> Modules;
-        
-        public ModuleManager()
-        {
-            this.Modules = new Dictionary<string, IModule>();
-        }
+		public readonly Dictionary<string, IModuleLibrary> Modules;
 
-        public void AddModule(IModule Module, string Name)
-        {
-            this.Modules.Add(Name, Module);
-        }
+		public ModuleManager ()
+		{
+			this.Modules = new Dictionary<string, IModuleLibrary>();
+		}
 
-        public void PushModuleToScreen(string name)
-        {
-            if (!this.Modules.ContainsKey(name))
-                throw new ArgumentException("That Module does not exist or is not loaded into the module cache.");
+		public void AddModule (IModuleLibrary Module, string Name)
+		{
+			this.Modules.Add(Name, Module);
+		}
 
-			if (this.CurrentModule != null)
+		public void PushModuleToScreen (string name)
+		{
+			if(!this.Modules.ContainsKey(name))
+				throw new ArgumentException("That Module does not exist or is not loaded into the module cache.");
+
+			if(this.CurrentModule != null)
 				this.CurrentModule.Deactivate();
 
 			this.CurrentModule = this.Modules[name];
 			this.CurrentModule.Activate();
-        }
-    }
+		}
+	}
 }

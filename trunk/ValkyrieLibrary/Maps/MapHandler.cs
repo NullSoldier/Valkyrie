@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using ValkyrieLibrary.Core;
+using Valkyrie.Library.Core;
 
-namespace ValkyrieLibrary.Maps
+namespace Valkyrie.Library.Maps
 {
 	public class MapHandler
 	{

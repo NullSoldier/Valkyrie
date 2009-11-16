@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using ValkyrieLibrary.Core;
+using Valkyrie.Library.Core;
 
-namespace ValkyrieLibrary.Characters
+namespace Valkyrie.Library.Characters
 {
 	[Flags]
 	public enum Directions

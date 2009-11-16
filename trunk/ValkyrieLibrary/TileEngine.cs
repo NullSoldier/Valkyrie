@@ -7,15 +7,15 @@ using System.Xml;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using ValkyrieLibrary.Characters;
-using ValkyrieLibrary.Collision;
-using ValkyrieLibrary.Core;
-using ValkyrieLibrary.Events;
-using ValkyrieLibrary.Maps;
-using ValkyrieLibrary.Input;
+using Valkyrie.Library.Characters;
+using Valkyrie.Library.Collision;
+using Valkyrie.Library.Core;
+using Valkyrie.Library.Events;
+using Valkyrie.Library.Maps;
+using Valkyrie.Library.Input;
 using Gablarski.Network;
 
-namespace ValkyrieLibrary
+namespace Valkyrie.Library
 {
 	public static class TileEngine
 	{
@@ -130,7 +130,7 @@ namespace ValkyrieLibrary
 
 		public static void Unload()
 		{
-			foreach (IModule module in TileEngine.ModuleManager.Modules.Values)
+			foreach (IModuleLibrary module in TileEngine.ModuleManager.Modules.Values)
 			{
 				module.Unload();
 			}
@@ -154,16 +154,22 @@ namespace ValkyrieLibrary
 			return new Point(x, y);
 		}
 
-		public static MapPoint GlobalTilePointToLocal(MapPoint localpoint)
+		public static MapPoint GlobalTilePointToLocal(MapPoint globalpoint)
 		{
-			Check.NullArgument (localpoint, "localpoint");
+			Check.NullArgument (globalpoint, "localpoint");
 
-            return localpoint - TileEngine.WorldManager.CurrentWorld.MapList[TileEngine.CurrentMapChunk.Name].MapLocation;
+            return globalpoint - TileEngine.WorldManager.CurrentWorld.MapList[TileEngine.CurrentMapChunk.Name].MapLocation;
 		}
 
 		private static void PlayerTileLocationChanged(object sender, EventArgs e)
 		{
-			TileEngine.ClearCurrentMapChunk();
+			if (TileEngine.Player.MapLocation.X < 0 ||
+				TileEngine.Player.MapLocation.X >= TileEngine.CurrentMapChunk.MapSize.X ||
+				TileEngine.Player.MapLocation.Y < 0 ||
+				TileEngine.Player.MapLocation.Y >= TileEngine.CurrentMapChunk.MapSize.Y)
+			{
+				TileEngine.ClearCurrentMapChunk();
+			}
 		}
 
 		public static void Update(GameTime time)
@@ -179,8 +185,8 @@ namespace ValkyrieLibrary
 
             foreach (var header in TileEngine.WorldManager.CurrentWorld.MapList.Values)
             {
-                if (header.Map.IsVisableToPlayer())
-                    header.Map.Update(time);
+                //if (header.Map.IsVisableToPlayer())
+                header.Map.Update(time);
             }
 		}
 
@@ -206,7 +212,7 @@ namespace ValkyrieLibrary
 
             foreach (var header in TileEngine.WorldManager.CurrentWorld.MapList.Values)
             {
-                if (!header.Map.IsVisableToPlayer())
+                if (!header.IsVisableToPlayer(TileEngine.Camera))
                     continue;
 
                 TileEngine.DrawLayerMap(spriteBatch, header, layer);
@@ -222,6 +228,9 @@ namespace ValkyrieLibrary
 
             foreach (var header in TileEngine.WorldManager.CurrentWorld.MapList.Values)
 			{
+				if(!header.IsVisableToPlayer(TileEngine.Camera))
+					continue;
+
 				TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.UnderLayer);
                 TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.BaseLayer);
                 TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.MiddleLayer);
@@ -237,7 +246,7 @@ namespace ValkyrieLibrary
 
             foreach (var header in TileEngine.WorldManager.CurrentWorld.MapList.Values)
 			{
-                if (!header.Map.IsVisableToPlayer())
+				if(!header.IsVisableToPlayer(TileEngine.Camera))
                     continue;
 
 				TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.UnderLayer);
@@ -254,7 +263,7 @@ namespace ValkyrieLibrary
 
                 foreach (var header in TileEngine.WorldManager.CurrentWorld.MapList.Values)
 			    {
-                    if (!header.Map.IsVisableToPlayer())
+					if(!header.IsVisableToPlayer(TileEngine.Camera))
                         continue;
 
                     TileEngine.DrawLayerMap(spriteBatch, header, MapLayers.TopLayer);

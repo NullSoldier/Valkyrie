@@ -1,264 +1,349 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ValkyrieLibrary.Characters;
-using Microsoft.Xna.Framework;
-using ValkyrieLibrary.Core.Collections;
-using ValkyrieLibrary.Core.Messages;
-using Valkyrie.Characters;
-using System.Diagnostics;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using Valkyrie.Library.Characters;
+//using Valkyrie.Library.Core.Collections;
+//using Microsoft.Xna.Framework;
+//using System.Diagnostics;
+//using Valkyrie.Library.Core;
+//using Valkyrie.Library;
 
-namespace ValkyrieLibrary.Core
-{
-	public class PokeMovementManager
-		: IMovementManager
-	{
-		public OrderedDictionary <IMapObject, MovementType> MovableCache = new OrderedDictionary <IMapObject, MovementType> ();
+//namespace Valkyrie.Core
+//{
+//    public class PokeMovementManager
+//        : IMovementManager
+//    {
+//        private OrderedDictionary<IMapObject, MovementType> MovableCache = new OrderedDictionary<IMapObject, MovementType>();
+//        private object cacheLock = new object();
 
-		public void RemoveMapObject(IMapObject value)
-		{
-			this.MovableCache.Remove(value);
-		}
+//        public void AddToCache(IMapObject movable, MovementType type)
+//        {
+//            lock(this.cacheLock)
+//            {
+//                this.MovableCache.Add(movable, type);
+//            }
+//        }
 
-		public void AddMapObject(IMapObject value, MovementType movement)
-		{
-			this.MovableCache.Add(value, movement);
-			//if (this.MovableCache.ContainsKey(value))
-			//	this.MovableCache[value] = movement;
-		}
-		#region IMovementManager Members
+//        public void RemoveFromCache (IMapObject movable)
+//        {
+//            lock(this.cacheLock)
+//            {
+//                this.MovableCache.Remove(movable);
+//            }
+//        }
 
-		public void Move(IMapObject movable, ScreenPoint destination)
-		{
-			this.Move(movable, destination, false);
-		}
+//        #region IMovementManager Members
 
-		public void Move(IMapObject movable, ScreenPoint destination, bool fireevent)
-		{
-			if (movable.IsMoving)
-			{
-				this.EndMove(movable, fireevent);
-				this.RemoveMapObject(movable);
-			}
+//        public void Move(IMapObject movable, ScreenPoint destination)
+//        {
+//            this.Move(movable, destination, true);
+//        }
 
-			this.RemoveMapObject(movable);
-			this.AddMapObject(movable, MovementType.Destination);
+//        public void Move(IMapObject movable, ScreenPoint destination, bool fireevent)
+//        {
+//            if (movable.IsMoving || this.MovableCache.ContainsKey(movable))
+//                this.EndMove(movable, fireevent);
 
-			movable.IsMoving = true;
-			movable.OnStartedMoving(this, EventArgs.Empty);
-			movable.EndAfterMovementReached = true;
-			movable.MovingDestination = destination;
-		}
+//            movable.IgnoreMoveInput = true;
+//            movable.IsMoving = true;
 
-		public void BeginMove(IMapObject movable, Directions direction)
-		{
-			if (movable.EndAfterMovementReached)
-				return;
+//            this.AddToCache(movable, MovementType.Destination);
 
-			if ((movable.Direction == direction && movable.IsMoving))
-				return; // Already going in that direction
+//            this.InternalMove(movable, destination);
 
-			if (movable.IsMoving)
-			{
-				this.EndMove(movable, false);
-				this.RemoveMapObject(movable);
-			}
+//            movable.OnStartedMoving(this, EventArgs.Empty);
+//        }
+
+//        private void InternalMove(IMapObject movable, ScreenPoint destination)
+//        {
+//            movable.MovingDestination = destination;
+//        }
+
+//        public void BeginMove(IMapObject movable, Directions direction)
+//        {
+//            if (movable.IsMoving)
+//            {
+//                if (movable.Direction == direction)
+//                    return;
+
+//                this.EndMove(movable, true);
+//                //movable.IsMoving = false;
+//                //movable.IgnoreMoveInput = false;
+
+//                //this.RemoveFromCache(movable);
+
+//                //movable.OnStoppedMoving(this, EventArgs.Empty);
+//            }
+
+//            if (this.MovableCache.ContainsKey(movable))
+//                return;
+
+//            movable.IsMoving = true;
+//            movable.Direction = direction;
 			
-			movable.IsMoving = true;
-			movable.Direction = direction;
-			movable.EndAfterMovementReached = true;
-
-			this.AddMapObject(movable, MovementType.TileBased);
-			movable.OnStartedMoving(this, EventArgs.Empty);
-		}
-
-		public void EndMove(IMapObject movable, bool fireEvent)
-		{
-			if (this.MovableCache.ContainsKey(movable))
-			{
-
-				if (this.MovableCache[movable] == MovementType.TileBased)
-				{
-					this.MovableCache[movable] = MovementType.Destination;
-
-					movable.EndAfterMovementReached = true;
-					movable.MovingDestination = this.GetNextScreenPointTile(movable);
-
-					return;
-				}
-			}
-
-			if ((movable.Location.Y % 32) != 0)
-				Debugger.Break();
-
-			movable.IsMoving = false;
-			movable.EndAfterMovementReached = false;
-			if (fireEvent)
-				movable.OnStoppedMoving(this, EventArgs.Empty);
-		}
-
-		public void Update(GameTime gameTime)
-		{
-			List<IMapObject> tmp = new List<IMapObject>();
-
-			int count = this.MovableCache.Count();
-
-			for (int i = 0; i < count; i++)
-			{
-				IMapObject movable = this.MovableCache.Keys.ElementAt(i);
-
-				if (!movable.IsMoving)
-				{
-					tmp.Add(movable);
-					continue;
-				}
-
-				movable.LastMoveTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-				bool result = true;
-				if (movable.LastMoveTime >= movable.MoveDelay)
-				{
-					movable.LastMoveTime = 0;
+//            this.InternalMove(movable, this.GetDestinationFromDirection(movable, movable.Direction));
 			
-					// Check movement and get the result, false = stopped moving for some reason, true = moved successfully
-					if (this.MovableCache[movable] == MovementType.Destination)
-						result = this.MoveDestinationBased(movable, gameTime);
-					else
-						result = this.MoveTileBased(movable, gameTime);
+//            this.AddToCache(movable, MovementType.TileBased);
 
-					if(!result) // Remove from the cache because it stopped moving
-						tmp.Add(movable);
-				}
-			}
+//            movable.OnStartedMoving(this, EventArgs.Empty);
+//        }
 
-			// Remove them if they stopped moving this time
-			foreach(var tmpObject in tmp)
-				this.RemoveMapObject(tmpObject);
-		}
+//        public void EndMove(IMapObject movable, bool fireevent)
+//        {
+//            if (this.MovableCache.ContainsKey(movable) &&
+//                this.MovableCache[movable] == MovementType.TileBased &&
+//                movable.IsMoving)
+//            {
+//                ScreenPoint destination = this.GetNextScreenPointTile(movable);
+//                if (TileEngine.CollisionManager.CheckCollision(movable, destination))
+//                {
+//                    movable.IgnoreMoveInput = true;
 
-		#endregion
+//                    movable.MovingDestination = destination;
+//                    this.MovableCache[movable] = MovementType.Destination;
 
-		public bool MoveTileBased(IMapObject movable, GameTime gameTime)
-		{
-			float newx = movable.Location.X;
-			float newy = movable.Location.Y;
+//                    return;
+//                }
+//            }
 
-			float checkx = 0;
-			float checky = 0;
+//            if ((movable.Location.Y % 32) != 0)
+//                movable.IsMoving = false;
 
-			if (movable.Direction == Directions.North)
-			{
-				newy -= movable.Speed;
-			}
-			if (movable.Direction == Directions.South)
-			{
-				newy += movable.Speed;
-				checky += TileEngine.TileSize;
-			}
-			if (movable.Direction == Directions.West)
-			{
-				newx -= movable.Speed;
-			}
-			if (movable.Direction == Directions.East)
-			{
-				newx += movable.Speed;
-				checkx += 32; 
-			}
+//            movable.IsMoving = false;
+//            movable.IgnoreMoveInput = false;
+			
+//            this.RemoveFromCache(movable);
 
-			ScreenPoint testPoint = new ScreenPoint((int)(newx + checkx), (int)(newy + checky));
+//            if (fireevent)
+//                movable.OnStoppedMoving(this, EventArgs.Empty);
+//        }
 
-			if (!TileEngine.CollisionManager.CheckCollision(movable, testPoint))
-			{
-				this.EndMove(movable, true);
-				movable.OnCollided(this, EventArgs.Empty);
-				return false;
-			}
+//        public void EndMoveFunctional (IMapObject movable)
+//        {
+//            movable.IsMoving = false;
+//            movable.IgnoreMoveInput = false;
 
-			movable.Location = new ScreenPoint((int)newx, (int)newy);
+//            this.RemoveFromCache(movable);
+//        }
 
-			if (movable.MapLocation != movable.LastMapLocation)
-				movable.OnTileLocationChanged(this, EventArgs.Empty);
+//        public void Update(GameTime time)
+//        {
+//            List<IMapObject> toberemoved = new List<IMapObject>();
+//            List<IMapObject> collided = new List<IMapObject>();
 
-			return true;
-		}
+//            lock (this.cacheLock)
+//            {
+				
+//                int count = this.MovableCache.Count;
 
-		public bool MoveDestinationBased(IMapObject movable, GameTime gameTime)
-		{
-			float x = movable.Location.X;
-			float y = movable.Location.Y;
+//                for(int i=0; i < count; i++)
+//                {
+//                    IMapObject movable = this.MovableCache.Keys.ElementAt(i);
+//                    MovementType movetype = this.MovableCache[movable];
 
-			if (movable.Location.X < movable.MovingDestination.X)
-			{
-				if (x + movable.Speed > movable.MovingDestination.X)
-					x = movable.MovingDestination.X;
-				else
-					x += movable.Speed;
-			}
-			else if (movable.Location.X > movable.MovingDestination.X)
-			{
-				if (x - movable.Speed < movable.MovingDestination.X)
-					x = movable.MovingDestination.X;
-				else
-					x -= movable.Speed;
-			}
+//                    movable.LastMoveTime += time.ElapsedGameTime.Milliseconds;
 
-			if (movable.Location.Y < movable.MovingDestination.Y)
-			{
-				if (y + movable.Speed > movable.MovingDestination.Y)
-					y = movable.MovingDestination.Y;
-				else
-					y += movable.Speed;
-			}
-			else if (movable.Location.Y > movable.MovingDestination.Y)
-			{
-				if (y - movable.Speed < movable.MovingDestination.Y)
-					y = movable.MovingDestination.Y;
-				else
-					y -= movable.Speed;
-			}
+//                    if (movable.LastMoveTime >= movable.MoveDelay)
+//                    {
+//                        movable.LastMoveTime = 0;
 
-			if (!TileEngine.CollisionManager.CheckCollision(movable, movable.MovingDestination))
-			{
-				movable.OnCollided(this, EventArgs.Empty);
+//                        if (movetype == MovementType.TileBased)
+//                        {
+//                            if (!MoveTileBased(movable, collided))
+//                                toberemoved.Add(movable);
+//                        }
+//                        else
+//                        {
+//                            if (!MoveDestinationBased(movable, collided))
+//                                toberemoved.Add(movable);
+//                        }
+//                    }
+//                }
 
-				this.EndMove(movable, true);
-				return false;
-			}
-			else
-			{
-				movable.Location = new ScreenPoint((int)x, (int)y);
+//                foreach (var movable in toberemoved)
+//                {
+//                    if (collided.Contains(movable))
+//                    {
+//                        movable.IsMoving = false;
+//                        movable.IgnoreMoveInput = false;
 
-				if (movable.MapLocation != movable.LastMapLocation)
-					movable.OnTileLocationChanged(this, EventArgs.Empty);
-			}
+//                        this.RemoveFromCache(movable);
 
-			// Reached destination
-			if (movable.Location == movable.MovingDestination)
-			{
-				this.EndMove(movable, true);
-				return false;
-			}
+//                        movable.OnStoppedMoving(this, EventArgs.Empty);
+//                    }
+//                    this.EndMove(movable, true);
+//                }
 
-			return true;
-		}
+//                foreach (var movable in collided)
+//                    movable.OnCollided(this, EventArgs.Empty);
 
-		private ScreenPoint GetNextScreenPointTile(IMapObject movable)
-		{
-			float x = movable.Location.X;
-			float y = movable.Location.Y;
+				
+//            }
+//        }
 
-			if (movable.Direction == Directions.North)
-				y = (movable.Location.Y / 32) * 32;
-			else if(movable.Direction == Directions.South)
-				y = ((movable.Location.Y + 32) / 32) * 32;
+//        private bool MoveDestinationBased(IMapObject movable, List<IMapObject> collided)
+//        {
+//            bool movedok = true;
 
-			if (movable.Direction == Directions.East)
-				x = ((movable.Location.X + 32) / 32) * 32;
-			else if(movable.Direction == Directions.West)
-				x = (movable.Location.X / 32) * 32;
+//            float x = movable.Location.X;
+//            float y = movable.Location.Y;
 
-			return new ScreenPoint((int)x, (int)y);
-		}
-	}
-}
+//            if (x < movable.MovingDestination.X)
+//            {
+//                if (x + movable.Speed > movable.MovingDestination.X)
+//                    x = movable.MovingDestination.X;
+//                else
+//                    x += movable.Speed;
+//            }
+//            else if (x > movable.MovingDestination.X)
+//            {
+//                if (x + movable.Speed < movable.MovingDestination.X)
+//                    x = movable.MovingDestination.X;
+//                else
+//                    x -= movable.Speed;
+//            }
+
+//            if (y > movable.MovingDestination.Y)
+//            {
+//                if (y - movable.Speed < movable.MovingDestination.Y)
+//                    y = movable.MovingDestination.Y;
+//                else
+//                    y -= movable.Speed;
+//            }
+//            else if (y < movable.MovingDestination.Y)
+//            {
+//                if (y + movable.Speed > movable.MovingDestination.Y)
+//                    y = movable.MovingDestination.Y;
+//                else
+//                    y += movable.Speed;
+//            }
+
+//            ScreenPoint destination = new ScreenPoint((int)x, (int)y);
+
+//            ScreenPoint collision = new ScreenPoint(destination.X, destination.Y);
+
+//            if (movable.Direction == Directions.South)
+//                collision = new ScreenPoint(destination.X, destination.Y + 32);
+//            else if (movable.Direction == Directions.East)
+//                collision = new ScreenPoint(destination.X + 32, destination.Y);
+
+//            movable.Location = destination;
+
+//            if (destination == movable.MovingDestination)
+//                movedok = false;						
+
+//            return movedok;
+//        }
+
+//        private bool MoveTileBased(IMapObject movable, List<IMapObject> collided)
+//        {
+//            bool movedok = true;
+//            float x = movable.Location.X;
+//            float y = movable.Location.Y;
+
+//            #region Destination calculation
+//            if (movable.Direction == Directions.North)
+//            {
+//                y -= movable.Speed;
+
+//                if (y < movable.MovingDestination.Y)
+//                    y = movable.MovingDestination.Y;
+//            }
+//            else if (movable.Direction == Directions.South)
+//            {
+//                y += movable.Speed;
+
+//                if (y > movable.MovingDestination.Y)
+//                    y = movable.MovingDestination.Y;
+//            }
+//            else if (movable.Direction == Directions.East)
+//            {
+//                x += movable.Speed;
+
+//                if (x > movable.MovingDestination.X)
+//                    x = movable.MovingDestination.X;
+//            }
+//            else if (movable.Direction == Directions.West)
+//            {
+//                x -= movable.Speed;
+
+//                if (x < movable.MovingDestination.X)
+//                    x = movable.MovingDestination.X;
+//            }
+//            #endregion
+
+//            ScreenPoint destination = new ScreenPoint((int)x, (int)y);
+
+//            ScreenPoint collision = new ScreenPoint(destination.X, destination.Y);
+
+//            if (movable.Direction == Directions.South)
+//                collision = new ScreenPoint(destination.X, destination.Y + 32 - (int)movable.Speed);
+//            else if (movable.Direction == Directions.East)
+//                collision = new ScreenPoint(destination.X + 32 - (int)movable.Speed, destination.Y);
+
+//            if (!TileEngine.CollisionManager.CheckCollision(movable, collision))
+//            {
+//                movable.IsMoving = false;
+//                movedok = false;
+
+//                collided.Add(movable);
+//            }
+//            else
+//            {
+//                movable.Location = destination;
+
+//                if (movable.MapLocation != movable.LastMapLocation)
+//                    movable.OnTileLocationChanged(this, EventArgs.Empty);
+
+//                if (movable.Location == movable.MovingDestination)
+//                {
+//                    movable.MovingDestination = this.GetDestinationFromDirection(movable, movable.Direction);
+//                }
+//            }
+
+//            return movedok;
+//        }
+
+//        #endregion
+
+//        private ScreenPoint GetDestinationFromDirection(IMapObject movable, Directions direction)
+//        {
+//            return this.GetDestinationFromDirection(movable.Location, direction);
+//        }
+
+//        private ScreenPoint GetDestinationFromDirection(ScreenPoint source, Directions Direction)
+//        {
+//            ScreenPoint newSource = new ScreenPoint(source.X, source.Y);
+
+//            if (Direction == Directions.North)
+//                newSource = new ScreenPoint(newSource.X, newSource.Y - 32);
+//            else if (Direction == Directions.South)
+//                newSource = new ScreenPoint(newSource.X, newSource.Y + 32);
+//            else if (Direction == Directions.East)
+//                newSource = new ScreenPoint(newSource.X + 32, newSource.Y);
+//            else if (Direction == Directions.West)
+//                newSource = new ScreenPoint(newSource.X - 32, newSource.Y);
+
+//            return newSource;
+//        }
+
+//        private ScreenPoint GetNextScreenPointTile(IMapObject movable)
+//        {
+//            float x = movable.Location.X;
+//            float y = movable.Location.Y;
+
+//            if (movable.Direction == Directions.North)
+//                y = (movable.Location.Y / 32) * 32;
+//            else if (movable.Direction == Directions.South)
+//                y = ((movable.Location.Y + 32) / 32) * 32;
+
+//            if (movable.Direction == Directions.East)
+//                x = ((movable.Location.X + 32) / 32) * 32;
+//            else if (movable.Direction == Directions.West)
+//                x = (movable.Location.X / 32) * 32;
+
+//            return new ScreenPoint((int)x, (int)y);
+//        }
+//    }
+//}

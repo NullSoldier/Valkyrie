@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ValkyrieLibrary.Collision;
-using ValkyrieLibrary.Characters;
+using Valkyrie.Library.Collision;
+using Valkyrie.Library.Characters;
 
-namespace ValkyrieLibrary.Core
+namespace Valkyrie.Library.Core
 {
 	public interface IMapObject
 		: ICollidable, IMovable, IPositionable

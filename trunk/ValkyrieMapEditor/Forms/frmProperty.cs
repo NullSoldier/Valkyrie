@@ -5,12 +5,12 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using ValkyrieLibrary.Core;
+using Valkyrie.Library.Core;
 using Microsoft.Xna.Framework;
 using System.IO;
 using System.Drawing;
-using ValkyrieLibrary.Maps;
-using ValkyrieLibrary;
+using Valkyrie.Library.Maps;
+using Valkyrie.Library;
 
 namespace ValkyrieMapEditor
 {

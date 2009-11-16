@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 
-namespace ValkyrieLibrary
+namespace Valkyrie
 {
     static class Program
     {

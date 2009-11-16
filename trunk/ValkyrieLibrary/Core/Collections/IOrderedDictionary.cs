@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
-namespace ValkyrieLibrary.Core.Collections
+namespace Valkyrie.Library.Core.Collections
 {
 	/// <summary>
 	/// Represents a generic collection of key/value pairs that are ordered independently of the key and value.

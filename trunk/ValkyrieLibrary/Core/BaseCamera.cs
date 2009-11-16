@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ValkyrieLibrary.Core;
-using ValkyrieLibrary.Characters;
+using Valkyrie.Library.Core;
+using Valkyrie.Library.Characters;
 using System.Threading;
-using ValkyrieLibrary.Camera;
+using Valkyrie.Library.Camera;
 
-namespace ValkyrieLibrary
+namespace Valkyrie.Library
 {
 	public class BaseCamera
 	{

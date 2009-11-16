@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ValkyrieLibrary.Core;
-using ValkyrieLibrary.Collision;
+using Valkyrie.Library.Core;
+using Valkyrie.Library.Collision;
 
-namespace ValkyrieLibrary.Characters
+namespace Valkyrie.Library.Characters
 {
 	public interface IMovable
 	{

@@ -1,4 +1,5 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectGuid>{D79942AD-2D2A-4DE4-A4C8-3D8243214961}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -6,10 +7,10 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ValkyrieLibrary</RootNamespace>
+    <RootNamespace>Valkyrie.Library</RootNamespace>
     <AssemblyName>valkyrie</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <XnaFrameworkVersion>v3.0</XnaFrameworkVersion>
+    <XnaFrameworkVersion>v3.1</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
     <XnaCrossPlatformGroupID>8009e1d5-9f09-4491-85c7-19ea13497a3d</XnaCrossPlatformGroupID>
     <ApplicationIcon>Game.ico</ApplicationIcon>
@@ -18,7 +19,12 @@
     <ManifestCertificateThumbprint>DFA866A159CAD0BD83445D1E6A934DB1E71EF6F1</ManifestCertificateThumbprint>
     <ManifestKeyFile>Valkyrie_TemporaryKey.pfx</ManifestKeyFile>
     <GenerateManifests>true</GenerateManifests>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
     <PublishUrl>C:\po\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -63,14 +69,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DirectShowLib-2005, Version=2.0.0.0, Culture=neutral, PublicKeyToken=67e7b740cdfc2d3f, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.Xna.Framework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
-      <Private>False</Private>
-      <SpecificVersion>True</SpecificVersion>
-    </Reference>
-    <Reference Include="Microsoft.Xna.Framework.Game, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=MSIL">
-      <Private>False</Private>
-      <SpecificVersion>True</SpecificVersion>
-    </Reference>
+    <Reference Include="Microsoft.Xna.Framework, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d" />
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d" />
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
@@ -93,24 +93,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Characters\PokeCharacter.cs" />
-    <Compile Include="Core\PokeCamera.cs" />
-    <Compile Include="Core\PokeCollisionManager.cs" />
     <Compile Include="Core\Characters\PokePlayer.cs" />
-    <Compile Include="Core\PokeMessage.cs" />
     <Compile Include="Core\PokeMovementManager.cs" />
-    <Compile Include="Core\PokeMovementManagerNew.cs" />
     <Compile Include="Events\CinematicsTestEvent.cs" />
     <Compile Include="Events\JumpEvent.cs" />
     <Compile Include="Events\JumpPadEvent.cs" />
     <Compile Include="Events\LoadEvent.cs" />
     <Compile Include="Events\RickRollEvent.cs" />
-    <Compile Include="Events\SignPostEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="PokeGame.cs" />
-    <Compile Include="States\GameModule.cs" />
-    <Compile Include="States\LoginModule.cs" />
-    <Compile Include="States\MenuModule.cs" />
+    <Compile Include="Providers\PokeSoundProvider.cs" />
+    <Compile Include="Providers\PokeNetworkProvider.cs" />
+    <Compile Include="Modules\GameModule.cs" />
+    <Compile Include="Modules\LoginModule.cs" />
+    <Compile Include="Modules\MenuModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Content.contentproj" />
@@ -240,13 +237,17 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Xna.Framework.3.0">
+    <BootstrapperPackage Include="Microsoft.Xna.Framework.3.1">
       <Visible>False</Visible>
-      <ProductName>Microsoft XNA Framework Redistributable 3.0</ProductName>
+      <ProductName>Microsoft XNA Framework Redistributable 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ValkyrieEngine\ValkyrieEngine.csproj">
+      <Project>{12722697-BA6D-4EED-8E90-50C6094AA407}</Project>
+      <Name>ValkyrieEngine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ValkyrieLibrary\ValkyrieLibrary.csproj">
       <Project>{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}</Project>
       <Name>ValkyrieLibrary</Name>
@@ -278,6 +279,9 @@ xcopy "$(ProjectDir)\Maps" "$(TargetDir)\Maps" /S /Y /I
 
 xcopy "$(ProjectDir)\Graphics" "$(SolutionDir)ValkyrieMapEditor\$(OutDir)\Graphics" /S /Y /I
 
-xcopy "$(TargetPath)" "$(SolutionDir)ValkyrieMapEditor\$(OutDir)" /S /Y /I</PostBuildEvent>
+xcopy "$(TargetPath)" "$(SolutionDir)ValkyrieMapEditor\$(OutDir)" /S /Y /I
+
+xcopy "$(ProjectDir)\Maps" "$(SolutionDir)ValkyrieGameServer\$(OutDir)\Maps" /S /Y /I
+xcopy "$(ProjectDir)\Data\PokeWorld.xml" "$(SolutionDir)ValkyrieGameServer\$(OutDir)\Maps" /S /Y /I</PostBuildEvent>
   </PropertyGroup>
 </Project>

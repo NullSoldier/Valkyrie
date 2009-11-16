@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using Microsoft.Xna.Framework.Content;
 
-namespace ValkyrieLibrary.Core
+namespace Valkyrie.Library.Core
 {
 	public class TextureManager
 	{

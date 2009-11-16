@@ -6,9 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using ValkyrieLibrary.Maps;
-using ValkyrieLibrary.Animation;
-using ValkyrieLibrary;
+using Valkyrie.Library.Maps;
+using Valkyrie.Library.Animation;
+using Valkyrie.Library;
 
 namespace ValkyrieMapEditor.Forms
 {

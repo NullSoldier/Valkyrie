@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Valkyrie.Engine.Camera;
+using Valkyrie.Engine;
 
-namespace ValkyrieLibrary.Camera
+namespace Valkyrie.Library.Camera
 {
 	public class QuakeEffect
 		: ICameraEffect

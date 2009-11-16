@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using System.Xml;
-using ValkyrieLibrary.Core;
-using ValkyrieLibrary.Characters;
+using Valkyrie.Library.Core;
+using Valkyrie.Library.Characters;
 
-namespace ValkyrieLibrary.Events
+namespace Valkyrie.Library.Events
 {
 	public interface IMapEvent
 		: ICloneable

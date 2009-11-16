@@ -8,11 +8,11 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using ValkyrieWorldEditor.Core;
-using ValkyrieLibrary.Core;
-using ValkyrieLibrary.Maps;
-using ValkyrieLibrary;
+using Valkyrie.Library.Core;
+using Valkyrie.Library.Maps;
+using Valkyrie.Library;
 using System.Reflection;
-using ValkyrieLibrary.Events;
+using Valkyrie.Library.Events;
 
 namespace ValkyrieWorldEditor.Forms
 {

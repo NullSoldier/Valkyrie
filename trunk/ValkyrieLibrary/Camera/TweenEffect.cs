@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
-using ValkyrieLibrary.Core;
+using Valkyrie.Library.Core;
+using Valkyrie.Engine.Camera;
+using Valkyrie.Engine;
+using Valkyrie.Engine.Core;
 
-namespace ValkyrieLibrary.Camera
+namespace Valkyrie.Library.Camera
 {
 	public class TweenEffect
 		: ICameraEffect

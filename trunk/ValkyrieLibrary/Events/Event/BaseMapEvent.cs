@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ValkyrieLibrary.Core;
-using ValkyrieLibrary.Characters;
+using Valkyrie.Library.Core;
+using Valkyrie.Library.Characters;
 using Microsoft.Xna.Framework;
 
-namespace ValkyrieLibrary.Events
+namespace Valkyrie.Library.Events
 {
 	/*
 	public abstract class BaseMapEvent

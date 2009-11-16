@@ -7,9 +7,9 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using ValkyrieLibrary.Core;
-using ValkyrieLibrary.Maps;
-using ValkyrieLibrary;
+using Valkyrie.Library.Core;
+using Valkyrie.Library.Maps;
+using Valkyrie.Library;
 
 namespace ValkyrieMapEditor.Core
 {
@@ -79,8 +79,9 @@ namespace ValkyrieMapEditor.Core
                 if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed && mouseState.X > 0 && mouseState.Y > 0)
                 {
                     MapPoint tileLocation = new MapPoint((mouseState.X - (int)TileEngine.Camera.MapOffset.X) / 32, (mouseState.Y - (int)TileEngine.Camera.MapOffset.Y) / 32);
+					MapHeader header = TileEngine.WorldManager.CurrentWorld.MapList[TileEngine.CurrentMapChunk.Name];
 
-                    if (TileEngine.CurrentMapChunk.TilePointInMapLocal(tileLocation))
+					if (header.TilePointInMapLocal(tileLocation))
                     {
                         for (int y = 0; y <= MapEditorManager.SelectedTilesRect.Height; y++)
                         {
@@ -89,7 +90,7 @@ namespace ValkyrieMapEditor.Core
                                 MapPoint tilesheetPoint = new MapPoint(MapEditorManager.SelectedTilesRect.X + x, MapEditorManager.SelectedTilesRect.Y + y);
                                 MapPoint point = new MapPoint(tileLocation.X + x, tileLocation.Y + y);
 
-                                if (TileEngine.CurrentMapChunk.TilePointInMapLocal(point))
+                                if (header.TilePointInMapLocal(point))
                                     TileEngine.CurrentMapChunk.SetData(MapEditorManager.CurrentLayer, point, TileEngine.CurrentMapChunk.GetTileSetValue(tilesheetPoint));
                             }
                         }

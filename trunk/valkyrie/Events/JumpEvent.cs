@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ValkyrieLibrary.Characters;
-using ValkyrieLibrary.Events;
+using Valkyrie.Library.Events;
 using Valkyrie.Characters;
 using Microsoft.Xna.Framework;
-using ValkyrieLibrary;
-using ValkyrieLibrary.Core;
+using Valkyrie.Library;
+using Valkyrie.Library.Core;
+using Valkyrie.Engine.Events;
+using Valkyrie.Engine.Characters;
 
 namespace Valkyrie.Events
 {
-	
 	public class JumpEvent
 		: IMapEvent
 	{
@@ -21,33 +21,22 @@ namespace Valkyrie.Events
 
 		public Dictionary<string, string> Parameters { get; set; }
 
-		public string GetStringType()
+		public string GetStringType ()
 		{
 			return "Jump";
 		}
 
-		public void Trigger(BaseCharacter character)
+		public void Trigger (BaseCharacter character)
 		{
-			if (!(character is PokePlayer))
-				return;
-
-			PokePlayer player = (PokePlayer)character;
-			player.IgnoreMoveInput = true;
-			player.StartedMoving += this.Event_StartedMoving;
-			player.StoppedMoving += this.Event_StoppedMoving;
-			
-			ScreenPoint dest = new ScreenPoint(TileEngine.Player.Location.X, TileEngine.Player.Location.Y);
-            ScreenPoint newDest = dest + (new ScreenPoint(player.GetLookPoint().ToMapPoint().X * 2, player.GetLookPoint().ToMapPoint().Y) * 2);
-
-			TileEngine.MovementManager.Move(character, newDest, false);
+			throw new NotImplementedException();
 		}
 
-		public IEnumerable<string> GetParameterNames()
+		public IEnumerable<string> GetParameterNames ()
 		{
 			return new string[0];
 		}
 
-		public object Clone()
+		public object Clone ()
 		{
 			JumpEvent clone = new JumpEvent();
 			clone.Rectangle = this.Rectangle;
@@ -58,22 +47,14 @@ namespace Valkyrie.Events
 			return clone;
 		}
 
-		public void Event_StartedMoving(object sender, EventArgs e)
+		public void Event_StartedMoving (object sender, EventArgs e)
 		{
-			PokePlayer player = (PokePlayer)sender;
-			player.Density = 0;
-			player.CurrentAnimationName = "Jump";
+			throw new NotImplementedException();
 		}
 
-		public void Event_StoppedMoving(object sender, EventArgs e)
+		public void Event_StoppedMoving (object sender, EventArgs e)
 		{
-			PokePlayer player = (PokePlayer)sender;
-			player.Density = 1;
-			player.CurrentAnimationName = player.Direction.ToString();
-			player.IgnoreMoveInput = false;
-
-			player.StartedMoving -= this.Event_StartedMoving;
-			player.StoppedMoving -= this.Event_StoppedMoving;
+			throw new NotImplementedException();
 		}
 	}
 }

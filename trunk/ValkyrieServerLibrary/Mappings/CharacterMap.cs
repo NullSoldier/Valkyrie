@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ValkyrieServerLibrary.Entities;
 using FluentNHibernate.Mapping;
-using ValkyrieLibrary.Characters;
+using Valkyrie.Library.Characters;
 
 namespace ValkyrieServerLibrary.Mappings
 {
@@ -23,6 +23,7 @@ namespace ValkyrieServerLibrary.Mappings
 			Map(c => c.MapY, "`characterMapY`");
 
 			Map(c => c.TileSheet, "`characterTileSheet`");
+			Map(c => c.WorldName, "`characterWorld`");
 		}
 	}
 }
