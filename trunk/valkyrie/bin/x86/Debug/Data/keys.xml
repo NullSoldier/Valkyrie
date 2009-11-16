@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<keys>
+
+  <Key>
+    <KeyPressed>90</KeyPressed>
+    <Action>AButton</Action>
+    <Control>0</Control>
+    <Alt>0</Alt>
+    <Shift>0</Shift>
+  </Key>
+
+  <Key>
+    <KeyPressed>88</KeyPressed>
+    <Action>BButton</Action>
+    <Control>0</Control>
+    <Alt>0</Alt>
+    <Shift>0</Shift>
+  </Key>
+   
+</keys>

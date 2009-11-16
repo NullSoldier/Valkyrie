@@ -1,0 +1,15 @@
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieNetwork\bin\x86\Debug\ValkyrieNetwork.dll
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieNetwork\bin\x86\Debug\ValkyrieNetwork.pdb
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieNetwork\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieNetwork\obj\x86\Debug\ValkyrieNetwork.dll
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieNetwork\obj\x86\Debug\ValkyrieNetwork.pdb
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\ValkyrieNetwork\bin\x86\Debug\ValkyrieNetwork.dll
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\ValkyrieNetwork\bin\x86\Debug\ValkyrieNetwork.pdb
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\ValkyrieNetwork\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\ValkyrieNetwork\obj\x86\Debug\ValkyrieNetwork.dll
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\ValkyrieNetwork\obj\x86\Debug\ValkyrieNetwork.pdb
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\ValkyrieNetwork\bin\x86\Debug\ValkyrieNetwork.dll
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\ValkyrieNetwork\bin\x86\Debug\ValkyrieNetwork.pdb
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\ValkyrieNetwork\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\ValkyrieNetwork\obj\x86\Debug\ValkyrieNetwork.dll
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\ValkyrieNetwork\obj\x86\Debug\ValkyrieNetwork.pdb

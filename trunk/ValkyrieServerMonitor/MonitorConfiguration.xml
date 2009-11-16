@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Configuration>
+  <TimeFormat>t</TimeFormat>
+  <RetryTime>300</RetryTime>
+  <GameServerAddress>127.0.0.2</GameServerAddress>
+  <ChatServerAddress>127.0.0.1</ChatServerAddress>
+</Configuration>

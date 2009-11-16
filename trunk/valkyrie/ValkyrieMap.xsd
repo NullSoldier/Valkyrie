@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema id="ValkyrieMaps"
+				elementFormDefault="qualified"
+				xmlns:mstns="http://www.nullsoldier.com"
+				xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	
+	<xs:element name="Map" maxOccurs="1" minOccurs="1">
+		<xs:complexType>
+			<xs:sequence>
+				
+				<xs:element name="Name">
+					<xs:simpleType>
+						<xs:restriction base="xs:string"/>
+					</xs:simpleType>
+				</xs:element>
+				
+				<xs:element name="TileSet">
+					
+				</xs:element>
+				
+				<xs:element name="TileSet">
+					<xs:simpleType>
+						<xs:restriction base="xs:string"/>
+					</xs:simpleType>
+				</xs:element>
+					
+				<xs:element name="MapSize">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:elemnt name="X"/>
+							<xs:elemnt name="Y"/>							
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+</xs>

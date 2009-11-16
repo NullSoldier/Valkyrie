@@ -1,0 +1,26 @@
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieLibrary\bin\x86\Debug\ValkyrieLibrary.dll
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieLibrary\bin\x86\Debug\ValkyrieLibrary.pdb
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieLibrary\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieLibrary\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieLibrary\obj\x86\Debug\ValkyrieLibrary.dll
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieLibrary\obj\x86\Debug\ValkyrieLibrary.pdb
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieLibrary\bin\x86\Debug\ValkyrieNetwork.dll
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieLibrary\bin\x86\Debug\ValkyrieNetwork.pdb
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\ValkyrieLibrary\bin\x86\Debug\ValkyrieLibrary.dll
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\ValkyrieLibrary\bin\x86\Debug\ValkyrieLibrary.pdb
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\ValkyrieLibrary\bin\x86\Debug\ValkyrieNetwork.dll
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\ValkyrieLibrary\bin\x86\Debug\ValkyrieNetwork.pdb
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\ValkyrieLibrary\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\ValkyrieLibrary\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\ValkyrieLibrary\obj\x86\Debug\ValkyrieLibrary.dll
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\ValkyrieLibrary\obj\x86\Debug\ValkyrieLibrary.pdb
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\ValkyrieLibrary\bin\x86\Debug\ValkyrieLibrary.dll
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\ValkyrieLibrary\bin\x86\Debug\ValkyrieLibrary.pdb
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\ValkyrieLibrary\bin\x86\Debug\ValkyrieNetwork.dll
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\ValkyrieLibrary\bin\x86\Debug\ValkyrieNetwork.pdb
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\ValkyrieLibrary\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\ValkyrieLibrary\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\ValkyrieLibrary\obj\x86\Debug\ValkyrieLibrary.dll
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\ValkyrieLibrary\obj\x86\Debug\ValkyrieLibrary.pdb
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieLibrary\bin\x86\Debug\ValkyrieEngine.dll
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieLibrary\bin\x86\Debug\ValkyrieEngine.pdb

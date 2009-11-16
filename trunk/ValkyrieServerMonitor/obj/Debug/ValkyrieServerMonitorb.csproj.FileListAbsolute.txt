@@ -1,0 +1,2 @@
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieServerMonitor\obj\Debug\ValkyrieServerMonitor.exe
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieServerMonitor\obj\Debug\ValkyrieServerMonitor.pdb

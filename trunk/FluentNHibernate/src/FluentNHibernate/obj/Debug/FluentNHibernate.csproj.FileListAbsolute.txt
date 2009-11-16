@@ -1,0 +1,57 @@
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\nhibernate-mapping.xsd
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\FluentNHibernate.dll
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\FluentNHibernate.pdb
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Castle.DynamicProxy2.dll
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Iesi.Collections.dll
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\NHibernate.ByteCode.Castle.dll
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\NHibernate.dll
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Castle.Core.dll
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\log4net.dll
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Antlr3.Runtime.dll
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\NHibernate.xml
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Iesi.Collections.xml
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Castle.Core.xml
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\NHibernate.ByteCode.Castle.xml
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\log4net.xml
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Castle.DynamicProxy2.xml
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\obj\Debug\FluentNHibernate.dll
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\obj\Debug\FluentNHibernate.pdb
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\nhibernate-mapping.xsd
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\FluentNHibernate.dll
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\FluentNHibernate.pdb
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Castle.DynamicProxy2.dll
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Iesi.Collections.dll
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\NHibernate.ByteCode.Castle.dll
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\NHibernate.dll
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Castle.Core.dll
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\log4net.dll
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Antlr3.Runtime.dll
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\NHibernate.xml
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Iesi.Collections.xml
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Castle.Core.xml
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\NHibernate.ByteCode.Castle.xml
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\log4net.xml
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Castle.DynamicProxy2.xml
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\obj\Debug\FluentNHibernate.dll
+C:\Users\owner\Desktop\new stuff\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\obj\Debug\FluentNHibernate.pdb
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\nhibernate-mapping.xsd
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\FluentNHibernate.dll
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\FluentNHibernate.pdb
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Castle.DynamicProxy2.dll
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Iesi.Collections.dll
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\NHibernate.ByteCode.Castle.dll
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\NHibernate.dll
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Castle.Core.dll
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\log4net.dll
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Antlr3.Runtime.dll
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\NHibernate.xml
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Iesi.Collections.xml
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Castle.Core.xml
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\NHibernate.ByteCode.Castle.xml
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\log4net.xml
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\bin\Debug\Castle.DynamicProxy2.xml
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\obj\Debug\FluentNHibernate.dll
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\FluentNHibernate\src\FluentNHibernate\obj\Debug\FluentNHibernate.pdb

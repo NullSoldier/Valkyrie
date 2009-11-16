@@ -1,0 +1,2 @@
+C:\Users\jasons\Desktop\Project Valkyrie\trunk\ValkyrieEngine\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieEngine\Content\obj\x86\Debug\ResolveAssemblyReference.cache

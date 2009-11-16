@@ -1,0 +1,152 @@
+<Worlds>
+  <World Name="Kanto">
+    <DefaultSpawn>PalletTownEntryPoint</DefaultSpawn>
+    <MapLoc>
+      <Name>Pewter_Town</Name>
+      <Uri>Main\Pewter_Town.xml</Uri>
+      <X>63</X>
+      <Y>0</Y>
+    </MapLoc>
+    <MapLoc>
+      <Name>Route2_Route</Name>
+      <Uri>Main\Route2_Route.xml</Uri>
+      <X>75</X>
+      <Y>40</Y>
+    </MapLoc>
+    <MapLoc>
+      <Name>Pallet_Town</Name>
+      <Uri>Main\Pallet_Town.xml</Uri>
+      <X>75</X>
+      <Y>200</Y>
+    </MapLoc>
+    <MapLoc>
+      <Name>Route1_Route</Name>
+      <Uri>Main\Route1_Route.xml</Uri>
+      <X>75</X>
+      <Y>160</Y>
+    </MapLoc>
+    
+    <MapLoc>
+      <Name>Viridian_Town</Name>
+      <Uri>Main\Viridian_Town.xml</Uri>
+      <X>63</X>
+      <Y>120</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route22_Route</Name>
+      <Uri>Main\Route22_Route.xml</Uri>
+      <X>15</X>
+      <Y>129</Y>
+    </MapLoc>
+    
+    <MapLoc>
+      <Name>Route21_Route</Name>
+      <Uri>Main\Route21_Route.xml</Uri>
+      <X>75</X>
+      <Y>222</Y>
+    </MapLoc>
+    
+    <MapLoc>
+      <Name>Cinnibar_Island</Name>
+      <Uri>Main\Cinnibar_Island.xml</Uri>
+      <X>75</X>
+      <Y>318</Y>
+    </MapLoc>
+    <MapLoc>
+      <Name>Fuschia_Town</Name>
+      <Uri>Main\Fuschia_Town.xml</Uri>
+      <X>207</X>
+      <Y>239</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route18_Route</Name>
+      <Uri>Main\Route18_Route.xml</Uri>
+      <X>145</X>
+      <Y>248</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route17_Route</Name>
+      <Uri>Main\Route17_Route.xml</Uri>
+      <X>142</X>
+      <Y>88</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route16_Route</Name>
+      <Uri>Main\Route16_Route.xml</Uri>
+      <X>142</X>
+      <Y>68</Y>
+    </MapLoc>
+    
+    <MapLoc>
+      <Name>Route15_Route</Name>
+      <Uri>Main\Route15_Route.xml</Uri>
+      <X>255</X>
+      <Y>248</Y>  
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route14_Route</Name>
+      <Uri>Main\Route14_Route.xml</Uri>
+      <X>327</X>
+      <Y>208</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route13_Route</Name>
+      <Uri>Main\Route13_Route.xml</Uri>
+      <X>351</X>
+      <Y>208</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route12_Route</Name>
+      <Uri>Main\Route12_Route.xml</Uri>
+      <X>399</X>
+      <Y>88</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route20_Route_01</Name>
+      <Uri>Main\Route20_Route_01.xml</Uri>
+      <X>99</X>
+      <Y>318</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route20_Route_02</Name>
+      <Uri>Main\Route20_Route_02.xml</Uri>
+      <X>219</X>
+      <Y>278</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route3_Route</Name>
+      <Uri>Main\Route3_Route.xml</Uri>
+      <X>111</X>
+      <Y>11</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route4_Route_01</Name>
+      <Uri>Main\Route4_Route_01.xml</Uri>
+      <X>171</X>
+      <Y>-9</Y>
+    </MapLoc>
+    
+  </World>
+  
+  
+  <World Name="Pallet_House">
+    <DefaultSpawn>PalletTown_HouseOne_Internal</DefaultSpawn>
+    <MapLoc>
+      <Name>Pallet_House_01</Name>
+      <Uri>Pallet_House_01\PalleT_House_01.xml</Uri>
+      <X>0</X>
+      <Y>0</Y>
+    </MapLoc>
+  </World>
+</Worlds>

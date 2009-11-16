@@ -1,0 +1,6 @@
+<Configuration>
+  <RetryTime>300</RetryTime>
+  <TimeFormat>t</TimeFormat>
+  <GameServerAddress>127.0.0.1</GameServerAddress>
+  <ChatServerAddress>127.0.0.1</ChatServerAddress>
+</Configuration>
