@@ -1,5 +1,0 @@
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieNetwork\bin\Release\ValkyrieNetwork.dll
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieNetwork\bin\Release\ValkyrieNetwork.pdb
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieNetwork\obj\Release\ResolveAssemblyReference.cache
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieNetwork\obj\Release\ValkyrieNetwork.dll
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieNetwork\obj\Release\ValkyrieNetwork.pdb
