@@ -24,6 +24,7 @@ using Valkyrie.Engine.Events;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Library.Camera;
 using Valkyrie.Engine.Core;
+using Valkyrie.Engine.Providers;
 
 namespace Valkyrie.Modules
 {
@@ -55,17 +56,16 @@ namespace Valkyrie.Modules
 	    {
 	        if (!this.IsLoaded)
 	            return;
-			
-			// Center on characters
-			BaseCharacter player = this.context.SceneProvider.Players["player1"];
-			player.Update(gameTime);
 
 			BaseCamera camera = this.context.SceneProvider.Cameras["camera1"];
 
 			if(camera.ManualControl)
-				camera.CenterOnCharacter(player); // center camera on player
+				camera.CenterOnCharacter(this.context.SceneProvider.Players["player1"]); // center camera on player
 
 			this.KeybindController.Update();
+
+			this.context.SceneProvider.Update(gameTime);
+			this.context.MovementProvider.Update(gameTime);
 
 			// To do
 			// Update network players
@@ -74,17 +74,12 @@ namespace Valkyrie.Modules
 
 	    public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
 	    {
-	        if (!this.IsLoaded)
-	            return;
+			if(!this.IsLoaded)
+				throw new ProviderNotLoadedException();
 
-			spriteBatch.GraphicsDevice.Viewport = this.context.SceneProvider.Cameras["camera1"].Viewport;
-	        spriteBatch.GraphicsDevice.Clear(Color.Black);
+			spriteBatch.GraphicsDevice.Clear(Color.Black);
 
-	        spriteBatch.Begin();
-
-			this.context.SceneProvider.DrawCamera(spriteBatch, "camera1");
-
-	        spriteBatch.End();
+			this.context.SceneProvider.DrawAllCameras(spriteBatch);
 	    }
 
 	    public void Load(IEngineContext enginecontext)
@@ -92,13 +87,24 @@ namespace Valkyrie.Modules
 			this.context = enginecontext;
 
 			this.context.SceneProvider.AddCamera("camera1", new ValkyrieCamera(0, 0, 800, 600) { WorldName = "Kanto" });
-			this.context.SceneProvider.AddPlayer("player1", new PokePlayer() { Location = new MapPoint(63, 0).ToScreenPoint() });
+			
+			this.context.SceneProvider.AddPlayer("player1", new PokePlayer()
+			{
+				WorldName = "Kanto",
+				Location = new MapPoint(87, 210).ToScreenPoint(),
+				Sprite = this.context.TextureManager.GetTexture("MaleSprite.png")
+			});
 
 	        this.KeybindController.AddKey(Keys.Left, "MoveLeft");
 	        this.KeybindController.AddKey(Keys.Up, "MoveUp");
 	        this.KeybindController.AddKey(Keys.Down, "MoveDown");
 	        this.KeybindController.AddKey(Keys.Right, "MoveRight");
 	        this.KeybindController.AddKey(Keys.Q, "Noclip");
+
+			this.KeybindController.AddKey(Keys.NumPad4, "MoveLeftPad");
+			this.KeybindController.AddKey(Keys.NumPad8, "MoveUpPad");
+			this.KeybindController.AddKey(Keys.NumPad2, "MoveDownPad");
+			this.KeybindController.AddKey(Keys.NumPad6, "MoveRightPad");
 
 	        this.KeybindController.KeyDown += this.GameModule_KeyDown;
 	        this.KeybindController.KeyUp += this.GameModule_KeyUp;
@@ -261,12 +267,12 @@ namespace Valkyrie.Modules
 
 	    public void GameModule_Collided(object sender, EventArgs ev)
 	    {
-	        this.context.EventProvider.Handle((BaseCharacter)sender, ActivationTypes.Collision);
+	        this.context.EventProvider.HandleEvent((BaseCharacter)sender, ActivationTypes.Collision);
 	    }
 
 	    public void GameModule_TileLocationChanged(object sender, EventArgs ev)
 	    {
-			this.context.EventProvider.Handle((BaseCharacter)sender, ActivationTypes.Movement);
+			this.context.EventProvider.HandleEvent((BaseCharacter)sender, ActivationTypes.Movement);
 
 	        this.TestTileLocationChanged(this, EventArgs.Empty);
 	    }
@@ -311,16 +317,16 @@ namespace Valkyrie.Modules
 	                switch (this.KeybindController.GetKeyAction(CrntDir))
 	                {
 	                    case "MoveUp":
-	                        //TileEngine.MovementManager.BeginMove(TileEngine.Player, Directions.North);
+							this.context.MovementProvider.BeginMove(this.context.SceneProvider.Players["player1"], Directions.North);
 	                        break;
 	                    case "MoveDown":
-	                       // TileEngine.MovementManager.BeginMove(TileEngine.Player, Directions.South);
+							this.context.MovementProvider.BeginMove(this.context.SceneProvider.Players["player1"], Directions.South);
 	                        break;
 	                    case "MoveLeft":
-	                       // TileEngine.MovementManager.BeginMove(TileEngine.Player, Directions.West);
+							this.context.MovementProvider.BeginMove(this.context.SceneProvider.Players["player1"], Directions.West);
 	                        break;
 	                    case "MoveRight":
-	                       // TileEngine.MovementManager.BeginMove(TileEngine.Player, Directions.East);
+							this.context.MovementProvider.BeginMove(this.context.SceneProvider.Players["player1"], Directions.East);
 	                        break;
 	                }
 	            }
@@ -330,6 +336,7 @@ namespace Valkyrie.Modules
 	    public void GameModule_KeyUp(object sender, KeyPressedEventArgs ev)
 	    {
 			PokePlayer player = (PokePlayer)this.context.SceneProvider.Players["player1"];
+
 	        // Did we activate?
 	        switch (ev.Action)
 	        {
@@ -345,7 +352,7 @@ namespace Valkyrie.Modules
 	        {
 	            if (this.IsDir(ev.KeyPressed))
 	            {
-	                //p.MovementManager.EndMove(TileEngine.Player, true);
+					this.context.MovementProvider.EndMove(player, true);
 	            }
 	        }
 	    }
@@ -360,7 +367,8 @@ namespace Valkyrie.Modules
 
 	    public bool IsDir(Keys key)
 	    {
-	        return (key == Keys.Left || key == Keys.Right || key == Keys.Up || key == Keys.Down);
+	        return (key == Keys.Left || key == Keys.Right || key == Keys.Up || key == Keys.Down ||
+				key == Keys.NumPad4 || key == Keys.NumPad6 || key == Keys.NumPad8 || key == Keys.NumPad2);
 	    }
 
 		private IEngineContext context = null;

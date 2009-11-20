@@ -6,6 +6,7 @@ using System.Xml;
 using System.IO;
 using Valkyrie.Engine.Core;
 using Mono.Rocks;
+using Microsoft.Xna.Framework;
 
 namespace Valkyrie.Engine.Maps
 {
@@ -46,6 +47,21 @@ namespace Valkyrie.Engine.Maps
 			{
 				this.maps.Add(header.MapName, header); 
 			}
+		}
+		
+		public MapHeader GetLocalMapFromPoint(MapPoint globalpoint)
+		{
+			foreach(MapHeader header in this.Maps.Values)
+			{
+				Rectangle rect = (header.MapLocation).ToRect(header.Map.MapSize.ToPoint());
+
+				if(rect.Contains(globalpoint.ToPoint()))
+				{
+					return header;
+				}
+			}
+
+			return null;
 		}
 
 		#endregion

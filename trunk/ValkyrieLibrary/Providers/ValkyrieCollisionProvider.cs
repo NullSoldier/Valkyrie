@@ -6,6 +6,8 @@ using Valkyrie.Engine.Providers;
 using Valkyrie.Engine.Core;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Engine;
+using Valkyrie.Engine.Maps;
+using Microsoft.Xna.Framework;
 
 namespace Valkyrie.Library.Providers
 {
@@ -16,24 +18,27 @@ namespace Valkyrie.Library.Providers
 
 		public bool CheckCollision (IMovable Source, ScreenPoint Destination)
 		{
-			//if (Source.Density == 0)
-			//    return true;
-
-			//MapPoint tilePoint = TileEngine.GlobalTilePointToLocal(Destination.ToMapPoint());
-
-			//if (!TileEngine.WorldManager.CurrentWorld.MapList[TileEngine.CurrentMapChunk.Name].TilePointInMapLocal(tilePoint))
-			//    return true;
-
-			//if (TileEngine.CurrentMapChunk.GetLayerValue(tilePoint, MapLayers.CollisionLayer) != -1)
-			//    return false;
-
-			//return true;
-			throw new NotImplementedException();
+			return this.CheckCollision(Source, Destination.ToMapPoint());
 		}
 
 		public bool CheckCollision (IMovable source, MapPoint Destination)
 		{
-			throw new NotImplementedException();
+			if(source.Density < 1)
+				return true;
+
+			World currentworld = this.context.WorldManager.Worlds[source.WorldName];
+
+			foreach(MapHeader header in currentworld.Maps.Values)
+			{
+				Rectangle rect = (header.MapLocation).ToRect(header.Map.MapSize.ToPoint());
+
+				if(rect.Contains(Destination.ToPoint()))
+				{
+					return (header.Map.GetLayerValue(Destination - header.MapLocation, MapLayers.CollisionLayer) == -1);
+				}
+			}
+
+			return true;
 		}
 
 		#endregion

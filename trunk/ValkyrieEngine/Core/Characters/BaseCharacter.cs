@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Valkyrie.Library.Core;
 using Valkyrie.Engine.Animation;
 using Valkyrie.Engine.Core;
+using Valkyrie.Engine.Maps;
 
 namespace Valkyrie.Engine.Characters
 {
@@ -72,18 +73,13 @@ namespace Valkyrie.Engine.Characters
 		private Texture2D sprite = null;
 		private Dictionary<string, FrameAnimation> animations = new Dictionary<string, FrameAnimation> ();
 		private Directions direction = Directions.South;
-		private string currentanimationname = string.Empty;
-		private bool animating = false;
-
-		// IPositionable
 		private ScreenPoint location = ScreenPoint.Zero;
 		private MapPoint lastmaplocation = MapPoint.Zero;
 		private string worldname = string.Empty;
-
-		// IMovable
-		
-		// ICollidable
 		private string currentworldname = string.Empty;
+		private string currentanimationname = string.Empty;
+		private bool animating = false;
+		private MapHeader currentmap = null;
 
         #region IPositionable Members
 		
@@ -97,8 +93,10 @@ namespace Valkyrie.Engine.Characters
 		// Local mappoint
 		public MapPoint LocalTileLocation
 		{
-			get { return MapPoint.Zero; }
-				//TileEngine.GlobalTilePointToLocal(TileLocation); }
+			get
+			{
+				return this.GlobalTileLocation - this.CurrentMap.MapLocation;
+			}
 		}
 
 		// Global mappoint
@@ -122,6 +120,12 @@ namespace Valkyrie.Engine.Characters
 		{
 			get { return this.worldname; }
 			set { this.worldname = value; }
+		}
+
+		public MapHeader CurrentMap
+		{
+			get { return this.currentmap; }
+			set { this.currentmap = value; }
 		}
 
         #endregion

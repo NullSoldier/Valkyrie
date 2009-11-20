@@ -49,6 +49,8 @@ namespace Valkyrie.Characters
 
 		public override void Update (GameTime gameTime)
 		{
+			this.CurrentAnimation.Update(gameTime);
+
 			if(this.Loaded)
 			{
 				base.Update(gameTime);

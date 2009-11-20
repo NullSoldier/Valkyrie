@@ -169,12 +169,12 @@ namespace Valkyrie.Engine.Maps
 		private int[] toplayer = new int[0];
 		private int[] collisionlayer = new int[0];
 
-		public MapPoint mapsize = MapPoint.Zero;
-		public int tilesize = 0;
-		public String texturename = string.Empty;
-		public String name = string.Empty;
+		private MapPoint mapsize = MapPoint.Zero;
+		private int tilesize = 0;
+		private String texturename = string.Empty;
+		private String name = string.Empty;
 
-		public Dictionary<int, FrameAnimation> animatedtiles = new Dictionary<int,FrameAnimation>();
+		private Dictionary<int, FrameAnimation> animatedtiles = new Dictionary<int, FrameAnimation>();
 		private Texture2D texture = null;
 	}
 

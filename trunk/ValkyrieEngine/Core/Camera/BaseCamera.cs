@@ -9,6 +9,7 @@ using System.Threading;
 using Valkyrie.Engine.Camera;
 using Valkyrie.Engine.Core;
 using Valkyrie.Engine.Characters;
+using Valkyrie.Engine.Maps;
 
 namespace Valkyrie.Engine
 {
@@ -41,12 +42,6 @@ namespace Valkyrie.Engine
 		public Viewport Viewport { get { return this.viewport; } }
 		public List<ICameraEffect> Effects { get { return this.effects; } }
 		public Vector2 CameraOffset { get { return this.cameraoffset; } }
-
-		public string WorldName
-		{
-			get { return this.worldname; }
-			set { this.worldname = value; }
-		}
 
 		public Vector2 MapOffset
 		{
@@ -197,6 +192,18 @@ namespace Valkyrie.Engine
 			{
 				this.CameraOrigin = value.ToPoint();
 			}
+		}
+
+		public string WorldName
+		{
+			get { return this.worldname; }
+			set { this.worldname = value; }
+		}
+
+		public MapHeader CurrentMap
+		{
+			get { throw new NotImplementedException(); }
+			set { throw new NotImplementedException(); }
 		}
 
 		#endregion

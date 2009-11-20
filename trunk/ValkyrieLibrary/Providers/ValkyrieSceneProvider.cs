@@ -16,6 +16,15 @@ namespace Valkyrie.Library.Providers
 	public class ValkyrieSceneProvider
 		: ISceneProvider
 	{
+		#region Constructors
+
+		public ValkyrieSceneProvider(GraphicsDevice graphicsdevice)
+		{
+			this.device = graphicsdevice;
+		}
+
+		#endregion
+
 		#region ISceneProvider Members
 
 		public void Update (GameTime gameTime)
@@ -24,13 +33,41 @@ namespace Valkyrie.Library.Providers
 				camera.Update(gameTime);
 
 			foreach(BaseCharacter player in this.Players.Values)
+			{
 				player.Update(gameTime);
+
+				// Update players current map
+				if(player.CurrentMap == null || player.LocalTileLocation.X < 0 || player.LocalTileLocation.Y < 0 ||
+					player.LocalTileLocation.X > player.CurrentMap.Map.MapSize.X || player.LocalTileLocation.Y > player.CurrentMap.Map.MapSize.Y)
+				{
+					this.ResolvePositionableCurrentMap(player);
+				}
+			}
 
 			foreach(MapHeader header in this.context.WorldManager.Worlds.SelectMany(w => w.Value.Maps.Values).Where( h => h.IsLoaded))
 				header.Map.Update(gameTime);
 		}
 
+		/// <summary>
+		/// Garentees the return of the positionables local map if they are on one
+		/// </summary>
+		/// <param name="positionable"></param>
+		/// <returns></returns>
+		public MapHeader GetPositionableLocalMap (IPositionable positionable)
+		{
+			if(positionable.CurrentMap != null)
+				return positionable.CurrentMap;
+
+			this.ResolvePositionableCurrentMap(positionable);
+			return positionable.CurrentMap;
+		}
+
 		#region Public Draw Methods
+
+		public void Draw (SpriteBatch spriteBatch)
+		{
+			// Empty
+		}
 
 		public void DrawCamera (SpriteBatch spriteBatch, string cameraname)
 		{
@@ -50,29 +87,45 @@ namespace Valkyrie.Library.Providers
 			}
 		}
 
-		public void DrawPlayer (SpriteBatch spriteBatch, string playername)
+		public void DrawPlayer (SpriteBatch spriteBatch, string playername, BaseCamera camera)
 		{
-			throw new NotImplementedException();
+			this.DrawPlayer(spriteBatch, this.Players[playername], camera);
+		}
+
+		public void DrawPlayer (SpriteBatch spriteBatch, BaseCharacter player, BaseCamera camera)
+		{
+			Vector2 location = new Vector2();
+			location.X = (int)camera.MapOffset.X + player.Location.X + 32 / 2 - player.CurrentAnimation.FrameRectangle.Width / 2;
+			location.Y = (int)camera.MapOffset.Y + player.Location.Y + 32 - player.CurrentAnimation.FrameRectangle.Height;
+
+			spriteBatch.Draw(player.Sprite, location, player.CurrentAnimation.FrameRectangle, Color.White);
+			//spriteBatch.DrawString(PokeGame.font, this.Name, new Vector2(this.DrawScreenLocation.X - (PokeGame.font.MeasureString(this.Name).X / 2) + 16, this.DrawScreenLocation.Y - 15), Color.Black)
 		}
 
 		#endregion
 
 		#region Private Draw Methods
 
-		public void DrawCamera (SpriteBatch spriteBatch, BaseCamera camera)
+		private void DrawCamera (SpriteBatch spriteBatch, BaseCamera camera)
 		{
 			foreach(var header in this.context.WorldManager.Worlds[camera.WorldName].Maps.Values)
 			{
 				if(!header.IsVisible(camera))
 					continue;
 
+				spriteBatch.Begin();
+				this.device.Viewport = camera.Viewport;
+
 				this.DrawCameraLayer(spriteBatch, camera, MapLayers.UnderLayer, header);
 				this.DrawCameraLayer(spriteBatch, camera, MapLayers.BaseLayer, header);
 				this.DrawCameraLayer(spriteBatch, camera, MapLayers.MiddleLayer, header);
 
-				// Draw players here
+				foreach(BaseCharacter player in this.Players.Values)
+					this.DrawPlayer(spriteBatch, player, camera);
 
 				this.DrawCameraLayer(spriteBatch, camera, MapLayers.TopLayer, header);
+
+				spriteBatch.End();
 			}
 
 		}
@@ -106,7 +159,7 @@ namespace Valkyrie.Library.Providers
 					if(sourceRectangle.IsEmpty)
 						continue;
 
-					spriteBatch.Draw(currentMap.Texture, des, sourceRectangle, Color.White);
+					spriteBatch.Draw(currentMap.Texture, des, sourceRectangle, tint);
 				}
 			}
 		}
@@ -188,6 +241,29 @@ namespace Valkyrie.Library.Providers
 		private readonly Dictionary<string, BaseCamera> cameras = new Dictionary<string, BaseCamera>();
 		private readonly Dictionary<string, BaseCharacter> players = new Dictionary<string, BaseCharacter>();
 		private IEngineContext context = null;
+		private GraphicsDevice device = null;
 		private bool isloaded = false;
+
+		private bool ResolvePositionableCurrentMap (IPositionable player)
+		{
+			player.CurrentMap = null;
+
+			bool found = false;
+
+			World currentworld = this.context.WorldManager.Worlds[player.WorldName];
+
+			foreach(MapHeader header in currentworld.Maps.Values)
+			{
+				Rectangle rect = (header.MapLocation).ToRect(header.Map.MapSize.ToPoint());
+
+				if(rect.Contains(player.GlobalTileLocation.ToPoint()))
+				{
+					player.CurrentMap = header;
+					found = true;
+				}
+			}
+
+			return found;
+		}
 	}
 }

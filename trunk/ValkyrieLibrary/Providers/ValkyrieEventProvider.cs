@@ -8,6 +8,8 @@ using Valkyrie.Engine.Maps;
 using Valkyrie.Engine.Characters;
 using System.Reflection;
 using Valkyrie.Engine.Events;
+using Valkyrie.Engine.Core;
+using Microsoft.Xna.Framework;
 
 namespace Valkyrie.Library.Providers
 {
@@ -47,9 +49,28 @@ namespace Valkyrie.Library.Providers
 			}
 		}
 
-		public bool Handle (BaseCharacter character, ActivationTypes action)
+		public bool HandleEvent (BaseCharacter player, ActivationTypes activation)
 		{
-			throw new NotImplementedException();
+			bool handledevents = false;
+			MapPoint pos = player.GlobalTileLocation;
+
+			if(activation == ActivationTypes.Activate || activation == ActivationTypes.Collision)
+			{
+				MapPoint newpt = player.GetLookValue();
+				pos = new MapPoint(pos.X + newpt.X, pos.Y + newpt.Y);
+			}
+
+			foreach(IMapEvent mapevent in this.GetEvent(player, pos))
+			{
+				if(mapevent.Direction == Directions.Any || mapevent.Direction == player.Direction
+					&& mapevent.Activation == activation)
+				{
+					mapevent.Trigger(player);
+					handledevents = true;
+				}
+			}
+
+			return handledevents;
 		}
 
 		#endregion
@@ -57,5 +78,27 @@ namespace Valkyrie.Library.Providers
 		private IEngineContext context = null;
 		private bool isloaded = false;
 		private Dictionary<string, List<IMapEvent>> events = new Dictionary<string, List<IMapEvent>>();
+
+		private IEnumerable<IMapEvent> GetEvent (BaseCharacter player, MapPoint position)
+		{
+			player.CurrentMap = this.context.SceneProvider.GetPositionableLocalMap(player);
+			MapPoint pos = player.LocalTileLocation;
+
+			if(pos.X < 0 || pos.Y < 0 || pos.X > player.CurrentMap.Map.MapSize.X || pos.Y > player.CurrentMap.Map.MapSize.Y)
+			{
+				// Find globally
+				MapHeader header = this.context.WorldManager.Worlds[player.WorldName].GetLocalMapFromPoint(position);
+				MapPoint localpos = player.GlobalTileLocation - header.MapLocation;
+
+				return this.events[header.MapName].Where(m => m.Rectangle.Contains((localpos).ToPoint()));
+			}
+			else
+			{
+				MapPoint localpos = position - player.CurrentMap.MapLocation;
+
+				return this.events[player.CurrentMap.MapName].Where(m => m.Rectangle.Contains((localpos).ToPoint()));
+			}
+			
+		}
 	}
 }

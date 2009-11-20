@@ -14,6 +14,6 @@ namespace Valkyrie.Engine.Providers
 	{
 		void Add (Map map, IMapEvent mapevent);
 		bool Remove (Map map, IMapEvent mapevent);
-		bool Handle (BaseCharacter character, ActivationTypes action);
+		bool HandleEvent (BaseCharacter character, ActivationTypes action);
 	}
 }
