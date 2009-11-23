@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Engine.Events;
+using Valkyrie.Engine;
 
 namespace Valkyrie.Library.Events
 {
@@ -22,7 +23,7 @@ namespace Valkyrie.Library.Events
 			return "EntryPoint";
 		}
 
-		public void Trigger(BaseCharacter character)
+		public void Trigger(BaseCharacter character, IEngineContext context)
 		{
 			throw new NotImplementedException();
 		}

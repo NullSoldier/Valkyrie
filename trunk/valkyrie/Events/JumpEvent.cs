@@ -9,6 +9,8 @@ using Valkyrie.Library;
 using Valkyrie.Library.Core;
 using Valkyrie.Engine.Events;
 using Valkyrie.Engine.Characters;
+using Valkyrie.Engine.Core;
+using Valkyrie.Engine;
 
 namespace Valkyrie.Events
 {
@@ -18,7 +20,6 @@ namespace Valkyrie.Events
 		public Rectangle Rectangle { get; set; }
 		public ActivationTypes Activation { get; set; }
 		public Directions Direction { get; set; }
-
 		public Dictionary<string, string> Parameters { get; set; }
 
 		public string GetStringType ()
@@ -26,9 +27,21 @@ namespace Valkyrie.Events
 			return "Jump";
 		}
 
-		public void Trigger (BaseCharacter character)
+		public void Trigger (BaseCharacter character, IEngineContext context)
 		{
-			throw new NotImplementedException();
+			if(!(character is PokePlayer))
+				return;
+
+			PokePlayer player = (PokePlayer)character;
+			player.IgnoreMoveInput = true;
+			player.StartedMoving += this.Event_StartedMoving;
+			player.StoppedMoving += this.Event_StoppedMoving;
+
+			ScreenPoint dest = new ScreenPoint(player.Location.X, player.Location.Y);
+			MapPoint lookvalue = player.GetLookValue();
+			ScreenPoint newDest = dest + (new ScreenPoint((lookvalue.X * 32) * 2,  (lookvalue.Y * 32) * 2));
+
+			context.MovementProvider.BeginMoveDestination(character, newDest);
 		}
 
 		public IEnumerable<string> GetParameterNames ()
@@ -49,12 +62,20 @@ namespace Valkyrie.Events
 
 		public void Event_StartedMoving (object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
+			PokePlayer player = (PokePlayer)sender;
+			player.Density = 0;
+			player.CurrentAnimationName = "Jump";
 		}
 
 		public void Event_StoppedMoving (object sender, EventArgs e)
 		{
-			throw new NotImplementedException();
+			PokePlayer player = (PokePlayer)sender;
+			player.Density = 1;
+			player.CurrentAnimationName = player.Direction.ToString();
+			player.IgnoreMoveInput = false;
+
+			player.StartedMoving -= this.Event_StartedMoving;
+			player.StoppedMoving -= this.Event_StoppedMoving;
 		}
 	}
 }

@@ -99,6 +99,7 @@ namespace Valkyrie.Library.Managers
 		public void LoadEngineContext (IEngineContext context)
 		{
 			this.context = context;
+			this.Load(this.context.Configuration[EngineConfigurationName.GraphicsRoot]);
 
 			this.isloaded = true;
 		}

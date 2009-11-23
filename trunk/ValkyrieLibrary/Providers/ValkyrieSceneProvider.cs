@@ -29,10 +29,10 @@ namespace Valkyrie.Library.Providers
 
 		public void Update (GameTime gameTime)
 		{
-			foreach(BaseCamera camera in this.Cameras.Values)
+			foreach(BaseCamera camera in this.cameras.Values)
 				camera.Update(gameTime);
 
-			foreach(BaseCharacter player in this.Players.Values)
+			foreach(BaseCharacter player in this.players.Values)
 			{
 				player.Update(gameTime);
 
@@ -44,7 +44,7 @@ namespace Valkyrie.Library.Providers
 				}
 			}
 
-			foreach(MapHeader header in this.context.WorldManager.Worlds.SelectMany(w => w.Value.Maps.Values).Where( h => h.IsLoaded))
+			foreach(MapHeader header in this.context.WorldManager.GetWorlds().SelectMany(w => w.Value.Maps.Values).Where( h => h.IsLoaded))
 				header.Map.Update(gameTime);
 		}
 
@@ -71,17 +71,33 @@ namespace Valkyrie.Library.Providers
 
 		public void DrawCamera (SpriteBatch spriteBatch, string cameraname)
 		{
-			this.DrawCamera(spriteBatch, this.Cameras[cameraname]);
+			this.DrawCamera(spriteBatch, this.cameras[cameraname]);
 		}
 
-		public void DrawCameraLayer (SpriteBatch spriteBatch, string cameraname, MapLayers layer, MapHeader header)
+		public void DrawCameraLayer (SpriteBatch spriteBatch, string cameraname, MapLayers layer)
 		{
-			this.DrawCameraLayer (spriteBatch, this.Cameras[cameraname], layer, header);
+			this.DrawCameraLayer (spriteBatch, this.cameras[cameraname], layer);
+		}
+
+		private void DrawCameraLayer (SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer)
+		{
+			foreach(var header in this.context.WorldManager.GetWorld(camera.WorldName).Maps.Values)
+			{
+				if(!header.IsVisible(camera))
+					continue;
+
+				spriteBatch.Begin();
+				this.device.Viewport = camera.Viewport;
+
+				this.DrawCameraLayer(spriteBatch, camera, layer, header);
+
+				spriteBatch.End();
+			}
 		}
 
 		public void DrawAllCameras (SpriteBatch spriteBatch)
 		{
-			foreach(BaseCamera camera in this.Cameras.Values)
+			foreach(BaseCamera camera in this.cameras.Values)
 			{
 				this.DrawCamera(spriteBatch, camera);
 			}
@@ -89,7 +105,7 @@ namespace Valkyrie.Library.Providers
 
 		public void DrawPlayer (SpriteBatch spriteBatch, string playername, BaseCamera camera)
 		{
-			this.DrawPlayer(spriteBatch, this.Players[playername], camera);
+			this.DrawPlayer(spriteBatch, this.players[playername], camera);
 		}
 
 		public void DrawPlayer (SpriteBatch spriteBatch, BaseCharacter player, BaseCamera camera)
@@ -108,7 +124,7 @@ namespace Valkyrie.Library.Providers
 
 		private void DrawCamera (SpriteBatch spriteBatch, BaseCamera camera)
 		{
-			foreach(var header in this.context.WorldManager.Worlds[camera.WorldName].Maps.Values)
+			foreach(var header in this.context.WorldManager.GetWorld(camera.WorldName).Maps.Values)
 			{
 				if(!header.IsVisible(camera))
 					continue;
@@ -120,7 +136,7 @@ namespace Valkyrie.Library.Providers
 				this.DrawCameraLayer(spriteBatch, camera, MapLayers.BaseLayer, header);
 				this.DrawCameraLayer(spriteBatch, camera, MapLayers.MiddleLayer, header);
 
-				foreach(BaseCharacter player in this.Players.Values)
+				foreach(BaseCharacter player in this.players.Values)
 					this.DrawPlayer(spriteBatch, player, camera);
 
 				this.DrawCameraLayer(spriteBatch, camera, MapLayers.TopLayer, header);
@@ -166,15 +182,20 @@ namespace Valkyrie.Library.Providers
 
 		#endregion
 
-		public ReadOnlyDictionary<string, BaseCamera> Cameras
+		public BaseCamera GetCamera (string name)
 		{
-			get
+			lock(this.cameras)
 			{
-				lock(this.cameras)
-				{
-					return new ReadOnlyDictionary<string, BaseCamera>(this.cameras);
-				}
+				if(!this.cameras.ContainsKey(name))
+					throw new Exception("Camera not found.");
+
+				return this.cameras[name];
 			}
+		}
+
+		public ReadOnlyDictionary<string, BaseCamera> GetCameras ()
+		{
+			return new ReadOnlyDictionary<string, BaseCamera> (this.cameras);
 		}
 
 		public void AddCamera (string name, BaseCamera camera)
@@ -193,15 +214,20 @@ namespace Valkyrie.Library.Providers
 			}
 		}
 
-		public ReadOnlyDictionary<string, BaseCharacter> Players
+		public BaseCharacter GetPlayer (string name)
 		{
-			get
+			lock(this.players)
 			{
-				lock(this.players)
-				{
-					return new ReadOnlyDictionary<string, BaseCharacter>(this.players);
-				}
+				if(!this.players.ContainsKey(name))
+					throw new Exception("Player not found");
+
+				return this.players[name];
 			}
+		}
+
+		public ReadOnlyDictionary<string, BaseCharacter> GetPlayers ()
+		{
+			return new ReadOnlyDictionary<string, BaseCharacter>(this.players);
 		}
 
 		public void AddPlayer (string name, BaseCharacter character)
@@ -250,7 +276,7 @@ namespace Valkyrie.Library.Providers
 
 			bool found = false;
 
-			World currentworld = this.context.WorldManager.Worlds[player.WorldName];
+			World currentworld = this.context.WorldManager.GetWorld(player.WorldName);
 
 			foreach(MapHeader header in currentworld.Maps.Values)
 			{

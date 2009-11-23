@@ -65,12 +65,36 @@ namespace Valkyrie.Library.Providers
 				if(mapevent.Direction == Directions.Any || mapevent.Direction == player.Direction
 					&& mapevent.Activation == activation)
 				{
-					mapevent.Trigger(player);
+					mapevent.Trigger(player, this.context);
 					handledevents = true;
 				}
 			}
 
 			return handledevents;
+		}
+
+		public void ClearEvents ()
+		{
+			lock(this.events)
+			{
+				this.events.Clear();
+			}
+		}
+
+		public IEnumerable<IMapEvent> GetMapsEvents (Map map)
+		{
+			return this.GetMapsEvents(map.Name);
+		}
+
+		public IEnumerable<IMapEvent> GetMapsEvents (string name)
+		{
+			lock(this.events)
+			{
+				if(!this.events.ContainsKey(name))
+					throw new Exception("Map not found in events");
+
+				return this.events[name];
+			}
 		}
 
 		#endregion
@@ -87,7 +111,7 @@ namespace Valkyrie.Library.Providers
 			if(pos.X < 0 || pos.Y < 0 || pos.X > player.CurrentMap.Map.MapSize.X || pos.Y > player.CurrentMap.Map.MapSize.Y)
 			{
 				// Find globally
-				MapHeader header = this.context.WorldManager.Worlds[player.WorldName].GetLocalMapFromPoint(position);
+				MapHeader header = this.context.WorldManager.GetWorld(player.WorldName).GetLocalMapFromPoint(position);
 				MapPoint localpos = player.GlobalTileLocation - header.MapLocation;
 
 				return this.events[header.MapName].Where(m => m.Rectangle.Contains((localpos).ToPoint()));

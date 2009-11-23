@@ -31,7 +31,6 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-			this.pctTileSurface = new ValkyrieMapEditor.TileBox();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.btnMapProperties = new System.Windows.Forms.Button();
 			this.lstSettings = new System.Windows.Forms.ListView();
@@ -43,7 +42,9 @@
 			this.HorizontalScroll = new System.Windows.Forms.HScrollBar();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+			this.footerStatus = new System.Windows.Forms.StatusStrip();
+			this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+			this.lblVersion = new System.Windows.Forms.ToolStripStatusLabel();
 			this.menuStrip = new System.Windows.Forms.MenuStrip();
 			this.toolProject = new System.Windows.Forms.ToolStripDropDownButton();
 			this.toolNew = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,20 +76,22 @@
 			this.btnRect = new System.Windows.Forms.ToolStripButton();
 			this.btnFill = new System.Windows.Forms.ToolStripButton();
 			this.btnSelection = new System.Windows.Forms.ToolStripButton();
+			this.pctTileSurface = new ValkyrieMapEditor.TileBox();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
 			this.splitContainer2.Panel1.SuspendLayout();
 			this.splitContainer2.Panel2.SuspendLayout();
 			this.splitContainer2.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).BeginInit();
 			this.splitContainer3.Panel1.SuspendLayout();
 			this.splitContainer3.Panel2.SuspendLayout();
 			this.splitContainer3.SuspendLayout();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pctSurface)).BeginInit();
+			this.footerStatus.SuspendLayout();
 			this.menuStrip.SuspendLayout();
 			this.toolStripTools.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// splitContainer1
@@ -135,19 +138,6 @@
 			this.splitContainer2.SplitterDistance = 395;
 			this.splitContainer2.SplitterWidth = 5;
 			this.splitContainer2.TabIndex = 0;
-			// 
-			// pctTileSurface
-			// 
-			this.pctTileSurface.DisplayTileSelection = false;
-			this.pctTileSurface.EndSelectedPoint = new System.Drawing.Point(0, 0);
-			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
-			this.pctTileSurface.Name = "pctTileSurface";
-			this.pctTileSurface.SelectedPoint = new System.Drawing.Point(0, 0);
-			this.pctTileSurface.SelectedRect = new System.Drawing.Rectangle(0, 0, 0, 0);
-			this.pctTileSurface.Size = new System.Drawing.Size(173, 134);
-			this.pctTileSurface.TabIndex = 0;
-			this.pctTileSurface.TabStop = false;
-			this.pctTileSurface.TileSize = new System.Drawing.Point(0, 0);
 			// 
 			// splitContainer3
 			// 
@@ -263,13 +253,28 @@
 			this.toolStripSeparator3.Name = "toolStripSeparator3";
 			this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
 			// 
-			// statusStrip1
+			// footerStatus
 			// 
-			this.statusStrip1.Location = new System.Drawing.Point(0, 708);
-			this.statusStrip1.Name = "statusStrip1";
-			this.statusStrip1.Size = new System.Drawing.Size(1008, 22);
-			this.statusStrip1.TabIndex = 4;
-			this.statusStrip1.Text = "statusStrip1";
+			this.footerStatus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel2,
+            this.lblVersion});
+			this.footerStatus.Location = new System.Drawing.Point(0, 708);
+			this.footerStatus.Name = "footerStatus";
+			this.footerStatus.Size = new System.Drawing.Size(1008, 22);
+			this.footerStatus.TabIndex = 4;
+			this.footerStatus.Text = "statusStrip1";
+			// 
+			// toolStripStatusLabel2
+			// 
+			this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+			this.toolStripStatusLabel2.Size = new System.Drawing.Size(947, 17);
+			this.toolStripStatusLabel2.Spring = true;
+			// 
+			// lblVersion
+			// 
+			this.lblVersion.Name = "lblVersion";
+			this.lblVersion.Size = new System.Drawing.Size(46, 17);
+			this.lblVersion.Text = "Version";
 			// 
 			// menuStrip
 			// 
@@ -433,8 +438,8 @@
             this.btnBaseLayer,
             this.btnMiddleLayer,
             this.btnTopLayer,
-            this.btnCollisionLayer,
             this.btnHelp,
+            this.btnCollisionLayer,
             this.btnEvent,
             this.toolStripSeparator3,
             this.btnPencil,
@@ -614,19 +619,32 @@
 			this.btnSelection.Size = new System.Drawing.Size(34, 22);
 			this.btnSelection.Text = "Selection";
 			// 
+			// pctTileSurface
+			// 
+			this.pctTileSurface.DisplayTileSelection = false;
+			this.pctTileSurface.EndSelectedPoint = new System.Drawing.Point(0, 0);
+			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
+			this.pctTileSurface.Name = "pctTileSurface";
+			this.pctTileSurface.SelectedPoint = new System.Drawing.Point(0, 0);
+			this.pctTileSurface.SelectedRect = new System.Drawing.Rectangle(0, 0, 0, 0);
+			this.pctTileSurface.Size = new System.Drawing.Size(173, 134);
+			this.pctTileSurface.TabIndex = 0;
+			this.pctTileSurface.TabStop = false;
+			this.pctTileSurface.TileSize = new System.Drawing.Point(0, 0);
+			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1008, 730);
-			this.Controls.Add(this.statusStrip1);
+			this.Controls.Add(this.footerStatus);
 			this.Controls.Add(this.toolStripTools);
 			this.Controls.Add(this.splitContainer1);
 			this.Controls.Add(this.menuStrip);
 			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.MainMenuStrip = this.menuStrip;
 			this.Name = "frmMain";
-			this.Text = "Valkryie Map Editor";
+			this.Text = "Griffin Map Editor";
 			this.Deactivate += new System.EventHandler(this.frmMain_Deactivate);
 			this.Load += new System.EventHandler(this.frmMain_Load);
 			this.Activated += new System.EventHandler(this.frmMain_Activated);
@@ -637,16 +655,18 @@
 			this.splitContainer2.Panel1.ResumeLayout(false);
 			this.splitContainer2.Panel2.ResumeLayout(false);
 			this.splitContainer2.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).EndInit();
 			this.splitContainer3.Panel1.ResumeLayout(false);
 			this.splitContainer3.Panel2.ResumeLayout(false);
 			this.splitContainer3.ResumeLayout(false);
 			this.panel1.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.pctSurface)).EndInit();
+			this.footerStatus.ResumeLayout(false);
+			this.footerStatus.PerformLayout();
 			this.menuStrip.ResumeLayout(false);
 			this.menuStrip.PerformLayout();
 			this.toolStripTools.ResumeLayout(false);
 			this.toolStripTools.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -680,7 +700,7 @@
         private System.Windows.Forms.ToolStripButton btnTopLayer;
         private System.Windows.Forms.ToolStripButton btnCollisionLayer;
 		private System.Windows.Forms.ToolStripMenuItem toolSaveAs;
-		private System.Windows.Forms.StatusStrip statusStrip1;
+		private System.Windows.Forms.StatusStrip footerStatus;
 		private System.Windows.Forms.ToolStripButton btnHelp;
 		private System.Windows.Forms.ToolStripButton btnNew;
 		private System.Windows.Forms.ToolStripButton btnOpen;
@@ -700,5 +720,7 @@
 		private System.Windows.Forms.ToolStripButton btnUnderLayer;
 		private System.Windows.Forms.ToolStripMenuItem btnAnimatedTileManager;
 		private System.Windows.Forms.ToolStripMenuItem btnViewSelected;
+		private System.Windows.Forms.ToolStripStatusLabel lblVersion;
+		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
 	}
 }

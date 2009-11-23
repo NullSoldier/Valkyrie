@@ -24,15 +24,17 @@ namespace Valkyrie.Library.Managers
 			this.mapprovider = new XMLMapProvider(eventassemblies);
 		}
 
+		public ValkyrieWorldManager (IMapProvider mapprovider)
+		{
+			this.mapprovider = mapprovider;
+		}
+
 		#endregion
 
 		#region Public Methods/Properties
 
 		public void Load (Uri location, IEventProvider eventprovider)
 		{
-			if(!this.IsLoaded)
-				throw new ProviderNotLoadedException();
-
 			lock(this.worldmanagerSync)
 			{
 				this.worlds = this.WorldProvider.GetWorlds(location).ToDictionary(p => p.Name, p => p);
@@ -60,9 +62,47 @@ namespace Valkyrie.Library.Managers
 			set { this.worldprovider = value; }
 		}
 
-		public ReadOnlyDictionary<string, World> Worlds
+		public void AddWorld (World world)
 		{
-			get { return new ReadOnlyDictionary<string, World>(this.worlds); }
+			lock(this.worlds)
+			{
+				if(this.worlds.ContainsKey(world.Name)) // Optimize
+					throw new Exception(String.Format("World {0} already exists", world.Name));
+
+				this.worlds.Add(world.Name, world);
+			}
+		}
+
+		public bool RemoveWorld (string name)
+		{
+			lock(this.worlds)
+			{
+				return this.worlds.Remove(name);
+			}
+		}
+
+		public void ClearWorlds ()
+		{
+			lock(this.worlds)
+			{
+				this.worlds.Clear();
+			}
+		}
+
+		public World GetWorld (string name)
+		{
+			lock(this.worlds)
+			{
+				if(!this.worlds.ContainsKey(name))
+					throw new Exception("World not found");
+
+				return this.worlds[name];
+			}
+		}
+
+		public ReadOnlyDictionary<string, World> GetWorlds ()
+		{
+			return new ReadOnlyDictionary<string, World>(this.worlds);
 		}
 
 		#endregion
@@ -82,6 +122,7 @@ namespace Valkyrie.Library.Managers
 		public void LoadEngineContext (IEngineContext context)
 		{
 			this.maproot = context.Configuration[EngineConfigurationName.MapRoot];
+
 			this.texturemanager = context.TextureManager;
 
 			this.isloaded = true;

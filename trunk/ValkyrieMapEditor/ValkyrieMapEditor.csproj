@@ -71,6 +71,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.65.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml">
@@ -91,7 +92,8 @@
     <Compile Include="Core\Components\EventsComponent.cs" />
     <Compile Include="Core\Components\RenderComponent.cs" />
     <Compile Include="Core\Components\DrawComponent.cs" />
-    <Compile Include="Core\MapEditorPlayer.cs" />
+    <Compile Include="Core\GriffinMapProvider.cs" />
+    <Compile Include="Core\SettingsManager.cs" />
     <Compile Include="Forms\frmAnimatedTile.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -253,6 +255,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ValkyrieEngine\ValkyrieEngine.csproj">
+      <Project>{12722697-BA6D-4EED-8E90-50C6094AA407}</Project>
+      <Name>ValkyrieEngine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ValkyrieLibrary\ValkyrieLibrary.csproj">
       <Project>{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}</Project>
       <Name>ValkyrieLibrary</Name>

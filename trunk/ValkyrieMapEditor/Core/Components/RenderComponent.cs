@@ -6,8 +6,9 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Valkyrie.Library.Core;
-using Valkyrie.Library.Maps;
 using Valkyrie.Library;
+using Valkyrie.Engine;
+using Valkyrie.Engine.Maps;
 
 namespace ValkyrieMapEditor.Core
 {
@@ -20,64 +21,67 @@ namespace ValkyrieMapEditor.Core
 
         public void OnSizeChanged(object sender, ScreenResizedEventArgs e)
         {
-            EditorXNA.graphics.PreferredBackBufferWidth = e.Width;
-            EditorXNA.graphics.PreferredBackBufferHeight = e.Height;
-            EditorXNA.graphics.IsFullScreen = false;
-            EditorXNA.graphics.ApplyChanges();
+			EditorXNA.graphics.PreferredBackBufferWidth = e.Width;
+			EditorXNA.graphics.PreferredBackBufferHeight = e.Height;
+			EditorXNA.graphics.IsFullScreen = false;
+			EditorXNA.graphics.ApplyChanges();
 
-            if (TileEngine.Camera != null)
-            {
-                TileEngine.Camera.Screen.Width = e.Width;
-                TileEngine.Camera.Screen.Height = e.Height;
+			if (this.context.SceneProvider.GetCamera("camera1") != null)
+			{
+				var camera = this.context.SceneProvider.GetCamera("camera1");
+				camera.ResizeScreen(camera.Screen.X, camera.Screen.Y, e.Width, e.Height);
 
-                if (TileEngine.IsMapLoaded)
-                {
-                    // Move the X origin
-                    int DisplayedWidth = (TileEngine.CurrentMapChunk.MapSize.X * TileEngine.CurrentMapChunk.TileSize.X) + (int)TileEngine.Camera.MapOffset.X;
-                    if (DisplayedWidth < e.Width)
-                    {
-                        if (TileEngine.CurrentMapChunk.MapSize.X * TileEngine.CurrentMapChunk.TileSize.X < e.Width)
-                            TileEngine.Camera.CenterOriginOnPoint(0, (int)(TileEngine.Camera.MapOffset.Y * -1));
-                        else
-                        {
-                            int newOffset = (e.Width - DisplayedWidth);
-                            TileEngine.Camera.CenterOriginOnPoint((int)(TileEngine.Camera.MapOffset.X * -1) - newOffset, (int)(TileEngine.Camera.MapOffset.Y * -1));
-                        }
-                    }
+			    if (MapEditorManager.CurrentMap != null)
+			    {
+			        // Move the X origin
+					int DisplayedWidth = (MapEditorManager.CurrentMap.MapSize.X * MapEditorManager.CurrentMap.TileSize) + (int)camera.MapOffset.X;
+			        if (DisplayedWidth < e.Width)
+			        {
+						if(MapEditorManager.CurrentMap.MapSize.X * MapEditorManager.CurrentMap.TileSize < e.Width)
+							camera.CenterOriginOnPoint(0, (int)(camera.MapOffset.Y * -1));
+						else
+						{
+							int newOffset = (e.Width - DisplayedWidth);
+							camera.CenterOriginOnPoint((int)(camera.MapOffset.X * -1) - newOffset, (int)(camera.MapOffset.Y * -1));
+						}
+					}
 
-                    // Move the Y origin
-                    int DisplayedHeight = (TileEngine.CurrentMapChunk.MapSize.Y * TileEngine.CurrentMapChunk.TileSize.Y) + (int)TileEngine.Camera.MapOffset.Y;
-                    if (DisplayedHeight < e.Height)
-                    {
-                        if (TileEngine.CurrentMapChunk.MapSize.Y * TileEngine.CurrentMapChunk.TileSize.Y < e.Height)
-                            TileEngine.Camera.CenterOriginOnPoint((int)(TileEngine.Camera.MapOffset.X * -1), 0);
-                        else
-                        {
-                            int newOffset = (e.Height - DisplayedHeight);
-                            TileEngine.Camera.CenterOriginOnPoint((int)(TileEngine.Camera.MapOffset.X * -1), (int)(TileEngine.Camera.MapOffset.Y * -1) - newOffset);
-                        }
-                    }
-                }
+			        // Move the Y origin
+					int DisplayedHeight = (MapEditorManager.CurrentMap.MapSize.Y * MapEditorManager.CurrentMap.TileSize) + (int)camera.MapOffset.Y;
+					if(DisplayedHeight < e.Height)
+					{
+						if(MapEditorManager.CurrentMap.MapSize.Y * MapEditorManager.CurrentMap.TileSize < e.Height)
+							camera.CenterOriginOnPoint((int)(camera.MapOffset.X * -1), 0);
+						else
+						{
+							int newOffset = (e.Height - DisplayedHeight);
+							camera.CenterOriginOnPoint((int)(camera.MapOffset.X * -1), (int)(camera.MapOffset.Y * -1) - newOffset);
+						}
+					}
+			    }
 
-            }
+			}
         }
 
         public void OnScrolled(object sender, ScrollEventArgs e)
         {
-            int dif = (e.NewValue - e.OldValue);
+			var camera = this.context.SceneProvider.GetCamera("camera1");
+			if(camera == null) return;
 
-            if (e.Type == ScrollEventType.EndScroll)
-                return;
+			int dif = (e.NewValue - e.OldValue);
 
-            int x = (int)(TileEngine.Camera.MapOffset.X) * -1;
-            int y = (int)(TileEngine.Camera.MapOffset.Y) * -1;
+			if (e.Type == ScrollEventType.EndScroll)
+			    return;
 
-            if (e.ScrollOrientation == ScrollOrientation.VerticalScroll)
-                y += dif * TileEngine.CurrentMapChunk.TileSize.Y;
-            else
-                x += dif * TileEngine.CurrentMapChunk.TileSize.X;
+			int x = (int)(camera.MapOffset.X) * -1;
+			int y = (int)(camera.MapOffset.Y) * -1;
 
-            TileEngine.Camera.CenterOriginOnPoint(new Point(x, y));
+			if(e.ScrollOrientation == ScrollOrientation.VerticalScroll)
+				y += dif * MapEditorManager.CurrentMap.TileSize;
+			else
+				x += dif * MapEditorManager.CurrentMap.TileSize;
+
+			camera.CenterOriginOnPoint(new Point(x, y));
         }
 
         public void OnMouseDown(object sender, MouseEventArgs ev)
@@ -98,70 +102,73 @@ namespace ValkyrieMapEditor.Core
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (!TileEngine.IsMapLoaded)
-                return;
+			if (MapEditorManager.CurrentMap == null)
+			    return;
 
-            if (MapEditorManager.ViewMode == ViewMode.All)
-            {
-                TileEngine.DrawAllLayers(spriteBatch, false);
-            }
-            else if (MapEditorManager.ViewMode == ViewMode.Below)
-            {
-                if (MapEditorManager.CurrentLayer == MapLayers.TopLayer)
-                {
-                    TileEngine.DrawAllLayers(spriteBatch, false);
-                }
-                else if (MapEditorManager.CurrentLayer == MapLayers.MiddleLayer)
-                {
-					TileEngine.DrawLayerMap(spriteBatch, MapLayers.UnderLayer);
-                    TileEngine.DrawLayerMap(spriteBatch, MapLayers.BaseLayer);
-                    TileEngine.DrawLayerMap(spriteBatch, MapLayers.MiddleLayer);
-                }
-				else if (MapEditorManager.CurrentLayer == MapLayers.BaseLayer)
+			if (MapEditorManager.ViewMode == ViewMode.All)
+			{
+				this.context.SceneProvider.DrawCamera(spriteBatch, "camera1");
+			}
+			else if (MapEditorManager.ViewMode == ViewMode.Below)
+			{
+			    if (MapEditorManager.CurrentLayer == MapLayers.TopLayer)
+			    {
+					this.context.SceneProvider.DrawCamera(spriteBatch, "camera1");
+			    }
+				else if(MapEditorManager.CurrentLayer == MapLayers.MiddleLayer)
 				{
-					TileEngine.DrawLayerMap(spriteBatch, MapLayers.UnderLayer);
-					TileEngine.DrawLayerMap(spriteBatch, MapLayers.BaseLayer);
+					this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.UnderLayer);
+					this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.BaseLayer);
+					this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.MiddleLayer);
+				}
+				else if(MapEditorManager.CurrentLayer == MapLayers.BaseLayer)
+				{
+					this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.UnderLayer);
+					this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.BaseLayer);
 				}
 				else
 				{
-					TileEngine.DrawLayerMap(spriteBatch, MapLayers.UnderLayer);
+					this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.UnderLayer);
 				}
-            }
-            else
-            {
-				// I only changed this because I really wanted to use a switch here
-				// because I already wrote the code and I didn't want to waste it... heh
-				// Also it looks pretty clean. :D
-				switch (MapEditorManager.CurrentLayer)
-				{
-					case MapLayers.UnderLayer:
-						TileEngine.DrawLayerMap(spriteBatch, MapLayers.UnderLayer);
-						break;
+			}
+			else
+			{
+			    // I only changed this because I really wanted to use a switch here
+			    // because I already wrote the code and I didn't want to waste it... heh
+			    // Also it looks pretty clean. :D
+			    switch (MapEditorManager.CurrentLayer)
+			    {
+			        case MapLayers.UnderLayer:
+						this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.UnderLayer);
+			            break;
 
-					case MapLayers.BaseLayer:
-						TileEngine.DrawLayerMap(spriteBatch, MapLayers.BaseLayer);
+			        case MapLayers.BaseLayer:
+						this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.BaseLayer);
 						break;
 
 					case MapLayers.MiddleLayer:
-						TileEngine.DrawLayerMap(spriteBatch, MapLayers.MiddleLayer);
+						this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.MiddleLayer);
 						break;
 
 					case MapLayers.TopLayer:
-						TileEngine.DrawLayerMap(spriteBatch, MapLayers.TopLayer);
+						this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.TopLayer);
 						break;
 
 					default:
 						break;
 				}
-            }
+			}
         }
 
         public void Update(GameTime gameTime)
         {
         }
 
-        public void LoadContent(GraphicsDevice graphicsDevice)
+		public void LoadContent (GraphicsDevice graphicsDevice, IEngineContext context)
         {
+			this.context = context;
         }
+
+		private IEngineContext context = null;
     }
 }

@@ -108,12 +108,10 @@ namespace Valkyrie.Engine
 			this.collisionprovider.LoadEngineContext(this);
 
 			this.texturemanager = texture;
-			this.texturemanager.LoadEngineContext(this);
-			this.texturemanager.Load(this.Configuration[EngineConfigurationName.GraphicsRoot]);
+			this.texturemanager.LoadEngineContext(this);			
 
 			this.worldmanager = world;
 			this.worldmanager.LoadEngineContext(this);
-			this.worldmanager.Load(new Uri(Path.Combine(Environment.CurrentDirectory, Path.Combine(this.Configuration[EngineConfigurationName.DataRoot], this.Configuration[EngineConfigurationName.WorldFile]))), this.eventprovider);
 
 			this.IsLoaded = true;
 		}

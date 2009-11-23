@@ -13,16 +13,13 @@ namespace Valkyrie.Engine.Events
 	{
 		// Properties
 		Rectangle Rectangle { get; set; }
-		
 		ActivationTypes Activation { get; set; }
 		Directions Direction { get; set; }
-	
 		Dictionary<String, String> Parameters { get; set; }
 	
-
 		// Methods
 		string GetStringType();
-		void Trigger(BaseCharacter character);
+		void Trigger(BaseCharacter character, IEngineContext context);
 		
 		IEnumerable<string> GetParameterNames();
 	}

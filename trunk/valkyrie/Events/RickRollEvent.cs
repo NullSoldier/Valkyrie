@@ -7,6 +7,7 @@ using Valkyrie.Library.Events;
 using Microsoft.Xna.Framework;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Engine.Events;
+using Valkyrie.Engine;
 
 namespace Valkyrie.Events
 {
@@ -23,7 +24,7 @@ namespace Valkyrie.Events
 			return "RickRoll";
 		}
 
-		public void Trigger (BaseCharacter character)
+		public void Trigger (BaseCharacter character, IEngineContext context)
 		{
 			Process.Start("http://www.youtube.com/watch?v=Yu_moia-oVI");
 		}

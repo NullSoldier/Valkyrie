@@ -120,7 +120,7 @@ namespace Valkyrie.Engine.Maps
             }
 		}
        
-        private void SetLayerValue(MapPoint point, int value, MapLayers layer)
+        public void SetLayerValue(MapPoint point,  MapLayers layer, int value)
         {
             if (point.X < 0 || (point.X > this.MapSize.X) || point.Y < 0 || (point.Y > this.MapSize.Y))
                 throw new ArgumentOutOfRangeException("point");
@@ -144,6 +144,11 @@ namespace Valkyrie.Engine.Maps
                     this.CollisionLayer[point.Y * this.MapSize.X + point.X] = value; break;
             }
         }
+
+		public int GetTileSetValue (MapPoint point)
+		{
+			return (point.Y * this.TilesPerRow + point.X);
+		}
 
 		public Rectangle GetLayerSourceRect(MapPoint point, MapLayers layer)
 		{

@@ -16,6 +16,11 @@ namespace Valkyrie.Engine.Managers
 		IMapProvider MapProvider { get; set; }
 		IWorldProvider WorldProvider { get; set; }
 
-		ReadOnlyDictionary<string, World> Worlds { get; }
+		void AddWorld (World world);
+		bool RemoveWorld (string name);
+		void ClearWorlds ();
+
+		World GetWorld (string name);
+		ReadOnlyDictionary<string, World> GetWorlds ();
 	}
 }

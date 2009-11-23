@@ -57,10 +57,10 @@ namespace Valkyrie.Modules
 	        if (!this.IsLoaded)
 	            return;
 
-			BaseCamera camera = this.context.SceneProvider.Cameras["camera1"];
+			BaseCamera camera = this.context.SceneProvider.GetCamera("camera1");
 
 			if(camera.ManualControl)
-				camera.CenterOnCharacter(this.context.SceneProvider.Players["player1"]); // center camera on player
+				camera.CenterOnCharacter(this.context.SceneProvider.GetPlayer("player1")); // center camera on player
 
 			this.KeybindController.Update();
 
@@ -86,8 +86,9 @@ namespace Valkyrie.Modules
 	    {
 			this.context = enginecontext;
 
-			this.context.SceneProvider.AddCamera("camera1", new ValkyrieCamera(0, 0, 800, 600) { WorldName = "Kanto" });
+			this.context.WorldManager.Load(new Uri(Path.Combine(Environment.CurrentDirectory, Path.Combine(this.context.Configuration[EngineConfigurationName.DataRoot], this.context.Configuration[EngineConfigurationName.WorldFile]))), this.context.EventProvider);
 			
+			this.context.SceneProvider.AddCamera("camera1", new ValkyrieCamera(0, 0, 800, 600) { WorldName = "Kanto" });
 			this.context.SceneProvider.AddPlayer("player1", new PokePlayer()
 			{
 				WorldName = "Kanto",
@@ -112,11 +113,11 @@ namespace Valkyrie.Modules
 	        //TileEngine.NetworkManager.MessageReceived += this.Game_MessageReceived;
 	       // TileEngine.NetworkManager.Send(new PlayerRequestListMessage());
 
-			this.context.SceneProvider.Players["player1"].StartedMoving += this.GameModule_StartedMoving;
-			this.context.SceneProvider.Players["player1"].StoppedMoving += this.GameModule_StoppedMoving;
-			this.context.SceneProvider.Players["player1"].TileLocationChanged += this.GameModule_TileLocationChanged;
-			this.context.SceneProvider.Players["player1"].Collided += this.GameModule_Collided;
-			this.context.SceneProvider.Players["player1"].TileLocationChanged += TestTileLocationChanged; // for testing purposes
+			this.context.SceneProvider.GetPlayer("player1").StartedMoving += this.GameModule_StartedMoving;
+			this.context.SceneProvider.GetPlayer("player1").StoppedMoving += this.GameModule_StoppedMoving;
+			this.context.SceneProvider.GetPlayer("player1").TileLocationChanged += this.GameModule_TileLocationChanged;
+			this.context.SceneProvider.GetPlayer("player1").Collided += this.GameModule_Collided;
+			this.context.SceneProvider.GetPlayer("player1").TileLocationChanged += TestTileLocationChanged; // for testing purposes
 
 	        this.IsLoaded = true;
 	    }
@@ -312,21 +313,21 @@ namespace Valkyrie.Modules
 	        {
 	            UpdateDirection(ev.KeyPressed);
 
-	            if (!this.context.SceneProvider.Players["player1"].IgnoreMoveInput)
+	            if (!this.context.SceneProvider.GetPlayer("player1").IgnoreMoveInput)
 	            {
 	                switch (this.KeybindController.GetKeyAction(CrntDir))
 	                {
 	                    case "MoveUp":
-							this.context.MovementProvider.BeginMove(this.context.SceneProvider.Players["player1"], Directions.North);
+							this.context.MovementProvider.BeginMove(this.context.SceneProvider.GetPlayer("player1"), Directions.North);
 	                        break;
 	                    case "MoveDown":
-							this.context.MovementProvider.BeginMove(this.context.SceneProvider.Players["player1"], Directions.South);
+							this.context.MovementProvider.BeginMove(this.context.SceneProvider.GetPlayer("player1"), Directions.South);
 	                        break;
 	                    case "MoveLeft":
-							this.context.MovementProvider.BeginMove(this.context.SceneProvider.Players["player1"], Directions.West);
+							this.context.MovementProvider.BeginMove(this.context.SceneProvider.GetPlayer("player1"), Directions.West);
 	                        break;
 	                    case "MoveRight":
-							this.context.MovementProvider.BeginMove(this.context.SceneProvider.Players["player1"], Directions.East);
+							this.context.MovementProvider.BeginMove(this.context.SceneProvider.GetPlayer("player1"), Directions.East);
 	                        break;
 	                }
 	            }
@@ -335,7 +336,7 @@ namespace Valkyrie.Modules
 
 	    public void GameModule_KeyUp(object sender, KeyPressedEventArgs ev)
 	    {
-			PokePlayer player = (PokePlayer)this.context.SceneProvider.Players["player1"];
+			PokePlayer player = (PokePlayer)this.context.SceneProvider.GetPlayer("player1");
 
 	        // Did we activate?
 	        switch (ev.Action)

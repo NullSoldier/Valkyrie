@@ -10,6 +10,7 @@ using Valkyrie.Library;
 using Microsoft.Xna.Framework;
 using Valkyrie.Engine.Events;
 using Valkyrie.Engine.Characters;
+using Valkyrie.Engine;
 
 namespace Valkyrie.Events
 {
@@ -27,7 +28,7 @@ namespace Valkyrie.Events
 			return "JumpPad";
 		}
 
-		public void Trigger (BaseCharacter character)
+		public void Trigger (BaseCharacter character, IEngineContext context)
 		{
 			throw new NotImplementedException();
 		}

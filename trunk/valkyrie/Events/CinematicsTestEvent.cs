@@ -7,6 +7,7 @@ using Valkyrie.Core;
 using Microsoft.Xna.Framework;
 using Valkyrie.Engine.Events;
 using Valkyrie.Engine.Characters;
+using Valkyrie.Engine;
 
 namespace Valkyrie.Events
 {
@@ -45,7 +46,7 @@ namespace Valkyrie.Events
 			return "Cinematics";
 		}
 
-		public void Trigger (BaseCharacter character)
+		public void Trigger (BaseCharacter character, IEngineContext context)
 		{
 			//if(!(TileEngine.Camera is PokeCamera))
 			//    return;

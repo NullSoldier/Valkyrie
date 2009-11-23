@@ -7,9 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Valkyrie.Library.Events;
-using Valkyrie.Library.Characters;
 using ValkyrieMapEditor.Properties;
 using Valkyrie.Library;
+using Valkyrie.Engine.Events;
+using Valkyrie.Engine.Characters;
 
 namespace ValkyrieMapEditor.Forms
 {
@@ -39,31 +40,31 @@ namespace ValkyrieMapEditor.Forms
 
 		private void frmMapEvent_Load(object sender, EventArgs e)
 		{
-			// Event Handler types
-			foreach (var type in frmMain.EventHandlerTypes)
-				this.inType.Items.Add(type);
+			//// Event Handler types
+			//foreach (var type in frmMain.EventHandlerTypes)
+			//    this.inType.Items.Add(type);
 
-			this.inType.DisplayMember = "Name";
-			this.inType.SelectedIndex = 0;
+			//this.inType.DisplayMember = "Name";
+			//this.inType.SelectedIndex = 0;
 
-			// Directions
-			var values = Enum.GetNames(typeof(Directions));
+			//// Directions
+			//var values = Enum.GetNames(typeof(Directions));
 
-			for (int i = 0; i < values.Length; i++)
-				this.inDirection.Items.Add(values[i]);
+			//for (int i = 0; i < values.Length; i++)
+			//    this.inDirection.Items.Add(values[i]);
 
-			this.inDirection.SelectedIndex = 0;
+			//this.inDirection.SelectedIndex = 0;
 
-			// Activation
-			values = Enum.GetNames(typeof(ActivationTypes));
+			//// Activation
+			//values = Enum.GetNames(typeof(ActivationTypes));
 
-			for (int i = 0; i < values.Length; i++)
-				this.inActivation.Items.Add(values[i]);
+			//for (int i = 0; i < values.Length; i++)
+			//    this.inActivation.Items.Add(values[i]);
 
-			this.inActivation.SelectedIndex = 0;
+			//this.inActivation.SelectedIndex = 0;
 
-			// Display events
-			this.DisplayEvent();
+			//// Display events
+			//this.DisplayEvent();
 		}
 
         public void DisplayEvent()

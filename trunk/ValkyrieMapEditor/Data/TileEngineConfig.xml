@@ -4,7 +4,7 @@
     <GraphicsRoot>Graphics</GraphicsRoot>
     <MapRoot>Maps</MapRoot>
     <DataRoot>Data</DataRoot>
-    <EntryMap>PokeMap.xml</EntryMap>
-    <EntryPoint></EntryPoint>
+    <DefaultModule>Menu</DefaultModule>
+    <WorldFile>PokeWorld.xml</WorldFile>
   </Config>
 </XnaContent>

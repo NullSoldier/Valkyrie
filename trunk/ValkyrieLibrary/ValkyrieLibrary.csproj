@@ -100,7 +100,9 @@
     <Compile Include="Providers\ValkyrieEventProvider.cs" />
     <Compile Include="Providers\ValkyrieModuleProvider.cs" />
     <Compile Include="Providers\ValkyrieMovementProvider.cs" />
+    <Compile Include="Providers\ValkyrieNetworkProvider.cs" />
     <Compile Include="Providers\ValkyrieSceneProvider.cs" />
+    <Compile Include="Providers\ValkyrieSoundProvider.cs" />
     <Compile Include="Providers\XMLMapProvider.cs" />
     <Compile Include="Providers\XMLWorldProvider.cs" />
     <Compile Include="Managers\ValkyrieWorldManager.cs" />

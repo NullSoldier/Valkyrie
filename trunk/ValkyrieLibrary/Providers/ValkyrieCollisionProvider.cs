@@ -26,7 +26,7 @@ namespace Valkyrie.Library.Providers
 			if(source.Density < 1)
 				return true;
 
-			World currentworld = this.context.WorldManager.Worlds[source.WorldName];
+			World currentworld = this.context.WorldManager.GetWorld(source.WorldName);
 
 			foreach(MapHeader header in currentworld.Maps.Values)
 			{

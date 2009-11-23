@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using ValkyrieMapEditor.Core;
 
 namespace ValkyrieMapEditor
 {
@@ -10,27 +11,27 @@ namespace ValkyrieMapEditor
 		/// The main entry point for the application.
 		/// </summary>
 		///
+		public static SettingsManager Settings = new SettingsManager();
 
 		[STAThreadAttribute]
 		static void Main(string[] args)
 		{
-			frmMain form = new frmMain();
-
-			if (!Debugger.IsAttached)
+			if(!Debugger.IsAttached)
 				AppDomain.CurrentDomain.UnhandledException += Program.Program_UnhandledException;
 
-			using (EditorXNA game = new EditorXNA(form.getDrawSurface(), form.getDrawTilesSurface()))
-			{
-                form.ScreenResized += game.Resized;
-                form.ScrolledMap += game.Scrolled;
+			Program.Settings.Initialize();
+			Program.Settings.SetCurrentProfile("Default");
 
-                game.EnlistEvents(form.pctSurface);
+			frmMain form = new frmMain();
 
-                MapEditorManager.GameInstance = game;
+			MapEditorManager.GameInstance = new EditorXNA(form.getDrawSurface(), form.getDrawTilesSurface());
+			MapEditorManager.GameInstance.EnlistEvents(form.pctSurface);
 
-                form.Show();
-				game.Run(); 
-			}
+            form.ScreenResized += MapEditorManager.GameInstance.Resized;
+			form.ScrolledMap += MapEditorManager.GameInstance.Scrolled;
+			form.Show();
+
+			MapEditorManager.GameInstance.Run();
 		}
 
 		static void Program_UnhandledException(object sender, UnhandledExceptionEventArgs ev)

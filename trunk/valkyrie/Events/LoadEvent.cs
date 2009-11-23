@@ -8,6 +8,7 @@ using Valkyrie.Library.Events;
 using Microsoft.Xna.Framework;
 using Valkyrie.Engine.Events;
 using Valkyrie.Engine.Characters;
+using Valkyrie.Engine;
 
 namespace Valkyrie.Events
 {
@@ -24,7 +25,7 @@ namespace Valkyrie.Events
 			return "Load";
 		}
 
-		public void Trigger (BaseCharacter character)
+		public void Trigger (BaseCharacter character, IEngineContext context)
 		{
 			String name = this.Parameters["World"];
 			String pos = this.Parameters["EntryPointName"];

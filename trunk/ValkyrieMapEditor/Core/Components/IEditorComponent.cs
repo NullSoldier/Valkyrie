@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Valkyrie.Engine;
 
 namespace ValkyrieMapEditor.Core
 {
@@ -20,6 +21,13 @@ namespace ValkyrieMapEditor.Core
         void Draw(SpriteBatch spriteBatch);
         void Update(GameTime gameTime);
 
-        void LoadContent(GraphicsDevice graphicsDevice);
+		void LoadContent (GraphicsDevice graphicsDevice, IEngineContext context);
     }
+
+	public enum ComponentID
+	{
+		Draw,
+		Events,
+		Collsion,
+	};
 }

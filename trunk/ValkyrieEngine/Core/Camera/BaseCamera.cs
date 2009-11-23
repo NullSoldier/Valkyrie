@@ -34,6 +34,12 @@ namespace Valkyrie.Engine
 			this.viewport = new Viewport() { X = x, Y = y, Width = width, Height = height };
 		}
 
+		public BaseCamera (Viewport viewport)
+		{
+			this.screen = new Rectangle(viewport.X, viewport.Y, viewport.Width, viewport.Height);
+			this.viewport = viewport;
+		}
+
 		#endregion
 
 		#region Public Methods/Properties
@@ -99,10 +105,19 @@ namespace Valkyrie.Engine
 
 		public bool CheckIsVisible(Rectangle rect)
 		{
-			Rectangle screen = new Rectangle(0, 0, this.Screen.Width, this.Screen.Height);
-			return (screen.Intersects(rect) == true);
+			return (this.screen.Intersects(rect) == true);
 		}
 
+		public void ResizeScreen (Rectangle rectangle)
+		{
+			this.ResizeScreen(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+		}
+
+		public void ResizeScreen (int x, int y, int width, int height)
+		{
+			this.screen = new Rectangle(x, y, width, height);
+			this.viewport = new Viewport() { X = x, Y = y, Width = width, Height = height };
+		}
 
 		public void CenterOriginOnPoint(Point Point)
 		{

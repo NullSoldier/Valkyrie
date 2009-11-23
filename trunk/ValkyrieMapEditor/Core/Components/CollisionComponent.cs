@@ -6,8 +6,10 @@ using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Valkyrie.Library.Core;
-using Valkyrie.Library.Maps;
 using Valkyrie.Library;
+using Valkyrie.Engine;
+using Valkyrie.Engine.Core;
+using Valkyrie.Engine.Maps;
 
 namespace ValkyrieMapEditor.Core
 {
@@ -20,9 +22,11 @@ namespace ValkyrieMapEditor.Core
 
         }
 
-        public void LoadContent(GraphicsDevice graphicsDevice)
+        public void LoadContent(GraphicsDevice graphicsDevice, IEngineContext context)
         {
             this.CollisionSprite = Texture2D.FromFile(graphicsDevice, "Graphics/EditorCollision.png");
+
+			this.context = context;
         }
 
         public void OnSizeChanged(object sender, ScreenResizedEventArgs e)
@@ -47,33 +51,41 @@ namespace ValkyrieMapEditor.Core
 
         public void OnMouseClicked(object sender, MouseEventArgs e)
         {
-            if (TileEngine.IsMapLoaded)
-            {
-                MapPoint point = new MapPoint((e.Location.X - (int)TileEngine.Camera.MapOffset.X) / 32, (e.Location.Y - (int)TileEngine.Camera.MapOffset.Y) / 32);
+			if (MapEditorManager.CurrentMap != null)
+			{
+				var camera = this.context.SceneProvider.GetCamera("camera1");
 
-                if (e.Button == MouseButtons.Left)
-                    TileEngine.CurrentMapChunk.SetData(MapLayers.CollisionLayer, point, 1);
-            }
+			    MapPoint point = new MapPoint((e.Location.X - (int)camera.MapOffset.X) / 32, (e.Location.Y - (int)camera.MapOffset.Y) / 32);
+
+				if(e.Button == MouseButtons.Left)
+				{
+					int value = MapEditorManager.CurrentMap.GetLayerValue(point, MapLayers.CollisionLayer);
+
+					MapEditorManager.CurrentMap.SetLayerValue(point, MapLayers.CollisionLayer, value * -1);
+				}
+			}
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            for (int y = 0; y < TileEngine.CurrentMapChunk.MapSize.Y; y++)
-            {
-                for (int x = 0; x < TileEngine.CurrentMapChunk.MapSize.X; x++)
-                {
-                    int value = TileEngine.CurrentMapChunk.GetLayerValue(new MapPoint(x, y), MapLayers.CollisionLayer);
+			for (int y = 0; y < MapEditorManager.CurrentMap.MapSize.Y; y++)
+			{
+				for(int x = 0; x < MapEditorManager.CurrentMap.MapSize.X; x++)
+			    {
+					int value = MapEditorManager.CurrentMap.GetLayerValue(new MapPoint(x, y), MapLayers.CollisionLayer);
 
-                    if (value == -1)
-                        continue;
+			        if (value == -1)
+			            continue;
 
-                    Rectangle destRectangle = new Rectangle(0, 0, TileEngine.CurrentMapChunk.TileSize.X, TileEngine.CurrentMapChunk.TileSize.Y);
-                    destRectangle.X = (int)TileEngine.Camera.MapOffset.X + (int)TileEngine.Camera.CameraOffset.X + (x * TileEngine.CurrentMapChunk.TileSize.X);
-                    destRectangle.Y = (int)TileEngine.Camera.MapOffset.Y + (int)TileEngine.Camera.CameraOffset.Y + (y * TileEngine.CurrentMapChunk.TileSize.Y);
+					var camera = this.context.SceneProvider.GetCamera("camera1");
 
-                    spriteBatch.Draw(this.CollisionSprite, destRectangle, new Rectangle(0, 0, this.CollisionSprite.Width, this.CollisionSprite.Height), Color.White);
-                }
-            }
+					Rectangle destRectangle = new Rectangle(0, 0, MapEditorManager.CurrentMap.TileSize, MapEditorManager.CurrentMap.TileSize);
+					destRectangle.X = (int)camera.MapOffset.X + (int)camera.CameraOffset.X + (x * MapEditorManager.CurrentMap.TileSize);
+					destRectangle.Y = (int)camera.MapOffset.Y + (int)camera.CameraOffset.Y + (y * MapEditorManager.CurrentMap.TileSize);
+
+			        spriteBatch.Draw(this.CollisionSprite, destRectangle, new Rectangle(0, 0, this.CollisionSprite.Width, this.CollisionSprite.Height), Color.White);
+			    }
+			}
         }
 
         public void Update(GameTime gameTime)
@@ -81,6 +93,6 @@ namespace ValkyrieMapEditor.Core
 
         }
 
-
+		private IEngineContext context = null;
     }
 }
