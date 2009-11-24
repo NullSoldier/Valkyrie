@@ -110,7 +110,7 @@ namespace ValkyrieMapEditor.Core
 				this.OpenDatabase(path);
 
 			var command = this.connection.CreateCommand();
-			command.CommandText ="CREATE TABLE profiles (id INTEGER PRIMARY KEY, name VARCHAR(50), current DEFAULT 0 INTEGER);";
+			command.CommandText ="CREATE TABLE profiles (id INTEGER PRIMARY KEY, name VARCHAR(50), current INTEGER DEFAULT 0);";
 			command.ExecuteNonQuery();
 
 			command.CommandText = "CREATE TABLE settings (id INTEGER PRIMARY KEY, profileid INTEGER NOT NULL, name VARCHAR(50), value TEXT)";
