@@ -69,8 +69,8 @@
 			this.btnBaseLayer = new System.Windows.Forms.ToolStripButton();
 			this.btnMiddleLayer = new System.Windows.Forms.ToolStripButton();
 			this.btnTopLayer = new System.Windows.Forms.ToolStripButton();
-			this.btnCollisionLayer = new System.Windows.Forms.ToolStripButton();
 			this.btnHelp = new System.Windows.Forms.ToolStripButton();
+			this.btnCollisionLayer = new System.Windows.Forms.ToolStripButton();
 			this.btnEvent = new System.Windows.Forms.ToolStripButton();
 			this.btnPencil = new System.Windows.Forms.ToolStripButton();
 			this.btnRect = new System.Windows.Forms.ToolStripButton();
@@ -537,18 +537,6 @@
 			this.btnTopLayer.Text = "Top Layer";
 			this.btnTopLayer.Click += new System.EventHandler(this.btnTopLayer_Click);
 			// 
-			// btnCollisionLayer
-			// 
-			this.btnCollisionLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.btnCollisionLayer.Enabled = false;
-			this.btnCollisionLayer.Image = global::ValkyrieMapEditor.Properties.Resources.imgCollision;
-			this.btnCollisionLayer.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.btnCollisionLayer.Name = "btnCollisionLayer";
-			this.btnCollisionLayer.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnCollisionLayer.Size = new System.Drawing.Size(34, 22);
-			this.btnCollisionLayer.Text = "Collison Layer";
-			this.btnCollisionLayer.Click += new System.EventHandler(this.btnCollisionLayer_Click);
-			// 
 			// btnHelp
 			// 
 			this.btnHelp.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -560,6 +548,18 @@
 			this.btnHelp.Size = new System.Drawing.Size(34, 22);
 			this.btnHelp.Text = "Help";
 			this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
+			// 
+			// btnCollisionLayer
+			// 
+			this.btnCollisionLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnCollisionLayer.Enabled = false;
+			this.btnCollisionLayer.Image = global::ValkyrieMapEditor.Properties.Resources.imgCollision;
+			this.btnCollisionLayer.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.btnCollisionLayer.Name = "btnCollisionLayer";
+			this.btnCollisionLayer.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
+			this.btnCollisionLayer.Size = new System.Drawing.Size(34, 22);
+			this.btnCollisionLayer.Text = "Collison Layer";
+			this.btnCollisionLayer.Click += new System.EventHandler(this.btnCollisionLayer_Click);
 			// 
 			// btnEvent
 			// 

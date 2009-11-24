@@ -26,6 +26,8 @@ namespace ValkyrieMapEditor.Core
 			EditorXNA.graphics.IsFullScreen = false;
 			EditorXNA.graphics.ApplyChanges();
 
+			if(!this.isloaded) return;
+
 			if (this.context.SceneProvider.GetCamera("camera1") != null)
 			{
 				var camera = this.context.SceneProvider.GetCamera("camera1");
@@ -167,8 +169,11 @@ namespace ValkyrieMapEditor.Core
 		public void LoadContent (GraphicsDevice graphicsDevice, IEngineContext context)
         {
 			this.context = context;
+
+			this.isloaded = true;
         }
 
+		private bool isloaded = false;
 		private IEngineContext context = null;
     }
 }
