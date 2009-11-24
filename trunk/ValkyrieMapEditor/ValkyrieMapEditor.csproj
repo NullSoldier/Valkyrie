@@ -154,6 +154,7 @@
     <Content Include="Graphics\EditorEvent.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="System.Data.SQLite.dll" />
     <None Include="Resources\layers.png" />
     <None Include="Resources\shape_handles.png" />
     <None Include="Resources\film.png" />
