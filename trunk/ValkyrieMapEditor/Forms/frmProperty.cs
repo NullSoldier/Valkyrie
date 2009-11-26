@@ -25,6 +25,7 @@ namespace ValkyrieMapEditor
 			InitializeComponent();
 
 			this.Map = map;
+			this.LastMapSize = new MapPoint(map.MapSize.X, map.MapSize.Y);
 			this.IsNewMap = false;
 
 			this.LoadPropertes(this.IsNewMap);
@@ -48,7 +49,21 @@ namespace ValkyrieMapEditor
 			set { this.map = value; }
 		}
 
+		public MapPoint LastMapSize
+		{
+			get { return this.lastmapsize; }
+			set { this.lastmapsize = value; }
+		}
+
+		public MapPoint NewMapSize
+		{
+			get { return this.newmapsize; }
+			set { this.newmapsize = value; }
+		}
+
 		private Map map;
+		private MapPoint lastmapsize = MapPoint.Zero;
+		private MapPoint newmapsize = MapPoint.Zero;
 		private bool IsNewMap = true;
 
 		private void LoadPropertes(bool newMap)
@@ -107,7 +122,10 @@ namespace ValkyrieMapEditor
 			this.map.Name = this.inName.Text;
 			this.map.TextureName = TileSet.Name;
 			this.map.TileSize = (int)this.inTileSize.Value;
-			this.map.MapSize = new MapPoint((int)this.inMapWidth.Value, (int)this.inMapHeight.Value);
+			//if(this.IsNewMap)
+			//	this.Map.MapSize = new MapPoint((int)this.inMapWidth.Value, (int)this.inMapHeight.Value);
+			//else
+				this.NewMapSize = new MapPoint((int)this.inMapWidth.Value, (int)this.inMapHeight.Value);
 
 			this.DialogResult = DialogResult.OK;
 			this.Close();

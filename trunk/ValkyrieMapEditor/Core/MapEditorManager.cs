@@ -230,21 +230,26 @@ namespace ValkyrieMapEditor
 
 		public static Map ApplyMapProperties (Map oldMap)
 		{
+			return MapEditorManager.ResizeMap(oldMap, oldMap.MapSize);
+		}
+
+		public static Map ResizeMap (Map map, MapPoint newsize)
+		{
 			Map newMap = new Map();
+			newMap.Name = map.Name;
+			newMap.TextureName = map.TextureName;
+			newMap.Texture = map.Texture;
+			newMap.TileSize = map.TileSize;
+			foreach(var animation in map.AnimatedTiles)
+				newMap.AnimatedTiles.Add(animation.Key, animation.Value);
 
-			newMap.Name = oldMap.Name;
-			newMap.MapSize = oldMap.MapSize;
-			newMap.TileSize = oldMap.TileSize;
-			newMap.TextureName = oldMap.TextureName;
-			// newMap.Texture = TileEngine.TextureManager.GetTexture(newMap.TextureName);
+			newMap.MapSize = newsize;
+			newMap.UnderLayer = new int[newsize.X * newsize.Y];
+			newMap.BaseLayer = new int[newsize.X * newsize.Y];
+			newMap.MiddleLayer = new int[newsize.X * newsize.Y];
+			newMap.TopLayer = new int[newsize.X * newsize.Y];
+			newMap.CollisionLayer = new int[newsize.X * newsize.Y];
 
-			newMap.UnderLayer = new int[newMap.MapSize.X * newMap.MapSize.Y];
-			newMap.BaseLayer = new int[newMap.MapSize.X * newMap.MapSize.Y];
-			newMap.MiddleLayer = new int[newMap.MapSize.X * newMap.MapSize.Y];
-			newMap.TopLayer = new int[newMap.MapSize.X * newMap.MapSize.Y];
-			newMap.CollisionLayer = new int[newMap.MapSize.X * newMap.MapSize.Y];
-
-			// Initialize to -1 for optimization. The engine doesn't render -1
 			for(int i = 0; i < (newMap.MapSize.X * newMap.MapSize.Y); i++)
 			{
 				newMap.UnderLayer[i] = -1;
@@ -252,6 +257,33 @@ namespace ValkyrieMapEditor
 				newMap.MiddleLayer[i] = -1;
 				newMap.TopLayer[i] = -1;
 				newMap.CollisionLayer[i] = -1;
+			}
+
+			for(int y = 0; y < newsize.Y; y++)
+			{
+				for(int x = 0; x < newsize.X; x++)
+				{
+					// If it's outside the Y range always fill with -1
+					if(y >= map.MapSize.Y)
+					{
+						newMap.SetLayerValue(new MapPoint(x, y), MapLayers.UnderLayer, -1);
+						continue;
+					}
+
+					// If it's outside the X range but not the Y range, fill with 0
+					if(x >= map.MapSize.X)
+					{
+						newMap.SetLayerValue(new MapPoint(x, y), MapLayers.UnderLayer, -1);
+						continue;
+					}
+
+					//Fill the new location with the value of the old location
+					newMap.SetLayerValue(new MapPoint(x, y), MapLayers.UnderLayer, map.GetLayerValue(new MapPoint(x, y), MapLayers.UnderLayer));
+					newMap.SetLayerValue(new MapPoint(x, y), MapLayers.BaseLayer, map.GetLayerValue(new MapPoint(x, y), MapLayers.BaseLayer));
+					newMap.SetLayerValue(new MapPoint(x, y), MapLayers.MiddleLayer, map.GetLayerValue(new MapPoint(x, y), MapLayers.MiddleLayer));
+					newMap.SetLayerValue(new MapPoint(x, y), MapLayers.TopLayer, map.GetLayerValue(new MapPoint(x, y), MapLayers.TopLayer));
+					newMap.SetLayerValue(new MapPoint(x, y), MapLayers.CollisionLayer, map.GetLayerValue(new MapPoint(x, y), MapLayers.CollisionLayer));
+				}
 			}
 
 			return newMap;

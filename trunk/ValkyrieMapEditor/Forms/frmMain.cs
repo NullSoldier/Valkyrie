@@ -122,6 +122,7 @@ namespace ValkyrieMapEditor
 
 			Map newMap = MapEditorManager.ApplyMapProperties(dialog.Map);
 			newMap.Texture = MapEditorManager.GameInstance.Engine.TextureManager.GetTexture(newMap.TextureName);
+			newMap = MapEditorManager.ResizeMap(newMap, dialog.NewMapSize);
 
 			MapEditorManager.SetCurrentMap(newMap);
 
@@ -158,9 +159,14 @@ namespace ValkyrieMapEditor
 				frmProperty dialog = new frmProperty(MapEditorManager.CurrentMap);
 				dialog.ShowDialog(this);
 
-				this.DisplayMapProperties(MapEditorManager.CurrentMap);
-
 				MapEditorManager.ApplyMapProperties(MapEditorManager.CurrentMap);
+				if(dialog.NewMapSize != dialog.LastMapSize)
+				{
+					var tmpmap = MapEditorManager.ResizeMap(MapEditorManager.CurrentMap, dialog.NewMapSize);
+					MapEditorManager.SetCurrentMap(tmpmap);
+				}
+
+				this.DisplayMapProperties(MapEditorManager.CurrentMap);
 
 				this.UpdateScrollBars();
 			}
