@@ -115,18 +115,18 @@ namespace ValkyrieMapEditor
 
 		private void toolNew_Click (object sender, EventArgs e)
 		{
-			Map newMap = new Map();
-
-			frmProperty dialog = new frmProperty(newMap, true);
+			frmProperty dialog = new frmProperty();
 			DialogResult result = dialog.ShowDialog(this);
 			if(result == DialogResult.Cancel)
 				return;
 
-			MapEditorManager.ApplyMapProperties(newMap);
-
-			this.DisplayMapProperties(newMap);
+			Map newMap = MapEditorManager.ApplyMapProperties(dialog.Map);
+			newMap.Texture = MapEditorManager.GameInstance.Engine.TextureManager.GetTexture(newMap.TextureName);
 
 			MapEditorManager.SetCurrentMap(newMap);
+
+			this.DisplayMapProperties(newMap);
+			this.DisplayTileSheet(newMap);
 
 			this.currentmaplocation = null;
 		}
@@ -155,7 +155,7 @@ namespace ValkyrieMapEditor
 		{
 			if(MapEditorManager.CurrentMap != null)
 			{
-				frmProperty dialog = new frmProperty(MapEditorManager.CurrentMap, false);
+				frmProperty dialog = new frmProperty(MapEditorManager.CurrentMap);
 				dialog.ShowDialog(this);
 
 				this.DisplayMapProperties(MapEditorManager.CurrentMap);

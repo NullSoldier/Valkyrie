@@ -11,95 +11,109 @@ using System.IO;
 using System.Drawing;
 using Valkyrie.Library;
 using Valkyrie.Engine.Maps;
+using Valkyrie.Engine;
+using Valkyrie.Engine.Core;
 
 namespace ValkyrieMapEditor
 {
     public partial class frmProperty : Form
     {
+		#region Constructors
+
+		public frmProperty(Map map)
+        {
+			InitializeComponent();
+
+			this.Map = map;
+			this.IsNewMap = false;
+
+			this.LoadPropertes(this.IsNewMap);
+        }
+
+		public frmProperty ()
+		{
+			this.InitializeComponent();
+
+			this.Map = new Map();
+			this.IsNewMap = true;
+
+			this.LoadPropertes(this.IsNewMap);
+		}
+
+		#endregion
+
 		public Map Map
 		{
 			get { return this.map; }
-			set { this.map = value; } 
+			set { this.map = value; }
 		}
 
-        private Map map;
-        private bool IsNewMap;
+		private Map map;
+		private bool IsNewMap = true;
 
-        public frmProperty(Map map, bool newMap)
+		private void LoadPropertes(bool newMap)
         {
-			//InitializeComponent();
-			//this.Map = map;
-			//this.IsNewMap = newMap;
+			if(!newMap)
+			{
+				this.inName.Text = this.map.Name;
 
-			//this.LoadPropertes(newMap);            
-        }
+				this.inTileSet.Text = Path.Combine(Environment.CurrentDirectory, Path.Combine(MapEditorManager.GameInstance.Engine.Configuration[EngineConfigurationName.GraphicsRoot], map.TextureName));
 
-        public void LoadPropertes(bool newMap)
-        {
-			//if (!newMap)
-			//{
-			//    this.inName.Text = this.map.Name;
+				this.inMapWidth.Value = this.map.MapSize.X;
+				this.inMapHeight.Value = this.map.MapSize.Y;
 
-			//    this.inTileSet.Text = MapEditorManager.CurrentTileSetLocation.FullName;
+				this.inTileSize.Value = this.map.TileSize;
+			}
+			else
+			{
+				this.inName.Text = "New Map";
+				this.inMapWidth.Value = 20;
+				this.inMapHeight.Value = 20;
 
-			//    this.inMapWidth.Value = this.map.MapSize.X;
-			//    this.inMapHeight.Value = this.map.MapSize.Y;
-
-			//    this.inTileWidth.Value = this.map.TileSize;
-			//    this.inTileHeight.Value = this.map.TileSize;
-			//}
-			//else
-			//{
-			//    this.inName.Text = "New Map";
-			//    this.inMapWidth.Value = 20;
-			//    this.inMapHeight.Value = 20;
-
-			//    this.inTileWidth.Value = 32;
-			//    this.inTileHeight.Value = 32;
-			//}
+				this.inTileSize.Value = 32;
+			}
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-			//this.DialogResult = DialogResult.Cancel;
-			//this.Close();
+			this.DialogResult = DialogResult.Cancel;
+			this.Close();
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-			//if (!ValidateForm())
-			//    return;
+			if (!ValidateForm())
+			    return;
 
-			//// Copy it over
-			//FileInfo TileSet = new FileInfo(this.inTileSet.Text);
-			//FileInfo tmp = new FileInfo(Path.Combine(Environment.CurrentDirectory, TileEngine.Configuration[TileEngineConfigurationName.GraphicsRoot]));			
+			// Copy it over
+			FileInfo TileSet = new FileInfo(this.inTileSet.Text);
+			string graphicsdir = Path.Combine(Environment.CurrentDirectory, MapEditorManager.GameInstance.Engine.Configuration[EngineConfigurationName.GraphicsRoot]);
+			FileInfo tmp = new FileInfo(graphicsdir);			
 
-			//if (TileSet.FullName != (tmp.FullName + TileSet.Name))
-			//{
-			//    try
-			//    {
-			//        var result = MessageBox.Show("Would you like to copy this tile set to the local directory this will override any previous tilesheets with that name?", "Copy Tileset", MessageBoxButtons.YesNo);
-			//        if (result == DialogResult.Yes)
-			//            TileSet.CopyTo(Path.Combine(Path.Combine(Environment.CurrentDirectory, TileEngine.Configuration[TileEngineConfigurationName.GraphicsRoot]), TileSet.Name), true);
-			//    }
-			//    catch (IOException)
-			//    {
-			//        MessageBox.Show(String.Format("Could not copy the image {0} to the target directory.", TileSet.Name), "Error", MessageBoxButtons.OK);
-			//    }
-			//}
+			if (TileSet.FullName != (tmp.FullName + TileSet.Name))
+			{
+			    try
+			    {
+			        var result = MessageBox.Show("Would you like to copy this tile set to the local directory this will override any previous tilesheets with that name?", "Copy Tileset", MessageBoxButtons.YesNo);
+			        if (result == DialogResult.Yes)
+						TileSet.CopyTo(Path.Combine(graphicsdir, TileSet.Name), true);
+			    }
+			    catch (IOException)
+			    {
+			        MessageBox.Show(String.Format("Could not copy the image {0} to the target directory.", TileSet.Name), "Error", MessageBoxButtons.OK);
+			    }
+			}
 
-			//this.map.TextureName = TileSet.Name;
+			this.map.Name = this.inName.Text;
+			this.map.TextureName = TileSet.Name;
+			this.map.TileSize = (int)this.inTileSize.Value;
+			this.map.MapSize = new MapPoint((int)this.inMapWidth.Value, (int)this.inMapHeight.Value);
 
-			//// Other properties
-			//this.map.Name = this.inName.Text;
-			//this.map.MapSize = new MapPoint((int)this.inMapWidth.Value, (int)this.inMapHeight.Value);
-			//this.map.TileSize = new ScreenPoint((int)this.inTileWidth.Value, (int)this.inTileHeight.Value);
-
-			//this.DialogResult = DialogResult.OK;
-			//this.Close();
+			this.DialogResult = DialogResult.OK;
+			this.Close();
         }
 
-		public bool ValidateForm()
+		private bool ValidateForm()
 		{
 			bool Error = false;
 
@@ -107,8 +121,7 @@ namespace ValkyrieMapEditor
 			this.inName.BackColor = Color.FromKnownColor(KnownColor.Control);
 			this.inMapWidth.BackColor = Color.FromKnownColor(KnownColor.Control);
 			this.inMapHeight.BackColor = Color.FromKnownColor(KnownColor.Control);
-			this.inTileWidth.BackColor = Color.FromKnownColor(KnownColor.Control);
-			this.inTileHeight.BackColor = Color.FromKnownColor(KnownColor.Control);
+			this.inTileSize.BackColor = Color.FromKnownColor(KnownColor.Control);
 
 			/* TileSet */
 			if (string.IsNullOrEmpty(this.inTileSet.Text))
@@ -153,15 +166,9 @@ namespace ValkyrieMapEditor
 				Error = true;
 			}
 
-			if (string.IsNullOrEmpty(this.inTileWidth.Text))
+			if (string.IsNullOrEmpty(this.inTileSize.Text))
 			{
-				this.inTileWidth.BackColor = Color.Red;
-				Error = true;
-			}
-
-			if (string.IsNullOrEmpty(this.inTileHeight.Text))
-			{
-				this.inTileHeight.BackColor = Color.Red;
+				this.inTileSize.BackColor = Color.Red;
 				Error = true;
 			}
 

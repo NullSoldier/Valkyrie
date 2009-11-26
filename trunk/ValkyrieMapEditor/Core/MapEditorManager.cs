@@ -228,7 +228,7 @@ namespace ValkyrieMapEditor
 			GameInstance.Engine.SceneProvider.GetCameras().FirstOrDefault().Value.CenterOriginOnPoint(0, 0);
 		}
 
-		public static void ApplyMapProperties (Map oldMap)
+		public static Map ApplyMapProperties (Map oldMap)
 		{
 			Map newMap = new Map();
 
@@ -254,7 +254,7 @@ namespace ValkyrieMapEditor
 				newMap.CollisionLayer[i] = -1;
 			}
 
-			oldMap = newMap;
+			return newMap;
 		}
 
 		#endregion

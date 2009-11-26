@@ -47,18 +47,15 @@
 			this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
 			this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
 			this.label5 = new System.Windows.Forms.Label();
-			this.label6 = new System.Windows.Forms.Label();
-			this.inTileWidth = new System.Windows.Forms.NumericUpDown();
-			this.inTileHeight = new System.Windows.Forms.NumericUpDown();
-			this.label7 = new System.Windows.Forms.Label();
+			this.lblTileSize = new System.Windows.Forms.Label();
+			this.inTileSize = new System.Windows.Forms.NumericUpDown();
 			((System.ComponentModel.ISupportInitialize)(this.inMapWidth)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.inMapHeight)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.inTileWidth)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.inTileHeight)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.inTileSize)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// lblName
@@ -77,13 +74,13 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.inName.Location = new System.Drawing.Point(122, 12);
 			this.inName.Name = "inName";
-			this.inName.Size = new System.Drawing.Size(260, 22);
+			this.inName.Size = new System.Drawing.Size(265, 22);
 			this.inName.TabIndex = 1;
 			// 
 			// btnCancel
 			// 
 			this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnCancel.Location = new System.Drawing.Point(310, 204);
+			this.btnCancel.Location = new System.Drawing.Point(315, 174);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
 			this.btnCancel.TabIndex = 10;
@@ -94,7 +91,7 @@
 			// btnOk
 			// 
 			this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnOk.Location = new System.Drawing.Point(229, 204);
+			this.btnOk.Location = new System.Drawing.Point(234, 174);
 			this.btnOk.Name = "btnOk";
 			this.btnOk.Size = new System.Drawing.Size(75, 23);
 			this.btnOk.TabIndex = 9;
@@ -123,7 +120,7 @@
             0,
             0});
 			this.inMapWidth.Name = "inMapWidth";
-			this.inMapWidth.Size = new System.Drawing.Size(260, 22);
+			this.inMapWidth.Size = new System.Drawing.Size(265, 22);
 			this.inMapWidth.TabIndex = 2;
 			this.inMapWidth.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
@@ -148,7 +145,7 @@
             0,
             0});
 			this.inMapHeight.Name = "inMapHeight";
-			this.inMapHeight.Size = new System.Drawing.Size(260, 22);
+			this.inMapHeight.Size = new System.Drawing.Size(265, 22);
 			this.inMapHeight.TabIndex = 3;
 			this.inMapHeight.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
@@ -156,7 +153,7 @@
 			// 
 			this.label1.AutoSize = true;
 			this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.Location = new System.Drawing.Point(15, 114);
+			this.label1.Location = new System.Drawing.Point(15, 112);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(52, 15);
 			this.label1.TabIndex = 0;
@@ -204,13 +201,13 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.inTileSet.Location = new System.Drawing.Point(122, 110);
 			this.inTileSet.Name = "inTileSet";
-			this.inTileSet.Size = new System.Drawing.Size(169, 22);
+			this.inTileSet.Size = new System.Drawing.Size(174, 22);
 			this.inTileSet.TabIndex = 4;
 			// 
 			// btnBrowseTileSet
 			// 
 			this.btnBrowseTileSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnBrowseTileSet.Location = new System.Drawing.Point(297, 109);
+			this.btnBrowseTileSet.Location = new System.Drawing.Point(302, 109);
 			this.btnBrowseTileSet.Name = "btnBrowseTileSet";
 			this.btnBrowseTileSet.Size = new System.Drawing.Size(85, 23);
 			this.btnBrowseTileSet.TabIndex = 5;
@@ -256,66 +253,39 @@
 			this.label5.TabIndex = 4;
 			this.label5.Text = "Height";
 			// 
-			// label6
+			// lblTileSize
 			// 
-			this.label6.AutoSize = true;
-			this.label6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label6.Location = new System.Drawing.Point(15, 142);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(67, 15);
-			this.label6.TabIndex = 2;
-			this.label6.Text = "Tile Width:";
+			this.lblTileSize.AutoSize = true;
+			this.lblTileSize.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblTileSize.Location = new System.Drawing.Point(15, 143);
+			this.lblTileSize.Name = "lblTileSize";
+			this.lblTileSize.Size = new System.Drawing.Size(56, 15);
+			this.lblTileSize.TabIndex = 2;
+			this.lblTileSize.Text = "Tile Size:";
 			// 
-			// inTileWidth
+			// inTileSize
 			// 
-			this.inTileWidth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+			this.inTileSize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.inTileWidth.Location = new System.Drawing.Point(122, 142);
-			this.inTileWidth.Maximum = new decimal(new int[] {
+			this.inTileSize.Location = new System.Drawing.Point(122, 142);
+			this.inTileSize.Maximum = new decimal(new int[] {
             99999999,
             0,
             0,
             0});
-			this.inTileWidth.Name = "inTileWidth";
-			this.inTileWidth.Size = new System.Drawing.Size(260, 22);
-			this.inTileWidth.TabIndex = 7;
-			this.inTileWidth.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			// 
-			// inTileHeight
-			// 
-			this.inTileHeight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.inTileHeight.Location = new System.Drawing.Point(122, 172);
-			this.inTileHeight.Maximum = new decimal(new int[] {
-            99999999,
-            0,
-            0,
-            0});
-			this.inTileHeight.Name = "inTileHeight";
-			this.inTileHeight.Size = new System.Drawing.Size(260, 22);
-			this.inTileHeight.TabIndex = 8;
-			this.inTileHeight.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-			// 
-			// label7
-			// 
-			this.label7.AutoSize = true;
-			this.label7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label7.Location = new System.Drawing.Point(15, 173);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(71, 15);
-			this.label7.TabIndex = 4;
-			this.label7.Text = "Tile Height:";
+			this.inTileSize.Name = "inTileSize";
+			this.inTileSize.Size = new System.Drawing.Size(265, 22);
+			this.inTileSize.TabIndex = 7;
+			this.inTileSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
 			// 
 			// frmProperty
 			// 
 			this.AcceptButton = this.btnOk;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(397, 239);
-			this.Controls.Add(this.inTileHeight);
-			this.Controls.Add(this.label6);
-			this.Controls.Add(this.label7);
-			this.Controls.Add(this.inTileWidth);
+			this.ClientSize = new System.Drawing.Size(402, 209);
+			this.Controls.Add(this.lblTileSize);
+			this.Controls.Add(this.inTileSize);
 			this.Controls.Add(this.inMapWidth);
 			this.Controls.Add(this.lblWidth);
 			this.Controls.Add(this.inMapHeight);
@@ -340,8 +310,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.inTileWidth)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.inTileHeight)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.inTileSize)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -368,9 +337,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDown6;
         private System.Windows.Forms.NumericUpDown numericUpDown7;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.NumericUpDown inTileWidth;
-        private System.Windows.Forms.NumericUpDown inTileHeight;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label lblTileSize;
+		private System.Windows.Forms.NumericUpDown inTileSize;
     }
 }
