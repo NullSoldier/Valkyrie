@@ -585,6 +585,7 @@
 			this.btnPencil.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
 			this.btnPencil.Size = new System.Drawing.Size(34, 22);
 			this.btnPencil.Text = "Pencil";
+			this.btnPencil.Click += new System.EventHandler(this.btnPencil_Click);
 			// 
 			// btnRect
 			// 
@@ -596,6 +597,7 @@
 			this.btnRect.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
 			this.btnRect.Size = new System.Drawing.Size(34, 22);
 			this.btnRect.Text = "Rectangle";
+			this.btnRect.Click += new System.EventHandler(this.btnRect_Click);
 			// 
 			// btnFill
 			// 

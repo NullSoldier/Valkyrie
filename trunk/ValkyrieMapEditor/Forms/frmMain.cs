@@ -489,6 +489,26 @@ namespace ValkyrieMapEditor
 		}
 
 		#endregion
+
+		private void btnRect_Click (object sender, EventArgs e)
+		{
+			this.btnRect.Checked = true;
+
+			this.btnPencil.Checked = false;
+			this.btnFill.Checked = false;
+
+			MapEditorManager.CurrentTool = Tools.Rectangle;
+		}
+
+		private void btnPencil_Click (object sender, EventArgs e)
+		{
+			this.btnPencil.Checked = true;
+
+			this.btnFill.Checked = false;
+			this.btnRect.Checked = false;
+
+			MapEditorManager.CurrentTool = Tools.Pencil;
+		}
 	}
 
 
