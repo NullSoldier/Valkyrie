@@ -35,8 +35,11 @@ namespace ValkyrieMapEditor.Core
         {
 			if(MapEditorManager.IgnoreInput) return;
 
-			if(ev.Button == MouseButtons.Left)
-				this.startpoint = new Point((ev.X / 32) * 32, (ev.Y / 32 ) * 32);
+			lock(this.pointlock)
+			{
+				if(ev.Button == MouseButtons.Left)
+					this.startpoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
+			}
         }
 
         public void OnMouseMove(object sender, MouseEventArgs ev)
@@ -126,14 +129,6 @@ namespace ValkyrieMapEditor.Core
 						#region Rectangle
 						if(startpoint != this.GetNegativeOne())
 						{
-							// The left button is released but we still have a start point??
-							if(mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Released)
-							{
-								// Must be some kind of error, reset
-								this.endpoint = this.GetNegativeOne();
-								this.startpoint = this.GetNegativeOne();
-							}
-
 							this.endpoint = new Point((mouseState.X / 32) * 32, (mouseState.Y / 32) * 32);
 
 							pos = this.GetSelectionRectangle(this.startpoint, this.endpoint);
