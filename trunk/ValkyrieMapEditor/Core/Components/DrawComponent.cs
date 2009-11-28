@@ -35,10 +35,13 @@ namespace ValkyrieMapEditor.Core
         {
 			if(MapEditorManager.IgnoreInput) return;
 
-			lock(this.pointlock)
+			if(MapEditorManager.CurrentTool == Tools.Rectangle)
 			{
-				if(ev.Button == MouseButtons.Left)
-					this.startpoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
+				lock(this.pointlock)
+				{
+					if(ev.Button == MouseButtons.Left)
+						this.startpoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
+				}
 			}
         }
 
@@ -48,46 +51,49 @@ namespace ValkyrieMapEditor.Core
 
         public void OnMouseUp(object sender, MouseEventArgs ev)
         {
-			lock(this.pointlock)
+			if(MapEditorManager.IgnoreInput) return;
+
+			if(MapEditorManager.CurrentTool == Tools.Rectangle)
 			{
-				if(MapEditorManager.IgnoreInput || this.startpoint == this.GetNegativeOne()) return;
-
-				this.endpoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
-
-				Rectangle selectrect = this.GetSelectionRectangle(this.startpoint, this.endpoint);
-
-				// Process
-				int xtile = 0;
-				int ytile = 0;
-				var camera = MapEditorManager.GameInstance.Engine.SceneProvider.GetCamera("camera1");
-
-				for(int y = 0; y < selectrect.Height / 32; y++)
+				lock(this.pointlock)
 				{
-					for(int x = 0; x < selectrect.Width / 32; x++)
+					if(this.startpoint == this.GetNegativeOne()) return;
+
+					this.endpoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
+
+					Rectangle selectrect = this.GetSelectionRectangle(this.startpoint, this.endpoint);
+
+					// Process
+					int xtile = 0;
+					int ytile = 0;
+					var camera = MapEditorManager.GameInstance.Engine.SceneProvider.GetCamera("camera1");
+
+					for(int y = 0; y < selectrect.Height / 32; y++)
 					{
-						// Figure out location on map
-						// Set it to proper tile
-						MapPoint tileLocation = new MapPoint((selectrect.X - (int)camera.MapOffset.X) / 32, (selectrect.Y - (int)camera.MapOffset.Y) / 32);
-						MapPoint tilesheetPoint = new MapPoint(MapEditorManager.SelectedTilesRectangle.X + xtile, MapEditorManager.SelectedTilesRectangle.Y + ytile);
-						MapPoint point = new MapPoint(tileLocation.X + x, tileLocation.Y + y);
+						for(int x = 0; x < selectrect.Width / 32; x++)
+						{
+							// Figure out location on map
+							// Set it to proper tile
+							MapPoint tileLocation = new MapPoint((selectrect.X - (int)camera.MapOffset.X) / 32, (selectrect.Y - (int)camera.MapOffset.Y) / 32);
+							MapPoint tilesheetPoint = new MapPoint(MapEditorManager.SelectedTilesRectangle.X + xtile, MapEditorManager.SelectedTilesRectangle.Y + ytile);
+							MapPoint point = new MapPoint(tileLocation.X + x, tileLocation.Y + y);
 
-						if(point.X < MapEditorManager.CurrentMap.MapSize.X && point.Y < MapEditorManager.CurrentMap.MapSize.Y)
-							MapEditorManager.CurrentMap.SetLayerValue(point, MapEditorManager.CurrentLayer, MapEditorManager.CurrentMap.GetTileSetValue(tilesheetPoint));
+							if(point.X < MapEditorManager.CurrentMap.MapSize.X && point.Y < MapEditorManager.CurrentMap.MapSize.Y)
+								MapEditorManager.CurrentMap.SetLayerValue(point, MapEditorManager.CurrentLayer, MapEditorManager.CurrentMap.GetTileSetValue(tilesheetPoint));
 
-						xtile++;
-						if(xtile > MapEditorManager.SelectedTilesRectangle.Width)
-							xtile = 0;
+							xtile++;
+							if(xtile > MapEditorManager.SelectedTilesRectangle.Width)
+								xtile = 0;
+						}
+
+						ytile++;
+						if(ytile > MapEditorManager.SelectedTilesRectangle.Height)
+							ytile = 0;
 					}
 
-					ytile++;
-					if(ytile > MapEditorManager.SelectedTilesRectangle.Height)
-						ytile = 0;
+					this.endpoint = this.GetNegativeOne();
+					this.startpoint = this.GetNegativeOne();
 				}
-
-
-
-				this.endpoint = this.GetNegativeOne();
-				this.startpoint = this.GetNegativeOne();
 			}
         }
 
