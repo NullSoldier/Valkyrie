@@ -110,15 +110,22 @@
     </MapLoc>
 
     <MapLoc>
-      <Name>Route20_Route_01</Name>
-      <Uri>Main\Route20_Route_01.xml</Uri>
+      <Name>Route11_Route</Name>
+      <Uri>Main\Route11_Route.xml</Uri>
+      <X>327</X>
+      <Y>148</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route20_Route</Name>
+      <Uri>Main\Route20_Route.xml</Uri>
       <X>99</X>
       <Y>318</Y>
     </MapLoc>
 
     <MapLoc>
-      <Name>Route20_Route_02</Name>
-      <Uri>Main\Route20_Route_02.xml</Uri>
+      <Name>Route19_Route</Name>
+      <Uri>Main\Route19_Route.xml</Uri>
       <X>219</X>
       <Y>278</Y>
     </MapLoc>
@@ -131,9 +138,86 @@
     </MapLoc>
 
     <MapLoc>
-      <Name>Route4_Route_01</Name>
-      <Uri>Main\Route4_Route_01.xml</Uri>
+      <Name>Route4_Route</Name>
+      <Uri>Main\Route4_Route.xml</Uri>
       <X>171</X>
+      <Y>-9</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Cerulean_Town</Name>
+      <Uri>Main\Cerulean_Town.xml</Uri>
+      <X>279</X>
+      <Y>-19</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route9_Route</Name>
+      <Uri>Main\Route9_Route.xml</Uri>
+      <X>327</X>
+      <Y>-9</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route24_Route</Name>
+      <Uri>Main\Route24_Route.xml</Uri>
+      <X>291</X>
+      <Y>-59</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route25_Route</Name>
+      <Uri>Main\Route25_Route.xml</Uri>
+      <X>315</X>
+      <Y>-59</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route5_Route</Name>
+      <Uri>Main\Route5_Route.xml</Uri>
+      <X>285</X>
+      <Y>21</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Saffron_Town</Name>
+      <Uri>Main\Saffron_Town.xml</Uri>
+      <X>269</X>
+      <Y>54</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route6_Route</Name>
+      <Uri>Main\Route6_Route.xml</Uri>
+      <X>291</X>
+      <Y>101</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route8_Route</Name>
+      <Uri>Main\Route8_Route.xml</Uri>
+      <X>327</X>
+      <Y>71</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route7_Route</Name>
+      <Uri>Main\Route7_Route.xml</Uri>
+      <X>255</X>
+      <Y>71</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Lavender_Town</Name>
+      <Uri>Main\Lavender_Town.xml</Uri>
+      <X>399</X>
+      <Y>71</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Route10_Route</Name>
+      <Uri>Main\Route10_Route.xml</Uri>
+      <X>399</X>
       <Y>-9</Y>
     </MapLoc>
     

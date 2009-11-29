@@ -280,12 +280,12 @@ namespace ValkyrieMapEditor
 			if (width <= limit * 2 || height <= limit * 2)
 				return null;
 
-			// create the rectangle texture, ,but it will have no color! lets fix that
+			// Create the rectangle texture, but it will have no color! lets fix that
 			Texture2D rectangleTexture = new Texture2D(EditorXNA.graphicsDevice, width, height, 1, TextureUsage.None, SurfaceFormat.Color);
 		   
-			Color[] color = new Color[width * height];//set the color to the amount of pixels
+			Color[] color = new Color[width * height]; // Set the color to the amount of pixels
 
-			//loop through all the colors setting them to whatever values we want
+			// Loop through all the colors setting them to whatever values we want
 			for (int y = 1; y < height; y++)
 			{
 				for (int x = 1; x < width; x++)

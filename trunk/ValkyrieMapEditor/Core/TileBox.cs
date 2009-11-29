@@ -24,9 +24,31 @@ namespace ValkyrieMapEditor
 		{
 			get
 			{
-				return new Rectangle(this.SelectedPoint.X, this.SelectedPoint.Y,
-					this.EndSelectedPoint.X - this.SelectedPoint.X,
-					this.EndSelectedPoint.Y - this.SelectedPoint.Y);
+				int x, y, width, height;
+
+				if(this.SelectedPoint.X <= this.EndSelectedPoint.X)
+				{
+					x = this.SelectedPoint.X;
+					width = (this.EndSelectedPoint.X + 1) - this.SelectedPoint.X;
+				}
+				else
+				{
+					x = this.EndSelectedPoint.X;
+					width = (this.SelectedPoint.X + 1) - this.EndSelectedPoint.X;
+				}
+
+				if(this.SelectedPoint.Y <= this.EndSelectedPoint.Y)
+				{
+					y = this.SelectedPoint.Y;
+					height = (this.EndSelectedPoint.Y + 1) - this.SelectedPoint.Y;
+				}
+				else
+				{
+					y = this.EndSelectedPoint.Y;
+					height = (this.SelectedPoint.Y + 1) - this.EndSelectedPoint.Y;
+				}
+
+				return new Rectangle(x, y, width, height);
 			}
 			set
 			{
@@ -118,10 +140,10 @@ namespace ValkyrieMapEditor
 			this.EndSelectedPoint = new Point(ev.X / 32, ev.Y / 32);
 
 			// Call the event to say tile selection has changed
-			Rectangle tileSelection = new Rectangle(this.SelectedPoint.X,
-				this.SelectedPoint.Y,
-				this.EndSelectedPoint.X - this.SelectedPoint.X,
-				this.EndSelectedPoint.Y - this.SelectedPoint.Y);
+			Rectangle tileSelection = new Rectangle(this.SelectedRect.X,
+				this.SelectedRect.Y,
+				this.SelectedRect.Width - 1, // Because the width does not start at 0
+				this.SelectedRect.Height - 1);
 
 			var handler = this.TileSelectionChanged;
 			
@@ -148,22 +170,21 @@ namespace ValkyrieMapEditor
 			if (!this.DisplayTileSelection)
 				return;
 
-			Brush currentBrush = Brushes.Black;
-			int limit = 4;
+			var rectangle = this.SelectedRect;
+			this.DrawSelection(pe.Graphics, rectangle.X * 32, rectangle.Y * 32, rectangle.Width * 32, rectangle.Height * 32);
+		}
 
-			for (int i = 0; i <= limit; i++)
-			{
-				// Filled rectangle using primtiives
-				currentBrush = ((i == 0 || i == limit) ? Brushes.Black : Brushes.White);
+		protected void DrawSelection(Graphics gfx, int x, int y, int width, int height)
+		{
+			//outer four
+			gfx.DrawRectangle(new Pen(Brushes.Black, 1),
+				new Rectangle(x, y, width, height));
 
-				pe.Graphics.DrawRectangle(new Pen(currentBrush, 1),
-					new Rectangle(
-						(this.SelectedPoint.X * this.TileSize.X) + i,
-						(this.SelectedPoint.Y * this.TileSize.Y) + i,
-						(((this.EndSelectedPoint.X * this.TileSize.X) - (this.SelectedPoint.X * this.TileSize.X)) - (i * 2)) + this.TileSize.X,
-						(((this.EndSelectedPoint.Y * this.TileSize.Y) - (this.SelectedPoint.Y * this.TileSize.Y)) - (i * 2)) + this.TileSize.Y
-						));
-			}
+			gfx.DrawRectangle(new Pen(Brushes.White, 3),
+				new Rectangle(x + 2, y + 2, width - 4, height - 4));
+
+			gfx.DrawRectangle(new Pen(Brushes.Black, 1),
+				new Rectangle(x + 4, y + 4, width - 8, height - 8));
 		}
 	}
 

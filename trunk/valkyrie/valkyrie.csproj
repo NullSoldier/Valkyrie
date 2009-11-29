@@ -143,16 +143,18 @@
     <Content Include="Graphics\Main\Route16_Route.png" />
     <Content Include="Graphics\Main\Route17_Route.png" />
     <Content Include="Graphics\Main\Route18_Route.png" />
-    <Content Include="Graphics\Main\Route20_Route_01.png" />
-    <Content Include="Graphics\Main\Route20_Route_02.png" />
+    <Content Include="Graphics\Main\Route19_Route.png" />
+    <Content Include="Graphics\Main\Route20_Route.png" />
     <Content Include="Graphics\Main\Route22_Route.png" />
     <Content Include="Graphics\Main\Route3_Route.png">
     </Content>
-    <Content Include="Graphics\Main\Route4_Route_01.png">
-    </Content>
     <Content Include="Graphics\Pallet_House\Pallet_House_01.png" />
+    <Content Include="Maps\Main\Cerulean_Town.xml" />
     <Content Include="Maps\Main\Cinnibar_Island.xml" />
     <Content Include="Maps\Main\Fuschia_Town.xml" />
+    <Content Include="Maps\Main\Lavender_Town.xml" />
+    <Content Include="Maps\Main\Route10_Route.xml" />
+    <Content Include="Maps\Main\Route11_Route.xml" />
     <Content Include="Maps\Main\Route12_Route.xml" />
     <Content Include="Maps\Main\Route13_Route.xml" />
     <Content Include="Maps\Main\Route14_Route.xml" />
@@ -160,13 +162,20 @@
     <Content Include="Maps\Main\Route16_Route.xml" />
     <Content Include="Maps\Main\Route17_Route.xml" />
     <Content Include="Maps\Main\Route18_Route.xml" />
-    <Content Include="Maps\Main\Route20_Route_01.xml" />
-    <Content Include="Maps\Main\Route20_route_02.xml" />
+    <Content Include="Maps\Main\Route19_route.xml" />
+    <Content Include="Maps\Main\Route20_Route.xml" />
     <Content Include="Maps\Main\Route22_Route.xml" />
+    <Content Include="Maps\Main\Route24_Route.xml" />
+    <Content Include="Maps\Main\Route25_Route.xml" />
     <Content Include="Maps\Main\Route3_Route.xml">
     </Content>
-    <Content Include="Maps\Main\Route4_Route_01.xml">
-    </Content>
+    <Content Include="Maps\Main\Route4_Route.xml" />
+    <Content Include="Maps\Main\Route5_Route.xml" />
+    <Content Include="Maps\Main\Route6_Route.xml" />
+    <Content Include="Maps\Main\Route7_Route.xml" />
+    <Content Include="Maps\Main\Route8_Route.xml" />
+    <Content Include="Maps\Main\Route9_Route.xml" />
+    <Content Include="Maps\Main\Saffron_Town.xml" />
     <Content Include="Media\PokemonIntro.avi">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
