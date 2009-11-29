@@ -335,10 +335,8 @@ namespace ValkyrieMapEditor
 
 		private void btnAnimatedTileManager_Click (object sender, EventArgs e)
 		{
-			//throw new NotImplementedException();
-
-			//frmAnimatedTileManager dialog = new frmAnimatedTileManager(TileEngine.CurrentMapChunk);
-			//dialog.ShowDialog(this);
+			frmAnimatedTileManager dialog = new frmAnimatedTileManager(MapEditorManager.CurrentMap, this.pctTileSurface.Image);
+			dialog.ShowDialog(this);
 		}
 
 		private void optionsToolStripMenuItem_Click (object sender, EventArgs e)
