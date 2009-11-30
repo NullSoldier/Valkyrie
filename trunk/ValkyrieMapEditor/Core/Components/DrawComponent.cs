@@ -43,6 +43,18 @@ namespace ValkyrieMapEditor.Core
 						this.startpoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
 				}
 			}
+			else if(MapEditorManager.CurrentTool == Tools.Bucket)
+			{
+				var camera = this.context.SceneProvider.GetCamera("camera1");
+
+				MapPoint tileLocation = new MapPoint((ev.X - (int)camera.MapOffset.X) / 32, (ev.Y - (int)camera.MapOffset.Y) / 32);
+				MapPoint tilesheetPoint = new MapPoint(MapEditorManager.SelectedTilesRectangle.X, MapEditorManager.SelectedTilesRectangle.Y);
+
+				int oldvalue = MapEditorManager.CurrentMap.GetLayerValue(tileLocation, MapEditorManager.CurrentLayer);
+				int newvalue = MapEditorManager.CurrentMap.GetTileSetValue(tilesheetPoint);
+
+				this.FloodFill(tileLocation.X, tileLocation.Y, oldvalue, newvalue);
+			}
         }
 
         public void OnMouseMove(object sender, MouseEventArgs ev)
@@ -143,6 +155,14 @@ namespace ValkyrieMapEditor.Core
 						#endregion
 					}
 				}
+				else if(MapEditorManager.CurrentTool == Tools.Bucket)
+				{
+					#region Bucket
+					pos = new Rectangle((mouseState.X / 32) * 32, (mouseState.Y / 32) * 32, 32, 32);
+
+					selectbox = EditorXNA.CreateSelectRectangle(pos.Width, pos.Height);
+					#endregion
+				}
 
 			    if (selectbox != null)
 			        spriteBatch.Draw(selectbox, pos, new Rectangle(0, 0, selectbox.Width, selectbox.Height), Color.White);
@@ -156,32 +176,37 @@ namespace ValkyrieMapEditor.Core
 			//// TODO: Add your update logic here
 			KeyboardState keyState = Keyboard.GetState();
 
-			// Only do this if your using something other than the pencil
-			if (MapEditorManager.CurrentMap != null && MapEditorManager.CurrentTool == Tools.Pencil)
+			if(MapEditorManager.CurrentMap == null)
+				return;
+
+			// Get the mouse state for analyzing it's current state
+			var mouseState = Mouse.GetState();
+
+			// Is the left mouse pressed and in the map's range?
+			if(mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed && mouseState.X > 0 && mouseState.Y > 0)
 			{
 				var camera = this.context.SceneProvider.GetCamera("camera1");
-			    var mouseState = Mouse.GetState();
 
-			    if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed && mouseState.X > 0 && mouseState.Y > 0)
-			    {
-			        MapPoint tileLocation = new MapPoint((mouseState.X - (int)camera.MapOffset.X) / 32, (mouseState.Y - (int)camera.MapOffset.Y) / 32);
+				if(MapEditorManager.CurrentTool == Tools.Pencil)
+				{
+					MapPoint tileLocation = new MapPoint((mouseState.X - (int)camera.MapOffset.X) / 32, (mouseState.Y - (int)camera.MapOffset.Y) / 32);
 					MapHeader header = this.context.WorldManager.GetWorld("Default").Maps[MapEditorManager.CurrentMap.Name];
 
-			        if (header.TilePointInMapLocal(tileLocation))
-			        {
-			            for (int y = 0; y <= MapEditorManager.SelectedTilesRectangle.Height; y++)
-			            {
-			                for (int x = 0; x <= MapEditorManager.SelectedTilesRectangle.Width; x++)
-			                {
-			                    MapPoint tilesheetPoint = new MapPoint(MapEditorManager.SelectedTilesRectangle.X + x, MapEditorManager.SelectedTilesRectangle.Y + y);
-			                    MapPoint point = new MapPoint(tileLocation.X + x, tileLocation.Y + y);
+					if(header.TilePointInMapLocal(tileLocation))
+					{
+						for(int y = 0; y <= MapEditorManager.SelectedTilesRectangle.Height; y++)
+						{
+							for(int x = 0; x <= MapEditorManager.SelectedTilesRectangle.Width; x++)
+							{
+								MapPoint tilesheetPoint = new MapPoint(MapEditorManager.SelectedTilesRectangle.X + x, MapEditorManager.SelectedTilesRectangle.Y + y);
+								MapPoint point = new MapPoint(tileLocation.X + x, tileLocation.Y + y);
 
-			                    if (header.TilePointInMapLocal(point))
-			                        MapEditorManager.CurrentMap.SetLayerValue(point, MapEditorManager.CurrentLayer, MapEditorManager.CurrentMap.GetTileSetValue(tilesheetPoint));
-			                }
-			            }
-			        }
-			    }
+								if(header.TilePointInMapLocal(point))
+									MapEditorManager.CurrentMap.SetLayerValue(point, MapEditorManager.CurrentLayer, MapEditorManager.CurrentMap.GetTileSetValue(tilesheetPoint));
+							}
+						}
+					}
+				}
 			}
         }
 
@@ -198,6 +223,27 @@ namespace ValkyrieMapEditor.Core
 		private Point endpoint;
 		private object pointlock = new object();
 
+		private void FloodFill (int x, int y, int targetid, int replacementid)
+		{
+			int value = MapEditorManager.CurrentMap.GetLayerValue(new MapPoint(x, y), MapEditorManager.CurrentLayer);
+
+			if(value != targetid || value == replacementid)
+				return;
+
+			MapEditorManager.CurrentMap.SetLayerValue(new MapPoint(x, y), MapEditorManager.CurrentLayer, replacementid);
+
+			if(x + 1 < MapEditorManager.CurrentMap.MapSize.X)
+				this.FloodFill(x + 1, y, targetid, replacementid);
+
+			if(x - 1 >= 0)
+				this.FloodFill(x - 1, y, targetid, replacementid);
+
+			if(y + 1 < MapEditorManager.CurrentMap.MapSize.Y)
+				this.FloodFill(x, y + 1, targetid, replacementid);
+
+			if(y - 1 >= 0)
+				this.FloodFill(x, y - 1, targetid, replacementid);
+		}
 
 		private Rectangle GetSelectionRectangle (Point spoint, Point epoint)
 		{

@@ -507,8 +507,17 @@ namespace ValkyrieMapEditor
 
 			MapEditorManager.CurrentTool = Tools.Pencil;
 		}
-	}
 
+		private void btnFill_Click (object sender, EventArgs e)
+		{
+			this.btnFill.Checked = true;
+
+			this.btnPencil.Checked = false;
+			this.btnRect.Checked = false;
+
+			MapEditorManager.CurrentTool = Tools.Bucket;
+		}
+	}
 
 	#region EventArgs
 	public class ScreenResizedEventArgs

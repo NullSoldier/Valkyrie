@@ -31,6 +31,7 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.pctTileSurface = new ValkyrieMapEditor.TileBox();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.btnMapProperties = new System.Windows.Forms.Button();
 			this.lstSettings = new System.Windows.Forms.ListView();
@@ -76,13 +77,13 @@
 			this.btnRect = new System.Windows.Forms.ToolStripButton();
 			this.btnFill = new System.Windows.Forms.ToolStripButton();
 			this.btnSelection = new System.Windows.Forms.ToolStripButton();
-			this.pctTileSurface = new ValkyrieMapEditor.TileBox();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
 			this.splitContainer2.Panel1.SuspendLayout();
 			this.splitContainer2.Panel2.SuspendLayout();
 			this.splitContainer2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).BeginInit();
 			this.splitContainer3.Panel1.SuspendLayout();
 			this.splitContainer3.Panel2.SuspendLayout();
 			this.splitContainer3.SuspendLayout();
@@ -91,7 +92,6 @@
 			this.footerStatus.SuspendLayout();
 			this.menuStrip.SuspendLayout();
 			this.toolStripTools.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// splitContainer1
@@ -138,6 +138,19 @@
 			this.splitContainer2.SplitterDistance = 395;
 			this.splitContainer2.SplitterWidth = 5;
 			this.splitContainer2.TabIndex = 0;
+			// 
+			// pctTileSurface
+			// 
+			this.pctTileSurface.DisplayTileSelection = false;
+			this.pctTileSurface.EndSelectedPoint = new System.Drawing.Point(0, 0);
+			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
+			this.pctTileSurface.Name = "pctTileSurface";
+			this.pctTileSurface.SelectedPoint = new System.Drawing.Point(0, 0);
+			this.pctTileSurface.SelectedRect = new System.Drawing.Rectangle(0, 0, 1, 1);
+			this.pctTileSurface.Size = new System.Drawing.Size(173, 134);
+			this.pctTileSurface.TabIndex = 0;
+			this.pctTileSurface.TabStop = false;
+			this.pctTileSurface.TileSize = new System.Drawing.Point(0, 0);
 			// 
 			// splitContainer3
 			// 
@@ -609,6 +622,7 @@
 			this.btnFill.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
 			this.btnFill.Size = new System.Drawing.Size(34, 22);
 			this.btnFill.Text = "Fill";
+			this.btnFill.Click += new System.EventHandler(this.btnFill_Click);
 			// 
 			// btnSelection
 			// 
@@ -620,19 +634,6 @@
 			this.btnSelection.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
 			this.btnSelection.Size = new System.Drawing.Size(34, 22);
 			this.btnSelection.Text = "Selection";
-			// 
-			// pctTileSurface
-			// 
-			this.pctTileSurface.DisplayTileSelection = false;
-			this.pctTileSurface.EndSelectedPoint = new System.Drawing.Point(0, 0);
-			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
-			this.pctTileSurface.Name = "pctTileSurface";
-			this.pctTileSurface.SelectedPoint = new System.Drawing.Point(0, 0);
-			this.pctTileSurface.SelectedRect = new System.Drawing.Rectangle(0, 0, 0, 0);
-			this.pctTileSurface.Size = new System.Drawing.Size(173, 134);
-			this.pctTileSurface.TabIndex = 0;
-			this.pctTileSurface.TabStop = false;
-			this.pctTileSurface.TileSize = new System.Drawing.Point(0, 0);
 			// 
 			// frmMain
 			// 
@@ -657,6 +658,7 @@
 			this.splitContainer2.Panel1.ResumeLayout(false);
 			this.splitContainer2.Panel2.ResumeLayout(false);
 			this.splitContainer2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).EndInit();
 			this.splitContainer3.Panel1.ResumeLayout(false);
 			this.splitContainer3.Panel2.ResumeLayout(false);
 			this.splitContainer3.ResumeLayout(false);
@@ -668,7 +670,6 @@
 			this.menuStrip.PerformLayout();
 			this.toolStripTools.ResumeLayout(false);
 			this.toolStripTools.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
