@@ -49,6 +49,22 @@ namespace ValkyrieMapEditor
 				}
 
 				return new Rectangle(x, y, width, height);
+
+				#region Swap experiment
+				Point startpoint = this.SelectedPoint;
+				Point endpoint = this.EndSelectedPoint;
+
+				// Swap them if the end is before the start
+				if(SelectedPoint.X > EndSelectedPoint.X || SelectedPoint.Y > EndSelectedPoint.Y)
+				{
+					startpoint = this.EndSelectedPoint;
+					endpoint = this.SelectedPoint;
+				}
+
+				return new Rectangle(startpoint.X, startpoint.Y,
+					endpoint.X - startpoint.X,
+					endpoint.Y - startpoint.Y);
+				#endregion
 			}
 			set
 			{
@@ -92,7 +108,6 @@ namespace ValkyrieMapEditor
 		private Point endselectionpoint;
 		private bool displaytileselection;
 		
-
 		public void Initialize()
 		{
 			this.SelectedPoint = new Point(0, 0);
@@ -124,12 +139,26 @@ namespace ValkyrieMapEditor
 			if( ev.Button == MouseButtons.Left)
 				this.EndSelectedPoint = new Point(ev.X / 32, ev.Y / 32);
 
-			if (this.EnforceSize && this.SelectedRect.Width > this.MaximumSize.Width)
-				this.SelectedRect = new Rectangle(this.SelectedRect.X, this.SelectedRect.Y, this.MaximumSize.Width, this.SelectedRect.Height);
-			if (this.EnforceSize && this.SelectedRect.Height > this.MaximumSize.Height)
-				this.SelectedRect = new Rectangle(this.SelectedRect.X, this.SelectedRect.Y, this.SelectedRect.Width, this.MaximumSize.Height);
+			if(this.EnforceSize)
+			{
+				if(this.EndSelectedPoint.X - this.SelectedPoint.X > this.MaximumSize.Width)
+				{
+					this.EndSelectedPoint = new Point(this.EndSelectedPoint.X + this.MaximumSize.Width, this.SelectedPoint.Y);
+				}
+				else if(this.SelectedPoint.X - this.EndSelectedPoint.X > this.MaximumSize.Width)
+				{
+					this.EndSelectedPoint = new Point(this.EndSelectedPoint.X - this.MaximumSize.Width, this.SelectedPoint.Y);
+				}
 
-
+				if (this.EndSelectedPoint.Y - this.SelectedPoint.Y > this.MaximumSize.Height)
+				{
+					this.EndSelectedPoint = new Point(this.EndSelectedPoint.X, this.SelectedPoint.Y + this.MaximumSize.Height);
+				}
+				else if(this.SelectedPoint.Y - this.EndSelectedPoint.Y > this.MaximumSize.Height)
+				{
+					this.EndSelectedPoint = new Point(this.EndSelectedPoint.X, this.SelectedPoint.Y - this.MaximumSize.Height);
+				}
+			}
 		}
 
 		public void Tile_MouseUp(object sender, MouseEventArgs ev)

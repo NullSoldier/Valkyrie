@@ -40,31 +40,31 @@ namespace ValkyrieMapEditor.Forms
 
 		private void frmMapEvent_Load(object sender, EventArgs e)
 		{
-			//// Event Handler types
-			//foreach (var type in frmMain.EventHandlerTypes)
-			//    this.inType.Items.Add(type);
+			// Event Handler types
+			foreach(var type in frmMain.EventHandlerTypes)
+				this.inType.Items.Add(type);
 
-			//this.inType.DisplayMember = "Name";
-			//this.inType.SelectedIndex = 0;
+			this.inType.DisplayMember = "Name";
+			this.inType.SelectedIndex = 0;
 
-			//// Directions
-			//var values = Enum.GetNames(typeof(Directions));
+			// Directions
+			var values = Enum.GetNames(typeof(Directions));
 
-			//for (int i = 0; i < values.Length; i++)
-			//    this.inDirection.Items.Add(values[i]);
+			for(int i = 0; i < values.Length; i++)
+				this.inDirection.Items.Add(values[i]);
 
-			//this.inDirection.SelectedIndex = 0;
+			this.inDirection.SelectedIndex = 0;
 
-			//// Activation
-			//values = Enum.GetNames(typeof(ActivationTypes));
+			// Activation
+			values = Enum.GetNames(typeof(ActivationTypes));
 
-			//for (int i = 0; i < values.Length; i++)
-			//    this.inActivation.Items.Add(values[i]);
+			for(int i = 0; i < values.Length; i++)
+				this.inActivation.Items.Add(values[i]);
 
-			//this.inActivation.SelectedIndex = 0;
+			this.inActivation.SelectedIndex = 0;
 
-			//// Display events
-			//this.DisplayEvent();
+			// Display events
+			this.DisplayEvent();
 		}
 
         public void DisplayEvent()
@@ -72,6 +72,7 @@ namespace ValkyrieMapEditor.Forms
 			if (this.Event != null)
 			{
 				this.inType.SelectedItem = this.Event.GetType();
+				this.inType.Enabled = false;
 
 				// Wtf won't set selected value?? Do it manually
 				for (int i = 0; i < this.inDirection.Items.Count; i++)

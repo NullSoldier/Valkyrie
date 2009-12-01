@@ -29,7 +29,7 @@ namespace ValkyrieMapEditor.Core
 			}
 
 			this.OpenDatabase(dbfile.FullName);
-			this.LoadDefaultProfle();
+			this.LoadDefaultProfile();
 		}
 
 		public string GetSetting (string name)
@@ -62,9 +62,25 @@ namespace ValkyrieMapEditor.Core
 			command.ExecuteNonQuery();
 		}
 
-		public bool RemoveProfile (string name)
+		public void RenameCurrentProfile (string name)
 		{
-			throw new NotImplementedException();
+			var command = this.connection.CreateCommand();
+			command.CommandText = "UPDATE profiles SET name = @boundparameter WHERE id = @boundparameter1;";
+			command.Parameters.Add(new SQLiteParameter("@boundparameter", name));
+			command.Parameters.Add(new SQLiteParameter("@boundparameter1", this.currentprofileid));
+
+			command.ExecuteNonQuery();
+		}
+
+		public bool RemoveProfile (int profileid)
+		{
+			var command = this.connection.CreateCommand();
+			command.CommandText = "DELETE FROM profiles WHERE id = @boundparameter;";
+			command.Parameters.Add(new SQLiteParameter("@boundparameter", profileid));
+
+			int affected = command.ExecuteNonQuery();
+
+			return (affected > 0);
 		}
 
 		public Dictionary<int, string> GetProfiles ()
@@ -83,20 +99,20 @@ namespace ValkyrieMapEditor.Core
 			return profiles;
 		}
 
-		public void SetCurrentProfile (string name)
+		public void SetCurrentProfile (int profileid)
 		{
 			var command = this.connection.CreateCommand();
-			command.CommandText = "SELECT id FROM profiles WHERE name = @boundparameter;";
-			command.Parameters.Add(new SQLiteParameter("@boundparameter", name));
+			command.CommandText = "SELECT id FROM profiles WHERE id = @boundparameter;";
+			command.Parameters.Add(new SQLiteParameter("@boundparameter", profileid));
 
 			var result = command.ExecuteScalar();
 			if(result == null)
-				throw new ArgumentOutOfRangeException("name", string.Format("Profile {0} does not exist", name));
+				throw new ArgumentOutOfRangeException("id", string.Format("Profile {0} does not exist", profileid));
 
-			command.CommandText = "UPDATE profiles SET current = 0; UPDATE profiles SET current = 1 WHERE name = @boundparameter;";
+			command.CommandText = "UPDATE profiles SET current = 0; UPDATE profiles SET current = 1 WHERE id = @boundparameter;";
 			command.ExecuteNonQuery();
 
-			this.currentprofileid = Convert.ToInt32(result);
+			this.currentprofileid = profileid;
 		}
 
 		private bool IsConnected
@@ -133,14 +149,17 @@ namespace ValkyrieMapEditor.Core
 			this.connection.Open();
 		}
 
-		private void LoadDefaultProfle()
+		private void LoadDefaultProfile()
 		{
 			var command = this.connection.CreateCommand();
 			command.CommandText = "SELECT id FROM profiles WHERE current = 1";
 			var result = command.ExecuteScalar();
 
 			if(result == null)
-				this.SetCurrentProfile("Default");
+			{
+				command.CommandText = "SELECT id FROM profiles LIMIT 1;";
+				this.SetCurrentProfile(Convert.ToInt32(command.ExecuteScalar()));
+			}
 			else
 				this.currentprofileid = Convert.ToInt32(result);
 		}

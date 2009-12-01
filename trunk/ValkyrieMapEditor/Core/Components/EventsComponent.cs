@@ -18,206 +18,146 @@ using ValkyrieMapEditor.Forms;
 using Valkyrie.Library.Events;
 using Valkyrie.Engine;
 using Valkyrie.Engine.Events;
+using Valkyrie.Engine.Core;
 
 namespace ValkyrieMapEditor.Core
 {
     public class EventsComponent : IEditorComponent
     {
-        private Texture2D EventSprite;
-        private Texture2D SelectionSprite;
+		public Point SelectedPoint
+		{
+			get { return this.selectedpoint; }
+			set { this.selectedpoint = value; }
+		}
 
-        private bool Cancel { get; set; }
-
-        public Point SelectedPoint {get; set; }
-        public Point EndSelectedPoint { get; set; }
-
-
-        public bool IsStartAfterEnd()
-        {
-            return (SelectedPoint.X > EndSelectedPoint.X || SelectedPoint.Y > EndSelectedPoint.Y);
-        }
+		public Point EndSelectedPoint
+		{
+			get { return this.endselectedpoint; }
+			set { this.endselectedpoint = value; }
+		}
 
 		public void LoadContent (GraphicsDevice device, IEngineContext context)
         {
             this.EventSprite = Texture2D.FromFile(device, "Graphics/EditorEvent.png");
             this.SelectionSprite = Texture2D.FromFile(device, "Graphics/EditorSelection.png");
-        }
 
-        public EventsComponent()
-        {
-            this.SelectedPoint = new Point(0, 0);
-            this.EndSelectedPoint = new Point(0, 0);
-        }
-
-        private void CancelEvent()
-        {
-            Cancel = true;
-            this.SelectedPoint = new Point(0, 0);
-            this.EndSelectedPoint = new Point(0, 0);
+			this.context = context;
         }
 
         public void CreateOrEditEvent()
         {
-			//if (Cancel)
-			//    return;
+			var camera = this.context.SceneProvider.GetCamera("camera1");
+			
+			int xOffset = (int)camera.MapOffset.X / 32 + (int)camera.CameraOffset.X;
+			int yOffset = (int)camera.MapOffset.Y / 32 + (int)camera.CameraOffset.Y;
 
-			//if (IsStartAfterEnd())
-			//{
-			//    Point temp = SelectedPoint;
-			//    SelectedPoint = EndSelectedPoint;
-			//    EndSelectedPoint = temp;
-			//}
+			MapPoint point = new MapPoint(SelectedPoint.X + (xOffset * -1), SelectedPoint.Y + (yOffset * -1));
 
-			//int xOffset = (int)TileEngine.Camera.MapOffset.X / 32 + (int)TileEngine.Camera.CameraOffset.X;
-			//int yOffset = (int)TileEngine.Camera.MapOffset.Y / 32 + (int)TileEngine.Camera.CameraOffset.Y;
+			IMapEvent mapevent = this.context.EventProvider.GetMapsEvents(MapEditorManager.CurrentMap.Name).Where(e => e.Rectangle.Contains(point.ToPoint())).FirstOrDefault();
 
-			//MapPoint point = new MapPoint(SelectedPoint.X + (xOffset * -1), SelectedPoint.Y + (yOffset * -1));
+			bool newEvent = false;
+			if(mapevent != null)
+			{
+				SelectedPoint = new Point(mapevent.Rectangle.X, mapevent.Rectangle.Y);
+				EndSelectedPoint = new Point(mapevent.Rectangle.X + mapevent.Rectangle.Width, mapevent.Rectangle.Y + mapevent.Rectangle.Height);
+			}
+			else
+			{
+				newEvent = true;
+			}
 
-			//IMapEvent e = TileEngine.EventManager.GetEventInRect(point, new BasePoint(1, 1));
+			MapPoint size = new MapPoint(this.EndSelectedPoint.X - this.SelectedPoint.X, this.EndSelectedPoint.Y - this.SelectedPoint.Y);
 
-			//bool newEvent = false;
-			//if (e != null)
-			//{
-			//    SelectedPoint = new Point(e.Rectangle.X, e.Rectangle.Y);
-			//    EndSelectedPoint = new Point(e.Rectangle.X + e.Rectangle.Width, e.Rectangle.Y + e.Rectangle.Height);
-			//}
-			//else
-			//{
-			//    newEvent = true;
-			//}
+			frmMapEvent dialog = new frmMapEvent(mapevent);
+			DialogResult result = dialog.ShowDialog();
 
-			//MapPoint size = new MapPoint(this.EndSelectedPoint.X - this.SelectedPoint.X, this.EndSelectedPoint.Y - this.SelectedPoint.Y);
+			mapevent = dialog.Event;
+			if(mapevent != null)
+			{
+				if(!newEvent)
+					mapevent.Rectangle = new Rectangle(mapevent.Rectangle.X, mapevent.Rectangle.Y, size.X, size.Y);
+				else
+					mapevent.Rectangle = new Rectangle(point.X, point.Y, size.X, size.Y);
+			}
 
-			//frmMapEvent dialog = new frmMapEvent(e);
-			//DialogResult result = dialog.ShowDialog();
+			if(result == DialogResult.OK)
+				this.context.EventProvider.ReferenceSetOrAdd(MapEditorManager.CurrentMap.Name, mapevent);
 
-			//e = dialog.Event;
-			//if (e != null)
-			//{
-			//    if(!newEvent)
-			//        e.Rectangle = new Rectangle(e.Rectangle.X, e.Rectangle.Y, size.X, size.Y);
-			//    else
-			//        e.Rectangle = new Rectangle(point.X, point.Y, size.X, size.Y);
-			//}
-
-			//if (result == DialogResult.OK)
-			//    TileEngine.EventManager.SetOrAddEvent(e);
-
-			//else if (result == DialogResult.Abort)
-			//    TileEngine.EventManager.DelEvent(e);
+			else if(result == DialogResult.Abort)
+				this.context.EventProvider.Remove(MapEditorManager.CurrentMap.Name, mapevent);
         }
 
         public void OnMouseDown(object sender, MouseEventArgs ev)
         {
-            Cancel = false;
-            //TileEngine.CurrentMapChunk.TilePointInMapLocal(tileLocation)
-            this.SelectedPoint = new Point(ev.X / 32, ev.Y / 32);
-            this.EndSelectedPoint = new Point(ev.X / 32 + 1, ev.Y / 32 + 1);
-        }
-
-        public void OnMouseMove(object sender, MouseEventArgs ev)
-        {
-            if (ev.Button == MouseButtons.Left)
-            {
-                if (!IsStartAfterEnd())
-                    this.EndSelectedPoint = new Point(ev.X / 32 + 1, ev.Y / 32 + 1);
-                else
-                    CancelEvent();
-            }
+			lock(this.pointlock)
+			{
+				this.SelectedPoint = new Point(ev.X / 32, ev.Y / 32);
+				this.EndSelectedPoint = new Point(ev.X / 32 + 1, ev.Y / 32 + 1);
+			}
         }
 
         public void OnMouseUp(object sender, MouseEventArgs ev)
         {
-            if (!IsStartAfterEnd())
-            {
-                this.EndSelectedPoint = new Point(ev.X / 32 + 1, ev.Y / 32 + 1);
-                this.CreateOrEditEvent();
-            }
-            else
-            {
-                CancelEvent();
-            }
-        }
+			lock(this.pointlock)
+			{
+				this.EndSelectedPoint = new Point(ev.X / 32 + 1, ev.Y / 32 + 1);
 
-        public void OnMouseClicked(object sender, MouseEventArgs ev)
-        {
-            //this.SelectedPoint = new Point(ev.X / 32, ev.Y / 32);
-            //this.EndSelectedPoint = new Point(ev.X / 32 + 1, ev.Y / 32 + 1);
+				this.CreateOrEditEvent();
+
+				this.SelectedPoint = new Point(-1, -1);
+				this.EndSelectedPoint = new Point(-1, -1);
+			}
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-			//foreach (IMapEvent e in TileEngine.CurrentMapChunk.EventList)
-			//{
+			var camera = this.context.SceneProvider.GetCamera("camera1");
 
-			//    Point newLoc = new Point((int)TileEngine.Camera.MapOffset.X + (int)TileEngine.Camera.CameraOffset.X + (e.Rectangle.X * TileEngine.CurrentMapChunk.TileSize.X),
-			//         (int)TileEngine.Camera.MapOffset.Y + (int)TileEngine.Camera.CameraOffset.Y + (e.Rectangle.Y * TileEngine.CurrentMapChunk.TileSize.Y));
+			// Render all of the events
+			foreach (IMapEvent mapevent in this.context.EventProvider.GetMapsEvents(MapEditorManager.CurrentMap.Name))
+			{
+				// Where on the screen?\
+				Point newLoc = new Point((int)camera.MapOffset.X + (int)camera.CameraOffset.X + (mapevent.Rectangle.X * MapEditorManager.CurrentMap.TileSize),
+					 (int)camera.MapOffset.Y + (int)camera.CameraOffset.Y + (mapevent.Rectangle.Y * MapEditorManager.CurrentMap.TileSize));
 
+				Texture2D border = EditorXNA.CreateSelectRectangleFilled(mapevent.Rectangle.Width * 32, mapevent.Rectangle.Height * 32);
 
-			//    Texture2D border = CreateBorderRectangle(e.Rectangle.Width * 32, e.Rectangle.Height * 32);
+				Rectangle destRectangle = new Rectangle(newLoc.X, newLoc.Y, mapevent.Rectangle.Width * 32, mapevent.Rectangle.Height * 32);
 
-			//    if (border != null)
-			//    {
-			//        Rectangle destRectangle = new Rectangle(newLoc.X, newLoc.Y, e.Rectangle.Width * 32, e.Rectangle.Height * 32);
-			//        spriteBatch.Draw(border, destRectangle, new Rectangle(0, 0, border.Width, border.Height), Color.White);
-			//    }
+				if(border != null)
+					spriteBatch.Draw(border, destRectangle, new Rectangle(0, 0, border.Width, border.Height), Color.White);
 
-			//    spriteBatch.DrawString(EditorXNA.font, e.GetStringType(), new Vector2(newLoc.X + 10, newLoc.Y + 10), Color.AliceBlue);
-			//}
+				// If this event is the one we've currently selected
+				if(mapevent == this.currentmapevent)
+				{
+					Texture2D selection = EditorXNA.CreateSelectRectangle(mapevent.Rectangle.Width * 32, mapevent.Rectangle.Height * 32);
 
-			//if (!Cancel)
-			//{
-			//    Point sel = SelectedPoint;
-			//    Point end = EndSelectedPoint;
+					if(selection != null)
+						spriteBatch.Draw(selection, destRectangle, new Rectangle(0, 0, border.Width, border.Height), Color.White);
+				}
 
-			//    Rectangle tileSelection = new Rectangle(sel.X * 32,
-			//        sel.Y * 32,
-			//        end.X * 32 - sel.X * 32,
-			//        end.Y * 32 - sel.Y * 32);
+				spriteBatch.DrawString(EditorXNA.font, mapevent.GetStringType(), new Vector2(newLoc.X + 10, newLoc.Y + 10), Color.AliceBlue);
+			}
 
-			//    Texture2D text = EditorXNA.CreateSelectRectangle(tileSelection.Width, tileSelection.Height);
+			// Only if there is no selected event and there is a valid selection.
+			// -1 is used to denote an invalid selection
+			if(this.currentmapevent == null && SelectedPoint.X != -1 && SelectedPoint.Y != -1)
+			{
+				Point sel = SelectedPoint;
+				Point end = EndSelectedPoint;
 
-			//    if (text == null)
-			//        text = this.SelectionSprite;
+				Rectangle tileSelection = new Rectangle(sel.X * 32,
+					sel.Y * 32,
+					end.X * 32 - sel.X * 32,
+					end.Y * 32 - sel.Y * 32);
 
-			//    spriteBatch.Draw(text, tileSelection, new Rectangle(0, 0, text.Width, text.Height), Color.White);
-			//}
-        }
+				Texture2D text = EditorXNA.CreateSelectRectangle(tileSelection.Width, tileSelection.Height);
 
-        static public Texture2D CreateBorderRectangle(int width, int height)
-        {
-            if (width <= 2 || height <=  2)
-                return null;
+				if(text == null)
+					text = this.SelectionSprite;
 
-            // create the rectangle texture, ,but it will have no color! lets fix that
-            Texture2D rectangleTexture = new Texture2D(EditorXNA.graphicsDevice, width, height, 1, TextureUsage.None, SurfaceFormat.Color);
-            Color[] color = new Color[width * height];//set the color to the amount of pixels
-
-            //loop through all the colors setting them to whatever values we want
-            for (int y = 1; y < height - 1; y++)
-            {
-                for (int x = 1; x < width - 1; x++)
-                {
-                    color[x + (y * width)] = new Color(255, 0, 0, 125);
-                }
-            }
-
-            //outer four
-            for (int y = 0; y < height; y++)
-                color[0 + (y * width)] = new Color(0, 0, 0, 255);
-
-            for (int y = 0; y < height; y++)
-                color[width - 1 + (y * width)] = new Color(0, 0, 0, 255);
-
-            for (int x = 0; x < width; x++)
-                color[x + (0 * width)] = new Color(0, 0, 0, 255);
-
-            for (int x = 0; x < width; x++)
-                color[x + ((height - 1) * width)] = new Color(0, 0, 0, 255);
-
-
-            rectangleTexture.SetData(color);//set the color data on the texture
-            return rectangleTexture;
+				spriteBatch.Draw(text, tileSelection, new Rectangle(0, 0, text.Width, text.Height), Color.White);
+			}
         }
 
         public void OnSizeChanged(object sender, ScreenResizedEventArgs e)
@@ -228,8 +168,65 @@ namespace ValkyrieMapEditor.Core
         {
         }
 
+		public void OnMouseClicked (object sender, MouseEventArgs e)
+		{
+		}
+
+		public void OnMouseMove (object sender, MouseEventArgs e)
+		{
+		}
+
         public void Update(GameTime gameTime)
         {
+			var mouseState = Mouse.GetState();
+
+			if(mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
+			{
+				lock(this.pointlock)
+				{
+					this.EndSelectedPoint = new Point(mouseState.X / 32 + 1, mouseState.Y / 32 + 1);
+				}
+			}
         }
+
+		private IEngineContext context = null;
+		private Texture2D EventSprite = null;
+		private Texture2D SelectionSprite = null;
+		private IMapEvent currentmapevent = null;
+		public Point selectedpoint = new Point(-1, -1);
+		public Point endselectedpoint = new Point(-1, -1);
+		private object pointlock = new object();
+
+		private Rectangle GetSelectionRectangle (Point spoint, Point epoint)
+		{
+			int x = -1;
+			int y = -1;
+			int width = -1;
+			int height = -1;
+
+			if(spoint.X <= epoint.X)
+			{
+				x = spoint.X;
+				width = (epoint.X - spoint.X) + 32;
+			}
+			else
+			{
+				x = epoint.X;
+				width = ((spoint.X + 32) - epoint.X);
+			}
+
+			if(spoint.Y <= epoint.Y)
+			{
+				y = spoint.Y;
+				height = (epoint.Y - spoint.Y) + 32;
+			}
+			else
+			{
+				y = epoint.Y;
+				height = ((spoint.Y + 32) - epoint.Y);
+			}
+
+			return new Rectangle(x, y, width, height);
+		}
     }
 }

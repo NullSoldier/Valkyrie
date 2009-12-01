@@ -32,20 +32,53 @@ namespace Valkyrie.Library.Providers
 
 		public void Add (Map map, IMapEvent mapevent)
 		{
+			this.Add(map.Name, mapevent);
+		}
+
+		public void Add (string mapname, IMapEvent mapevent)
+		{
 			lock(this.events)
 			{
-				if(!this.events.ContainsKey(map.Name))
-					this.events.Add(map.Name, new List<IMapEvent>());
+				if(!this.events.ContainsKey(mapname))
+					this.events.Add(mapname, new List<IMapEvent>());
 
-				this.events[map.Name].Add(mapevent);
+				this.events[mapname].Add(mapevent);
+			}
+		}
+
+		public void ReferenceSetOrAdd (Map map, IMapEvent mapevent)
+		{
+			this.ReferenceSetOrAdd(map.Name, mapevent);
+		}
+
+		public void ReferenceSetOrAdd (string mapname, IMapEvent mapevent)
+		{
+			lock(this.events)
+			{
+				if(this.events[mapname].Contains(mapevent))
+				{
+					int index = this.events[mapname].IndexOf(mapevent);
+
+					this.events[mapname][index] = (IMapEvent)mapevent.Clone();
+				}
+				else
+					this.events[mapname].Add(mapevent);
 			}
 		}
 
 		public bool Remove (Map map, IMapEvent mapevent)
 		{
+			return this.Remove(map.Name, mapevent);
+		}
+
+		public bool Remove (string mapname, IMapEvent mapevent)
+		{
 			lock(this.events)
 			{
-				return this.events[map.Name].Remove(mapevent);
+				if(!this.events.ContainsKey(mapname))
+					return false;
+
+				return this.events[mapname].Remove(mapevent);
 			}
 		}
 
@@ -86,15 +119,28 @@ namespace Valkyrie.Library.Providers
 			return this.GetMapsEvents(map.Name);
 		}
 
-		public IEnumerable<IMapEvent> GetMapsEvents (string name)
+		public IEnumerable<IMapEvent> GetMapsEvents (string mapname)
 		{
 			lock(this.events)
 			{
-				if(!this.events.ContainsKey(name))
-					throw new Exception("Map not found in events");
+				if(!this.events.ContainsKey(mapname))
+					this.events.Add(mapname, new List<IMapEvent>());
 
-				return this.events[name];
+				return this.events[mapname];
 			}
+		}
+
+		public int GetMapsEventCount (Map map)
+		{
+			return this.GetMapsEventCount(map.Name);
+		}
+
+		public int GetMapsEventCount (string mapname)
+		{
+			if(!this.events.ContainsKey(mapname))
+				this.events.Add(mapname, new List<IMapEvent>());
+
+			return this.events[mapname].Count;
 		}
 
 		#endregion

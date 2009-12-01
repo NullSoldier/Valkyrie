@@ -32,8 +32,6 @@
 			this.ColProfile = new System.Windows.Forms.ColumnHeader();
 			this.grpProperties = new System.Windows.Forms.GroupBox();
 			this.lnkAddAssembly = new System.Windows.Forms.LinkLabel();
-			this.btnBrowse = new System.Windows.Forms.Button();
-			this.inAssemblyPath = new System.Windows.Forms.TextBox();
 			this.lblAssemblies = new System.Windows.Forms.Label();
 			this.listAssemblies = new System.Windows.Forms.ListBox();
 			this.inName = new System.Windows.Forms.TextBox();
@@ -53,13 +51,13 @@
 			this.listProfiles.FullRowSelect = true;
 			this.listProfiles.HideSelection = false;
 			this.listProfiles.Location = new System.Drawing.Point(12, 12);
-			this.listProfiles.MultiSelect = false;
 			this.listProfiles.Name = "listProfiles";
 			this.listProfiles.Size = new System.Drawing.Size(175, 202);
 			this.listProfiles.TabIndex = 0;
 			this.listProfiles.UseCompatibleStateImageBehavior = false;
 			this.listProfiles.View = System.Windows.Forms.View.Details;
 			this.listProfiles.SelectedIndexChanged += new System.EventHandler(this.listProfiles_SelectedIndexChanged);
+			this.listProfiles.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.listProfiles_PreviewKeyDown);
 			// 
 			// ColProfile
 			// 
@@ -72,16 +70,15 @@
 						| System.Windows.Forms.AnchorStyles.Left)
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.grpProperties.Controls.Add(this.lnkAddAssembly);
-			this.grpProperties.Controls.Add(this.btnBrowse);
-			this.grpProperties.Controls.Add(this.inAssemblyPath);
 			this.grpProperties.Controls.Add(this.lblAssemblies);
 			this.grpProperties.Controls.Add(this.listAssemblies);
 			this.grpProperties.Controls.Add(this.inName);
 			this.grpProperties.Controls.Add(this.lblName);
+			this.grpProperties.Enabled = false;
 			this.grpProperties.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.grpProperties.Location = new System.Drawing.Point(193, 12);
 			this.grpProperties.Name = "grpProperties";
-			this.grpProperties.Size = new System.Drawing.Size(414, 202);
+			this.grpProperties.Size = new System.Drawing.Size(610, 202);
 			this.grpProperties.TabIndex = 1;
 			this.grpProperties.TabStop = false;
 			this.grpProperties.Text = "Properties";
@@ -90,36 +87,14 @@
 			// 
 			this.lnkAddAssembly.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.lnkAddAssembly.AutoSize = true;
-			this.lnkAddAssembly.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lnkAddAssembly.Location = new System.Drawing.Point(358, 170);
+			this.lnkAddAssembly.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lnkAddAssembly.Location = new System.Drawing.Point(556, 173);
 			this.lnkAddAssembly.Name = "lnkAddAssembly";
-			this.lnkAddAssembly.Size = new System.Drawing.Size(34, 13);
+			this.lnkAddAssembly.Size = new System.Drawing.Size(35, 13);
 			this.lnkAddAssembly.TabIndex = 6;
 			this.lnkAddAssembly.TabStop = true;
 			this.lnkAddAssembly.Text = "Add..";
 			this.lnkAddAssembly.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkAddAssembly_LinkClicked);
-			// 
-			// btnBrowse
-			// 
-			this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnBrowse.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnBrowse.Location = new System.Drawing.Point(311, 165);
-			this.btnBrowse.Name = "btnBrowse";
-			this.btnBrowse.Size = new System.Drawing.Size(41, 23);
-			this.btnBrowse.TabIndex = 5;
-			this.btnBrowse.Text = "...";
-			this.btnBrowse.UseVisualStyleBackColor = true;
-			this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
-			// 
-			// inAssemblyPath
-			// 
-			this.inAssemblyPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-						| System.Windows.Forms.AnchorStyles.Right)));
-			this.inAssemblyPath.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.inAssemblyPath.Location = new System.Drawing.Point(101, 167);
-			this.inAssemblyPath.Name = "inAssemblyPath";
-			this.inAssemblyPath.Size = new System.Drawing.Size(204, 22);
-			this.inAssemblyPath.TabIndex = 4;
 			// 
 			// lblAssemblies
 			// 
@@ -139,8 +114,10 @@
 			this.listAssemblies.FormattingEnabled = true;
 			this.listAssemblies.Location = new System.Drawing.Point(101, 75);
 			this.listAssemblies.Name = "listAssemblies";
-			this.listAssemblies.Size = new System.Drawing.Size(294, 82);
+			this.listAssemblies.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+			this.listAssemblies.Size = new System.Drawing.Size(490, 95);
 			this.listAssemblies.TabIndex = 2;
+			this.listAssemblies.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.listAssemblies_PreviewKeyDown);
 			// 
 			// inName
 			// 
@@ -149,8 +126,9 @@
 			this.inName.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.inName.Location = new System.Drawing.Point(101, 34);
 			this.inName.Name = "inName";
-			this.inName.Size = new System.Drawing.Size(294, 22);
+			this.inName.Size = new System.Drawing.Size(490, 22);
 			this.inName.TabIndex = 1;
+			this.inName.TextChanged += new System.EventHandler(this.inName_TextChanged);
 			// 
 			// lblName
 			// 
@@ -164,21 +142,23 @@
 			// btnSave
 			// 
 			this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnSave.Location = new System.Drawing.Point(451, 226);
+			this.btnSave.Enabled = false;
+			this.btnSave.Location = new System.Drawing.Point(647, 226);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);
 			this.btnSave.TabIndex = 2;
-			this.btnSave.Text = "Save";
+			this.btnSave.Text = "&Save";
 			this.btnSave.UseVisualStyleBackColor = true;
+			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 
 			// lnkAddProfile
 			// 
 			this.lnkAddProfile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.lnkAddProfile.AutoSize = true;
-			this.lnkAddProfile.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lnkAddProfile.Location = new System.Drawing.Point(12, 226);
+			this.lnkAddProfile.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lnkAddProfile.Location = new System.Drawing.Point(12, 217);
 			this.lnkAddProfile.Name = "lnkAddProfile";
-			this.lnkAddProfile.Size = new System.Drawing.Size(70, 13);
+			this.lnkAddProfile.Size = new System.Drawing.Size(72, 13);
 			this.lnkAddProfile.TabIndex = 3;
 			this.lnkAddProfile.TabStop = true;
 			this.lnkAddProfile.Text = "Add Profile..";
@@ -187,11 +167,11 @@
 			// btnClose
 			// 
 			this.btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnClose.Location = new System.Drawing.Point(532, 226);
+			this.btnClose.Location = new System.Drawing.Point(728, 226);
 			this.btnClose.Name = "btnClose";
 			this.btnClose.Size = new System.Drawing.Size(75, 23);
 			this.btnClose.TabIndex = 4;
-			this.btnClose.Text = "Close";
+			this.btnClose.Text = "&Close";
 			this.btnClose.UseVisualStyleBackColor = true;
 			this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
 			// 
@@ -199,7 +179,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(619, 261);
+			this.ClientSize = new System.Drawing.Size(815, 261);
 			this.Controls.Add(this.btnClose);
 			this.Controls.Add(this.lnkAddProfile);
 			this.Controls.Add(this.btnSave);
@@ -210,6 +190,7 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Options";
 			this.Load += new System.EventHandler(this.frmOptions_Load);
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmOptions_FormClosing);
 			this.grpProperties.ResumeLayout(false);
 			this.grpProperties.PerformLayout();
 			this.ResumeLayout(false);
@@ -228,8 +209,6 @@
 		private System.Windows.Forms.TextBox inName;
 		private System.Windows.Forms.Label lblName;
 		private System.Windows.Forms.LinkLabel lnkAddAssembly;
-		private System.Windows.Forms.Button btnBrowse;
-		private System.Windows.Forms.TextBox inAssemblyPath;
 		private System.Windows.Forms.Label lblAssemblies;
 		private System.Windows.Forms.ListBox listAssemblies;
 	}

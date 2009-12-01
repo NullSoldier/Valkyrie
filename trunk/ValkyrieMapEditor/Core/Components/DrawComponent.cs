@@ -43,6 +43,20 @@ namespace ValkyrieMapEditor.Core
 						this.startpoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
 				}
 			}
+			else if(MapEditorManager.CurrentTool == Tools.Select)
+			{
+				lock(this.pointlock)
+				{
+					if(ev.Button == MouseButtons.Left)
+					{
+						// See if we clicked on the selected area
+						// If we did set selectedgrabbed to true
+						// 
+						this.isdragging = true;
+						this.startpoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
+					}
+				}
+			}
 			else if(MapEditorManager.CurrentTool == Tools.Bucket)
 			{
 				var camera = this.context.SceneProvider.GetCamera("camera1");
@@ -64,6 +78,8 @@ namespace ValkyrieMapEditor.Core
         public void OnMouseUp(object sender, MouseEventArgs ev)
         {
 			if(MapEditorManager.IgnoreInput) return;
+
+			this.isdragging = false;
 
 			if(MapEditorManager.CurrentTool == Tools.Rectangle)
 			{
@@ -107,6 +123,15 @@ namespace ValkyrieMapEditor.Core
 					this.startpoint = this.GetNegativeOne();
 				}
 			}
+			else if(MapEditorManager.CurrentTool == Tools.Select)
+			{
+				if(this.endpoint == this.startpoint)
+				{
+					this.endpoint = this.GetNegativeOne();
+					this.startpoint = this.GetNegativeOne();
+				}
+
+			}
         }
 
         public void OnMouseClicked(object sender, MouseEventArgs e)
@@ -122,14 +147,14 @@ namespace ValkyrieMapEditor.Core
 
 			var mouseState = Mouse.GetState();
 
-			if (mouseState.X > 0 && mouseState.Y > 0 &&
+			// Common properties
+			Texture2D selectbox = null;
+			Rectangle pos = Rectangle.Empty;
+
+			if(mouseState.X > 0 && mouseState.Y > 0 &&
 				mouseState.X < this.context.SceneProvider.GetCamera("camera1").Screen.Width &&
 				mouseState.Y < this.context.SceneProvider.GetCamera("camera1").Screen.Height)
 			{
-				// Common properties
-				Texture2D selectbox = null;
-				Rectangle pos = Rectangle.Empty;
-
 				if(MapEditorManager.CurrentTool == Tools.Pencil)
 				{
 					#region Pencil
@@ -147,8 +172,6 @@ namespace ValkyrieMapEditor.Core
 						#region Rectangle
 						if(startpoint != this.GetNegativeOne())
 						{
-							this.endpoint = new Point((mouseState.X / 32) * 32, (mouseState.Y / 32) * 32);
-
 							pos = this.GetSelectionRectangle(this.startpoint, this.endpoint);
 							selectbox = EditorXNA.CreateSelectRectangle(pos.Width, pos.Height);
 						}
@@ -163,10 +186,22 @@ namespace ValkyrieMapEditor.Core
 					selectbox = EditorXNA.CreateSelectRectangle(pos.Width, pos.Height);
 					#endregion
 				}
-
-			    if (selectbox != null)
-			        spriteBatch.Draw(selectbox, pos, new Rectangle(0, 0, selectbox.Width, selectbox.Height), Color.White);
 			}
+
+
+			if(MapEditorManager.CurrentTool == Tools.Select)
+			{
+				#region Select
+				if(startpoint != this.GetNegativeOne())
+				{
+					pos = this.GetSelectionRectangle(this.startpoint, this.endpoint);
+					selectbox = EditorXNA.CreateSelectRectangleFilled(pos.Width, pos.Height);
+				}
+				#endregion
+			}
+
+		    if (selectbox != null)
+		        spriteBatch.Draw(selectbox, pos, new Rectangle(0, 0, selectbox.Width, selectbox.Height), Color.White);
         }
 
         public void Update(GameTime gameTime)
@@ -207,6 +242,13 @@ namespace ValkyrieMapEditor.Core
 						}
 					}
 				}
+				else if(MapEditorManager.CurrentTool == Tools.Rectangle || MapEditorManager.CurrentTool == Tools.Select)
+				{
+					lock(this.pointlock)
+					{
+						this.endpoint = new Point((mouseState.X / 32) * 32, (mouseState.Y / 32) * 32);
+					}
+				}
 			}
         }
 
@@ -222,6 +264,7 @@ namespace ValkyrieMapEditor.Core
 		private Point startpoint;
 		private Point endpoint;
 		private object pointlock = new object();
+		private bool isdragging = false;
 
 		private void FloodFill (int x, int y, int targetid, int replacementid)
 		{
@@ -255,7 +298,7 @@ namespace ValkyrieMapEditor.Core
 			if(spoint.X <= epoint.X)
 			{
 				x = spoint.X;
-				width = (endpoint.X - spoint.X) + 32;
+				width = (epoint.X - spoint.X) + 32;
 			}
 			else
 			{
@@ -263,7 +306,7 @@ namespace ValkyrieMapEditor.Core
 				width = ((spoint.X + 32) - epoint.X);
 			}
 
-			if(spoint.Y <= endpoint.Y)
+			if(spoint.Y <= epoint.Y)
 			{
 				y = spoint.Y;
 				height = (epoint.Y - spoint.Y) + 32;

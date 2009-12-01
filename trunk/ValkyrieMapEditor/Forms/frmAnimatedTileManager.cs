@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Valkyrie.Library;
 using Valkyrie.Engine.Animation;
 using Valkyrie.Engine.Maps;
+using ValkyrieMapEditor.Properties;
 
 namespace ValkyrieMapEditor.Forms
 {
@@ -19,6 +20,8 @@ namespace ValkyrieMapEditor.Forms
 		public frmAnimatedTileManager(Map map, Image tilesheet)
 		{
 			InitializeComponent();
+
+			this.Icon = Icon.FromHandle(Resources.imgFilm.GetHicon());
 
 			this.map = map;
 			this.tilesheet = tilesheet;

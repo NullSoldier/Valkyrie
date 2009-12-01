@@ -20,7 +20,7 @@ namespace ValkyrieMapEditor
 				AppDomain.CurrentDomain.UnhandledException += Program.Program_UnhandledException;
 
 			Program.Settings.Initialize();
-			Program.Settings.SetCurrentProfile("Default");
+			
 
 			frmMain form = new frmMain();
 

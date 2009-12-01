@@ -74,7 +74,7 @@ namespace Valkyrie.Engine.Maps
 		}
 
         public int TilesPerRow {get { return ((this.Texture != null) ? (this.Texture.Width / this.TileSize) : 0); }}
-        public int TilesPerCol {get { return ((this.Texture != null) ? (this.Texture.Height / this.TileSize) : 0); }}
+        //public int TilesPerCol {get { return ((this.Texture != null) ? (this.Texture.Height / this.TileSize) : 0); }}
 
 		public Dictionary<int, FrameAnimation> AnimatedTiles
 		{

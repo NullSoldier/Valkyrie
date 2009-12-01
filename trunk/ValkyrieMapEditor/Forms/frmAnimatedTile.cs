@@ -20,7 +20,7 @@ namespace ValkyrieMapEditor.Forms
 		public frmAnimatedTile(Map map, Image tilesheet)
 			: this(map, tilesheet, new FrameAnimation(0, 0, 0, 0, 0)) { }
 
-		public frmAnimatedTile(Map map, Image tilesheet, FrameAnimation animation)
+		public frmAnimatedTile(Map map, Image tilesheetimage, FrameAnimation animation)
 		{
 			InitializeComponent();
 
@@ -28,30 +28,41 @@ namespace ValkyrieMapEditor.Forms
 
 			this.Tile = animation;
 			this.map = map;
-			this.tilesheet = tilesheet;
+			this.tilesheetimage = tilesheetimage;
 
-			this.inTilePane.Initialize(); // Set it up
+			this.DisplayTile();
+		}
+
+		private Map map = null;
+		private Image tilesheetimage = null;
+
+		private void DisplayTile()
+		{
+			this.inTilePane.Initialize();
+
 			this.inTilePane.MaximumSize = new Size(this.map.MapSize.X, 0);
 			this.inTilePane.EnforceSize = true;
-			this.inTilePane.Image = this.tilesheet;
+			this.inTilePane.Image = this.tilesheetimage;
 			this.inTilePane.Size = this.inTilePane.Image.Size;
 			this.inTilePane.TileSize = new Point(this.map.TileSize, this.map.TileSize);
+
 			this.inTilePane.SelectedRect = new Rectangle(
 				this.Tile.InitialFrameRect.X / this.map.TileSize,
 				this.Tile.InitialFrameRect.Y / this.map.TileSize,
 				((this.Tile.InitialFrameRect.Width / this.map.TileSize) * this.Tile.FrameCount) - 1,
 				(this.Tile.InitialFrameRect.Height / this.map.TileSize) - 1);
+
 			this.inTilePane.Invalidate();
 
-			// Size correction
+			// Change the size of the window to fit the image
 			int newx = this.Size.Width;
 			int newy = this.splitTileManager.Panel1.Height;
 
 			if(this.Size.Width > this.inTilePane.Image.Size.Width)
-				newx = this.inTilePane.Image.Size.Width + 6;
+			    newx = this.inTilePane.Image.Size.Width + 6;
 
 			if(this.splitTileManager.Panel2.Height > this.inTilePane.Image.Size.Height)
-				newy = this.inTilePane.Image.Size.Height;
+			    newy = this.inTilePane.Image.Size.Height;
 
 			this.Height = newy + this.splitTileManager.Panel2.Height;
 			this.Width = newx + 10;
@@ -61,9 +72,6 @@ namespace ValkyrieMapEditor.Forms
 
 			this.inTilePane.TileSelectionChanged += this.OnSelectionChanged;
 		}
-
-		private Map map = null;
-		private Image tilesheet = null;
 
 		private void OnSelectionChanged(object sender, TileSelectionChangedEventArgs ev)
 		{

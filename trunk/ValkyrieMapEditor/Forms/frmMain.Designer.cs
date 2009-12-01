@@ -142,11 +142,11 @@
 			// pctTileSurface
 			// 
 			this.pctTileSurface.DisplayTileSelection = false;
-			this.pctTileSurface.EndSelectedPoint = new System.Drawing.Point(0, 0);
+			this.pctTileSurface.EndSelectedPoint = new System.Drawing.Point(3, 3);
 			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
 			this.pctTileSurface.Name = "pctTileSurface";
 			this.pctTileSurface.SelectedPoint = new System.Drawing.Point(0, 0);
-			this.pctTileSurface.SelectedRect = new System.Drawing.Rectangle(0, 0, 1, 1);
+			this.pctTileSurface.SelectedRect = new System.Drawing.Rectangle(0, 0, 4, 4);
 			this.pctTileSurface.Size = new System.Drawing.Size(173, 134);
 			this.pctTileSurface.TabIndex = 0;
 			this.pctTileSurface.TabStop = false;
@@ -455,10 +455,10 @@
             this.btnCollisionLayer,
             this.btnEvent,
             this.toolStripSeparator3,
+            this.btnSelection,
             this.btnPencil,
             this.btnRect,
-            this.btnFill,
-            this.btnSelection});
+            this.btnFill});
 			this.toolStripTools.Location = new System.Drawing.Point(0, 26);
 			this.toolStripTools.Name = "toolStripTools";
 			this.toolStripTools.Size = new System.Drawing.Size(1008, 25);
@@ -588,8 +588,6 @@
 			// 
 			// btnPencil
 			// 
-			this.btnPencil.Checked = true;
-			this.btnPencil.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.btnPencil.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.btnPencil.Enabled = false;
 			this.btnPencil.Image = global::ValkyrieMapEditor.Properties.Resources.imgPencil;
@@ -626,6 +624,8 @@
 			// 
 			// btnSelection
 			// 
+			this.btnSelection.Checked = true;
+			this.btnSelection.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.btnSelection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.btnSelection.Enabled = false;
 			this.btnSelection.Image = global::ValkyrieMapEditor.Properties.Resources.imgSelect;
@@ -634,6 +634,7 @@
 			this.btnSelection.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
 			this.btnSelection.Size = new System.Drawing.Size(34, 22);
 			this.btnSelection.Text = "Selection";
+			this.btnSelection.Click += new System.EventHandler(this.btnSelection_Click);
 			// 
 			// frmMain
 			// 

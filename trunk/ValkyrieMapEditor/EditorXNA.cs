@@ -284,6 +284,9 @@ namespace ValkyrieMapEditor
 			Texture2D rectangleTexture = new Texture2D(EditorXNA.graphicsDevice, width, height, 1, TextureUsage.None, SurfaceFormat.Color);
 		   
 			Color[] color = new Color[width * height]; // Set the color to the amount of pixels
+			Color black = new Color(0, 0, 0, 255);
+			Color blacknoalpha = new Color(0, 0, 0, 0);
+			Color white = new Color(255, 255, 255, 255);
 
 			// Loop through all the colors setting them to whatever values we want
 			for (int y = 1; y < height; y++)
@@ -292,43 +295,71 @@ namespace ValkyrieMapEditor
 				{
 					if ((x < limit) || (x > width - limit - 2) || (y < limit) || (y > height - limit - 2))
 					{
-						color[x + (y * width)] = new Color(255, 255, 255, 255);
+						color[x + (y * width)] = white;
 					}
 					else
 					{
-						color[x + (y * width)] = new Color(0, 0, 0, 0);
+						color[x + (y * width)] = blacknoalpha;
 					}
 				}
 			}
 
-			//outer four
-			for (int y = 0; y < height; y++)
-				color[0 + (y * width)] = new Color(0, 0, 0, 255);
+			// Outer four
+			for(int y = 0; y < height; y++)
+				color[0 + (y * width)] = black;
 
 			for (int y = 0; y < height; y++)
-				color[width - 1 + (y * width)] = new Color(0, 0, 0, 255);
+				color[width - 1 + (y * width)] = black;
 
 			for (int x = 0; x < width; x++)
-				color[x + (0 * width)] = new Color(0, 0, 0, 255);
+				color[x + (0 * width)] = black;
 
 			for (int x = 0; x < width; x++)
-				color[x + ((height - 1) * width)] = new Color(0, 0, 0, 255);
+				color[x + ((height - 1) * width)] = black;
 
-			//inner four
+			// Inner four
 			for (int y = limit; y < (height - limit -1); y++)
-				color[limit + (y * width)] = new Color(0, 0, 0, 255);
+				color[limit + (y * width)] = black;
 
 			for (int y = limit; y < (height - limit); y++)
-				color[width - limit - 1 + (y * width)] = new Color(0, 0, 0, 255);
+				color[width - limit - 1 + (y * width)] = black;
 
 			for (int x = limit; x < (width - limit - 1); x++)
-				color[x + (limit * width)] = new Color(0, 0, 0, 255);
+				color[x + (limit * width)] = black;
 
 			for (int x = limit; x < (width - limit); x++)
-				color[x + ((height - limit - 1) * width)] = new Color(0, 0, 0, 255);
+				color[x + ((height - limit - 1) * width)] = black;
 
 			rectangleTexture.SetData(color);//set the color data on the texture
 			return rectangleTexture;
+		}
+
+		static public Texture2D CreateSelectRectangleFilled (int width, int height)
+		{
+			Texture2D texture = new Texture2D(EditorXNA.graphicsDevice, width, height, 1, TextureUsage.None, SurfaceFormat.Color);
+			Color[] color = new Color[width * height];
+
+			Color mainfill = new Color(160, 190, 234, 160);
+			Color border = new Color(93, 134, 212, 255);
+
+			for(int i = 0; i < width * height; i++)
+				color[i] = mainfill;
+
+			// Outer four
+			for(int y = 0; y < height; y++)
+				color[0 + (y * width)] = border;
+
+			for(int y = 0; y < height; y++)
+				color[width - 1 + (y * width)] = border;
+
+			for(int x = 0; x < width; x++)
+				color[x + (0 * width)] = border;
+
+			for(int x = 0; x < width; x++)
+				color[x + ((height - 1) * width)] = border;
+
+			texture.SetData(color);//set the color data on the texture
+			return texture;
 		}
 		
 		#endregion

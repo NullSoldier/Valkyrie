@@ -19,6 +19,7 @@ using ValkyrieMapEditor.Core;
 using Valkyrie.Engine.Maps;
 using Valkyrie.Library.Providers;
 using Valkyrie.Engine;
+using Valkyrie.Engine.Events;
 
 namespace ValkyrieMapEditor
 {
@@ -78,6 +79,7 @@ namespace ValkyrieMapEditor
 		private void frmMain_Load(object sender, EventArgs e)
 		{
 			this.lblVersion.Text = String.Format("Version: {0}", Assembly.GetExecutingAssembly().GetName().Version.ToString());
+			frmMain.EventHandlerTypes = this.LoadImplementers();
 
 			// Do this last
 			var handler = this.ScreenResized;
@@ -365,11 +367,13 @@ namespace ValkyrieMapEditor
 
 			this.DisplayMapProperties(map);
 			this.DisplayTileSheet(map);
-
 			this.UpdateScrollBars();
 
-			if(MapEditorManager.NoEvents)
+			if(MapEditorManager.NoEvents || 
+				frmMain.EventHandlerTypes.Count() <= 0 )
+			{
 				this.btnEvent.Enabled = false;
+			}
         }
 
 		private void DisplayTileSheet(Map map)
@@ -406,11 +410,12 @@ namespace ValkyrieMapEditor
 			this.btnMiddleLayer.Enabled = enabled;
 			this.btnTopLayer.Enabled = enabled;
 			this.btnCollisionLayer.Enabled = enabled;
+			this.btnEvent.Enabled = enabled;
 			this.btnSave.Enabled = enabled;
 			this.btnPencil.Enabled = enabled;
 			this.btnRect.Enabled = enabled;
 			this.btnFill.Enabled = enabled;
-			this.btnEvent.Enabled = enabled;
+			this.btnSelection.Enabled = enabled;
 		}
 
 		private IEnumerable<Assembly> GetAssemblies ()
@@ -420,6 +425,10 @@ namespace ValkyrieMapEditor
 			var results = Program.Settings.GetSetting("AssemblyDirectories").Split(';');
 			foreach(var result in results)
 			{
+				FileInfo info = new FileInfo(result);
+				if(!info.Exists)
+					continue;
+
 				if(!string.IsNullOrEmpty(result))
 					assemblies.Add(Assembly.LoadFile(result));
 			}
@@ -494,6 +503,7 @@ namespace ValkyrieMapEditor
 
 			this.btnPencil.Checked = false;
 			this.btnFill.Checked = false;
+			this.btnSelection.Checked = false;
 
 			MapEditorManager.CurrentTool = Tools.Rectangle;
 		}
@@ -504,6 +514,7 @@ namespace ValkyrieMapEditor
 
 			this.btnFill.Checked = false;
 			this.btnRect.Checked = false;
+			this.btnSelection.Checked = false;
 
 			MapEditorManager.CurrentTool = Tools.Pencil;
 		}
@@ -514,9 +525,32 @@ namespace ValkyrieMapEditor
 
 			this.btnPencil.Checked = false;
 			this.btnRect.Checked = false;
+			this.btnSelection.Checked = false;
 
 			MapEditorManager.CurrentTool = Tools.Bucket;
 		}
+
+		private void btnSelection_Click (object sender, EventArgs e)
+		{
+			this.btnSelection.Checked = true;
+
+			this.btnPencil.Checked = false;
+			this.btnRect.Checked = false;
+			this.btnFill.Checked = false;
+
+			MapEditorManager.CurrentTool = Tools.Select;
+		}
+
+		private IEnumerable<Type> LoadImplementers ()
+		{
+			return this.GetAssemblies().SelectMany(a => a.GetTypes()).Where(t => typeof(IMapEvent).IsAssignableFrom(t) && !t.IsInterface);
+		}
+
+		#region Statics and Internals
+
+		public static IEnumerable<Type> EventHandlerTypes = new List<Type>();
+
+		#endregion
 	}
 
 	#region EventArgs

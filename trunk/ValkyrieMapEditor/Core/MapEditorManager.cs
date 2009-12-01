@@ -295,7 +295,7 @@ namespace ValkyrieMapEditor
 		private static EditorXNA gameinstance = null;
 		private static MapLayers currentlayer = MapLayers.BaseLayer;
 		private static ViewMode viewmode = ViewMode.All;
-		private static Tools tool = Tools.Pencil;
+		private static Tools tool = Tools.Select;
 		private static Rectangle selectedtilesrectangle = Rectangle.Empty;
 		private static bool ignoreinput = false;
 		private static bool noevents = false;
@@ -322,6 +322,7 @@ namespace ValkyrieMapEditor
 		Pencil,
 		Rectangle,
 		Bucket,
+		Select
 	}
 
     public enum ViewMode

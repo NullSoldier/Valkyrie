@@ -94,6 +94,12 @@
     <Compile Include="Core\Components\DrawComponent.cs" />
     <Compile Include="Core\GriffinMapProvider.cs" />
     <Compile Include="Core\SettingsManager.cs" />
+    <Compile Include="Forms\frmAddAssembly.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmAddAssembly.Designer.cs">
+      <DependentUpon>frmAddAssembly.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmAnimatedTile.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -225,6 +231,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Forms\frmAddAssembly.resx">
+      <DependentUpon>frmAddAssembly.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmAnimatedTile.resx">
       <DependentUpon>frmAnimatedTile.cs</DependentUpon>
       <SubType>Designer</SubType>
