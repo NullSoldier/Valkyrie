@@ -425,12 +425,22 @@ namespace ValkyrieMapEditor
 			var results = Program.Settings.GetSetting("AssemblyDirectories").Split(';');
 			foreach(var result in results)
 			{
-				FileInfo info = new FileInfo(result);
-				if(!info.Exists)
-					continue;
+                if (string.IsNullOrEmpty(result))
+                    continue;
 
-				if(!string.IsNullOrEmpty(result))
-					assemblies.Add(Assembly.LoadFile(result));
+                try
+                {
+                    FileInfo info = new FileInfo(result);
+                    if (!info.Exists)
+                        continue;
+
+
+                    assemblies.Add(Assembly.LoadFile(result));
+                }
+                catch
+                {
+                    continue; // Must be an invalid assembly path
+                }
 			}
 
 			return assemblies;
