@@ -44,29 +44,29 @@ namespace ValkyrieMapEditor.Core
 			this.context = context;
         }
 
-        public void CreateOrEditEvent()
+        public void CreateOrEditEvent(Rectangle selectedRect)
         {
+			MapEditorManager.IgnoreInput = true;
+
 			var camera = this.context.SceneProvider.GetCamera("camera1");
 			
 			int xOffset = (int)camera.MapOffset.X / 32 + (int)camera.CameraOffset.X;
 			int yOffset = (int)camera.MapOffset.Y / 32 + (int)camera.CameraOffset.Y;
 
-			MapPoint point = new MapPoint(SelectedPoint.X + (xOffset * -1), SelectedPoint.Y + (yOffset * -1));
-
-			IMapEvent mapevent = this.context.EventProvider.GetMapsEvents(MapEditorManager.CurrentMap.Name).Where(e => e.Rectangle.Contains(point.ToPoint())).FirstOrDefault();
+			IMapEvent mapevent = this.context.EventProvider.GetMapsEvents(MapEditorManager.CurrentMap.Name).Where(e => e.Rectangle.Intersects(selectedRect)).FirstOrDefault();
 
 			bool newEvent = false;
 			if(mapevent != null)
 			{
-				SelectedPoint = new Point(mapevent.Rectangle.X, mapevent.Rectangle.Y);
-				EndSelectedPoint = new Point(mapevent.Rectangle.X + mapevent.Rectangle.Width, mapevent.Rectangle.Y + mapevent.Rectangle.Height);
+				SelectedPoint = new Point(mapevent.Rectangle.X * 32, mapevent.Rectangle.Y * 32);
+				EndSelectedPoint = new Point((mapevent.Rectangle.X * 32) + ((mapevent.Rectangle.Width - 1) * 32), (mapevent.Rectangle.Y * 32) + ((mapevent.Rectangle.Height - 1) * 32));
 			}
 			else
 			{
 				newEvent = true;
 			}
 
-			MapPoint size = new MapPoint(this.EndSelectedPoint.X - this.SelectedPoint.X, this.EndSelectedPoint.Y - this.SelectedPoint.Y);
+			MapPoint size = new MapPoint(((this.EndSelectedPoint.X - this.SelectedPoint.X) / 32) + 1, ((this.EndSelectedPoint.Y - this.SelectedPoint.Y) / 32) + 1);
 
 			frmMapEvent dialog = new frmMapEvent(mapevent);
 			DialogResult result = dialog.ShowDialog();
@@ -77,32 +77,45 @@ namespace ValkyrieMapEditor.Core
 				if(!newEvent)
 					mapevent.Rectangle = new Rectangle(mapevent.Rectangle.X, mapevent.Rectangle.Y, size.X, size.Y);
 				else
-					mapevent.Rectangle = new Rectangle(point.X, point.Y, size.X, size.Y);
+					mapevent.Rectangle = new Rectangle(selectedRect.X, selectedRect.Y, size.X, size.Y);
 			}
 
 			if(result == DialogResult.OK)
+			{
 				this.context.EventProvider.ReferenceSetOrAdd(MapEditorManager.CurrentMap.Name, mapevent);
-
+				MapEditorManager.OnMapChanged();
+			}
 			else if(result == DialogResult.Abort)
+			{
 				this.context.EventProvider.Remove(MapEditorManager.CurrentMap.Name, mapevent);
+				MapEditorManager.OnMapChanged();
+			}
+
+			MapEditorManager.IgnoreInput = false;
         }
 
         public void OnMouseDown(object sender, MouseEventArgs ev)
         {
+			if(MapEditorManager.IgnoreInput) return;
+
 			lock(this.pointlock)
 			{
-				this.SelectedPoint = new Point(ev.X / 32, ev.Y / 32);
-				this.EndSelectedPoint = new Point(ev.X / 32 + 1, ev.Y / 32 + 1);
+				this.SelectedPoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
+				this.EndSelectedPoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
 			}
         }
 
         public void OnMouseUp(object sender, MouseEventArgs ev)
         {
+			if(MapEditorManager.IgnoreInput) return;
+
 			lock(this.pointlock)
 			{
-				this.EndSelectedPoint = new Point(ev.X / 32 + 1, ev.Y / 32 + 1);
+				this.EndSelectedPoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
 
-				this.CreateOrEditEvent();
+				var tmpRect = this.GetSelectionRectangle(this.SelectedPoint, this.EndSelectedPoint);
+
+				this.CreateOrEditEvent(new Rectangle(tmpRect.X / 32, tmpRect.Y / 32, tmpRect.Width / 32, tmpRect.Height / 32));
 
 				this.SelectedPoint = new Point(-1, -1);
 				this.EndSelectedPoint = new Point(-1, -1);
@@ -120,7 +133,7 @@ namespace ValkyrieMapEditor.Core
 				Point newLoc = new Point((int)camera.MapOffset.X + (int)camera.CameraOffset.X + (mapevent.Rectangle.X * MapEditorManager.CurrentMap.TileSize),
 					 (int)camera.MapOffset.Y + (int)camera.CameraOffset.Y + (mapevent.Rectangle.Y * MapEditorManager.CurrentMap.TileSize));
 
-				Texture2D border = EditorXNA.CreateSelectRectangleFilled(mapevent.Rectangle.Width * 32, mapevent.Rectangle.Height * 32);
+				Texture2D border = EditorXNA.CreateSelectRectangleFilled(mapevent.Rectangle.Width * 32, mapevent.Rectangle.Height * 32, new Color(136, 0, 21, 255), new Color(255, 128, 128, 160));
 
 				Rectangle destRectangle = new Rectangle(newLoc.X, newLoc.Y, mapevent.Rectangle.Width * 32, mapevent.Rectangle.Height * 32);
 
@@ -143,20 +156,14 @@ namespace ValkyrieMapEditor.Core
 			// -1 is used to denote an invalid selection
 			if(this.currentmapevent == null && SelectedPoint.X != -1 && SelectedPoint.Y != -1)
 			{
-				Point sel = SelectedPoint;
-				Point end = EndSelectedPoint;
+				var rectangle = this.GetSelectionRectangle(this.SelectedPoint, this.EndSelectedPoint);
 
-				Rectangle tileSelection = new Rectangle(sel.X * 32,
-					sel.Y * 32,
-					end.X * 32 - sel.X * 32,
-					end.Y * 32 - sel.Y * 32);
+				Texture2D texture = EditorXNA.CreateSelectRectangle(rectangle.Width, rectangle.Height);
 
-				Texture2D text = EditorXNA.CreateSelectRectangle(tileSelection.Width, tileSelection.Height);
+				if(texture == null) // If we couldn't generate a texture use the loaded texture
+					texture = this.SelectionSprite;
 
-				if(text == null)
-					text = this.SelectionSprite;
-
-				spriteBatch.Draw(text, tileSelection, new Rectangle(0, 0, text.Width, text.Height), Color.White);
+				spriteBatch.Draw(texture, rectangle, new Rectangle(0, 0, texture.Width, texture.Height), Color.White);
 			}
         }
 
@@ -178,13 +185,15 @@ namespace ValkyrieMapEditor.Core
 
         public void Update(GameTime gameTime)
         {
+			if(MapEditorManager.IgnoreInput) return;
+
 			var mouseState = Mouse.GetState();
 
 			if(mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
 			{
 				lock(this.pointlock)
 				{
-					this.EndSelectedPoint = new Point(mouseState.X / 32 + 1, mouseState.Y / 32 + 1);
+					this.EndSelectedPoint = new Point((mouseState.X / 32) * 32, (mouseState.Y / 32) * 32);
 				}
 			}
         }

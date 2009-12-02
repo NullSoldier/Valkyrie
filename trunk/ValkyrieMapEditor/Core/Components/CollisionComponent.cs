@@ -62,6 +62,7 @@ namespace ValkyrieMapEditor.Core
 					int value = MapEditorManager.CurrentMap.GetLayerValue(point, MapLayers.CollisionLayer);
 
 					MapEditorManager.CurrentMap.SetLayerValue(point, MapLayers.CollisionLayer, value * -1);
+					MapEditorManager.OnMapChanged();
 				}
 			}
         }

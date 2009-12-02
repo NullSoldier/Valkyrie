@@ -334,13 +334,10 @@ namespace ValkyrieMapEditor
 			return rectangleTexture;
 		}
 
-		static public Texture2D CreateSelectRectangleFilled (int width, int height)
+		static public Texture2D CreateSelectRectangleFilled (int width, int height, Color border, Color mainfill)
 		{
 			Texture2D texture = new Texture2D(EditorXNA.graphicsDevice, width, height, 1, TextureUsage.None, SurfaceFormat.Color);
 			Color[] color = new Color[width * height];
-
-			Color mainfill = new Color(160, 190, 234, 160);
-			Color border = new Color(93, 134, 212, 255);
 
 			for(int i = 0; i < width * height; i++)
 				color[i] = mainfill;

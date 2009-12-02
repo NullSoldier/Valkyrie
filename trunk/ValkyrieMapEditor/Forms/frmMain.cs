@@ -29,9 +29,9 @@ namespace ValkyrieMapEditor
 
 		public frmMain()
 		{
-			InitializeComponent();
-
 			this.Icon = Icon.FromHandle(Resources.imgLayers.GetHicon());
+
+			InitializeComponent();
 
 			this.pctTileSurface.Initialize();
 			this.pctTileSurface.TileSelectionChanged += this.SelectionChanged;
@@ -40,6 +40,34 @@ namespace ValkyrieMapEditor
 		#endregion
 
 		#region Public Properties
+
+		public bool MapChanged
+		{
+			get { return this.mapchanged; }
+			set
+			{
+				if(value)
+				{
+					if(!this.Text.EndsWith("*"))
+					{
+						this.Text += "*";
+						this.btnSave.Enabled = true;
+						this.toolSave.Enabled = true;
+					}
+				}
+				else
+				{
+					if(this.Text.EndsWith("*"))
+					{
+						this.Text = this.Text.Substring(0, this.Text.Length - 1);
+						this.btnSave.Enabled = false;
+						this.toolSave.Enabled = false;
+					}
+				}
+
+				this.mapchanged = value;
+			}
+		}
 
 		public event EventHandler<ScreenResizedEventArgs> ScreenResized;
 		public event EventHandler<ScrollEventArgs> ScrolledMap;
@@ -58,17 +86,6 @@ namespace ValkyrieMapEditor
 			return pctTileSurface.Handle;
 		}
 
-		public bool MapChanged
-		{
-			get { return this.mapchanged; }
-			set
-			{
-				// Add * to title
-
-				this.mapchanged = value;
-			}
-		}
-
 		#endregion
 
 		private bool mapchanged = false;
@@ -80,6 +97,8 @@ namespace ValkyrieMapEditor
 		{
 			this.lblVersion.Text = String.Format("Version: {0}", Assembly.GetExecutingAssembly().GetName().Version.ToString());
 			frmMain.EventHandlerTypes = this.LoadImplementers();
+
+			MapEditorManager.MapChanged += this.frmMain_MapChanged;
 
 			// Do this last
 			var handler = this.ScreenResized;
@@ -104,6 +123,8 @@ namespace ValkyrieMapEditor
 
 		private void toolOpen_Click (object sender, EventArgs e)
 		{
+			MapEditorManager.IgnoreInput = true;
+
 			OpenFileDialog openDialog = new OpenFileDialog();
 			openDialog.DefaultExt = ".xml";
 			openDialog.Filter = "Valkyrie Maps|*.xml";
@@ -113,10 +134,14 @@ namespace ValkyrieMapEditor
 				return;
 
 			this.LoadMap(new FileInfo(openDialog.FileName));
+
+			MapEditorManager.IgnoreInput = false;
 		}
 
 		private void toolNew_Click (object sender, EventArgs e)
 		{
+			MapEditorManager.IgnoreInput = true;
+
 			frmProperty dialog = new frmProperty();
 			DialogResult result = dialog.ShowDialog(this);
 			if(result == DialogResult.Cancel)
@@ -132,6 +157,8 @@ namespace ValkyrieMapEditor
 			this.DisplayTileSheet(newMap);
 
 			this.currentmaplocation = null;
+
+			MapEditorManager.IgnoreInput = false;
 		}
 
 		private void toolSave_Click (object sender, EventArgs e)
@@ -181,7 +208,6 @@ namespace ValkyrieMapEditor
 			this.btnBaseLayer.Checked = false;
 			this.btnMiddleLayer.Checked = false;
 			this.btnTopLayer.Checked = false;
-			this.btnEvent.Checked = false;
 			this.btnCollisionLayer.Checked = false;
 
 			MapEditorManager.CurrentLayer = MapLayers.UnderLayer;
@@ -195,7 +221,6 @@ namespace ValkyrieMapEditor
 			this.btnUnderLayer.Checked = false;
 			this.btnMiddleLayer.Checked = false;
 			this.btnTopLayer.Checked = false;
-			this.btnEvent.Checked = false;
 			this.btnCollisionLayer.Checked = false;
 
 			MapEditorManager.CurrentLayer = MapLayers.BaseLayer;
@@ -209,7 +234,6 @@ namespace ValkyrieMapEditor
 			this.btnUnderLayer.Checked = false;
 			this.btnBaseLayer.Checked = false;
 			this.btnTopLayer.Checked = false;
-			this.btnEvent.Checked = false;
 			this.btnCollisionLayer.Checked = false;
 
 			MapEditorManager.CurrentLayer = MapLayers.MiddleLayer;
@@ -223,7 +247,6 @@ namespace ValkyrieMapEditor
 			this.btnUnderLayer.Checked = false;
 			this.btnBaseLayer.Checked = false;
 			this.btnMiddleLayer.Checked = false;
-			this.btnEvent.Checked = false;
 			this.btnCollisionLayer.Checked = false;
 
 			MapEditorManager.CurrentLayer = MapLayers.TopLayer;
@@ -273,15 +296,12 @@ namespace ValkyrieMapEditor
 		{
 			this.btnEvent.Checked = true;
 
-			this.btnBaseLayer.Checked = false;
-			this.btnMiddleLayer.Checked = false;
-			this.btnTopLayer.Checked = false;
-			this.btnCollisionLayer.Checked = false;
+			this.btnPencil.Checked = false;
+			this.btnFill.Checked = false;
+			this.btnSelection.Checked = false;
+			this.btnRect.Checked = false;
 
-			if(this.btnEvent.Checked)
-				MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Events);
-			else
-				MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Draw);
+			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Events);
 		}
 
 		private void btnCollisionLayer_Click (object sender, EventArgs e)
@@ -291,12 +311,8 @@ namespace ValkyrieMapEditor
 			this.btnBaseLayer.Checked = false;
 			this.btnMiddleLayer.Checked = false;
 			this.btnTopLayer.Checked = false;
-			this.btnEvent.Checked = false;
 
-			if(this.btnCollisionLayer.Checked)
-				MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Collsion);
-			else
-				MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Draw);
+			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Collsion);
 		}
 
 		private void allLayersToolStripMenuItem_Click (object sender, EventArgs e)
@@ -337,14 +353,22 @@ namespace ValkyrieMapEditor
 
 		private void btnAnimatedTileManager_Click (object sender, EventArgs e)
 		{
+			MapEditorManager.IgnoreInput = true;
+
 			frmAnimatedTileManager dialog = new frmAnimatedTileManager(MapEditorManager.CurrentMap, this.pctTileSurface.Image);
 			dialog.ShowDialog(this);
+
+			MapEditorManager.IgnoreInput = false;
 		}
 
 		private void optionsToolStripMenuItem_Click (object sender, EventArgs e)
 		{
+			MapEditorManager.IgnoreInput = true;
+
 			frmOptions dialog = new frmOptions();
 			dialog.ShowDialog(this);
+
+			MapEditorManager.IgnoreInput = false;
 		}
 
 		#endregion
@@ -368,6 +392,9 @@ namespace ValkyrieMapEditor
 			this.DisplayMapProperties(map);
 			this.DisplayTileSheet(map);
 			this.UpdateScrollBars();
+
+			this.splitContainer2.Panel1.VerticalScroll.SmallChange = MapEditorManager.CurrentMap.TileSize;
+			this.splitContainer2.Panel1.HorizontalScroll.SmallChange = MapEditorManager.CurrentMap.TileSize;
 
 			if(MapEditorManager.NoEvents || 
 				frmMain.EventHandlerTypes.Count() <= 0 )
@@ -485,6 +512,8 @@ namespace ValkyrieMapEditor
 			    this.SaveMapAs();
 			else
 				MapEditorManager.SaveMap(MapEditorManager.CurrentMap, this.currentmaplocation);
+
+			this.MapChanged = false;
 		}
 
 		private void SaveMapAs()
@@ -503,6 +532,8 @@ namespace ValkyrieMapEditor
 			FileInfo file = new FileInfo(dialog.FileName);
 
 			MapEditorManager.SaveMap(MapEditorManager.CurrentMap, file);
+
+			this.MapChanged = false;
 		}
 
 		#endregion
@@ -514,8 +545,10 @@ namespace ValkyrieMapEditor
 			this.btnPencil.Checked = false;
 			this.btnFill.Checked = false;
 			this.btnSelection.Checked = false;
+			this.btnEvent.Checked = false;
 
 			MapEditorManager.CurrentTool = Tools.Rectangle;
+			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Draw);
 		}
 
 		private void btnPencil_Click (object sender, EventArgs e)
@@ -525,8 +558,10 @@ namespace ValkyrieMapEditor
 			this.btnFill.Checked = false;
 			this.btnRect.Checked = false;
 			this.btnSelection.Checked = false;
+			this.btnEvent.Checked = false;
 
 			MapEditorManager.CurrentTool = Tools.Pencil;
+			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Draw);
 		}
 
 		private void btnFill_Click (object sender, EventArgs e)
@@ -536,8 +571,10 @@ namespace ValkyrieMapEditor
 			this.btnPencil.Checked = false;
 			this.btnRect.Checked = false;
 			this.btnSelection.Checked = false;
+			this.btnEvent.Checked = false;
 
 			MapEditorManager.CurrentTool = Tools.Bucket;
+			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Draw);
 		}
 
 		private void btnSelection_Click (object sender, EventArgs e)
@@ -547,8 +584,10 @@ namespace ValkyrieMapEditor
 			this.btnPencil.Checked = false;
 			this.btnRect.Checked = false;
 			this.btnFill.Checked = false;
+			this.btnEvent.Checked = false;
 
 			MapEditorManager.CurrentTool = Tools.Select;
+			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Draw);
 		}
 
 		private IEnumerable<Type> LoadImplementers ()
@@ -556,11 +595,26 @@ namespace ValkyrieMapEditor
 			return this.GetAssemblies().SelectMany(a => a.GetTypes()).Where(t => typeof(IMapEvent).IsAssignableFrom(t) && !t.IsInterface);
 		}
 
+		private void frmMain_MapChanged (object sender, EventArgs ev)
+		{
+			this.MapChanged = true;
+		}
+
 		#region Statics and Internals
 
 		public static IEnumerable<Type> EventHandlerTypes = new List<Type>();
 
 		#endregion
+
+		private void frmMain_FormClosing (object sender, FormClosingEventArgs e)
+		{
+			if(this.MapChanged)
+			{
+				var result = MessageBox.Show(string.Format("Do you want to save changes to {0}?", MapEditorManager.CurrentMap.Name), "Griffin", MessageBoxButtons.YesNo);
+				if(result == DialogResult.Yes)
+					this.SaveMap();
+			}
+		}
 	}
 
 	#region EventArgs

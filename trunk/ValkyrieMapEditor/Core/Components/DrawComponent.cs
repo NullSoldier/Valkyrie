@@ -68,6 +68,8 @@ namespace ValkyrieMapEditor.Core
 				int newvalue = MapEditorManager.CurrentMap.GetTileSetValue(tilesheetPoint);
 
 				this.FloodFill(tileLocation.X, tileLocation.Y, oldvalue, newvalue);
+
+				MapEditorManager.OnMapChanged();
 			}
         }
 
@@ -121,6 +123,8 @@ namespace ValkyrieMapEditor.Core
 
 					this.endpoint = this.GetNegativeOne();
 					this.startpoint = this.GetNegativeOne();
+
+					MapEditorManager.OnMapChanged();
 				}
 			}
 			else if(MapEditorManager.CurrentTool == Tools.Select)
@@ -146,10 +150,12 @@ namespace ValkyrieMapEditor.Core
 				return;
 
 			var mouseState = Mouse.GetState();
+			var camera = this.context.SceneProvider.GetCamera("camera1");
 
 			// Common properties
 			Texture2D selectbox = null;
 			Rectangle pos = Rectangle.Empty;
+			Point newLoc = Point.Zero;
 
 			if(mouseState.X > 0 && mouseState.Y > 0 &&
 				mouseState.X < this.context.SceneProvider.GetCamera("camera1").Screen.Width &&
@@ -161,7 +167,7 @@ namespace ValkyrieMapEditor.Core
 					Point tileLocation = new Point(mouseState.X / 32, mouseState.Y / 32);
 					Vector2 cLoc = new Vector2(tileLocation.X * 32, tileLocation.Y * 32);
 					pos = new Rectangle((int)cLoc.X, (int)cLoc.Y, MapEditorManager.SelectedTilesRectangle.Width * 32 + 32, MapEditorManager.SelectedTilesRectangle.Height * 32 + 32);
-					
+					newLoc = new Point(pos.X, pos.Y);
 					selectbox = EditorXNA.CreateSelectRectangle(pos.Width, pos.Height);
 					#endregion
 				}
@@ -173,6 +179,7 @@ namespace ValkyrieMapEditor.Core
 						if(startpoint != this.GetNegativeOne())
 						{
 							pos = this.GetSelectionRectangle(this.startpoint, this.endpoint);
+							newLoc = new Point(pos.X, pos.Y);
 							selectbox = EditorXNA.CreateSelectRectangle(pos.Width, pos.Height);
 						}
 						#endregion
@@ -182,7 +189,7 @@ namespace ValkyrieMapEditor.Core
 				{
 					#region Bucket
 					pos = new Rectangle((mouseState.X / 32) * 32, (mouseState.Y / 32) * 32, 32, 32);
-
+					newLoc = new Point(pos.X, pos.Y);
 					selectbox = EditorXNA.CreateSelectRectangle(pos.Width, pos.Height);
 					#endregion
 				}
@@ -195,13 +202,17 @@ namespace ValkyrieMapEditor.Core
 				if(startpoint != this.GetNegativeOne())
 				{
 					pos = this.GetSelectionRectangle(this.startpoint, this.endpoint);
-					selectbox = EditorXNA.CreateSelectRectangleFilled(pos.Width, pos.Height);
+					
+					newLoc = new Point((int)camera.MapOffset.X + (int)camera.CameraOffset.X + pos.X,
+					 (int)camera.MapOffset.Y + (int)camera.CameraOffset.Y + pos.Y);
+
+					selectbox = EditorXNA.CreateSelectRectangleFilled(pos.Width, pos.Height, new Color(93, 134, 212, 255), new Color(160, 190, 234, 160));
 				}
 				#endregion
 			}
 
 		    if (selectbox != null)
-		        spriteBatch.Draw(selectbox, pos, new Rectangle(0, 0, selectbox.Width, selectbox.Height), Color.White);
+				spriteBatch.Draw(selectbox, new Vector2(newLoc.X, newLoc.Y), new Rectangle(0, 0, selectbox.Width, selectbox.Height), Color.White);
         }
 
         public void Update(GameTime gameTime)
@@ -240,6 +251,8 @@ namespace ValkyrieMapEditor.Core
 									MapEditorManager.CurrentMap.SetLayerValue(point, MapEditorManager.CurrentLayer, MapEditorManager.CurrentMap.GetTileSetValue(tilesheetPoint));
 							}
 						}
+
+						MapEditorManager.OnMapChanged();
 					}
 				}
 				else if(MapEditorManager.CurrentTool == Tools.Rectangle || MapEditorManager.CurrentTool == Tools.Select)

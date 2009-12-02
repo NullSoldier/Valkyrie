@@ -72,11 +72,11 @@
 			this.btnTopLayer = new System.Windows.Forms.ToolStripButton();
 			this.btnHelp = new System.Windows.Forms.ToolStripButton();
 			this.btnCollisionLayer = new System.Windows.Forms.ToolStripButton();
-			this.btnEvent = new System.Windows.Forms.ToolStripButton();
+			this.btnSelection = new System.Windows.Forms.ToolStripButton();
 			this.btnPencil = new System.Windows.Forms.ToolStripButton();
 			this.btnRect = new System.Windows.Forms.ToolStripButton();
 			this.btnFill = new System.Windows.Forms.ToolStripButton();
-			this.btnSelection = new System.Windows.Forms.ToolStripButton();
+			this.btnEvent = new System.Windows.Forms.ToolStripButton();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -114,7 +114,7 @@
 			this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.ControlDark;
 			this.splitContainer1.Panel2.Controls.Add(this.panel1);
 			this.splitContainer1.Size = new System.Drawing.Size(1008, 652);
-			this.splitContainer1.SplitterDistance = 280;
+			this.splitContainer1.SplitterDistance = 311;
 			this.splitContainer1.SplitterWidth = 5;
 			this.splitContainer1.TabIndex = 2;
 			// 
@@ -134,19 +134,19 @@
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
-			this.splitContainer2.Size = new System.Drawing.Size(276, 648);
-			this.splitContainer2.SplitterDistance = 395;
+			this.splitContainer2.Size = new System.Drawing.Size(307, 648);
+			this.splitContainer2.SplitterDistance = 441;
 			this.splitContainer2.SplitterWidth = 5;
 			this.splitContainer2.TabIndex = 0;
 			// 
 			// pctTileSurface
 			// 
-			this.pctTileSurface.DisplayTileSelection = false;
-			this.pctTileSurface.EndSelectedPoint = new System.Drawing.Point(3, 3);
+			this.pctTileSurface.DisplayTileSelection = true;
+			this.pctTileSurface.EndSelectedPoint = new System.Drawing.Point(0, 0);
 			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
 			this.pctTileSurface.Name = "pctTileSurface";
 			this.pctTileSurface.SelectedPoint = new System.Drawing.Point(0, 0);
-			this.pctTileSurface.SelectedRect = new System.Drawing.Rectangle(0, 0, 4, 4);
+			this.pctTileSurface.SelectedRect = new System.Drawing.Rectangle(0, 0, 1, 1);
 			this.pctTileSurface.Size = new System.Drawing.Size(173, 134);
 			this.pctTileSurface.TabIndex = 0;
 			this.pctTileSurface.TabStop = false;
@@ -167,8 +167,8 @@
 			// splitContainer3.Panel2
 			// 
 			this.splitContainer3.Panel2.Controls.Add(this.lstSettings);
-			this.splitContainer3.Size = new System.Drawing.Size(276, 248);
-			this.splitContainer3.SplitterDistance = 29;
+			this.splitContainer3.Size = new System.Drawing.Size(307, 202);
+			this.splitContainer3.SplitterDistance = 25;
 			this.splitContainer3.TabIndex = 3;
 			// 
 			// btnMapProperties
@@ -177,7 +177,7 @@
 			this.btnMapProperties.Enabled = false;
 			this.btnMapProperties.Location = new System.Drawing.Point(0, 0);
 			this.btnMapProperties.Name = "btnMapProperties";
-			this.btnMapProperties.Size = new System.Drawing.Size(276, 29);
+			this.btnMapProperties.Size = new System.Drawing.Size(307, 25);
 			this.btnMapProperties.TabIndex = 1;
 			this.btnMapProperties.Text = "Map Properties";
 			this.btnMapProperties.UseVisualStyleBackColor = true;
@@ -194,7 +194,7 @@
 			this.lstSettings.HideSelection = false;
 			this.lstSettings.Location = new System.Drawing.Point(0, 0);
 			this.lstSettings.Name = "lstSettings";
-			this.lstSettings.Size = new System.Drawing.Size(276, 215);
+			this.lstSettings.Size = new System.Drawing.Size(307, 173);
 			this.lstSettings.TabIndex = 0;
 			this.lstSettings.UseCompatibleStateImageBehavior = false;
 			this.lstSettings.View = System.Windows.Forms.View.Details;
@@ -218,7 +218,7 @@
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(719, 648);
+			this.panel1.Size = new System.Drawing.Size(688, 648);
 			this.panel1.TabIndex = 3;
 			// 
 			// pctSurface
@@ -228,7 +228,7 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.pctSurface.Location = new System.Drawing.Point(0, -2);
 			this.pctSurface.Name = "pctSurface";
-			this.pctSurface.Size = new System.Drawing.Size(699, 633);
+			this.pctSurface.Size = new System.Drawing.Size(668, 633);
 			this.pctSurface.TabIndex = 0;
 			this.pctSurface.TabStop = false;
 			this.pctSurface.Resize += new System.EventHandler(this.pctSurface_Resize);
@@ -237,7 +237,7 @@
 			// 
 			this.VerticalScroll.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
 						| System.Windows.Forms.AnchorStyles.Right)));
-			this.VerticalScroll.Location = new System.Drawing.Point(702, -2);
+			this.VerticalScroll.Location = new System.Drawing.Point(671, -2);
 			this.VerticalScroll.Name = "VerticalScroll";
 			this.VerticalScroll.Size = new System.Drawing.Size(17, 633);
 			this.VerticalScroll.TabIndex = 2;
@@ -250,7 +250,7 @@
 						| System.Windows.Forms.AnchorStyles.Right)));
 			this.HorizontalScroll.Location = new System.Drawing.Point(0, 631);
 			this.HorizontalScroll.Name = "HorizontalScroll";
-			this.HorizontalScroll.Size = new System.Drawing.Size(702, 17);
+			this.HorizontalScroll.Size = new System.Drawing.Size(671, 17);
 			this.HorizontalScroll.TabIndex = 1;
 			this.HorizontalScroll.Visible = false;
 			this.HorizontalScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.TileMap_Scroll);
@@ -453,12 +453,12 @@
             this.btnTopLayer,
             this.btnHelp,
             this.btnCollisionLayer,
-            this.btnEvent,
             this.toolStripSeparator3,
             this.btnSelection,
             this.btnPencil,
             this.btnRect,
-            this.btnFill});
+            this.btnFill,
+            this.btnEvent});
 			this.toolStripTools.Location = new System.Drawing.Point(0, 26);
 			this.toolStripTools.Name = "toolStripTools";
 			this.toolStripTools.Size = new System.Drawing.Size(1008, 25);
@@ -574,17 +574,19 @@
 			this.btnCollisionLayer.Text = "Collison Layer";
 			this.btnCollisionLayer.Click += new System.EventHandler(this.btnCollisionLayer_Click);
 			// 
-			// btnEvent
+			// btnSelection
 			// 
-			this.btnEvent.AutoSize = false;
-			this.btnEvent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.btnEvent.Enabled = false;
-			this.btnEvent.Image = global::ValkyrieMapEditor.Properties.Resources.imgLightning;
-			this.btnEvent.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.btnEvent.Name = "btnEvent";
-			this.btnEvent.Size = new System.Drawing.Size(34, 22);
-			this.btnEvent.Text = "Event Mode";
-			this.btnEvent.Click += new System.EventHandler(this.btnEvent_Click);
+			this.btnSelection.Checked = true;
+			this.btnSelection.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.btnSelection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnSelection.Enabled = false;
+			this.btnSelection.Image = global::ValkyrieMapEditor.Properties.Resources.imgSelect;
+			this.btnSelection.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.btnSelection.Name = "btnSelection";
+			this.btnSelection.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
+			this.btnSelection.Size = new System.Drawing.Size(34, 22);
+			this.btnSelection.Text = "Selection";
+			this.btnSelection.Click += new System.EventHandler(this.btnSelection_Click);
 			// 
 			// btnPencil
 			// 
@@ -622,19 +624,16 @@
 			this.btnFill.Text = "Fill";
 			this.btnFill.Click += new System.EventHandler(this.btnFill_Click);
 			// 
-			// btnSelection
+			// btnEvent
 			// 
-			this.btnSelection.Checked = true;
-			this.btnSelection.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.btnSelection.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.btnSelection.Enabled = false;
-			this.btnSelection.Image = global::ValkyrieMapEditor.Properties.Resources.imgSelect;
-			this.btnSelection.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.btnSelection.Name = "btnSelection";
-			this.btnSelection.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnSelection.Size = new System.Drawing.Size(34, 22);
-			this.btnSelection.Text = "Selection";
-			this.btnSelection.Click += new System.EventHandler(this.btnSelection_Click);
+			this.btnEvent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnEvent.Enabled = false;
+			this.btnEvent.Image = global::ValkyrieMapEditor.Properties.Resources.imgLightning;
+			this.btnEvent.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.btnEvent.Name = "btnEvent";
+			this.btnEvent.Size = new System.Drawing.Size(23, 22);
+			this.btnEvent.Text = "Event Mode";
+			this.btnEvent.Click += new System.EventHandler(this.btnEvent_Click);
 			// 
 			// frmMain
 			// 
@@ -653,6 +652,7 @@
 			this.Load += new System.EventHandler(this.frmMain_Load);
 			this.Activated += new System.EventHandler(this.frmMain_Activated);
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			this.splitContainer1.ResumeLayout(false);

@@ -14,6 +14,7 @@ using Valkyrie.Engine.Providers;
 using Valkyrie.Engine.Core;
 using Valkyrie.Library.Providers;
 using System.Reflection;
+using Valkyrie.Engine.Events;
 
 namespace ValkyrieMapEditor
 {
@@ -67,10 +68,24 @@ namespace ValkyrieMapEditor
 			get { return selectedtilesrectangle; }
 			set { selectedtilesrectangle = value; }
 		}
+
+		public static event EventHandler MapChanged
+		{
+			add { mapchanged += value; }
+			remove { mapchanged -= value; }
+		}
+
 		
 		#endregion
 
 		#region Public Methods
+
+		public static void OnMapChanged()
+		{
+			var handler = mapchanged;
+			if(handler != null)
+				handler(null, EventArgs.Empty);
+		}
 
 		public static Map LoadMap(string path, IMapProvider provider)
 		{
@@ -164,10 +179,10 @@ namespace ValkyrieMapEditor
 
 			// Events
 			var eventLayer = doc.CreateElement("Events");
-			//foreach(IMapEvent e in map.EventList)
-			//{
-			//eventLayer.AppendChild(TileEngine.EventManager.EventToXmlNode(e, doc));
-			//}
+			foreach(IMapEvent mapevent in GameInstance.Engine.EventProvider.GetMapsEvents(map.Name))
+			{
+				eventLayer.AppendChild(EventToXmlNode(mapevent, doc));
+			}
 
 			// Animations
 			var animations = doc.CreateElement("AnimatedTiles");
@@ -299,6 +314,54 @@ namespace ValkyrieMapEditor
 		private static Rectangle selectedtilesrectangle = Rectangle.Empty;
 		private static bool ignoreinput = false;
 		private static bool noevents = false;
+		private static event EventHandler mapchanged;
+
+		private static XmlNode EventToXmlNode (IMapEvent mapevent, XmlDocument doc)
+		{
+			XmlElement xmlevent = doc.CreateElement("Event");
+
+			// Properties of event	
+			XmlElement loc = doc.CreateElement("Location");
+			new MapPoint(mapevent.Rectangle.X, mapevent.Rectangle.Y).ToXml(doc, loc);
+
+			XmlElement size = doc.CreateElement("Size");
+			new MapPoint(mapevent.Rectangle.Width, mapevent.Rectangle.Height).ToXml(doc, size);
+
+			XmlElement type = doc.CreateElement("Type");
+			type.InnerText = mapevent.GetType().FullName;
+
+			XmlElement dir = doc.CreateElement("Dir");
+			dir.InnerText = mapevent.Direction.ToString();
+
+			XmlElement activation = doc.CreateElement("Activation");
+			activation.InnerText = ((int)mapevent.Activation).ToString();
+
+			XmlElement parmRoot = doc.CreateElement("Parameters");
+
+			foreach(var parm in mapevent.Parameters)
+			{
+				XmlElement pname = doc.CreateElement("Name");
+				pname.InnerText = parm.Key;
+
+				XmlElement pvalue = doc.CreateElement("Value");
+				pvalue.InnerText = parm.Value;
+
+				XmlElement parmNode = doc.CreateElement("Parameter");
+				parmNode.AppendChild(pname);
+				parmNode.AppendChild(pvalue);
+
+				parmRoot.AppendChild(parmNode);
+			}
+
+			xmlevent.AppendChild(type);
+			xmlevent.AppendChild(activation);
+			xmlevent.AppendChild(dir);
+			xmlevent.AppendChild(loc);
+			xmlevent.AppendChild(size);
+			xmlevent.AppendChild(parmRoot);
+
+			return xmlevent;
+		}
 
 		#region OldGarbage
 		//public static Point MouseLocation
