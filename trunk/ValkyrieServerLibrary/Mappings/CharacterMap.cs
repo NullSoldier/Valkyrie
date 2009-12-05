@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ValkyrieServerLibrary.Entities;
 using FluentNHibernate.Mapping;
-using Valkyrie.Library.Characters;
+using Valkyrie.Engine.Characters;
 
 namespace ValkyrieServerLibrary.Mappings
 {

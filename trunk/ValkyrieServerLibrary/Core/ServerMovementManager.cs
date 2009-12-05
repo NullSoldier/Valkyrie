@@ -4,61 +4,27 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using Valkyrie.Engine.Providers;
+using Gablarski;
+using Valkyrie.Engine.Characters;
+using Valkyrie.Engine.Core;
+using Valkyrie.Engine;
 
 namespace ValkyrieServerLibrary.Core
 {
-	public class ServerMovementManager
-		: IMovementManager
+	public class ServerMovementProvider
+		: IMovementProvider
 	{
-		public CollisionManager CollisionManager { get; set; }
+		#region Constructors
 
-		private OrderedDictionary<IMapObject, MovementType> MovableCache = new OrderedDictionary<IMapObject, MovementType> ();
-		private object cacheLock = new object();
-
-		public void AddToCache (IMapObject movable, MovementType type)
+		public ServerMovementProvider(ICollisionProvider collisionprovider)
 		{
-			lock(this.cacheLock)
-			{
-				this.MovableCache.Add(movable, type);
-			}
+			this.collisionprovider = collisionprovider;
 		}
 
-		public void RemoveFromCache (IMapObject movable)
-		{
-			lock(this.cacheLock)
-			{
-				this.MovableCache.Remove(movable);
-			}
-		}
+		#endregion
 
-		#region IMovementManager Members
-
-		public void Move (IMapObject movable, ScreenPoint destination)
-		{
-			this.Move(movable, destination, true);
-		}
-
-		public void Move (IMapObject movable, ScreenPoint destination, bool fireevent)
-		{
-			if(movable.IsMoving || this.MovableCache.ContainsKey(movable))
-				this.EndMove(movable, fireevent);
-
-			movable.IgnoreMoveInput = true;
-			movable.IsMoving = true;
-
-			this.AddToCache(movable, MovementType.Destination);
-
-			this.InternalMove(movable, destination);
-
-			movable.OnStartedMoving(this, EventArgs.Empty);
-		}
-
-		private void InternalMove (IMapObject movable, ScreenPoint destination)
-		{
-			movable.MovingDestination = destination;
-		}
-
-		public void BeginMove (IMapObject movable, Directions direction)
+		public void BeginMove (IMovable movable, Directions direction)
 		{
 			if(movable.IsMoving)
 			{
@@ -68,7 +34,7 @@ namespace ValkyrieServerLibrary.Core
 				this.EndMove(movable, true);
 			}
 
-			if(this.MovableCache.ContainsKey(movable))
+			if(this.movablecache.ContainsKey(movable))
 				return;
 
 			movable.IsMoving = true;
@@ -81,23 +47,50 @@ namespace ValkyrieServerLibrary.Core
 			movable.OnStartedMoving(this, EventArgs.Empty);
 		}
 
-		public void EndMove (IMapObject movable, bool fireevent)
+		public void BeginMoveDestination (IMovable movable, ScreenPoint destination)
 		{
-			if(this.MovableCache.ContainsKey(movable) &&
-				this.MovableCache[movable] == MovementType.TileBased &&
-				movable.IsMoving)
+			this.BeginMoveDestination(movable, destination, true);
+		}
+
+		public void BeginMoveDestination (IMovable movable, ScreenPoint destination, bool fireevent)
+		{
+			if(movable.IsMoving || this.movablecache.ContainsKey(movable))
+				this.EndMove(movable, fireevent);
+
+			movable.IgnoreMoveInput = true;
+			movable.IsMoving = true;
+
+			this.AddToCache(movable, MovementType.Destination);
+
+			this.InternalMove(movable, destination);
+
+			movable.OnStartedMoving(this, EventArgs.Empty);
+		}
+
+		public void EndMove (IMovable movable)
+		{
+			this.EndMove(movable, true);
+		}
+
+		public void EndMove (IMovable movable, bool fireevent)
+		{
+			if(this.movablecache.ContainsKey(movable) && this.movablecache[movable] == MovementType.TileBased
+				&& movable.IsMoving)
 			{
 				ScreenPoint destination = this.GetNextScreenPointTile(movable);
-				if(this.CollisionManager.CheckCollision(movable, destination))
+				if(this.collisionprovider.CheckCollision(movable, destination))
 				{
 					movable.IgnoreMoveInput = true;
 
 					movable.MovingDestination = destination;
-					this.MovableCache[movable] = MovementType.Destination;
+					this.movablecache[movable] = MovementType.Destination;
 
 					return;
 				}
 			}
+
+			if((movable.Location.Y % 32) != 0)
+				movable.IsMoving = false;
 
 			movable.IsMoving = false;
 			movable.IgnoreMoveInput = false;
@@ -108,27 +101,20 @@ namespace ValkyrieServerLibrary.Core
 				movable.OnStoppedMoving(this, EventArgs.Empty);
 		}
 
-		public void EndMoveFunctional (IMapObject movable)
-		{
-			movable.IsMoving = false;
-			movable.IgnoreMoveInput = false;
-
-			this.RemoveFromCache(movable);
-		}
-
 		public void Update (GameTime time)
 		{
-			List<IMapObject> toberemoved = new List<IMapObject>();
-			List<IMapObject> collided = new List<IMapObject>();
+			List<IMovable> toberemoved = new List<IMovable>();
+			List<IMovable> collided = new List<IMovable>();
 
-			lock(this.cacheLock)
+			lock(this.movablecache)
 			{
-				int count = this.MovableCache.Count;
+
+				int count = this.movablecache.Count;
 
 				for(int i = 0; i < count; i++)
 				{
-					IMapObject movable = this.MovableCache.Keys.ElementAt(i);
-					MovementType movetype = this.MovableCache[movable];
+					IMovable movable = this.movablecache.Keys.ElementAt(i);
+					MovementType movetype = this.movablecache[movable];
 
 					movable.LastMoveTime += time.ElapsedGameTime.Milliseconds;
 
@@ -170,7 +156,51 @@ namespace ValkyrieServerLibrary.Core
 			}
 		}
 
-		private bool MoveDestinationBased (IMapObject movable, List<IMapObject> collided)
+		#region IEngineProvider Members
+
+		public void LoadEngineContext (IEngineContext context)
+		{
+			// Use the constructor to load
+
+			if(context != null)
+				this.collisionprovider = context.CollisionProvider;
+
+			this.isloaded = true;
+		}
+
+		public bool IsLoaded
+		{
+			get { return this.isloaded; }
+		}
+
+		#endregion
+
+		private bool isloaded = false;
+		private ICollisionProvider collisionprovider = null;
+		private OrderedDictionary<IMovable, MovementType> movablecache = new OrderedDictionary<IMovable, MovementType>();
+
+		private void AddToCache (IMovable movable, MovementType type)
+		{
+			lock(this.movablecache)
+			{
+				this.movablecache.Add(movable, type);
+			}
+		}
+
+		public void RemoveFromCache (IMovable movable)
+		{
+			lock(this.movablecache)
+			{
+				this.movablecache.Remove(movable);
+			}
+		}
+
+		private void InternalMove (IMovable movable, ScreenPoint destination)
+		{
+			movable.MovingDestination = destination;
+		}
+
+		private bool MoveDestinationBased (IMovable movable, List<IMovable> collided)
 		{
 			bool movedok = true;
 
@@ -224,7 +254,7 @@ namespace ValkyrieServerLibrary.Core
 			return movedok;
 		}
 
-		private bool MoveTileBased (IMapObject movable, List<IMapObject> collided)
+		private bool MoveTileBased (IMovable movable, List<IMovable> collided)
 		{
 			bool movedok = true;
 			float x = movable.Location.X;
@@ -270,7 +300,7 @@ namespace ValkyrieServerLibrary.Core
 			else if(movable.Direction == Directions.East)
 				collision = new ScreenPoint(destination.X + 32 - (int)movable.Speed, destination.Y);
 
-			if(!this.CollisionManager.CheckCollision(movable, collision))
+			if(!this.collisionprovider.CheckCollision(movable, collision))
 			{
 				movable.IsMoving = false;
 				movedok = false;
@@ -281,8 +311,8 @@ namespace ValkyrieServerLibrary.Core
 			{
 				movable.Location = destination;
 
-				//if(movable.MapLocation != movable.LastMapLocation)
-					//movable.OnTileLocationChanged(this, EventArgs.Empty);
+				//if(movable.GlobalTileLocation != movable.LastMapLocation)
+				//movable.OnTileLocationChanged(this, EventArgs.Empty);
 
 				if(movable.Location == movable.MovingDestination)
 				{
@@ -293,9 +323,7 @@ namespace ValkyrieServerLibrary.Core
 			return movedok;
 		}
 
-		#endregion
-
-		private ScreenPoint GetDestinationFromDirection (IMapObject movable, Directions direction)
+		private ScreenPoint GetDestinationFromDirection (IMovable movable, Directions direction)
 		{
 			return this.GetDestinationFromDirection(movable.Location, direction);
 		}
@@ -316,7 +344,7 @@ namespace ValkyrieServerLibrary.Core
 			return newSource;
 		}
 
-		private ScreenPoint GetNextScreenPointTile (IMapObject movable)
+		private ScreenPoint GetNextScreenPointTile (IMovable movable)
 		{
 			float x = movable.Location.X;
 			float y = movable.Location.Y;

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Valkyrie.Library.Network;
 using Gablarski;
-using Valkyrie.Library.Maps;
 
 namespace ValkyrieServerLibrary.Core
 {

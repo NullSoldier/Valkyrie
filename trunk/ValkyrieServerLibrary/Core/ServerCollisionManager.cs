@@ -2,34 +2,72 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Valkyrie.Library.Collision;
 using Valkyrie.Library.Core;
-using Valkyrie.Library.Maps;
+using Valkyrie.Engine;
+using Microsoft.Xna.Framework;
+using Valkyrie.Engine.Maps;
+using Valkyrie.Engine.Characters;
+using Valkyrie.Engine.Core;
+using Valkyrie.Engine.Providers;
+using Valkyrie.Engine.Managers;
 
 namespace ValkyrieServerLibrary.Core
 {
-	public class ServerCollisionManager
-		: CollisionManager
+	public class ServerCollisionProvider
+		: ICollisionProvider
 	{
-		public ServerCollisionManager (WorldManager worldmanager)
+		#region Constructor
+
+		public ServerCollisionProvider (IWorldManager worldmanager)
 		{
-			this.WorldManager = worldmanager;
+			this.worldmanager = worldmanager;
 		}
 
-		public WorldManager WorldManager { get; set; }
+		#endregion
 
-		public override bool CheckCollision (ICollidable Source, ScreenPoint Destination)
+		public bool CheckCollision (IMovable Source, ScreenPoint Destination)
 		{
-			if(Source.Density == 0)
+			return this.CheckCollision(Source, Destination.ToMapPoint());
+		}
+
+		public bool CheckCollision (IMovable source, MapPoint Destination)
+		{
+			if(source.Density < 1)
 				return true;
 
-			// Get value from global x, y
-			MapPoint tilePoint = Destination.ToMapPoint();
+			World currentworld = this.worldmanager.GetWorld(source.WorldName);
 
-			if(this.WorldManager.GetGlobalLayerValue(Source.GetWorld(), tilePoint, MapLayers.CollisionLayer) != -1)
-				return false;
+			foreach(MapHeader header in currentworld.Maps.Values)
+			{
+				Rectangle rect = (header.MapLocation).ToRect(header.Map.MapSize.ToPoint());
+
+				if(rect.Contains(Destination.ToPoint()))
+				{
+					return (header.Map.GetLayerValue(Destination - header.MapLocation, MapLayers.CollisionLayer) == -1);
+				}
+			}
 
 			return true;
 		}
+
+		#region IEngineProvider Members
+
+		public void LoadEngineContext (IEngineContext context)
+		{
+			if(context != null)
+				this.worldmanager = context.WorldManager;
+
+			this.isloaded = true;
+		}
+
+		public bool IsLoaded
+		{
+			get { return this.isloaded; }
+		}
+
+		#endregion
+
+		private IWorldManager worldmanager = null;
+		private bool isloaded = false;
 	}
 }

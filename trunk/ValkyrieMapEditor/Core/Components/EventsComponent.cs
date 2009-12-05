@@ -96,7 +96,7 @@ namespace ValkyrieMapEditor.Core
 
         public void OnMouseDown(object sender, MouseEventArgs ev)
         {
-			if(MapEditorManager.IgnoreInput) return;
+			if(MapEditorManager.IgnoreInput || ev.Button != MouseButtons.Left) return;
 
 			lock(this.pointlock)
 			{
@@ -107,7 +107,7 @@ namespace ValkyrieMapEditor.Core
 
         public void OnMouseUp(object sender, MouseEventArgs ev)
         {
-			if(MapEditorManager.IgnoreInput) return;
+			if(MapEditorManager.IgnoreInput || ev.Button != MouseButtons.Left) return;
 
 			lock(this.pointlock)
 			{

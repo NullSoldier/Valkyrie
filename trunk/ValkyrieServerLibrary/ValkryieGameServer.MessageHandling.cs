@@ -16,6 +16,8 @@ using System.Drawing;
 using ValkyrieServerLibrary.Network.Messages.Valkyrie;
 using Valkyrie.Library.Core;
 using ValkyrieNetwork.Messages.Valkyrie.Movement;
+using Valkyrie.Engine.Core;
+using Valkyrie.Engine.Characters;
 
 namespace ValkyrieServerLibrary.Core
 {
@@ -274,7 +276,7 @@ namespace ValkyrieServerLibrary.Core
 			PlayerStopMovingMessage message = (PlayerStopMovingMessage)ev.Message;
 			NetworkPlayer player = this.players.GetPlayer(message.NetworkID);
 
-			((ServerMovementManager)this.movement).RemoveFromCache(player.Character);
+			((ServerMovementProvider)this.movement).RemoveFromCache(player.Character);
 
 			/* Get Modifier */
 			int modifierx = 0;

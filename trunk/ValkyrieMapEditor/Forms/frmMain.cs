@@ -186,18 +186,23 @@ namespace ValkyrieMapEditor
 			if(MapEditorManager.CurrentMap != null)
 			{
 				frmProperty dialog = new frmProperty(MapEditorManager.CurrentMap);
-				dialog.ShowDialog(this);
+				var result = dialog.ShowDialog(this);
 
-				MapEditorManager.ApplyMapProperties(MapEditorManager.CurrentMap);
-				if(dialog.NewMapSize != dialog.LastMapSize)
+				if(result == DialogResult.OK)
 				{
-					var tmpmap = MapEditorManager.ResizeMap(MapEditorManager.CurrentMap, dialog.NewMapSize);
-					MapEditorManager.SetCurrentMap(tmpmap);
+					MapEditorManager.ApplyMapProperties(MapEditorManager.CurrentMap);
+					if(dialog.NewMapSize != dialog.LastMapSize)
+					{
+						var tmpmap = MapEditorManager.ResizeMap(MapEditorManager.CurrentMap, dialog.NewMapSize);
+						MapEditorManager.SetCurrentMap(tmpmap);
+					}
+
+					this.DisplayMapProperties(MapEditorManager.CurrentMap);
+
+					this.UpdateScrollBars();
+
+					MapEditorManager.OnMapChanged();
 				}
-
-				this.DisplayMapProperties(MapEditorManager.CurrentMap);
-
-				this.UpdateScrollBars();
 			}
 		}
 

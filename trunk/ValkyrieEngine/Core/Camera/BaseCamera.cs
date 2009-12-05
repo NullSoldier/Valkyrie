@@ -172,6 +172,16 @@ namespace Valkyrie.Engine
 			}
 		}
 
+		public void Scale (double scale)
+		{
+			this.Scale(scale, scale);
+		}
+
+		public void Scale(double x, double y)
+        {
+			this.ResizeScreen(new Rectangle(Screen.X, Screen.Y, (int)(Screen.Width * (1.0 / x)), (int)(Screen.Height * (1.0 / y))));
+		}
+
 		#endregion
 
 		private Rectangle screen = Rectangle.Empty;

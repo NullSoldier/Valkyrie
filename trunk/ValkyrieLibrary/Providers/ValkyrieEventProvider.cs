@@ -166,6 +166,9 @@ namespace Valkyrie.Library.Providers
 			{
 				MapPoint localpos = position - player.CurrentMap.MapLocation;
 
+				if(!this.events.ContainsKey(player.CurrentMap.MapName))
+					return new List<IMapEvent>();
+
 				return this.events[player.CurrentMap.MapName].Where(m => m.Rectangle.Contains((localpos).ToPoint()));
 			}
 			

@@ -101,6 +101,8 @@ namespace Valkyrie.Modules
 	        this.KeybindController.AddKey(Keys.Down, "MoveDown");
 	        this.KeybindController.AddKey(Keys.Right, "MoveRight");
 	        this.KeybindController.AddKey(Keys.Q, "Noclip");
+			this.KeybindController.AddKey(Keys.Add, "ZoomIn");
+			this.KeybindController.AddKey(Keys.Subtract, "ZoomOut");
 
 			this.KeybindController.AddKey(Keys.NumPad4, "MoveLeftPad");
 			this.KeybindController.AddKey(Keys.NumPad8, "MoveUpPad");
@@ -337,12 +339,19 @@ namespace Valkyrie.Modules
 	    public void GameModule_KeyUp(object sender, KeyPressedEventArgs ev)
 	    {
 			PokePlayer player = (PokePlayer)this.context.SceneProvider.GetPlayer("player1");
+			BaseCamera camera = this.context.SceneProvider.GetCamera("camera1"); ;
 
 	        // Did we activate?
 	        switch (ev.Action)
 	        {
 	            case "Noclip":
 					player.Density = Convert.ToInt32(!(player.Density == 1));
+					break;
+				case "ZoomIn":
+					camera.Scale(1.2);
+					break;
+				case "ZoomOut":
+					camera.Scale(0.9);
 					break;
 	            default:
 	                break;

@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
-using Valkyrie.Library.Characters;
 using Valkyrie.Library.Core;
+using Valkyrie.Engine.Characters;
+using Valkyrie.Engine.Core;
+using Valkyrie.Engine.Maps;
 
 namespace ValkyrieServerLibrary.Entities
 {
 	public class Character
-		: IMapObject
+		: IMovable
 	{
 		public virtual int ID
 		{
@@ -45,6 +47,12 @@ namespace ValkyrieServerLibrary.Entities
 		{
 			get; set;
 		}
+
+		public virtual MapHeader CurrentMap
+		{
+			get; set;
+		}
+
 
 		#region Non Persistent Members
 
@@ -182,7 +190,12 @@ namespace ValkyrieServerLibrary.Entities
 			set;
 		}
 
-		public virtual MapPoint TileLocation
+		public MapPoint LocalTileLocation
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		public MapPoint GlobalTileLocation
 		{
 			get { return this.MapLocation; }
 		}

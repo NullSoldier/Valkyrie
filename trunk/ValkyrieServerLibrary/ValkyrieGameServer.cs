@@ -10,13 +10,14 @@ using FluentNHibernate.Cfg.Db;
 using System.Reflection;
 using NHibernate;
 using ValkyrieServerLibrary.Entities;
-using Valkyrie.Library.Maps;
 using System.IO;
 using Valkyrie.Library.Core;
-using Valkyrie.Library.Characters;
-using Valkyrie.Library.Maps.MapProvider;
 using System.Threading;
 using Microsoft.Xna.Framework;
+using Valkyrie.Engine.Managers;
+using Valkyrie.Engine.Providers;
+using Valkyrie.Library.Managers;
+using Valkyrie.Engine.Core;
 
 namespace ValkyrieServerLibrary.Core
 {
@@ -29,8 +30,9 @@ namespace ValkyrieServerLibrary.Core
 		private NetworkPlayerCache players;
 		private readonly GameServerSettings settings;
 
-		private readonly WorldManager worlds;
-		private readonly IMovementManager movement;
+		private readonly IWorldManager worlds;
+		private readonly IMovementProvider movement;
+		private readonly ICollisionProvider collision;
 
 		private bool Started = false;
 		private bool Loaded = false;
@@ -44,11 +46,9 @@ namespace ValkyrieServerLibrary.Core
 		public ValkyrieGameServer(GameServerSettings settings)
 			: this()
 		{
-			this.worlds = new WorldManager();
-
-			ServerMovementManager manager = new ServerMovementManager();
-			manager.CollisionManager = new ServerCollisionManager(this.worlds);
-			this.movement = manager;
+			this.worlds = new ValkyrieWorldManager(new Assembly[] { });
+			this.collision = new ServerCollisionProvider(this.worlds);
+			this.movement = new ServerMovementProvider(this.collision);
 
 			this.players = new NetworkPlayerCache();
 
@@ -159,7 +159,7 @@ namespace ValkyrieServerLibrary.Core
 
 		private void LoadWorlds()
 		{
-			this.worlds.Load(new FileInfo(Path.Combine(Environment.CurrentDirectory, this.settings[ServerSettingName.MapDirectory] + "PokeWorld.xml")), new XMLMapProvider() );
+			//this.worlds.Load(new FileInfo(Path.Combine(Environment.CurrentDirectory, this.settings[ServerSettingName.MapDirectory] + "PokeWorld.xml")), new XMLMapProvider() );
 		}
 
 		private string GetChunkName (string WorldName, MapPoint location)

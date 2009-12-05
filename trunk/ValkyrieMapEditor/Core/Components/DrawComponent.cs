@@ -33,7 +33,7 @@ namespace ValkyrieMapEditor.Core
 
         public void OnMouseDown(object sender, MouseEventArgs ev)
         {
-			if(MapEditorManager.IgnoreInput) return;
+			if(MapEditorManager.IgnoreInput || ev.Button != MouseButtons.Left) return;
 
 			if(MapEditorManager.CurrentTool == Tools.Rectangle)
 			{
@@ -79,7 +79,7 @@ namespace ValkyrieMapEditor.Core
 
         public void OnMouseUp(object sender, MouseEventArgs ev)
         {
-			if(MapEditorManager.IgnoreInput) return;
+			if(MapEditorManager.IgnoreInput || ev.Button != MouseButtons.Left) return;
 
 			this.isdragging = false;
 
