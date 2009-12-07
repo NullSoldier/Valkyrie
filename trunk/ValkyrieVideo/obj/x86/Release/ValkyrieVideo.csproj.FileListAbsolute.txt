@@ -1,7 +1,0 @@
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieVideo\bin\x86\Release\ValkyrieVideo.dll
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieVideo\bin\x86\Release\ValkyrieVideo.pdb
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieVideo\bin\x86\Release\DirectShowLib-2005.dll
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieVideo\obj\x86\Release\ResolveAssemblyReference.cache
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieVideo\obj\x86\Release\Microsoft.Xna.Framework.RuntimeProfile.txt
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieVideo\obj\x86\Release\ValkyrieVideo.dll
-C:\Users\NullSoldier\Documents\Code Work Area\Project Valkyrie\trunk\ValkyrieVideo\obj\x86\Release\ValkyrieVideo.pdb
