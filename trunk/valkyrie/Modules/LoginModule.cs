@@ -22,6 +22,10 @@ using System.Threading;
 using Valkyrie.Library;
 using Valkyrie.Engine;
 using Valkyrie.Engine.Input;
+using Valkyrie.Providers;
+using Valkyrie.Engine.Providers;
+using Valkyrie.Engine.Characters;
+using Valkyrie.Engine.Core;
 
 namespace Valkyrie.Modules
 {
@@ -66,6 +70,7 @@ namespace Valkyrie.Modules
 		public void Load (IEngineContext enginecontext)
 		{
 			this.context = enginecontext;
+			this.network = (PokeNetworkProvider)this.context.NetworkProvider;
 
 			this.Background = this.context.TextureManager.GetTexture(this.backgroundfile);
 
@@ -110,86 +115,90 @@ namespace Valkyrie.Modules
 				if(this.connecting)
 					return;
 
-				this.context.ModuleProvider.PushModule("Game");
-				//FileInfo file = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), "ClientSettings.xml"));
+				FileInfo file = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), "ClientSettings.xml"));
 
-				//XmlDocument doc = new XmlDocument();
-				//doc.Load(file.FullName);
+				XmlDocument doc = new XmlDocument();
+				doc.Load(file.FullName);
 
-				//string address = doc.GetElementsByTagName("Address")[0].InnerText;
-				//string port = doc.GetElementsByTagName("Port")[0].InnerText;
-				//string username = doc.GetElementsByTagName("Username")[0].InnerText;
-				//string password = doc.GetElementsByTagName("Password")[0].InnerText;
+				string address = doc.GetElementsByTagName("Address")[0].InnerText;
+				string port = doc.GetElementsByTagName("Port")[0].InnerText;
+				string username = doc.GetElementsByTagName("Username")[0].InnerText;
+				string password = doc.GetElementsByTagName("Password")[0].InnerText;
 
-				//TileEngine.NetworkManager.Disconnected += this.TestDisconnected;
-				//TileEngine.NetworkManager.MessageReceived += this.TestMessageReceived;
+				this.context.NetworkProvider.Disconnected += this.TestDisconnected;
+				this.context.NetworkProvider.MessageReceived += this.TestMessageReceived;
 
-				//try
-				//{
-				//    this.connecting = true;
-				//    TileEngine.NetworkManager.Connect(new IPEndPoint(IPAddress.Parse(address), Convert.ToInt32(port)));
-				//}
-				//catch(SocketException)
-				//{
-				//    // Failed to connect
-				//    TileEngine.NetworkManager.Disconnected -= this.TestDisconnected;
-				//    TileEngine.NetworkManager.MessageReceived -= this.TestMessageReceived;
+				try
+				{
+					this.connecting = true;
+					this.context.NetworkProvider.Connect(address, Convert.ToInt32(port));
+				}
+				catch(SocketException)
+				{
+					// Failed to connect
+					this.context.NetworkProvider.Disconnected -= this.TestDisconnected;
+					this.context.NetworkProvider.MessageReceived -= this.TestMessageReceived;
 
-				//    MessageBox(new IntPtr(0), "Cannot connect to server.", "Server down", 0);
-				//    this.connecting = false;
-				//    return;
-				//}
+					MessageBox(new IntPtr(0), "Cannot connect to server.", "Server down", 0);
+					this.connecting = false;
+					return;
+				}
 
-				//LoginMessage msg = new LoginMessage();
-				//msg.Username = username;
-				//msg.Password = password;
-				//TileEngine.NetworkManager.Send(msg);
+				LoginMessage msg = new LoginMessage();
+				msg.Username = username;
+				msg.Password = password;
+				this.context.NetworkProvider.Send(msg);
 			}
 		}
 
 		private void TestMessageReceived (object sender, MessageReceivedEventArgs ev)
 		{
-			//if(ev.Message is LoginSuccessMessage)
-			//{
-			//    TileEngine.NetworkID = ((LoginSuccessMessage)ev.Message).NetworkIDAssigned;
+			if(ev.Message is LoginSuccessMessage)
+			{
+				// Store the assigned network ID untill we are ready to create the player
+				this.assignednetworkID = ((LoginSuccessMessage)ev.Message).NetworkIDAssigned;
 
-			//    PlayerRequestMessage msg = new PlayerRequestMessage();
-			//    msg.RequestedPlayerNetworkID = TileEngine.NetworkID;
+				PlayerRequestMessage msg = new PlayerRequestMessage();
+				msg.RequestedPlayerNetworkID = this.assignednetworkID;
 
-			//    TileEngine.NetworkManager.Send(msg);
-			//}
-			//else if(ev.Message is LoginFailedMessage)
-			//{
-			//    LoginFailedMessage msg = (LoginFailedMessage)ev.Message;
+				this.network.Send(msg);
+			}
+			else if(ev.Message is LoginFailedMessage)
+			{
+				LoginFailedMessage msg = (LoginFailedMessage)ev.Message;
 
-			//    if(msg.Reason == ConnectionRejectedReason.BadLogin)
-			//        MessageBox(new IntPtr(0), "Incorrect username or password.", "Login Failed", 0);
+				if(msg.Reason == ConnectionRejectedReason.BadLogin)
+					MessageBox(new IntPtr(0), "Incorrect username or password.", "Login Failed", 0);
 
-			//    this.connecting = false;
-			//}
-			//else if(ev.Message is PlayerInfoMessage)
-			//{
-			//    PlayerInfoMessage msg = (PlayerInfoMessage)ev.Message;
-			//    if(msg.NetworkID != TileEngine.NetworkID)
-			//        return;
+				this.connecting = false;
+			}
+			else if(ev.Message is PlayerInfoMessage)
+			{
+				PlayerInfoMessage msg = (PlayerInfoMessage)ev.Message;
+				if(msg.NetworkID != this.assignednetworkID) // If we've just received some player info that isn't us..
+					return;
 
-			//    TileEngine.NetworkManager.Disconnected -= this.TestDisconnected;
-			//    TileEngine.NetworkManager.MessageReceived -= this.TestMessageReceived;
+				// Always unsubscribe to avoid memory leaks
+				this.network.Disconnected -= this.TestDisconnected;
+				this.network.MessageReceived -= this.TestMessageReceived;
 
-			//    // Get character info
-			//    PokePlayer player = new PokePlayer();
-			//    player.Gender = Genders.Male;
-			//    player.Sprite = TileEngine.TextureManager.GetTexture(msg.TileSheet);
+				// Get character info
+				PokePlayer player = new PokePlayer()
+				{
+					Name = msg.Name,
+					NetworkID = this.assignednetworkID,
+					Location = new ScreenPoint(msg.Location.X, msg.Location.Y),
+					WorldName = msg.WorldName,
+					Gender = Genders.Male,
+					Sprite = this.context.TextureManager.GetTexture(msg.TileSheet),
+					CurrentAnimationName = msg.Animation,
+					Loaded = true
+				};
 
-			//    player.Location = new ScreenPoint(msg.Location.X, msg.Location.Y);
-			//    player.CurrentAnimationName = msg.Animation;
-			//    player.Name = msg.Name;
-			//    player.Loaded = true;
-
-			//    TileEngine.Player = player;
-
-			//    TileEngine.ModuleManager.PushModuleToScreen("Game");
-			//}
+				this.context.SceneProvider.AddPlayer("player1", player);
+				this.context.ModuleProvider.GetModule("Game").Load(this.context);
+				this.context.ModuleProvider.PushModule("Game");
+			}
 		}
 
 		private void TestDisconnected (object sender, EventArgs ev)
@@ -199,8 +208,10 @@ namespace Valkyrie.Modules
 
 		private bool isloaded = false;
 		private IEngineContext context = null;
+		private PokeNetworkProvider network = null;
 		private Texture2D Background;
 		private KeybindController keycontroller = new KeybindController();
+		private uint assignednetworkID = 0;
 		private bool drawing = false;
 		private bool connecting = false;
 		private string backgroundfile = "PokeBackground.png";

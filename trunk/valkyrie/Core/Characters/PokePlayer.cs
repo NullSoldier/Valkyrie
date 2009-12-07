@@ -13,15 +13,9 @@ using Valkyrie.Engine.Characters;
 
 namespace Valkyrie.Characters
 {
-	class PokePlayer
+	public class PokePlayer
 		: PokeCharacter
 	{
-		public bool Loaded
-		{
-			get;
-			set;
-		}
-
 		public PokePlayer ()
 			: base()
 		{
@@ -45,6 +39,18 @@ namespace Valkyrie.Characters
 
 			this.Name = "NULL";
 			this.CurrentAnimationName = "South";
+		}
+
+		public uint NetworkID
+		{
+			get;
+			set;
+		}
+
+		public bool Loaded
+		{
+			get;
+			set;
 		}
 
 		public override void Update (GameTime gameTime)

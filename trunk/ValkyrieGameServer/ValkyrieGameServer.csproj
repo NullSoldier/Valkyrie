@@ -95,6 +95,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ValkyrieEngine\ValkyrieEngine.csproj">
+      <Project>{12722697-BA6D-4EED-8E90-50C6094AA407}</Project>
+      <Name>ValkyrieEngine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ValkyrieLibrary\ValkyrieLibrary.csproj">
       <Project>{DA132C5A-D15B-4A39-B4BE-24F2140D3EE0}</Project>
       <Name>ValkyrieLibrary</Name>

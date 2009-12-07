@@ -18,13 +18,15 @@ namespace ValkyrieNetwork.Messages.Valkyrie.Movement
 		public uint NetworkID { get; set; }
 		public int MapX { get; set; }
 		public int MapY { get; set; }
-
+		public string Animation { get; set; }
 
 		public override void WritePayload(IValueWriter writerm)
 		{
 			writerm.WriteUInt32(this.NetworkID);
 			writerm.WriteInt32(this.MapX);
 			writerm.WriteInt32(this.MapY);
+			
+			writerm.WriteString(this.Animation);
 		}
 
 		public override void ReadPayload(IValueReader reader)
@@ -32,6 +34,8 @@ namespace ValkyrieNetwork.Messages.Valkyrie.Movement
 			this.NetworkID = reader.ReadUInt32();
 			this.MapX = reader.ReadInt32();
 			this.MapY = reader.ReadInt32();
+			
+			this.Animation = reader.ReadString();
 		}
 	}
 }

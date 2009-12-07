@@ -14,7 +14,7 @@ namespace Valkyrie.Core.Characters
 	/// <summary>
 	/// A class used for coupling the basic logic for any character in Pokemon Online
 	/// </summary>
-	class PokeCharacter
+	public class PokeCharacter
 		: BaseCharacter
 	{
 		// Character properties
@@ -24,7 +24,7 @@ namespace Valkyrie.Core.Characters
 		public PokeCharacter()
 		{
 			this.Animating = false;
-			this.Speed = 40;
+			this.Speed = 2;
 			this.MoveDelay = 0.002f;
 			this.LastMoveTime = 0;
 			this.IsMoving = false;

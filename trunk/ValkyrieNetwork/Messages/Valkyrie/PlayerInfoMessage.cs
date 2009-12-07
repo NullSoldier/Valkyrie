@@ -57,6 +57,12 @@ namespace ValkyrieServerLibrary.Network.Messages.Valkyrie
 			}
 		}
 
+		public string WorldName
+		{
+			get;
+			set;
+		}
+
 		public int X
 		{
 			get;
@@ -80,6 +86,8 @@ namespace ValkyrieServerLibrary.Network.Messages.Valkyrie
 			writer.WriteInt32(this.X);
 			writer.WriteInt32(this.Y);
 
+			writer.WriteString(this.WorldName);
+
 			writer.WriteString(this.TileSheet);
 		}
 
@@ -93,6 +101,8 @@ namespace ValkyrieServerLibrary.Network.Messages.Valkyrie
 			this.Animation = reader.ReadString();
 			this.X = reader.ReadInt32();
 			this.Y = reader.ReadInt32();
+
+			this.WorldName = reader.ReadString();
 
 			this.TileSheet = reader.ReadString();
 		}

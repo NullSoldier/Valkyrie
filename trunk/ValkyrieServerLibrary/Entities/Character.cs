@@ -184,18 +184,19 @@ namespace ValkyrieServerLibrary.Entities
 
 		#region IPositionable Members
 
+		// "The following types may not be used as proxies:\nValkyrieServerLibrary.Entities.Character: method get_LocalTileLocation should be 'public/protected virtual' or 'protected internal virtual'\nValkyrieServerLibrary.Entities.Character: method get_GlobalTileLocation should be 'public/protected virtual' or 'protected internal virtual'"
 		public virtual MapPoint LastMapLocation
 		{
 			get;
 			set;
 		}
 
-		public MapPoint LocalTileLocation
+		public virtual MapPoint LocalTileLocation
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public MapPoint GlobalTileLocation
+		public virtual MapPoint GlobalTileLocation
 		{
 			get { return this.MapLocation; }
 		}

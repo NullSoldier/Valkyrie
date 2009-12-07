@@ -176,6 +176,12 @@
     <None Include="Core\Collision\.svn\text-base\ICollisionManager.cs.svn-base" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ValkyrieNetwork\ValkyrieNetwork.csproj">
+      <Project>{6B5AF197-5051-4543-AEDC-691332649E1B}</Project>
+      <Name>ValkyrieNetwork</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Core\Collision\.svn\prop-base\" />
     <Folder Include="Core\Collision\.svn\props\" />
     <Folder Include="Core\Collision\.svn\tmp\prop-base\" />

@@ -31,7 +31,7 @@ namespace ValkyrieServerLibrary.Core
 		private readonly GameServerSettings settings;
 
 		private readonly IWorldManager worlds;
-		private readonly IMovementProvider movement;
+		private readonly ServerMovementProvider movement;
 		private readonly ICollisionProvider collision;
 
 		private bool Started = false;

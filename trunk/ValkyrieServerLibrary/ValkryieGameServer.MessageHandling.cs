@@ -200,6 +200,7 @@ namespace ValkyrieServerLibrary.Core
 			infomsg.Moving = player.Character.Moving;
 			infomsg.TileSheet = player.Character.TileSheet;
 			infomsg.Location = new Point(player.Character.Location.X, player.Character.Location.Y);
+			infomsg.WorldName = player.Character.WorldName;
 
 			ev.Connection.Send(infomsg);
 		}
@@ -221,6 +222,7 @@ namespace ValkyrieServerLibrary.Core
 				infomsg.Moving = player.Character.Moving;
 				infomsg.TileSheet = player.Character.TileSheet;
 				infomsg.Location = new Point(player.Character.Location.X, player.Character.Location.Y);
+				infomsg.WorldName = player.Character.WorldName;
 
 				ev.Connection.Send(infomsg);
 			}
@@ -244,15 +246,45 @@ namespace ValkyrieServerLibrary.Core
 			}*/
 		}
 
+		private void PlayerLoadedReceived (MessageReceivedEventArgs ev)
+		{
+			PlayerLoadedMessage message = (PlayerLoadedMessage)ev.Message;
+
+			NetworkPlayer player = this.players.GetPlayers().Where(p => p.NetworkID == message.NetworkID).FirstOrDefault();
+
+			if(player == null)
+				return;
+
+			PlayerInfoMessage infomsg = new PlayerInfoMessage();
+			infomsg.NetworkID = player.NetworkID;
+			infomsg.Name = player.Character.Name;
+			infomsg.Animation = player.Character.Animation;
+			infomsg.Moving = player.Character.Moving;
+			infomsg.TileSheet = player.Character.TileSheet;
+			infomsg.Location = new Point(player.Character.Location.X, player.Character.Location.Y);
+			infomsg.WorldName = player.Character.WorldName;
+
+			foreach(NetworkPlayer destPlayer in this.players.GetPlayers())
+			{
+				if(destPlayer.Connection != player.Connection)
+					destPlayer.Connection.Send(infomsg);
+			}
+		}
+
 		private void PlayerStartMovingReceived (MessageReceivedEventArgs ev)
 		{
+			//Thread.Sleep(1000); // Simulate network lag of 1000 MS
+
 			PlayerStartMovingMessage message = (PlayerStartMovingMessage)ev.Message;
 
 			NetworkPlayer player = this.players[ev.Connection];
 			player.Character.Speed = message.Speed;
 			player.Character.MoveDelay = message.MoveDelay;
 
-			this.movement.BeginMove(player.Character, (Directions)message.Direction);
+			var direction = (Directions)message.Direction;
+
+			// Should throw the movement onto the queue and then process it on each update
+			this.movement.BeginMove(player.Character, direction, message.Animation);
 
 			PlayerStartedMovingMessage movmsg = new PlayerStartedMovingMessage();
 			movmsg.NetworkID = player.NetworkID;
@@ -275,37 +307,19 @@ namespace ValkyrieServerLibrary.Core
 
 			PlayerStopMovingMessage message = (PlayerStopMovingMessage)ev.Message;
 			NetworkPlayer player = this.players.GetPlayer(message.NetworkID);
-
-			((ServerMovementProvider)this.movement).RemoveFromCache(player.Character);
-
-			/* Get Modifier */
-			int modifierx = 0;
-			int modifiery = 0;
-			if(player.Character.Direction == Directions.East)
-				modifierx = 15;
-			else if(player.Character.Direction == Directions.South)
-				modifiery = 15;
-            Rectangle playerRect = new Rectangle(message.MapX - 1, message.MapY - 1, 2, 2);
-           
-			//if (playerRect.Contains(new System.Drawing.Point(player.Character.MapLocation.X, player.Character.MapLocation.Y)))
-            //{
-                player.Character.Location.X = message.MapX * 32;
-                player.Character.Location.Y = message.MapY * 32;
-            //}
-            //else
-            //{
-                //player.Character.Location.X = ((player.Character.Location.X + modifierx) / 32) * 32;
-              //  player.Character.Location.Y = ((player.Character.Location.Y + modifiery) / 32) * 32;
-            //}
-
 			player.Character.Animation = player.Character.Direction.ToString();
-			player.Character.IsMoving = false;
+			player.Character.Location = new ScreenPoint(message.MapX * 32, message.MapY * 32);
+
+			((ServerMovementProvider)this.movement).EndMoveLocation(player.Character, new MapPoint(message.MapX, message.MapY), player.Character.Animation);
+
+			if(message.Animation == "Any")
+				return;
 
 			PlayerStoppedMovingMessage movmsg = new PlayerStoppedMovingMessage();
-			movmsg.X = player.Character.Location.X;
-			movmsg.Y = player.Character.Location.Y;
+			movmsg.X = message.MapX * 32;
+			movmsg.Y = message.MapY * 32;
 			movmsg.NetworkID = player.NetworkID;
-			movmsg.Animation = player.Character.Animation;
+			movmsg.Animation = message.Animation;
 
 			foreach(NetworkPlayer netplayer in this.players.GetPlayers())
 			{

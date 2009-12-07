@@ -97,7 +97,7 @@ namespace Valkyrie
 			ValkyrieWorldManager worldmanager = new ValkyrieWorldManager(new Assembly[] { Assembly.GetExecutingAssembly(), Assembly.Load("ValkyrieLibrary") });
 			ValkyrieTextureManager texturemanager = new ValkyrieTextureManager(this.Content, this.GraphicsDevice);
 
-			this.Engine.Load(new ValkyrieSceneProvider(this.GraphicsDevice),
+			this.Engine.Load(new PokeSceneProvider(this.GraphicsDevice),
 				new ValkyrieEventProvider(),
 				new PokeNetworkProvider(),
 				new PokeSoundProvider(),
@@ -110,6 +110,9 @@ namespace Valkyrie
 			this.Engine.ModuleProvider.AddModule(new MenuModule(Content.Load<Video>("PokemonIntro")));
 			this.Engine.ModuleProvider.AddModule(new LoginModule());
 			this.Engine.ModuleProvider.AddModule(new GameModule(this.GraphicsDevice));
+
+			this.Engine.ModuleProvider.GetModule("Menu").Load(this.Engine);
+			this.Engine.ModuleProvider.GetModule("Login").Load(this.Engine);
 
 			this.Engine.ModuleProvider.PushModule("Menu");
         }

@@ -93,8 +93,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Characters\PokeCharacter.cs" />
+    <Compile Include="Core\Characters\PokeCharacterRenderer.cs" />
     <Compile Include="Core\Characters\PokePlayer.cs" />
-    <Compile Include="Core\PokeMovementManager.cs" />
     <Compile Include="Events\CinematicsTestEvent.cs" />
     <Compile Include="Events\JumpEvent.cs" />
     <Compile Include="Events\JumpPadEvent.cs" />
@@ -103,6 +103,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="PokeGame.cs" />
+    <Compile Include="Providers\NetworkMovementProvider.cs" />
+    <Compile Include="Providers\PokeMovementProvider.cs" />
+    <Compile Include="Providers\PokeSceneProvider.cs" />
     <Compile Include="Providers\PokeSoundProvider.cs" />
     <Compile Include="Providers\PokeNetworkProvider.cs" />
     <Compile Include="Modules\GameModule.cs" />

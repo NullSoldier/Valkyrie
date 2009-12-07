@@ -2,23 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Diagnostics;
-using Microsoft.Xna.Framework;
-using Valkyrie.Engine.Providers;
-using Gablarski;
-using Valkyrie.Engine.Characters;
 using Valkyrie.Engine.Core;
+using Valkyrie.Engine.Characters;
+using Valkyrie.Engine.Providers;
+using Valkyrie.Library.Core;
+using Microsoft.Xna.Framework;
 using Valkyrie.Engine;
+using Gablarski;
+using Valkyrie.Characters;
+using Valkyrie.Core.Characters;
 using Valkyrie.Library;
-using ValkyrieServerLibrary.Entities;
 
-namespace ValkyrieServerLibrary.Core
+namespace Valkyrie.Providers
 {
-	public class ServerMovementProvider
+	public class NetworkMovementProvider
 	{
 		#region Constructors
 
-		public ServerMovementProvider (ICollisionProvider collisionprovider)
+		public NetworkMovementProvider (ICollisionProvider collisionprovider)
 		{
 			this.collisionprovider = collisionprovider;
 		}
@@ -54,17 +55,24 @@ namespace ValkyrieServerLibrary.Core
 
 				for(int i = 0; i < count; i++)
 				{
-					var movable = (Character)this.movablecache.Keys.ElementAt(i);
+					var movable = (PokeCharacter)this.movablecache.Keys.ElementAt(i);
 					MovementItem moveitem = this.movablecache[movable].FirstOrDefault();
+
+					while((moveitem.Type == MovementType.TileBased && this.movablecache[movable].Count > 1)
+						|| (moveitem.Type == MovementType.Destination && movable.Location == moveitem.Destination && this.movablecache[movable].Count > 1))
+					{
+						if(moveitem.Type == MovementType.Destination)
+							movable.CurrentAnimationName = moveitem.AnimationName;
+
+						this.movablecache[movable].Dequeue();
+						
+						moveitem = this.movablecache[movable].FirstOrDefault();						
+					}
+
 					MovementType movetype = moveitem.Type;
 
+					movable.CurrentAnimationName = moveitem.AnimationName;
 					movable.MovingDestination = moveitem.Destination;
-
-					if(movetype == MovementType.TileBased && this.movablecache[movable].Count > 1)
-					{
-						this.movablecache[movable].Dequeue();
-						continue;
-					}
 
 					movable.LastMoveTime += time.ElapsedGameTime.Milliseconds;
 
@@ -75,7 +83,6 @@ namespace ValkyrieServerLibrary.Core
 						if(movetype == MovementType.TileBased)
 						{
 							movable.Direction = moveitem.Direction;
-							movable.Animation = moveitem.AnimationName;
 
 							if(!MoveTileBased(movable, collided))
 								toberemoved.Add(movable);

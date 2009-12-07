@@ -25,6 +25,19 @@ using Valkyrie.Engine.Characters;
 using Valkyrie.Library.Camera;
 using Valkyrie.Engine.Core;
 using Valkyrie.Engine.Providers;
+using Valkyrie.Providers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Diagnostics;
+using Microsoft.Xna.Framework;
+using Valkyrie.Engine.Providers;
+using Gablarski;
+using Valkyrie.Engine.Characters;
+using Valkyrie.Engine.Core;
+using Valkyrie.Engine;
+using Valkyrie.Engine.Maps;
 
 namespace Valkyrie.Modules
 {
@@ -60,12 +73,16 @@ namespace Valkyrie.Modules
 			BaseCamera camera = this.context.SceneProvider.GetCamera("camera1");
 
 			if(camera.ManualControl)
-				camera.CenterOnCharacter(this.context.SceneProvider.GetPlayer("player1")); // center camera on player
+				camera.CenterOnCharacter(this.context.SceneProvider.GetPlayer("player1")); // Center camera on player
 
 			this.KeybindController.Update();
 
 			this.context.SceneProvider.Update(gameTime);
 			this.context.MovementProvider.Update(gameTime);
+			this.networkmovementprovider.Update(gameTime);
+
+			foreach(var player in this.network.GetPlayers())
+				player.Update(gameTime);
 
 			// To do
 			// Update network players
@@ -79,22 +96,33 @@ namespace Valkyrie.Modules
 
 			spriteBatch.GraphicsDevice.Clear(Color.Black);
 
-			this.context.SceneProvider.DrawAllCameras(spriteBatch);
+			if(this.underlayer)
+				this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.UnderLayer);
+			if(this.baselayer)
+				this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.BaseLayer);
+			if(this.middlelayer)
+				this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.MiddleLayer);
+			if(this.showplayers)
+			{
+				spriteBatch.Begin();
+				this.context.SceneProvider.DrawPlayer(spriteBatch, "player1", this.context.SceneProvider.GetCamera("camera1"));
+				spriteBatch.End();
+			}
+			if(this.toplayer)
+				this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.TopLayer);			
+
+			//this.context.SceneProvider.DrawAllCameras(spriteBatch);
 	    }
 
 	    public void Load(IEngineContext enginecontext)
 	    {
 			this.context = enginecontext;
+			this.network = (PokeNetworkProvider)enginecontext.NetworkProvider;
+			this.networkmovementprovider = new NetworkMovementProvider(enginecontext.CollisionProvider);
 
 			this.context.WorldManager.Load(new Uri(Path.Combine(Environment.CurrentDirectory, Path.Combine(this.context.Configuration[EngineConfigurationName.DataRoot], this.context.Configuration[EngineConfigurationName.WorldFile]))), this.context.EventProvider);
 			
-			this.context.SceneProvider.AddCamera("camera1", new ValkyrieCamera(0, 0, 800, 600) { WorldName = "Kanto" });
-			this.context.SceneProvider.AddPlayer("player1", new PokePlayer()
-			{
-				WorldName = "Kanto",
-				Location = new MapPoint(87, 210).ToScreenPoint(),
-				Sprite = this.context.TextureManager.GetTexture("MaleSprite.png")
-			});
+			this.context.SceneProvider.AddCamera("camera1", new ValkyrieCamera(0, 0, 800, 600) { WorldName = this.context.SceneProvider.GetPlayer("player1").WorldName });
 
 	        this.KeybindController.AddKey(Keys.Left, "MoveLeft");
 	        this.KeybindController.AddKey(Keys.Up, "MoveUp");
@@ -103,17 +131,20 @@ namespace Valkyrie.Modules
 	        this.KeybindController.AddKey(Keys.Q, "Noclip");
 			this.KeybindController.AddKey(Keys.Add, "ZoomIn");
 			this.KeybindController.AddKey(Keys.Subtract, "ZoomOut");
-
-			this.KeybindController.AddKey(Keys.NumPad4, "MoveLeftPad");
-			this.KeybindController.AddKey(Keys.NumPad8, "MoveUpPad");
-			this.KeybindController.AddKey(Keys.NumPad2, "MoveDownPad");
-			this.KeybindController.AddKey(Keys.NumPad6, "MoveRightPad");
+			this.KeybindController.AddKey(Keys.NumPad6, "SpeedUp");
+			this.KeybindController.AddKey(Keys.NumPad9, "SlowDown");
+			this.KeybindController.AddKey(Keys.F1, "ToggleUnderlayer");
+			this.KeybindController.AddKey(Keys.F2, "ToggleBaselayer");
+			this.KeybindController.AddKey(Keys.F3, "ToggleMiddlelayer");
+			this.KeybindController.AddKey(Keys.F4, "ToggleToplayer");
+			this.KeybindController.AddKey(Keys.F5, "TogglePlayers");
 
 	        this.KeybindController.KeyDown += this.GameModule_KeyDown;
 	        this.KeybindController.KeyUp += this.GameModule_KeyUp;
 
-	        //TileEngine.NetworkManager.MessageReceived += this.Game_MessageReceived;
-	       // TileEngine.NetworkManager.Send(new PlayerRequestListMessage());
+	        this.network.MessageReceived += this.Game_MessageReceived;
+			this.network.Disconnected += this.Game_Disconnected;
+			this.network.Send(new PlayerRequestListMessage());
 
 			this.context.SceneProvider.GetPlayer("player1").StartedMoving += this.GameModule_StartedMoving;
 			this.context.SceneProvider.GetPlayer("player1").StoppedMoving += this.GameModule_StoppedMoving;
@@ -122,122 +153,127 @@ namespace Valkyrie.Modules
 			this.context.SceneProvider.GetPlayer("player1").TileLocationChanged += TestTileLocationChanged; // for testing purposes
 
 	        this.IsLoaded = true;
+
+			//PlayerLoadedMessage loadedmsg = new PlayerLoadedMessage();
+			//loadedmsg.NetworkID = ((PokePlayer)this.context.SceneProvider.GetPlayer("player1")).NetworkID;
+
+			//this.network.Send(loadedmsg);
 	    }
 
 	    public void Game_MessageReceived(object sender, MessageReceivedEventArgs ev)
 	    {
+			if (ev.Message is PlayerUpdateMessage)
+			{
+				this.Message_PlayerUpdateReceived((PlayerUpdateMessage)ev.Message);
+			}
+			else if(ev.Message is PlayerInfoMessage)
+			{
+				this.Message_PlayerInfoReceived((PlayerInfoMessage)ev.Message);
+			}
+			else if(ev.Message is PlayerStartedMovingMessage)
+			{
+				this.Message_PlayerStartedMovingReceived((PlayerStartedMovingMessage)ev.Message);
+			}
+			else if(ev.Message is PlayerStoppedMovingMessage)
+			{
+				this.Message_PlayerStoppedMovingReceived((PlayerStoppedMovingMessage)ev.Message);
+			}
+		}
 
-			//if (ev.Message is PlayerUpdateMessage)
-			//{
-			//    var message = (PlayerUpdateMessage)ev.Message;
+		public void Game_Disconnected (object sender, ConnectionEventArgs ev)
+		{
+			MessageBox(new IntPtr(0), "You lost connection to the server.", "Disconnected", 0);
+			Environment.Exit(1);
+		}
 
-			//    if (message.Action == PlayerUpdateAction.Add)
-			//    {
-			//        PokePlayer player = new PokePlayer();
-			//        player.Loaded = false;
+		#region Messages Received
 
-			//        TileEngine.NetworkPlayerCache.Add(message.NetworkID, player);
+		public void Message_PlayerUpdateReceived (PlayerUpdateMessage message)
+		{
 
-			//        PlayerRequestMessage msg = new PlayerRequestMessage();
-			//        msg.RequestedPlayerNetworkID = message.NetworkID;
+			if(message.Action == PlayerUpdateAction.Add)
+			{
+				PokePlayer player = new PokePlayer();
+				player.NetworkID = message.NetworkID;
+				player.Loaded = false;
 
-			//        TileEngine.NetworkManager.Send(msg);
-			//    }
-			//    else
-			//    {
-			//        TileEngine.NetworkPlayerCache.Remove(message.NetworkID);
-			//    }
-			//}
-			//else if (ev.Message is PlayerInfoMessage)
-			//{
-			//    PlayerInfoMessage message = (PlayerInfoMessage)ev.Message;
+				this.network.AddPlayer(message.NetworkID, player);
 
-			//    PokePlayer player = null;
+				PlayerRequestMessage msg = new PlayerRequestMessage();
+				msg.RequestedPlayerNetworkID = message.NetworkID;
 
-			//    lock(TileEngine.NetworkPlayerCache)
-			//    {
-			//        if(!TileEngine.NetworkPlayerCache.ContainsKey(message.NetworkID))
-			//        {
-			//            // If it's not in the cache, add it
-			//            player = new PokePlayer();
-			//            TileEngine.NetworkPlayerCache.Add(message.NetworkID, player);
-			//        }
-			//        else
-			//        {
-			//            // Otherwise get it
-			//            player = (PokePlayer)TileEngine.NetworkPlayerCache[message.NetworkID];
-			//        }
+				this.network.Send(msg);
+			}
+			else
+			{
+				this.network.RemovePlayer(message.NetworkID);
+			}
+		}
 
-			//        player.Sprite = TileEngine.TextureManager.GetTexture("MaleSprite.png");
-			//        player.Name = message.Name;
-			//        player.CurrentAnimationName = message.Animation;
-			//        player.Location = new ScreenPoint(message.Location.X, message.Location.Y);
+		public void Message_PlayerInfoReceived (PlayerInfoMessage message)
+		{
+			PokePlayer player = null;
 
-			//        if(!player.Loaded)
-			//            player.Loaded = true;
-			//    }
-			//}
-			//else if (ev.Message is LocationUpdateReceived)
-			//{
-			//    var message = (LocationUpdateReceived)ev.Message;
+			if(!this.network.ContainsPlayer(message.NetworkID))
+			{
+				player = new PokePlayer();
+				player.NetworkID = message.NetworkID;
+				this.network.AddPlayer(message.NetworkID, player);
+			}
+			else
+			{
+				player = this.network.GetPlayer(message.NetworkID);
+			}
 
-			//    if (!TileEngine.NetworkPlayerCache.ContainsKey(message.NetworkID))
-			//        throw new IndexOutOfRangeException("Player does not exist in the network cache.");
+			player.Sprite = this.context.TextureManager.GetTexture(message.TileSheet);
+			player.Name = message.Name;
+			player.CurrentAnimationName = message.Animation;
+			player.Location = new ScreenPoint(message.Location.X, message.Location.Y);
+			player.WorldName = message.WorldName;
 
-			//    UInt32 NID = message.NetworkID;
-			//    int x = message.X;
-			//    int y = message.Y;
-			//    string animation = message.Animation;
+			if(!player.Loaded)
+				player.Loaded = true;
+		}
 
-			//    lock(TileEngine.NetworkPlayerCache)
-			//    {
-			//        PokePlayer player = (PokePlayer)TileEngine.NetworkPlayerCache[NID];
+		public void Message_PlayerStartedMovingReceived (PlayerStartedMovingMessage message)
+		{
+		    if(!this.network.ContainsPlayer(message.NetworkID))
+		        return;
 
-			//        player.Location = new ScreenPoint(x, y);
-			//        player.CurrentAnimationName = animation;
-			//    }
-			//}
-			//else if(ev.Message is PlayerStartedMovingMessage)
-			//{
-			//    var message = (PlayerStartedMovingMessage)ev.Message;
+			lock(this.network)
+			{
+				PokePlayer player = (PokePlayer)this.network.GetPlayer(message.NetworkID);
 
-			//    if(!TileEngine.NetworkPlayerCache.ContainsKey(message.NetworkID))
-			//        return;
+				var direction = (Directions)message.Direction;
 
-			//    lock(TileEngine.NetworkPlayerCache)
-			//    {
-			//        PokePlayer player = (PokePlayer)TileEngine.NetworkPlayerCache[message.NetworkID];
-			//        player.Direction = (Directions)message.Direction;
-			//        player.CurrentAnimationName = message.Animation;
-			//        TileEngine.MovementManager.BeginMove(player, player.Direction);
-			//    }
-			//}
-			//else if(ev.Message is PlayerStoppedMovingMessage)
-			//{
-			//    var message = (PlayerStoppedMovingMessage)ev.Message;
+				this.networkmovementprovider.BeginMove(player, direction, message.Animation);
+			}
+		}
 
-			//    if(message.NetworkID == TileEngine.NetworkID)
-			//    {
-			//        TileEngine.Player.Location = new ScreenPoint(message.Location.X, message.Location.Y);
-			//    }
-			//    else
-			//    {
-			//        if(!TileEngine.NetworkPlayerCache.ContainsKey(message.NetworkID))
-			//            return;
+		public void Message_PlayerStoppedMovingReceived (PlayerStoppedMovingMessage message)
+		{
+			lock(this.networkmovementcache)
+			{
+				PokePlayer player = (PokePlayer)this.network.GetPlayer(message.NetworkID);
 
-			//        lock(TileEngine.NetworkPlayerCache)
-			//        {
-			//            PokePlayer player = (PokePlayer)TileEngine.NetworkPlayerCache[message.NetworkID];
-			//            TileEngine.MovementManager.EndMoveFunctional(player);
+				((NetworkMovementProvider)this.networkmovementprovider).EndMoveLocation(player, new MapPoint(message.X / 32, message.Y / 32), message.Animation);
 
-			//            player.CurrentAnimationName = message.Animation;
-			//            player.Location = new ScreenPoint(message.X, message.Y);
-			//        }
-			//    }
-			//}
-	    }
+				player.StoppedMoving += this.NetworkPlayer_Stopped;
+			}
+		}
+		
+		#endregion
 
-	    public void TestTileLocationChanged(object sender, EventArgs e)
+		private void NetworkPlayer_Stopped (object sender, EventArgs e)
+		{
+			var player = (PokePlayer)sender;
+
+			player.CurrentAnimationName = player.Direction.ToString();
+
+			player.StoppedMoving -= this.NetworkPlayer_Stopped;
+		}
+
+		public void TestTileLocationChanged(object sender, EventArgs e)
 	    {
 	        // Send Test
 			//LocationUpdateMessage msg = new LocationUpdateMessage();
@@ -268,48 +304,49 @@ namespace Valkyrie.Modules
 
 	    #endregion
 
-	    public void GameModule_Collided(object sender, EventArgs ev)
+		private void GameModule_Collided (object sender, EventArgs ev)
 	    {
 	        this.context.EventProvider.HandleEvent((BaseCharacter)sender, ActivationTypes.Collision);
 	    }
 
-	    public void GameModule_TileLocationChanged(object sender, EventArgs ev)
+		private void GameModule_TileLocationChanged (object sender, EventArgs ev)
 	    {
 			this.context.EventProvider.HandleEvent((BaseCharacter)sender, ActivationTypes.Movement);
 
 	        this.TestTileLocationChanged(this, EventArgs.Empty);
 	    }
 
-	    public void GameModule_StartedMoving(object sender, EventArgs ev)
+	    private void GameModule_StartedMoving(object sender, EventArgs ev)
 	    {
 	        PokePlayer player = (PokePlayer)sender;
 
 	        player.CurrentAnimationName = "Walk" + player.Direction.ToString();
 
-			//PlayerStartMovingMessage msg = new PlayerStartMovingMessage();
-			//msg.NetworkID = .NetworkID;
-			//msg.Direction = (int)player.Direction;
-			//msg.MovementType = (int)MovementType.TileBased;
-			//msg.Animation = player.CurrentAnimationName;
-			//msg.Speed = player.Speed;
-			//msg.MoveDelay = player.MoveDelay;
-			//TileEngine.NetworkManager.Send(msg);
+			PlayerStartMovingMessage msg = new PlayerStartMovingMessage();
+			msg.NetworkID = player.NetworkID;
+			msg.Direction = (int)player.Direction;
+			msg.MovementType = (int)MovementType.TileBased;
+			msg.Animation = player.CurrentAnimationName;
+			msg.Speed = player.Speed;
+			msg.MoveDelay = player.MoveDelay;
+			this.network.Send(msg);
 	    }
 
-	    public void GameModule_StoppedMoving(object sender, EventArgs ev)
+	    private void GameModule_StoppedMoving(object sender, EventArgs ev)
 	    {
 	        PokePlayer player = (PokePlayer)sender;
 
 	        player.CurrentAnimationName = player.Direction.ToString();
 
-			//PlayerStopMovingMessage msg = new PlayerStopMovingMessage();
-			//msg.NetworkID = TileEngine.NetworkID;
-			//msg.MapX = TileEngine.Player.Location.X / 32;
-			//msg.MapY = TileEngine.Player.Location.Y / 32;
-			//TileEngine.NetworkManager.Send(msg);
+			PlayerStopMovingMessage msg = new PlayerStopMovingMessage();
+			msg.NetworkID = player.NetworkID;
+			msg.MapX = player.GlobalTileLocation.X;
+			msg.MapY = player.GlobalTileLocation.Y;
+			msg.Animation = player.CurrentAnimationName;
+			this.network.Send(msg);
 	    }
 
-	    public void GameModule_KeyDown(object sender, KeyPressedEventArgs ev)
+	    private void GameModule_KeyDown(object sender, KeyPressedEventArgs ev)
 	    {
 	        if (this.IsDir(ev.KeyPressed))
 	        {
@@ -336,7 +373,7 @@ namespace Valkyrie.Modules
 	        }
 	    }
 
-	    public void GameModule_KeyUp(object sender, KeyPressedEventArgs ev)
+	    private void GameModule_KeyUp(object sender, KeyPressedEventArgs ev)
 	    {
 			PokePlayer player = (PokePlayer)this.context.SceneProvider.GetPlayer("player1");
 			BaseCamera camera = this.context.SceneProvider.GetCamera("camera1"); ;
@@ -353,6 +390,28 @@ namespace Valkyrie.Modules
 				case "ZoomOut":
 					camera.Scale(0.9);
 					break;
+				case "SpeedUp":
+					player.Speed += 5;
+					break;
+				case "SlowDown":
+					player.Speed -= 5;
+					if(player.Speed <= 0) player.Speed = 1;
+					break;
+				case "TogglePlayers":
+					this.showplayers = !showplayers;
+					break;
+				case "ToggleUnderlayer":
+					this.underlayer = !this.underlayer;
+					break;
+				case "ToggleBaselayer":
+					this.baselayer = !this.baselayer;
+					break;
+				case "ToggleMiddlelayer":
+					this.middlelayer = !this.middlelayer;
+					break;
+				case "ToggleToplayer":
+					this.toplayer = !this.toplayer;
+					break;
 	            default:
 	                break;
 	        }
@@ -367,7 +426,7 @@ namespace Valkyrie.Modules
 	        }
 	    }
 
-	    public void UpdateDirection(Keys NewDir)
+	    private void UpdateDirection(Keys NewDir)
 	    {
 	        if (!this.KeybindController.LastKeys.Contains<Keys>(NewDir) || !this.KeybindController.CurrentKeys.Contains<Keys>(CrntDir))
 	        {
@@ -375,17 +434,47 @@ namespace Valkyrie.Modules
 	        }
 	    }
 
-	    public bool IsDir(Keys key)
+	    private bool IsDir(Keys key)
 	    {
 	        return (key == Keys.Left || key == Keys.Right || key == Keys.Up || key == Keys.Down ||
 				key == Keys.NumPad4 || key == Keys.NumPad6 || key == Keys.NumPad8 || key == Keys.NumPad2);
 	    }
 
+		private void AddToMovementCache (PokePlayer player, MovementItem moveitem)
+		{
+			lock(this.networkmovementcache)
+			{
+				if(!this.networkmovementcache.ContainsKey(player.NetworkID))
+					this.networkmovementcache.Add(player.NetworkID, new Queue<MovementItem>());
+
+				this.networkmovementcache[player.NetworkID].Enqueue(moveitem);				
+			}
+		}
+
+		private bool RemoveFromMovementCache (PokePlayer player)
+		{
+			lock(this.networkmovementcache)
+			{
+				return this.networkmovementcache.Remove(player.NetworkID);
+			}
+		}
+
 		private IEngineContext context = null;
+		private PokeNetworkProvider network = null;
 		private bool isloaded = false;
 		private KeybindController KeybindController = new KeybindController();
 		private Keys CrntDir = Keys.None;
 		private GraphicsDevice graphicsdevice = null;
+		private Dictionary<uint, Queue<MovementItem>> networkmovementcache = new Dictionary<uint, Queue<MovementItem>>();
+
+		private bool underlayer = true;
+		private bool baselayer = true;
+		private bool middlelayer = true;
+		private bool toplayer = true;
+		private bool showplayers = true;
+
+		private NetworkMovementProvider networkmovementprovider = null;
+		//private PokePlayer player = null;
 
 		#region Statics and Internals
 

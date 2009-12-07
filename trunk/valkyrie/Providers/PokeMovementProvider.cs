@@ -2,45 +2,93 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Diagnostics;
-using Microsoft.Xna.Framework;
 using Valkyrie.Engine.Providers;
-using Gablarski;
 using Valkyrie.Engine.Characters;
-using Valkyrie.Engine.Core;
 using Valkyrie.Engine;
-using Valkyrie.Library;
-using ValkyrieServerLibrary.Entities;
+using Valkyrie.Engine.Core;
+using Gablarski;
+using Microsoft.Xna.Framework;
 
-namespace ValkyrieServerLibrary.Core
+namespace Valkyrie.Library.Providers
 {
-	public class ServerMovementProvider
+	public class PokeMovementProvider
+		: IMovementProvider
 	{
-		#region Constructors
-
-		public ServerMovementProvider (ICollisionProvider collisionprovider)
+		public void BeginMove (IMovable movable, Directions direction)
 		{
-			this.collisionprovider = collisionprovider;
-		}
+			if(movable.IsMoving)
+			{
+				if(movable.Direction == direction)
+					return;
 
-		#endregion
+				this.EndMove(movable, true);
+			}
 
-		public void BeginMove (IMovable movable, Directions direction, string animationname)
-		{
-			this.AddToCache(movable, new MovementItem(ScreenPoint.Zero, MovementType.TileBased, direction, animationname));
+			if(this.MovableCache.ContainsKey(movable))
+				return;
+
+			movable.IsMoving = true;
+			movable.Direction = direction;
+
+			this.InternalMove(movable, this.GetDestinationFromDirection(movable, movable.Direction));
+
+			this.AddToCache(movable, MovementType.TileBased);
 
 			movable.OnStartedMoving(this, EventArgs.Empty);
 		}
 
-		public void EndMoveLocation (IMovable movable, MapPoint destination, string animationname)
+		public void BeginMoveDestination (IMovable movable, ScreenPoint destination)
 		{
-			lock(this.movablecache)
-			{
-				if(!this.movablecache.ContainsKey(movable))
-					return;
+			this.BeginMoveDestination(movable, destination, true);
+		}
 
-				this.movablecache[movable].Enqueue(new MovementItem(destination.ToScreenPoint(), MovementType.Destination, Directions.Any, animationname));
+		public void BeginMoveDestination (IMovable movable, ScreenPoint destination, bool fireevent)
+		{
+			if(movable.IsMoving || this.MovableCache.ContainsKey(movable))
+				this.EndMove(movable, fireevent);
+
+			movable.IgnoreMoveInput = true;
+			movable.IsMoving = true;
+
+			this.AddToCache(movable, MovementType.Destination);
+
+			this.InternalMove(movable, destination);
+
+			movable.OnStartedMoving(this, EventArgs.Empty);
+		}
+
+		public void EndMove (IMovable movable)
+		{
+			this.EndMove(movable, true);
+		}
+
+		public void EndMove (IMovable movable, bool fireevent)
+		{
+			if(this.MovableCache.ContainsKey(movable) && this.MovableCache[movable] == MovementType.TileBased
+				&& movable.IsMoving)
+			{
+				ScreenPoint destination = this.GetNextScreenPointTile(movable);
+				if(this.context.CollisionProvider.CheckCollision(movable, destination))
+				{
+					movable.IgnoreMoveInput = true;
+
+					movable.MovingDestination = destination;
+					this.MovableCache[movable] = MovementType.Destination;
+
+					return;
+				}
 			}
+
+			if((movable.Location.Y % 32) != 0)
+				movable.IsMoving = false;
+
+			movable.IsMoving = false;
+			movable.IgnoreMoveInput = false;
+
+			this.RemoveFromCache(movable);
+
+			if(fireevent)
+				movable.OnStoppedMoving(this, EventArgs.Empty);
 		}
 
 		public void Update (GameTime time)
@@ -48,23 +96,15 @@ namespace ValkyrieServerLibrary.Core
 			List<IMovable> toberemoved = new List<IMovable>();
 			List<IMovable> collided = new List<IMovable>();
 
-			lock(this.movablecache)
+			lock(this.MovableCache)
 			{
-				int count = this.movablecache.Count;
+
+				int count = this.MovableCache.Count;
 
 				for(int i = 0; i < count; i++)
 				{
-					var movable = (Character)this.movablecache.Keys.ElementAt(i);
-					MovementItem moveitem = this.movablecache[movable].FirstOrDefault();
-					MovementType movetype = moveitem.Type;
-
-					movable.MovingDestination = moveitem.Destination;
-
-					if(movetype == MovementType.TileBased && this.movablecache[movable].Count > 1)
-					{
-						this.movablecache[movable].Dequeue();
-						continue;
-					}
+					IMovable movable = this.MovableCache.Keys.ElementAt(i);
+					MovementType movetype = this.MovableCache[movable];
 
 					movable.LastMoveTime += time.ElapsedGameTime.Milliseconds;
 
@@ -74,9 +114,6 @@ namespace ValkyrieServerLibrary.Core
 
 						if(movetype == MovementType.TileBased)
 						{
-							movable.Direction = moveitem.Direction;
-							movable.Animation = moveitem.AnimationName;
-
 							if(!MoveTileBased(movable, collided))
 								toberemoved.Add(movable);
 						}
@@ -92,18 +129,18 @@ namespace ValkyrieServerLibrary.Core
 				{
 					if(collided.Contains(movable))
 					{
-						movable.OnCollided(this, EventArgs.Empty);
+						movable.IsMoving = false;
+						movable.IgnoreMoveInput = false;
+
+						this.RemoveFromCache(movable);
+
+						movable.OnStoppedMoving(this, EventArgs.Empty);
 					}
-
-					this.movablecache[movable].Dequeue();
-					movable.IsMoving = false;
-					movable.IgnoreMoveInput = false;
-
-					if(this.movablecache[movable].Count == 0)
-						this.movablecache.Remove(movable);
-
-					movable.OnStoppedMoving(this, EventArgs.Empty);
+					this.EndMove(movable, true);
 				}
+
+				foreach(var movable in collided)
+					movable.OnCollided(this, EventArgs.Empty);
 
 
 			}
@@ -113,10 +150,7 @@ namespace ValkyrieServerLibrary.Core
 
 		public void LoadEngineContext (IEngineContext context)
 		{
-			// This is optional, use the constructor to load
-
-			if(context != null)
-				this.collisionprovider = context.CollisionProvider;
+			this.context = context;
 
 			this.isloaded = true;
 		}
@@ -129,37 +163,22 @@ namespace ValkyrieServerLibrary.Core
 		#endregion
 
 		private bool isloaded = false;
-		private ICollisionProvider collisionprovider = null;
-		// Why is this ordered, why do they need to be in order? It just slows everything down.
-		private OrderedDictionary<IMovable, Queue<MovementItem>> movablecache = new OrderedDictionary<IMovable, Queue<MovementItem>>();
+		private IEngineContext context = null;
+		private OrderedDictionary<IMovable, MovementType> MovableCache = new OrderedDictionary<IMovable, MovementType>();
 
-		private void AddToCache (IMovable movable, MovementItem moveitem)
+		private void AddToCache (IMovable movable, MovementType type)
 		{
-			lock(this.movablecache)
+			lock(this.MovableCache)
 			{
-				if(!this.movablecache.ContainsKey(movable))
-					this.movablecache.Add(movable, new Queue<MovementItem>());
-
-				this.movablecache[movable].Enqueue(moveitem);
+				this.MovableCache.Add(movable, type);
 			}
 		}
 
-		private void AddToCache (IMovable movable, ScreenPoint destination, MovementType type, Directions direction, string animationname)
+		private void RemoveFromCache (IMovable movable)
 		{
-			lock(this.movablecache)
+			lock(this.MovableCache)
 			{
-				if(!this.movablecache.ContainsKey(movable))
-					this.movablecache.Add(movable, new Queue<MovementItem>());
-
-				this.movablecache[movable].Enqueue(new MovementItem(destination, type, direction, animationname));
-			}
-		}
-
-		public void RemoveFromCache (IMovable movable)
-		{
-			lock(this.movablecache)
-			{
-				this.movablecache.Remove(movable);
+				this.MovableCache.Remove(movable);
 			}
 		}
 
@@ -207,6 +226,13 @@ namespace ValkyrieServerLibrary.Core
 
 			ScreenPoint destination = new ScreenPoint((int)x, (int)y);
 
+			ScreenPoint collision = new ScreenPoint(destination.X, destination.Y);
+
+			if(movable.Direction == Directions.South)
+				collision = new ScreenPoint(destination.X, destination.Y + 32);
+			else if(movable.Direction == Directions.East)
+				collision = new ScreenPoint(destination.X + 32, destination.Y);
+
 			movable.Location = destination;
 
 			if(destination == movable.MovingDestination)
@@ -225,22 +251,61 @@ namespace ValkyrieServerLibrary.Core
 			if(movable.Direction == Directions.North)
 			{
 				y -= movable.Speed;
+
+				if(y < movable.MovingDestination.Y)
+					y = movable.MovingDestination.Y;
 			}
 			else if(movable.Direction == Directions.South)
 			{
 				y += movable.Speed;
+
+				if(y > movable.MovingDestination.Y)
+					y = movable.MovingDestination.Y;
 			}
 			else if(movable.Direction == Directions.East)
 			{
 				x += movable.Speed;
+
+				if(x > movable.MovingDestination.X)
+					x = movable.MovingDestination.X;
 			}
 			else if(movable.Direction == Directions.West)
 			{
 				x -= movable.Speed;
+
+				if(x < movable.MovingDestination.X)
+					x = movable.MovingDestination.X;
 			}
 			#endregion
 
-			movable.Location = new ScreenPoint((int)x, (int)y);
+			ScreenPoint destination = new ScreenPoint((int)x, (int)y);
+
+			ScreenPoint collision = new ScreenPoint(destination.X, destination.Y);
+
+			if(movable.Direction == Directions.South)
+				collision = new ScreenPoint(destination.X, destination.Y + 32 - (int)movable.Speed);
+			else if(movable.Direction == Directions.East)
+				collision = new ScreenPoint(destination.X + 32 - (int)movable.Speed, destination.Y);
+
+			if(!this.context.CollisionProvider.CheckCollision(movable, collision))
+			{
+				movable.IsMoving = false;
+				movedok = false;
+
+				collided.Add(movable);
+			}
+			else
+			{
+				movable.Location = destination;
+
+				//if(movable.GlobalTileLocation != movable.LastMapLocation)
+				//movable.OnTileLocationChanged(this, EventArgs.Empty);
+
+				if(movable.Location == movable.MovingDestination)
+				{
+					movable.MovingDestination = this.GetDestinationFromDirection(movable, movable.Direction);
+				}
+			}
 
 			return movedok;
 		}

@@ -89,6 +89,7 @@
     <Compile Include="Messages\Valkyrie\Movement\PlayerStopMovingMessage.cs" />
     <Compile Include="Messages\Valkyrie\Movement\PlayerStoppedMovingMessage.cs" />
     <Compile Include="Messages\Valkyrie\PlayerInfoMessage.cs" />
+    <Compile Include="Messages\Valkyrie\PlayerLoadedMessage.cs" />
     <Compile Include="Messages\Valkyrie\PlayerRequestListMessage.cs" />
     <Compile Include="Messages\Valkyrie\PlayerRequestMessage.cs" />
     <Compile Include="Messages\Valkyrie\Movement\PlayerStartMovingMessage.cs" />

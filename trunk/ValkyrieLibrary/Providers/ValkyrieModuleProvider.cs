@@ -57,8 +57,6 @@ namespace Valkyrie.Library.Providers
 			if(!this.IsLoaded)
 				throw new ProviderNotLoadedException();
 
-			module.Load(this.context);
-
 			lock(this.moduleSync)
 			{
 				if(this.modules.ContainsKey(module.Name))
