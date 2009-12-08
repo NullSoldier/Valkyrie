@@ -108,6 +108,7 @@
     <Compile Include="Core\Points\ScreenPoint.cs" />
     <Compile Include="Core\ReadOnlyDictionary.cs" />
     <Compile Include="IEngineContext.cs" />
+    <Compile Include="Managers\ISoundManager.cs" />
     <Compile Include="Managers\IWorldManager.cs" />
     <Compile Include="Managers\ITextureManager.cs" />
     <Compile Include="Modules\IModule.cs" />

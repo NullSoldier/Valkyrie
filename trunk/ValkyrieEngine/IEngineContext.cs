@@ -20,6 +20,7 @@ namespace Valkyrie.Engine
 
 		IWorldManager WorldManager { get; }
 		ITextureManager TextureManager { get; }
+		ISoundManager SoundManager { get; }
 
 		EngineConfiguration Configuration { get; }
 	}

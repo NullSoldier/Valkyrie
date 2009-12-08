@@ -16,6 +16,8 @@ using Valkyrie.Engine.Providers;
 using Valkyrie.Library.Providers;
 using Microsoft.Xna.Framework.Media;
 using Valkyrie.Library.Managers;
+using ValkyrieNetwork.Messages.Valkyrie.Authentication;
+using Valkyrie.Characters;
 
 namespace Valkyrie
 {
@@ -105,7 +107,8 @@ namespace Valkyrie
 				new ValkyrieMovementProvider(),
 				new ValkyrieCollisionProvider(),
 				worldmanager,
-				texturemanager);
+				texturemanager,
+				new ValkyrieSoundManager());
 
 			this.Engine.ModuleProvider.AddModule(new MenuModule(Content.Load<Video>("PokemonIntro")));
 			this.Engine.ModuleProvider.AddModule(new LoginModule());
@@ -121,6 +124,16 @@ namespace Valkyrie
         {
 			this.ExitingGame = true;
 
+			var player = (PokePlayer)this.Engine.SceneProvider.GetPlayer("player1");
+
+			// Send logout message to the server
+			if(this.Engine.IsLoaded && this.Engine.NetworkProvider.IsConnected && player != null)
+			{
+				var msg = new LogoutMessage() { NetworkID = player.NetworkID };
+
+				this.Engine.NetworkProvider.Send(msg);
+			}
+			
 			this.Engine.Unload();
         }
 

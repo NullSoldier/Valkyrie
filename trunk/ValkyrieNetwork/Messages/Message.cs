@@ -17,7 +17,8 @@ namespace Gablarski.Messages
 		PlayerInfoRequest = 21,
 		PlayerStartMoving = 29,
 		PlayerStopMoving = 31,
-		PlayerLoaded = 37
+		PlayerLoaded = 37,
+		Logout = 39
 	}
 
 	public enum ServerMessageType

@@ -156,6 +156,17 @@ namespace Valkyrie.Providers
 
 		}
 
+		public void DrawNetworkedPlayers (SpriteBatch spriteBatch, BaseCamera camera)
+		{
+			// Draw network players
+			var network = (PokeNetworkProvider)this.context.NetworkProvider;
+			foreach(PokePlayer player in network.GetPlayers())
+			{
+				if(player.Loaded)
+					this.DrawPlayer(spriteBatch, player, camera);
+			}
+		}
+
 		private void DrawCameraLayer (SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer, MapHeader header)
 		{
 			this.DrawLayerMap(spriteBatch, camera, layer, header, Color.White);
@@ -229,7 +240,7 @@ namespace Valkyrie.Providers
 			lock(this.players)
 			{
 				if(!this.players.ContainsKey(name))
-					throw new Exception("Player not found");
+					return null;
 
 				return this.players[name];
 			}

@@ -10,6 +10,16 @@ namespace Valkyrie.Providers
 	public class PokeSoundProvider
 		:  ISoundProvider
 	{
+		public void PlaySound (System.Media.SoundPlayer sound, bool loop)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void PlayBGM (System.Media.SoundPlayer sound, bool loop)
+		{
+			throw new NotImplementedException();
+		}
+
 		public bool IsLoaded
 		{
 			get { return this.isloaded; }

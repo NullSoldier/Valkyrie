@@ -103,6 +103,7 @@
   <ItemGroup>
     <Compile Include="Core\DefaultServerSettings.cs" />
     <Compile Include="Core\EventArguments.cs" />
+    <Compile Include="Core\PlayerState.cs" />
     <Compile Include="Core\ServerCollisionManager.cs" />
     <Compile Include="Core\ServerMovementManager.cs" />
     <Compile Include="Entities\Account.cs" />

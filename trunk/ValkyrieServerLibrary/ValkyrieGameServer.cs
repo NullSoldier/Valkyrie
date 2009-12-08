@@ -85,6 +85,7 @@ namespace ValkyrieServerLibrary.Core
 
 			this.server.StartListening();
 			this.server.ConnectionMade += this.Server_ConnectionMade;
+			
 
 			this.session = Fluently.Configure()
 				.Database(PostgreSQLConfiguration.Standard.ConnectionString(s => s.Host(this.settings[ServerSettingName.DatabaseAddress]).Username(this.settings[ServerSettingName.DatabaseUser]).Password(this.settings[ServerSettingName.DatabasePassword]).Database(this.settings[ServerSettingName.DatabaseName]).Port(Convert.ToInt32(this.settings[ServerSettingName.DatabasePort]))))
@@ -110,7 +111,8 @@ namespace ValkyrieServerLibrary.Core
 			ev.Connection.MessageReceived -= this.Server_MessageReceived;
 			ev.Connection.Disconnected -= this.Server_Disconnected;
 
-			this.Disconnect(ev.Connection);
+			if(this.players.GetPlayer(ev.Connection).State == PlayerState.LoggedIn)
+				this.Disconnect(ev.Connection);
 		}
 
 		public void Stop()
@@ -125,6 +127,15 @@ namespace ValkyrieServerLibrary.Core
 			this.session.Disconnect();
 
 			this.Started = false;
+		}
+
+		public void Disconnect (uint NetworkID)
+		{
+			var player = this.players.GetPlayer(NetworkID);
+			player.State = PlayerState.LoggedOut;
+
+			if(player != null)
+				this.Disconnect(player.Connection);			
 		}
 
 		public void Disconnect(IConnection connection)

@@ -18,6 +18,7 @@ using Valkyrie.Library.Core;
 using ValkyrieNetwork.Messages.Valkyrie.Movement;
 using Valkyrie.Engine.Core;
 using Valkyrie.Engine.Characters;
+using ValkyrieNetwork.Messages.Valkyrie.Authentication;
 
 namespace ValkyrieServerLibrary.Core
 {
@@ -29,6 +30,7 @@ namespace ValkyrieServerLibrary.Core
 			{
 				{ClientMessageType.Connect, ClientConnected},
 				{ClientMessageType.Login, LoginRequestReceived},
+				{ClientMessageType.Logout, LogoutRequestReceived},
 				{ClientMessageType.LocationData, LocationDataReceived},
 				{ClientMessageType.PlayerStartMoving, PlayerStartMovingReceived},
 				{ClientMessageType.PlayerStopMoving, PlayerStopMovingReceived},
@@ -73,6 +75,8 @@ namespace ValkyrieServerLibrary.Core
 				case ClientMessageType.Login:
 					this.loginqueue.Enqueue(ev);
 					break;
+				case ClientMessageType.PlayerStartMoving:
+				case ClientMessageType.PlayerStopMoving:
 				case ClientMessageType.LocationData:
 					this.movequeue.Enqueue(ev);
 					break;
@@ -159,6 +163,7 @@ namespace ValkyrieServerLibrary.Core
 			player.NetworkID = ++this.LastNetworkID;
 			player.Connection = ev.Connection;
 			player.Character.MapChunkName = this.GetChunkName(player.Character.WorldName, player.Character.MapLocation);
+			player.State = PlayerState.LoggedIn;
 
 			// Add to the list of players in the servers memory
 			this.players.AddPlayer(player);
@@ -180,6 +185,15 @@ namespace ValkyrieServerLibrary.Core
 
 			foreach (var tmp in this.players.GetPlayers())
 				tmp.Connection.Send(updatemsg);
+
+			
+		}
+
+		private void LogoutRequestReceived (MessageReceivedEventArgs ev)
+		{
+			var message = (LogoutMessage)ev.Message;
+
+			this.Disconnect(message.NetworkID);
 		}
 		#endregion
 
@@ -285,6 +299,9 @@ namespace ValkyrieServerLibrary.Core
 
 			// Should throw the movement onto the queue and then process it on each update
 			this.movement.BeginMove(player.Character, direction, message.Animation);
+
+			if(message.Animation == "Any")
+				return;
 
 			PlayerStartedMovingMessage movmsg = new PlayerStartedMovingMessage();
 			movmsg.NetworkID = player.NetworkID;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ValkyrieServerLibrary.Core;
 
 namespace ValkyrieServerLibrary.Entities
 {
@@ -20,6 +21,6 @@ namespace ValkyrieServerLibrary.Entities
 		public virtual string Password
 		{
 			get; set;
-		} 
+		}
 	}
 }

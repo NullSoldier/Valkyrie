@@ -6,6 +6,7 @@ using Valkyrie.Library.Core;
 using Gablarski;
 using System.Drawing;
 using ValkyrieServerLibrary.Entities;
+using ValkyrieServerLibrary.Core;
 
 namespace Valkyrie.Library.Network
 {
@@ -30,6 +31,12 @@ namespace Valkyrie.Library.Network
 		}
 
 		public Character Character
+		{
+			get;
+			set;
+		}
+
+		public PlayerState State
 		{
 			get;
 			set;

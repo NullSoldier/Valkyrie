@@ -9,6 +9,7 @@ namespace Valkyrie.Engine
 	{
 		MapRoot,
 		GraphicsRoot,
+		SoundsRoot,
 		DefaultModule,
 		DataRoot,
 		WorldFile

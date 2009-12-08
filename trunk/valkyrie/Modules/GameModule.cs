@@ -70,14 +70,14 @@ namespace Valkyrie.Modules
 	        if (!this.IsLoaded)
 	            return;
 
-			BaseCamera camera = this.context.SceneProvider.GetCamera("camera1");
+			BaseCamera camera = this.scene.GetCamera("camera1");
 
 			if(camera.ManualControl)
-				camera.CenterOnCharacter(this.context.SceneProvider.GetPlayer("player1")); // Center camera on player
+				camera.CenterOnCharacter(this.scene.GetPlayer("player1")); // Center camera on player
 
 			this.KeybindController.Update();
 
-			this.context.SceneProvider.Update(gameTime);
+			this.scene.Update(gameTime);
 			this.context.MovementProvider.Update(gameTime);
 			this.networkmovementprovider.Update(gameTime);
 
@@ -97,32 +97,35 @@ namespace Valkyrie.Modules
 			spriteBatch.GraphicsDevice.Clear(Color.Black);
 
 			if(this.underlayer)
-				this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.UnderLayer);
+				this.scene.DrawCameraLayer(spriteBatch, "camera1", MapLayers.UnderLayer);
 			if(this.baselayer)
-				this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.BaseLayer);
+				this.scene.DrawCameraLayer(spriteBatch, "camera1", MapLayers.BaseLayer);
 			if(this.middlelayer)
-				this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.MiddleLayer);
+				this.scene.DrawCameraLayer(spriteBatch, "camera1", MapLayers.MiddleLayer);
 			if(this.showplayers)
 			{
 				spriteBatch.Begin();
-				this.context.SceneProvider.DrawPlayer(spriteBatch, "player1", this.context.SceneProvider.GetCamera("camera1"));
+				this.scene.DrawPlayer(spriteBatch, "player1", this.scene.GetCamera("camera1"));
+				this.scene.DrawNetworkedPlayers(spriteBatch, this.scene.GetCamera("camera1"));
+				
 				spriteBatch.End();
 			}
 			if(this.toplayer)
-				this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.TopLayer);			
+				this.scene.DrawCameraLayer(spriteBatch, "camera1", MapLayers.TopLayer);			
 
-			//this.context.SceneProvider.DrawAllCameras(spriteBatch);
+			//this.scene.DrawAllCameras(spriteBatch);
 	    }
 
 	    public void Load(IEngineContext enginecontext)
 	    {
 			this.context = enginecontext;
 			this.network = (PokeNetworkProvider)enginecontext.NetworkProvider;
+			this.scene = (PokeSceneProvider)enginecontext.SceneProvider;
 			this.networkmovementprovider = new NetworkMovementProvider(enginecontext.CollisionProvider);
 
 			this.context.WorldManager.Load(new Uri(Path.Combine(Environment.CurrentDirectory, Path.Combine(this.context.Configuration[EngineConfigurationName.DataRoot], this.context.Configuration[EngineConfigurationName.WorldFile]))), this.context.EventProvider);
 			
-			this.context.SceneProvider.AddCamera("camera1", new ValkyrieCamera(0, 0, 800, 600) { WorldName = this.context.SceneProvider.GetPlayer("player1").WorldName });
+			this.scene.AddCamera("camera1", new ValkyrieCamera(0, 0, 800, 600) { WorldName = this.scene.GetPlayer("player1").WorldName });
 
 	        this.KeybindController.AddKey(Keys.Left, "MoveLeft");
 	        this.KeybindController.AddKey(Keys.Up, "MoveUp");
@@ -146,18 +149,13 @@ namespace Valkyrie.Modules
 			this.network.Disconnected += this.Game_Disconnected;
 			this.network.Send(new PlayerRequestListMessage());
 
-			this.context.SceneProvider.GetPlayer("player1").StartedMoving += this.GameModule_StartedMoving;
-			this.context.SceneProvider.GetPlayer("player1").StoppedMoving += this.GameModule_StoppedMoving;
-			this.context.SceneProvider.GetPlayer("player1").TileLocationChanged += this.GameModule_TileLocationChanged;
-			this.context.SceneProvider.GetPlayer("player1").Collided += this.GameModule_Collided;
-			this.context.SceneProvider.GetPlayer("player1").TileLocationChanged += TestTileLocationChanged; // for testing purposes
+			this.scene.GetPlayer("player1").StartedMoving += this.GameModule_StartedMoving;
+			this.scene.GetPlayer("player1").StoppedMoving += this.GameModule_StoppedMoving;
+			this.scene.GetPlayer("player1").TileLocationChanged += this.GameModule_TileLocationChanged;
+			this.scene.GetPlayer("player1").Collided += this.GameModule_Collided;
+			this.scene.GetPlayer("player1").TileLocationChanged += TestTileLocationChanged; // for testing purposes
 
 	        this.IsLoaded = true;
-
-			//PlayerLoadedMessage loadedmsg = new PlayerLoadedMessage();
-			//loadedmsg.NetworkID = ((PokePlayer)this.context.SceneProvider.GetPlayer("player1")).NetworkID;
-
-			//this.network.Send(loadedmsg);
 	    }
 
 	    public void Game_MessageReceived(object sender, MessageReceivedEventArgs ev)
@@ -228,6 +226,8 @@ namespace Valkyrie.Modules
 			player.Sprite = this.context.TextureManager.GetTexture(message.TileSheet);
 			player.Name = message.Name;
 			player.CurrentAnimationName = message.Animation;
+			if(player.CurrentAnimationName == "Any")
+				return;
 			player.Location = new ScreenPoint(message.Location.X, message.Location.Y);
 			player.WorldName = message.WorldName;
 
@@ -267,6 +267,9 @@ namespace Valkyrie.Modules
 		private void NetworkPlayer_Stopped (object sender, EventArgs e)
 		{
 			var player = (PokePlayer)sender;
+
+			if(player.Direction == Directions.Any)
+				return;
 
 			player.CurrentAnimationName = player.Direction.ToString();
 
@@ -320,7 +323,8 @@ namespace Valkyrie.Modules
 	    {
 	        PokePlayer player = (PokePlayer)sender;
 
-	        player.CurrentAnimationName = "Walk" + player.Direction.ToString();
+			if(string.IsNullOrEmpty(player.HandleAnimationTag))
+				player.CurrentAnimationName = "Walk" + player.Direction.ToString();
 
 			PlayerStartMovingMessage msg = new PlayerStartMovingMessage();
 			msg.NetworkID = player.NetworkID;
@@ -336,14 +340,14 @@ namespace Valkyrie.Modules
 	    {
 	        PokePlayer player = (PokePlayer)sender;
 
-	        player.CurrentAnimationName = player.Direction.ToString();
-
 			PlayerStopMovingMessage msg = new PlayerStopMovingMessage();
 			msg.NetworkID = player.NetworkID;
 			msg.MapX = player.GlobalTileLocation.X;
 			msg.MapY = player.GlobalTileLocation.Y;
 			msg.Animation = player.CurrentAnimationName;
 			this.network.Send(msg);
+
+			player.CurrentAnimationName = player.Direction.ToString();
 	    }
 
 	    private void GameModule_KeyDown(object sender, KeyPressedEventArgs ev)
@@ -352,21 +356,21 @@ namespace Valkyrie.Modules
 	        {
 	            UpdateDirection(ev.KeyPressed);
 
-	            if (!this.context.SceneProvider.GetPlayer("player1").IgnoreMoveInput)
+	            if (!this.scene.GetPlayer("player1").IgnoreMoveInput)
 	            {
 	                switch (this.KeybindController.GetKeyAction(CrntDir))
 	                {
 	                    case "MoveUp":
-							this.context.MovementProvider.BeginMove(this.context.SceneProvider.GetPlayer("player1"), Directions.North);
+							this.context.MovementProvider.BeginMove(this.scene.GetPlayer("player1"), Directions.North);
 	                        break;
 	                    case "MoveDown":
-							this.context.MovementProvider.BeginMove(this.context.SceneProvider.GetPlayer("player1"), Directions.South);
+							this.context.MovementProvider.BeginMove(this.scene.GetPlayer("player1"), Directions.South);
 	                        break;
 	                    case "MoveLeft":
-							this.context.MovementProvider.BeginMove(this.context.SceneProvider.GetPlayer("player1"), Directions.West);
+							this.context.MovementProvider.BeginMove(this.scene.GetPlayer("player1"), Directions.West);
 	                        break;
 	                    case "MoveRight":
-							this.context.MovementProvider.BeginMove(this.context.SceneProvider.GetPlayer("player1"), Directions.East);
+							this.context.MovementProvider.BeginMove(this.scene.GetPlayer("player1"), Directions.East);
 	                        break;
 	                }
 	            }
@@ -375,8 +379,8 @@ namespace Valkyrie.Modules
 
 	    private void GameModule_KeyUp(object sender, KeyPressedEventArgs ev)
 	    {
-			PokePlayer player = (PokePlayer)this.context.SceneProvider.GetPlayer("player1");
-			BaseCamera camera = this.context.SceneProvider.GetCamera("camera1"); ;
+			PokePlayer player = (PokePlayer)this.scene.GetPlayer("player1");
+			BaseCamera camera = this.scene.GetCamera("camera1"); ;
 
 	        // Did we activate?
 	        switch (ev.Action)
@@ -461,6 +465,7 @@ namespace Valkyrie.Modules
 
 		private IEngineContext context = null;
 		private PokeNetworkProvider network = null;
+		private PokeSceneProvider scene = null;
 		private bool isloaded = false;
 		private KeybindController KeybindController = new KeybindController();
 		private Keys CrntDir = Keys.None;

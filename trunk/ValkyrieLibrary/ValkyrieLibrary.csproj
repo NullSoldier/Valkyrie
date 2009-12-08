@@ -94,6 +94,7 @@
     <Compile Include="Events\EntryPointEvent.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Managers\ValkyrieSoundManager.cs" />
     <Compile Include="Managers\ValkyrieTextureManager.cs" />
     <Compile Include="MovementItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

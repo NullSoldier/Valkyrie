@@ -41,6 +41,12 @@ namespace Valkyrie.Events
 			MapPoint lookvalue = player.GetLookValue();
 			ScreenPoint newDest = dest + (new ScreenPoint((lookvalue.X * 32) * 2,  (lookvalue.Y * 32) * 2));
 
+			if(string.IsNullOrEmpty(player.HandleAnimationTag))
+			{
+				player.HandleAnimationTag = "Jumping";
+				player.CurrentAnimationName = "Jump";
+			}
+
 			context.MovementProvider.BeginMoveDestination(character, newDest);
 		}
 
@@ -64,7 +70,6 @@ namespace Valkyrie.Events
 		{
 			PokePlayer player = (PokePlayer)sender;
 			player.Density = 0;
-			player.CurrentAnimationName = "Jump";
 		}
 
 		public void Event_StoppedMoving (object sender, EventArgs e)
@@ -76,6 +81,9 @@ namespace Valkyrie.Events
 
 			player.StartedMoving -= this.Event_StartedMoving;
 			player.StoppedMoving -= this.Event_StoppedMoving;
+			
+			if(player.HandleAnimationTag == "Jumping")
+				player.HandleAnimationTag = string.Empty;
 		}
 	}
 }

@@ -80,6 +80,7 @@
     <Compile Include="Messages\ServerMessage.cs" />
     <Compile Include="Messages\Valkyrie\Authentication\ConnectionRejectedMessage.cs" />
     <Compile Include="Messages\Valkyrie\Authentication\ConnectMessage.cs" />
+    <Compile Include="Messages\Valkyrie\Authentication\LogoutMessage.cs" />
     <Compile Include="Messages\Valkyrie\Movement\LocationUpdateMessage.cs" />
     <Compile Include="Messages\Valkyrie\Movement\LocationUpdateReceived.cs" />
     <Compile Include="Messages\Valkyrie\Authentication\LoginFailedMessage.cs" />

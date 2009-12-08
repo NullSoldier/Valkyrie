@@ -82,9 +82,14 @@ namespace Valkyrie.Engine
 			get { return this.texturemanager; }
 		}
 
+		public ISoundManager SoundManager
+		{
+			get { return this.soundmanager; }
+		}
+
 		#endregion
 
-		public void Load (ISceneProvider draw, IEventProvider events, INetworkProvider network, ISoundProvider sound, IModuleProvider modules, IMovementProvider movement, ICollisionProvider collision, IWorldManager world, ITextureManager texture)
+		public void Load (ISceneProvider draw, IEventProvider events, INetworkProvider network, ISoundProvider sound, IModuleProvider modules, IMovementProvider movement, ICollisionProvider collision, IWorldManager world, ITextureManager texture, ISoundManager soundmanager)
 		{
 			this.drawprovider = draw;
 			this.drawprovider.LoadEngineContext(this);
@@ -112,6 +117,9 @@ namespace Valkyrie.Engine
 
 			this.worldmanager = world;
 			this.worldmanager.LoadEngineContext(this);
+
+			this.soundmanager = soundmanager;
+			this.soundmanager.LoadEngineContext(this);
 
 			this.IsLoaded = true;
 		}
@@ -141,6 +149,7 @@ namespace Valkyrie.Engine
 
 		private IWorldManager worldmanager;
 		private ITextureManager texturemanager;
+		private ISoundManager soundmanager;
 
 		private EngineConfiguration configuration;
 		private bool loaded = false;

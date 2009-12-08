@@ -53,6 +53,12 @@ namespace Valkyrie.Characters
 			set;
 		}
 
+		public string HandleAnimationTag
+		{
+			get;
+			set;
+		}
+
 		public override void Update (GameTime gameTime)
 		{
 			this.CurrentAnimation.Update(gameTime);

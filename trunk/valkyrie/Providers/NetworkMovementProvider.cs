@@ -62,7 +62,10 @@ namespace Valkyrie.Providers
 						|| (moveitem.Type == MovementType.Destination && movable.Location == moveitem.Destination && this.movablecache[movable].Count > 1))
 					{
 						if(moveitem.Type == MovementType.Destination)
+						{
 							movable.CurrentAnimationName = moveitem.AnimationName;
+							movable.Direction = this.GetDirectionFromAnimation(moveitem.AnimationName);
+						}
 
 						this.movablecache[movable].Dequeue();
 						
@@ -108,6 +111,9 @@ namespace Valkyrie.Providers
 
 					if(this.movablecache[movable].Count == 0)
 						this.movablecache.Remove(movable);
+
+					if(movable.Direction == Directions.Any)
+						return;
 
 					movable.OnStoppedMoving(this, EventArgs.Empty);
 				}
@@ -250,6 +256,20 @@ namespace Valkyrie.Providers
 			movable.Location = new ScreenPoint((int)x, (int)y);
 
 			return movedok;
+		}
+
+		private Directions GetDirectionFromAnimation (string animation)
+		{
+			if(animation.Contains("North"))
+				return Directions.North;
+			else if(animation.Contains("South"))
+				return Directions.South;
+			else if(animation.Contains("East"))
+				return Directions.East;
+			else if(animation.Contains("West"))
+				return Directions.West;
+			else
+				return Directions.South;
 		}
 
 		private ScreenPoint GetDestinationFromDirection (IMovable movable, Directions direction)

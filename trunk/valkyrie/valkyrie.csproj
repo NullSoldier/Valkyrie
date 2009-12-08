@@ -288,6 +288,7 @@
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(ProjectDir)\Graphics" "$(TargetDir)\Graphics" /S /Y /I
 xcopy "$(ProjectDir)\Maps" "$(TargetDir)\Maps" /S /Y /I
+xcopy "$(ProjectDir)\Sounds" "$(TargetDir)\Sounds" /S /Y /I
 
 xcopy "$(ProjectDir)\Graphics" "$(SolutionDir)ValkyrieMapEditor\$(OutDir)\Graphics" /S /Y /I
 

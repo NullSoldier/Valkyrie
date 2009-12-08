@@ -124,7 +124,8 @@ namespace ValkyrieMapEditor
 				new ValkyrieMovementProvider(),
 				new ValkyrieCollisionProvider(),
 				worldmanager,
-				new ValkyrieTextureManager(this.Content, this.GraphicsDevice));
+				new ValkyrieTextureManager(this.Content, this.GraphicsDevice),
+				new ValkyrieSoundManager());
 
 			this.Engine.SceneProvider.AddCamera("camera1", new BaseCamera(this.GraphicsDevice.Viewport) { WorldName = "Default" });
 			this.Engine.SceneProvider.GetCamera("camera1").CenterOriginOnPoint(0, 0);
