@@ -23,7 +23,7 @@ namespace Valkyrie.Library.Managers
 			set { this.soundroot = value; }
 		}
 
-		public void Load (string textureroot)
+		public void Load (string soundroot)
 		{
 			this.SoundRoot = soundroot;
 		}
@@ -40,8 +40,7 @@ namespace Valkyrie.Library.Managers
 
 		public void AddSound (string FileName)
 		{
-
-			this.AddSound(FileName, new SoundPlayer(Path.Combine(SoundRoot, FileName)));
+			this.AddSound(FileName, new SoundPlayer(Path.Combine(Environment.CurrentDirectory, Path.Combine(SoundRoot, FileName))));
 		}
 
 		public SoundPlayer GetSound (string FileName)

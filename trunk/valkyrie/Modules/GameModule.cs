@@ -155,6 +155,8 @@ namespace Valkyrie.Modules
 			this.scene.GetPlayer("player1").Collided += this.GameModule_Collided;
 			this.scene.GetPlayer("player1").TileLocationChanged += TestTileLocationChanged; // for testing purposes
 
+			this.context.SoundManager.AddSound("PalletTown.wav");
+			
 	        this.IsLoaded = true;
 	    }
 
@@ -226,8 +228,6 @@ namespace Valkyrie.Modules
 			player.Sprite = this.context.TextureManager.GetTexture(message.TileSheet);
 			player.Name = message.Name;
 			player.CurrentAnimationName = message.Animation;
-			if(player.CurrentAnimationName == "Any")
-				return;
 			player.Location = new ScreenPoint(message.Location.X, message.Location.Y);
 			player.WorldName = message.WorldName;
 
@@ -244,6 +244,8 @@ namespace Valkyrie.Modules
 			{
 				PokePlayer player = (PokePlayer)this.network.GetPlayer(message.NetworkID);
 
+				if(player == null) return; // Wait till you load the person
+
 				var direction = (Directions)message.Direction;
 
 				this.networkmovementprovider.BeginMove(player, direction, message.Animation);
@@ -255,6 +257,8 @@ namespace Valkyrie.Modules
 			lock(this.networkmovementcache)
 			{
 				PokePlayer player = (PokePlayer)this.network.GetPlayer(message.NetworkID);
+
+				if(player == null) return; // Wait till you load the person
 
 				((NetworkMovementProvider)this.networkmovementprovider).EndMoveLocation(player, new MapPoint(message.X / 32, message.Y / 32), message.Animation);
 
@@ -298,6 +302,8 @@ namespace Valkyrie.Modules
 	    {
 	        if( !this.IsLoaded )
 	            this.Load(this.context);
+
+			this.context.SoundProvider.PlayBGM(this.context.SoundManager.GetSound("PalletTown.wav"), true);
 	    }
 
 	    public void Deactivate()

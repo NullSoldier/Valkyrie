@@ -129,6 +129,7 @@
     <Content Include="Data\keys.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Graphics\FireRedSprite.png" />
     <Content Include="Graphics\Intro\Cline.png" />
     <Content Include="Graphics\Intro\Copyright.png" />
     <Content Include="Graphics\Intro\GrassOverlay.png" />
@@ -151,7 +152,9 @@
     <Content Include="Graphics\Main\Route22_Route.png" />
     <Content Include="Graphics\Main\Route3_Route.png">
     </Content>
+    <Content Include="Graphics\NurseJoy.png" />
     <Content Include="Graphics\Pallet_House\Pallet_House_01.png" />
+    <Content Include="Graphics\RetardSprite.png" />
     <Content Include="Maps\Main\Cerulean_Town.xml" />
     <Content Include="Maps\Main\Cinnibar_Island.xml" />
     <Content Include="Maps\Main\Fuschia_Town.xml" />

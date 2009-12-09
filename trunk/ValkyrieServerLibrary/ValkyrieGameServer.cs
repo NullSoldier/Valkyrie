@@ -83,14 +83,13 @@ namespace ValkyrieServerLibrary.Core
 
 			this.Load();
 
-			this.server.StartListening();
-			this.server.ConnectionMade += this.Server_ConnectionMade;
-			
-
 			this.session = Fluently.Configure()
 				.Database(PostgreSQLConfiguration.Standard.ConnectionString(s => s.Host(this.settings[ServerSettingName.DatabaseAddress]).Username(this.settings[ServerSettingName.DatabaseUser]).Password(this.settings[ServerSettingName.DatabasePassword]).Database(this.settings[ServerSettingName.DatabaseName]).Port(Convert.ToInt32(this.settings[ServerSettingName.DatabasePort]))))
 				.Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()))
 				.BuildSessionFactory().OpenSession();
+
+			this.server.StartListening();
+			this.server.ConnectionMade += this.Server_ConnectionMade;
 
 			this.MovementUpdateThread = new Thread(this.UpdateMovementThread);
 			this.MovementUpdateThread.Name = "Movement Update";

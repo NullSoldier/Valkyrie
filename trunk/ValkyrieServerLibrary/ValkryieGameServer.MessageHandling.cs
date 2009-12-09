@@ -300,9 +300,6 @@ namespace ValkyrieServerLibrary.Core
 			// Should throw the movement onto the queue and then process it on each update
 			this.movement.BeginMove(player.Character, direction, message.Animation);
 
-			if(message.Animation == "Any")
-				return;
-
 			PlayerStartedMovingMessage movmsg = new PlayerStartedMovingMessage();
 			movmsg.NetworkID = player.NetworkID;
 			movmsg.Direction = message.Direction;
@@ -328,9 +325,6 @@ namespace ValkyrieServerLibrary.Core
 			player.Character.Location = new ScreenPoint(message.MapX * 32, message.MapY * 32);
 
 			((ServerMovementProvider)this.movement).EndMoveLocation(player.Character, new MapPoint(message.MapX, message.MapY), player.Character.Animation);
-
-			if(message.Animation == "Any")
-				return;
 
 			PlayerStoppedMovingMessage movmsg = new PlayerStoppedMovingMessage();
 			movmsg.X = message.MapX * 32;

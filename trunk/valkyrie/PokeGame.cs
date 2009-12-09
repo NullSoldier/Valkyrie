@@ -102,7 +102,7 @@ namespace Valkyrie
 			this.Engine.Load(new PokeSceneProvider(this.GraphicsDevice),
 				new ValkyrieEventProvider(),
 				new PokeNetworkProvider(),
-				new PokeSoundProvider(),
+				new ValkyrieSoundProvider(),
 				new ValkyrieModuleProvider(),
 				new ValkyrieMovementProvider(),
 				new ValkyrieCollisionProvider(),

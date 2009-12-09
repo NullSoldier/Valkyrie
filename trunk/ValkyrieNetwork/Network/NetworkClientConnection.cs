@@ -1,4 +1,40 @@
-﻿using System;
+﻿// Copyright (c) 2009, Eric Maupin
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with
+// or without modification, are permitted provided that
+// the following conditions are met:
+
+// - Redistributions of source code must retain the above 
+//   copyright notice, this list of conditions and the
+//   following disclaimer.
+
+// - Redistributions in binary form must reproduce the above
+//   copyright notice, this list of conditions and the
+//   following disclaimer in the documentation and/or other
+//   materials provided with the distribution.
+
+// - Neither the name of Gablarski nor the names of its
+//   contributors may be used to endorse or promote products
+//   derived from this software without specific prior
+//   written permission.
+
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS
+// AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+// GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+// WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+// THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+// DAMAGE.
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -45,6 +81,8 @@ namespace Gablarski.Network
 			{
 				sendQueue.Enqueue (message);
 			}
+
+			this.sendWait.Set ();
 		}
 
 		/// <summary>
@@ -53,6 +91,13 @@ namespace Gablarski.Network
 		public void Disconnect()
 		{
 			this.running = false;
+
+			ManualResetEvent mre = new ManualResetEvent (false);
+
+			if (pinger != null)
+				pinger.Dispose (mre);
+
+			mre.WaitOne();
 
 			try
 			{
@@ -71,6 +116,7 @@ namespace Gablarski.Network
 
 			lock (this.sendQueue)
 			{
+				this.sendWait.Set ();
 				this.sendQueue.Clear();
 			}
 
@@ -126,7 +172,9 @@ namespace Gablarski.Network
 
 			this.udp = new Socket (AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 			this.udp.Bind ((IPEndPoint)this.tcp.Client.LocalEndPoint);
-			this.udp.SendTo (new byte[] { 24, 24 }, endpoint);
+			Ping (endpoint);
+
+			pinger = new Timer (Ping, endpoint, 45000, 45000);
 
 			Trace.WriteLine ("[Client] UDP Local Endpoint: " + this.udp.LocalEndPoint);
 
@@ -138,6 +186,14 @@ namespace Gablarski.Network
 
 			this.uwriter = new SocketValueWriter (this.udp, endpoint);
 			
+			byte[] rbuffer = new byte[1];
+			this.rstream.BeginRead (rbuffer, 0, 1, ReliableReceived, rbuffer);
+
+			var ipendpoint = new IPEndPoint (IPAddress.Any, 0);
+			var tendpoint = (EndPoint)ipendpoint;
+			byte[] urbuffer = new byte[5120];
+			this.udp.BeginReceiveFrom (urbuffer, 0, urbuffer.Length, SocketFlags.None, ref tendpoint, UnreliableReceive, urbuffer);
+
 			this.runnerThread = new Thread (this.Runner) { Name = "NetworkClientConnection Runner" };
 			this.runnerThread.Start();
 		}
@@ -158,76 +214,49 @@ namespace Gablarski.Network
 		private IValueWriter uwriter;
 		private IValueReader ureader;
 		private volatile bool uwaiting;
+		private Timer pinger;
 
+		private readonly AutoResetEvent sendWait = new AutoResetEvent (false);
 		private readonly Queue<MessageBase> sendQueue = new Queue<MessageBase>();
+
+		private void Ping (object state)
+		{
+			this.udp.SendTo (new byte[] { 24, 24 }, (IPEndPoint) state);
+		}
 
 		private void Runner()
 		{
-			const uint maxLoops = UInt32.MaxValue;
-			uint loops = 0;
-			bool singleCore = (Environment.ProcessorCount == 1);
-
 			IValueWriter writeReliable = this.rwriter;
 			IValueWriter writeUnreliable = this.uwriter;
 
+			AutoResetEvent wait = this.sendWait;
 			Queue<MessageBase> queue = this.sendQueue;
 
 			while (this.running)
 			{
 				MessageBase toSend = null;
-				lock (queue)
-				{
-					if (queue.Count > 0)
-						toSend = queue.Dequeue();
-				}
 
-				if (toSend != null)
+				while (queue.Count > 0)
 				{
+					lock (queue)
+					{
+						toSend = queue.Dequeue ();
+					}
+
 					IValueWriter iwriter = (!toSend.Reliable) ? writeUnreliable : writeReliable;
 					iwriter.WriteByte (0x2A);
-					
+
 					if (!toSend.Reliable)
 						iwriter.WriteUInt32 (this.nid);
 
 					iwriter.WriteUInt16 (toSend.MessageTypeCode);
 
 					toSend.WritePayload (iwriter);
-					iwriter.Flush();
+					iwriter.Flush ();
 				}
 
-				if (!this.uwaiting && udp.Available > 3)
-				{
-					this.uwaiting = true;
-					var ipEndpoint = new IPEndPoint (IPAddress.Any, 0);
-					var tendpoint = (EndPoint)ipEndpoint;
-					byte[] buffer = new byte[5120];
-					udp.BeginReceiveFrom (buffer, 0, buffer.Length, SocketFlags.None, ref tendpoint, UnreliableReceive, buffer);
-				}
-
-				if (!this.rwaiting)
-				{
-					this.rwaiting = true;
-					byte[] mbuffer = new byte[1];
-
-					try
-					{
-						this.rstream.BeginRead (mbuffer, 0, 1, this.ReliableReceived, mbuffer);
-					}
-					catch (SocketException sex)
-					{
-						Trace.WriteLine ("[Server] Error starting read, disconnecting: " + sex.Message);
-						this.Disconnect();
-						return;
-					}
-				}
-
-				if (singleCore || (++loops % 100) == 0)
-					Thread.Sleep (1);
-				else
-					Thread.SpinWait (20);
-
-				if (loops == maxLoops)
-					loops = 0;
+				if (queue.Count == 0)
+					wait.WaitOne ();
 			}
 		}
 
@@ -267,6 +296,9 @@ namespace Gablarski.Network
 					msg.ReadPayload (this.rreader);
 
 					OnMessageReceived (new MessageReceivedEventArgs (this, msg));
+
+					if (rstream != null && running)
+						rstream.BeginRead (mbuffer, 0, 1, ReliableReceived, mbuffer);
 				}
 				else
 					this.Disconnect();
@@ -285,18 +317,21 @@ namespace Gablarski.Network
 
 		private void UnreliableReceive (IAsyncResult result)
 		{
+			var ipendpoint = new IPEndPoint (IPAddress.Any, 0);
+			var endpoint = (EndPoint)ipendpoint;
+
+			byte[] buffer = (byte[])result.AsyncState;
+
+			if (udp == null)
+				return;
+
 			try
 			{
-				var ipendpoint = new IPEndPoint (IPAddress.Any, 0);
-				var endpoint = (EndPoint)ipendpoint;
-				
 				if (udp.EndReceiveFrom (result, ref endpoint) == 0)
 				{
 					Trace.WriteLineIf (VerboseTracing, "[Network] UDP EndReceiveFrom returned nothing.");
 					return;
 				}
-
-				byte[] buffer = (byte[])result.AsyncState;
 
 				if (buffer[0] != 0x2A)
 				{
@@ -322,6 +357,7 @@ namespace Gablarski.Network
 			}
 			catch (SocketException sex)
 			{
+				Trace.WriteLine ("[Network] SocketException during unreliable receive: " + sex);
 			}
 			catch (ObjectDisposedException odex)
 			{
@@ -329,6 +365,9 @@ namespace Gablarski.Network
 			finally
 			{
 				this.uwaiting = false;
+
+				if (udp != null && running)
+					udp.BeginReceiveFrom (buffer, 0, buffer.Length, SocketFlags.None, ref endpoint, UnreliableReceive, buffer);
 			}
 		}
 	}

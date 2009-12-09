@@ -103,10 +103,15 @@ namespace Valkyrie.Library.Providers
 		{
 			lock(this.moduleSync)
 			{
+				if(this.CurrentModule != null)
+					this.CurrentModule.Deactivate();
+
 				if(!this.modules.ContainsKey(name))
 					throw new KeyNotFoundException(string.Format("The module `{0}` does not exist in the module manager.", name));
 
 				this.currentmoduleName = name;
+
+				this.CurrentModule.Activate();
 			}
 		}
 
