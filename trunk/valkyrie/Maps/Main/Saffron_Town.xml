@@ -14,8 +14,8 @@
   <Events />
   <AnimatedTiles>
     <AnimatedTile>
-      <TileID>184</TileID>
-      <TileRect>96 352 32 32</TileRect>
+      <TileID>440</TileID>
+      <TileRect>0 1760 32 32</TileRect>
       <FrameCount>4</FrameCount>
     </AnimatedTile>
   </AnimatedTiles>
