@@ -55,45 +55,45 @@ namespace Valkyrie.Providers
 
 				for(int i = 0; i < count; i++)
 				{
-					var movable = (PokeCharacter)this.movablecache.Keys.ElementAt(i);
-					MovementItem moveitem = this.movablecache[movable].FirstOrDefault();
+					BaseCharacter player = (BaseCharacter)this.movablecache.Keys.ElementAt(i);
+					MovementItem moveitem = this.movablecache[player].FirstOrDefault();
 
-					while((moveitem.Type == MovementType.TileBased && this.movablecache[movable].Count > 1)
-						|| (moveitem.Type == MovementType.Destination && movable.Location == moveitem.Destination && this.movablecache[movable].Count > 1))
+					// Used to speed up if this movable is behind
+					int speedmodifier = 1;
+
+					// If we're behind on movement, increase the speed modifier
+					if(this.movablecache[player].Count > 4)
+						speedmodifier = 5;
+
+					/* If it's TileBased and there is more in the queue, skip it
+					 * Or if it's DestinationBased and there are more in the queue and we are at our destination */
+					while(moveitem.Type == MovementType.TileBased && this.movablecache[player].Count > 1)
 					{
-						if(moveitem.Type == MovementType.Destination)
-						{
-							movable.CurrentAnimationName = moveitem.AnimationName;
-							movable.Direction = this.GetDirectionFromAnimation(moveitem.AnimationName);
-						}
-
-						this.movablecache[movable].Dequeue();
-						
-						moveitem = this.movablecache[movable].FirstOrDefault();						
+						this.movablecache[player].Dequeue();
+						moveitem = this.movablecache[player].FirstOrDefault();
 					}
 
-					MovementType movetype = moveitem.Type;
+					player.CurrentAnimationName = moveitem.AnimationName;
+					player.MovingDestination = moveitem.Destination;
+					player.LastMoveTime += time.ElapsedGameTime.Milliseconds;
 
-					movable.CurrentAnimationName = moveitem.AnimationName;
-					movable.MovingDestination = moveitem.Destination;
-
-					movable.LastMoveTime += time.ElapsedGameTime.Milliseconds;
-
-					if(movable.LastMoveTime >= movable.MoveDelay)
+					if(player.LastMoveTime >= player.MoveDelay)
 					{
-						movable.LastMoveTime = 0;
+						player.LastMoveTime = 0;
 
-						if(movetype == MovementType.TileBased)
+						if(moveitem.Type == MovementType.TileBased)
 						{
-							movable.Direction = moveitem.Direction;
+							player.Direction = moveitem.Direction;
 
-							if(!MoveTileBased(movable, collided))
-								toberemoved.Add(movable);
+							if(!MoveTileBased(player, collided))
+								toberemoved.Add(player);
 						}
 						else
 						{
-							if(!MoveDestinationBased(movable, collided))
-								toberemoved.Add(movable);
+							player.Direction = this.GetDirectionFromAnimation (player.CurrentAnimationName);
+
+							if(!MoveDestinationBased(player, collided, speedmodifier))
+								toberemoved.Add(player);
 						}
 					}
 				}
@@ -105,6 +105,7 @@ namespace Valkyrie.Providers
 						movable.OnCollided(this, EventArgs.Empty);
 					}
 
+					// Remove players that either collided or reached their destination
 					this.movablecache[movable].Dequeue();
 					movable.IsMoving = false;
 					movable.IgnoreMoveInput = false;
@@ -112,14 +113,16 @@ namespace Valkyrie.Providers
 					if(this.movablecache[movable].Count == 0)
 						this.movablecache.Remove(movable);
 
-					if(movable.Direction == Directions.Any)
-						return;
-
 					movable.OnStoppedMoving(this, EventArgs.Empty);
 				}
-
-
 			}
+		}
+
+		public int GetMoveCount (IMovable movable)
+		{
+			if(!this.movablecache.ContainsKey (movable))
+				return 0;
+			else return this.movablecache[movable].Count;
 		}
 
 		#region IEngineProvider Members
@@ -181,41 +184,42 @@ namespace Valkyrie.Providers
 			movable.MovingDestination = destination;
 		}
 
-		private bool MoveDestinationBased (IMovable movable, List<IMovable> collided)
+		private bool MoveDestinationBased (IMovable movable, List<IMovable> collided, float speedmodifier)
 		{
 			bool movedok = true;
 
 			float x = movable.Location.X;
 			float y = movable.Location.Y;
+			float speed = movable.Speed * speedmodifier;
 
 			if(x < movable.MovingDestination.X)
 			{
-				if(x + movable.Speed > movable.MovingDestination.X)
+				if(x + speed > movable.MovingDestination.X)
 					x = movable.MovingDestination.X;
 				else
-					x += movable.Speed;
+					x += speed;
 			}
 			else if(x > movable.MovingDestination.X)
 			{
-				if(x + movable.Speed < movable.MovingDestination.X)
+				if(x + speed < movable.MovingDestination.X)
 					x = movable.MovingDestination.X;
 				else
-					x -= movable.Speed;
+					x -= speed;
 			}
 
 			if(y > movable.MovingDestination.Y)
 			{
-				if(y - movable.Speed < movable.MovingDestination.Y)
+				if(y - speed < movable.MovingDestination.Y)
 					y = movable.MovingDestination.Y;
 				else
-					y -= movable.Speed;
+					y -= speed;
 			}
 			else if(y < movable.MovingDestination.Y)
 			{
-				if(y + movable.Speed > movable.MovingDestination.Y)
+				if(y + speed > movable.MovingDestination.Y)
 					y = movable.MovingDestination.Y;
 				else
-					y += movable.Speed;
+					y += speed;
 			}
 
 			ScreenPoint destination = new ScreenPoint((int)x, (int)y);

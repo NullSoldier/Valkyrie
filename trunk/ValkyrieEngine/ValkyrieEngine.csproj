@@ -89,7 +89,9 @@
     </Compile>
     <Compile Include="Core\Camera\ICameraEffect.cs" />
     <Compile Include="Core\Characters\BaseCharacter.cs" />
+    <Compile Include="Core\Characters\IAnimatable.cs" />
     <Compile Include="Core\Characters\ICharacterRenderer.cs" />
+    <Compile Include="Core\Characters\ICollidable.cs" />
     <Compile Include="Core\Characters\IMovable.cs" />
     <Compile Include="Core\Characters\IPositionable.cs" />
     <Compile Include="Core\Characters\Direction.cs" />
@@ -171,23 +173,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Core\Collision\.svn\all-wcprops" />
-    <None Include="Core\Collision\.svn\entries" />
-    <None Include="Core\Collision\.svn\text-base\ICollidable.cs.svn-base" />
-    <None Include="Core\Collision\.svn\text-base\ICollisionManager.cs.svn-base" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\ValkyrieNetwork\ValkyrieNetwork.csproj">
       <Project>{6B5AF197-5051-4543-AEDC-691332649E1B}</Project>
       <Name>ValkyrieNetwork</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Core\Collision\.svn\prop-base\" />
-    <Folder Include="Core\Collision\.svn\props\" />
-    <Folder Include="Core\Collision\.svn\tmp\prop-base\" />
-    <Folder Include="Core\Collision\.svn\tmp\props\" />
-    <Folder Include="Core\Collision\.svn\tmp\text-base\" />
+    <Folder Include="Core\Collision\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

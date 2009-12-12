@@ -41,9 +41,9 @@ namespace Valkyrie.Events
 			MapPoint lookvalue = player.GetLookValue();
 			ScreenPoint newDest = dest + (new ScreenPoint((lookvalue.X * 32) * 2,  (lookvalue.Y * 32) * 2));
 
-			if(string.IsNullOrEmpty(player.HandleAnimationTag))
+			if(string.IsNullOrEmpty (player.AnimationTag.ToString()))
 			{
-				player.HandleAnimationTag = "Jumping";
+				player.AnimationTag = "Jumping";
 				player.CurrentAnimationName = "Jump";
 			}
 
@@ -81,9 +81,9 @@ namespace Valkyrie.Events
 
 			player.StartedMoving -= this.Event_StartedMoving;
 			player.StoppedMoving -= this.Event_StoppedMoving;
-			
-			if(player.HandleAnimationTag == "Jumping")
-				player.HandleAnimationTag = string.Empty;
+
+			if(player.AnimationTag == "Jumping")
+				player.AnimationTag = string.Empty;
 		}
 	}
 }

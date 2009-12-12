@@ -99,6 +99,7 @@
     <Compile Include="Events\JumpEvent.cs" />
     <Compile Include="Events\JumpPadEvent.cs" />
     <Compile Include="Events\LoadEvent.cs" />
+    <Compile Include="Events\PlaySoundEvent.cs" />
     <Compile Include="Events\RickRollEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />

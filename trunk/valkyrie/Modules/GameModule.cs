@@ -194,7 +194,7 @@ namespace Valkyrie.Modules
 			if(message.Action == PlayerUpdateAction.Add)
 			{
 				PokePlayer player = new PokePlayer();
-				player.NetworkID = message.NetworkID;
+				player.ID = message.NetworkID;
 				player.Loaded = false;
 
 				this.network.AddPlayer(message.NetworkID, player);
@@ -217,7 +217,7 @@ namespace Valkyrie.Modules
 			if(!this.network.ContainsPlayer(message.NetworkID))
 			{
 				player = new PokePlayer();
-				player.NetworkID = message.NetworkID;
+				player.ID = message.NetworkID;
 				this.network.AddPlayer(message.NetworkID, player);
 			}
 			else
@@ -254,15 +254,15 @@ namespace Valkyrie.Modules
 
 		public void Message_PlayerStoppedMovingReceived (PlayerStoppedMovingMessage message)
 		{
-			lock(this.networkmovementcache)
+			lock(this.networkmovementprovider)
 			{
 				PokePlayer player = (PokePlayer)this.network.GetPlayer(message.NetworkID);
 
 				if(player == null) return; // Wait till you load the person
-
-				((NetworkMovementProvider)this.networkmovementprovider).EndMoveLocation(player, new MapPoint(message.X / 32, message.Y / 32), message.Animation);
-
+				
 				player.StoppedMoving += this.NetworkPlayer_Stopped;
+
+				this.networkmovementprovider.EndMoveLocation(player, new MapPoint(message.X / 32, message.Y / 32), message.Animation);
 			}
 		}
 		
@@ -275,9 +275,13 @@ namespace Valkyrie.Modules
 			if(player.Direction == Directions.Any)
 				return;
 
-			player.CurrentAnimationName = player.Direction.ToString();
+			player.CurrentAnimationName = player.Direction.ToString ();
 
-			player.StoppedMoving -= this.NetworkPlayer_Stopped;
+			if(this.networkmovementprovider.GetMoveCount(player) == 0)
+				player.StoppedMoving -= this.NetworkPlayer_Stopped;
+
+			if(player.CurrentAnimationName.Contains ("Walk"))
+				return;
 		}
 
 		public void TestTileLocationChanged(object sender, EventArgs e)
@@ -329,11 +333,17 @@ namespace Valkyrie.Modules
 	    {
 	        PokePlayer player = (PokePlayer)sender;
 
-			if(string.IsNullOrEmpty(player.HandleAnimationTag))
+			if(string.IsNullOrEmpty (player.AnimationTag.ToString()))
 				player.CurrentAnimationName = "Walk" + player.Direction.ToString();
 
+			if(this.CollideBeforeMove (player, player.Direction))
+			{
+				this.silentstep = true;
+				return;
+			}
+
 			PlayerStartMovingMessage msg = new PlayerStartMovingMessage();
-			msg.NetworkID = player.NetworkID;
+			msg.NetworkID = (uint)player.ID;
 			msg.Direction = (int)player.Direction;
 			msg.MovementType = (int)MovementType.TileBased;
 			msg.Animation = player.CurrentAnimationName;
@@ -346,12 +356,17 @@ namespace Valkyrie.Modules
 	    {
 	        PokePlayer player = (PokePlayer)sender;
 
-			PlayerStopMovingMessage msg = new PlayerStopMovingMessage();
-			msg.NetworkID = player.NetworkID;
-			msg.MapX = player.GlobalTileLocation.X;
-			msg.MapY = player.GlobalTileLocation.Y;
-			msg.Animation = player.CurrentAnimationName;
-			this.network.Send(msg);
+			if(!this.silentstep)
+			{
+				PlayerStopMovingMessage msg = new PlayerStopMovingMessage ();
+				msg.NetworkID = (uint) player.ID;
+				msg.MapX = player.GlobalTileLocation.X;
+				msg.MapY = player.GlobalTileLocation.Y;
+				msg.Animation = player.CurrentAnimationName;
+				this.network.Send (msg);
+			}
+			else
+				this.silentstep = false;
 
 			player.CurrentAnimationName = player.Direction.ToString();
 	    }
@@ -362,23 +377,28 @@ namespace Valkyrie.Modules
 	        {
 	            UpdateDirection(ev.KeyPressed);
 
-	            if (!this.scene.GetPlayer("player1").IgnoreMoveInput)
+				var player = this.scene.GetPlayer ("player1");
+	            if (!player.IgnoreMoveInput)
 	            {
+					Directions direction = Directions.Any;
+
 	                switch (this.KeybindController.GetKeyAction(CrntDir))
 	                {
 	                    case "MoveUp":
-							this.context.MovementProvider.BeginMove(this.scene.GetPlayer("player1"), Directions.North);
+							direction = Directions.North;
 	                        break;
 	                    case "MoveDown":
-							this.context.MovementProvider.BeginMove(this.scene.GetPlayer("player1"), Directions.South);
+							direction = Directions.South;
 	                        break;
 	                    case "MoveLeft":
-							this.context.MovementProvider.BeginMove(this.scene.GetPlayer("player1"), Directions.West);
+							direction = Directions.West;
 	                        break;
 	                    case "MoveRight":
-							this.context.MovementProvider.BeginMove(this.scene.GetPlayer("player1"), Directions.East);
+							direction = Directions.East;
 	                        break;
 	                }
+
+					this.context.MovementProvider.BeginMove (player, direction);
 	            }
 	        }
 	    }
@@ -446,27 +466,46 @@ namespace Valkyrie.Modules
 
 	    private bool IsDir(Keys key)
 	    {
-	        return (key == Keys.Left || key == Keys.Right || key == Keys.Up || key == Keys.Down ||
-				key == Keys.NumPad4 || key == Keys.NumPad6 || key == Keys.NumPad8 || key == Keys.NumPad2);
+	        return (key == Keys.Left || key == Keys.Right || key == Keys.Up || key == Keys.Down);
 	    }
 
-		private void AddToMovementCache (PokePlayer player, MovementItem moveitem)
+		private bool CollideBeforeMove (BaseCharacter movable, Directions directon)
 		{
-			lock(this.networkmovementcache)
-			{
-				if(!this.networkmovementcache.ContainsKey(player.NetworkID))
-					this.networkmovementcache.Add(player.NetworkID, new Queue<MovementItem>());
+			float x = movable.Location.X;
+			float y = movable.Location.Y;
 
-				this.networkmovementcache[player.NetworkID].Enqueue(moveitem);				
-			}
-		}
-
-		private bool RemoveFromMovementCache (PokePlayer player)
-		{
-			lock(this.networkmovementcache)
+			#region Destination calculation
+			if(directon == Directions.North)
 			{
-				return this.networkmovementcache.Remove(player.NetworkID);
+				y -= movable.Speed;
 			}
+			else if(directon == Directions.South)
+			{
+				y += movable.Speed;
+			}
+			else if(directon == Directions.East)
+			{
+				x += movable.Speed;
+			}
+			else if(directon == Directions.West)
+			{
+				x -= movable.Speed;
+			}
+			#endregion
+
+			ScreenPoint destination = new ScreenPoint ((int) x, (int) y);
+			ScreenPoint collision = new ScreenPoint (destination.X, destination.Y);
+
+			if(directon == Directions.South)
+				collision = new ScreenPoint (destination.X, destination.Y + 32 - (int) movable.Speed);
+			else if(directon == Directions.East)
+				collision = new ScreenPoint (destination.X + 32 - (int) movable.Speed, destination.Y);
+
+			var collisionevent = this.context.EventProvider.GetMapsEvents(movable, collision.ToMapPoint()).Where( p => p.Activation == ActivationTypes.Collision && p.Direction == movable.Direction).FirstOrDefault();
+			if(collisionevent != null)
+				return false;
+
+			return !this.context.CollisionProvider.CheckCollision (movable, collision);
 		}
 
 		private IEngineContext context = null;
@@ -476,7 +515,7 @@ namespace Valkyrie.Modules
 		private KeybindController KeybindController = new KeybindController();
 		private Keys CrntDir = Keys.None;
 		private GraphicsDevice graphicsdevice = null;
-		private Dictionary<uint, Queue<MovementItem>> networkmovementcache = new Dictionary<uint, Queue<MovementItem>>();
+		private bool silentstep = false;
 
 		private bool underlayer = true;
 		private bool baselayer = true;

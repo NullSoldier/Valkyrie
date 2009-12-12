@@ -10,6 +10,7 @@ using Valkyrie.Engine;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Engine.Core;
 using Mono.Rocks;
+using Valkyrie.Engine.Events;
 
 namespace Valkyrie.Library.Providers
 {
@@ -41,6 +42,7 @@ namespace Valkyrie.Library.Providers
 					player.LocalTileLocation.X > player.CurrentMap.Map.MapSize.X || player.LocalTileLocation.Y > player.CurrentMap.Map.MapSize.Y)
 				{
 					this.ResolvePositionableCurrentMap(player);
+					this.context.EventProvider.HandleEvent (player, ActivationTypes.OnMapEnter);
 				}
 			}
 
@@ -53,12 +55,16 @@ namespace Valkyrie.Library.Providers
 		/// </summary>
 		/// <param name="positionable"></param>
 		/// <returns></returns>
-		public MapHeader GetPositionableLocalMap (IPositionable positionable)
+		public MapHeader GetPositionableLocalMap (BaseCharacter positionable)
 		{
 			if(positionable.CurrentMap != null)
 				return positionable.CurrentMap;
+			else
+			{
+				this.ResolvePositionableCurrentMap (positionable);
+				this.context.EventProvider.HandleEvent (positionable, ActivationTypes.OnMapEnter);
+			}
 
-			this.ResolvePositionableCurrentMap(positionable);
 			return positionable.CurrentMap;
 		}
 

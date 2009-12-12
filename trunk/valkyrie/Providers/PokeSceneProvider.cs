@@ -17,6 +17,7 @@ using Mono.Rocks;
 using Valkyrie.Engine.Core;
 using Valkyrie.Engine.Core.Characters;
 using Valkyrie.Library.Core.Characters;
+using Valkyrie.Engine.Events;
 
 namespace Valkyrie.Providers
 {
@@ -48,6 +49,7 @@ namespace Valkyrie.Providers
 					player.LocalTileLocation.X > player.CurrentMap.Map.MapSize.X || player.LocalTileLocation.Y > player.CurrentMap.Map.MapSize.Y)
 				{
 					this.ResolvePositionableCurrentMap(player);
+					this.context.EventProvider.HandleEvent (player, ActivationTypes.OnMapEnter);
 				}
 			}
 
@@ -64,8 +66,12 @@ namespace Valkyrie.Providers
 		{
 			if(positionable.CurrentMap != null)
 				return positionable.CurrentMap;
+			else
+			{
+				this.ResolvePositionableCurrentMap (positionable);
+				this.ResolvePositionableCurrentMap (positionable);
+			}
 
-			this.ResolvePositionableCurrentMap(positionable);
 			return positionable.CurrentMap;
 		}
 
@@ -117,7 +123,7 @@ namespace Valkyrie.Providers
 
 		public void DrawPlayer (SpriteBatch spriteBatch, BaseCharacter player, BaseCamera camera)
 		{
-			this.playerrenderer.Draw(player, spriteBatch, camera);
+			this.playerrenderer.DrawBase(player, spriteBatch, camera);
 		}
 
 		#endregion

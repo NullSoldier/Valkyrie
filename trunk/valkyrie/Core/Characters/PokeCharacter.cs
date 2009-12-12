@@ -23,7 +23,6 @@ namespace Valkyrie.Core.Characters
 
 		public PokeCharacter()
 		{
-			this.Animating = false;
 			this.Speed = 2;
 			this.MoveDelay = 0.002f;
 			this.LastMoveTime = 0;

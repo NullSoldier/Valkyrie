@@ -23,37 +23,25 @@ namespace Valkyrie.Characters
 
 			if(this.Gender == Genders.Male)
 			{
-				this.Animations.Add("North", new FrameAnimation(new Rectangle(56, 0, 28, 42), 1));
-				this.Animations.Add("South", new FrameAnimation(new Rectangle(56, 84, 28, 42), 1));
-				this.Animations.Add("East", new FrameAnimation(new Rectangle(56, 42, 28, 42), 1));
-				this.Animations.Add("West", new FrameAnimation(new Rectangle(56, 126, 28, 42), 1));
+				this.AddAnimation ("North", new FrameAnimation(new Rectangle(56, 0, 28, 42), 1));
+				this.AddAnimation ("South", new FrameAnimation(new Rectangle(56, 84, 28, 42), 1));
+				this.AddAnimation ("East", new FrameAnimation(new Rectangle(56, 42, 28, 42), 1));
+				this.AddAnimation ("West", new FrameAnimation(new Rectangle(56, 126, 28, 42), 1));
 
-				this.Animations.Add("WalkNorth", new FrameAnimation(new Rectangle(0, 0, 28, 42), 3));
-				this.Animations.Add("WalkEast", new FrameAnimation(new Rectangle(0, 42, 28, 42), 3));
-				this.Animations.Add("WalkSouth", new FrameAnimation(new Rectangle(0, 84, 28, 42), 3));
-				this.Animations.Add("WalkWest", new FrameAnimation(new Rectangle(0, 126, 28, 42), 3));
+				this.AddAnimation ("WalkNorth", new FrameAnimation(new Rectangle(0, 0, 28, 42), 3));
+				this.AddAnimation ("WalkEast", new FrameAnimation(new Rectangle(0, 42, 28, 42), 3));
+				this.AddAnimation ("WalkSouth", new FrameAnimation(new Rectangle(0, 84, 28, 42), 3));
+				this.AddAnimation ("WalkWest", new FrameAnimation(new Rectangle(0, 126, 28, 42), 3));
 
-				this.Animations.Add("Jump", new FrameAnimation(new Rectangle(0, 168, 27, 56), 1));
-				this.Animations.Add("Spin", new FrameAnimation(new Rectangle(0, 224, 28, 41), 4, 0.1f));
+				this.AddAnimation ("Jump", new FrameAnimation(new Rectangle(0, 168, 27, 56), 1));
+				this.AddAnimation ("Spin", new FrameAnimation(new Rectangle(0, 224, 28, 41), 4, 0.1f));
 			}
 
 			this.Name = "NULL";
 			this.CurrentAnimationName = "South";
 		}
 
-		public uint NetworkID
-		{
-			get;
-			set;
-		}
-
 		public bool Loaded
-		{
-			get;
-			set;
-		}
-
-		public string HandleAnimationTag
 		{
 			get;
 			set;

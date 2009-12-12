@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using Valkyrie.Library.Core;
 using Valkyrie.Engine.Core;
+using Valkyrie.Engine.Core.Characters;
 
 namespace Valkyrie.Engine.Characters
 {
 	public interface IMovable
-		: IPositionable
+		: IPositionable, ICollidable
 	{
 		event EventHandler StoppedMoving;
 		event EventHandler StartedMoving;

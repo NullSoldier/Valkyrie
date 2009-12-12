@@ -18,6 +18,7 @@ namespace ValkyrieNetwork.Messages.Valkyrie.Movement
 
 		public uint NetworkID { get; set; }
 
+		public int Direction { get; set; }
 		public string Animation { get; set; }
 
 		public Point Location
@@ -38,6 +39,8 @@ namespace ValkyrieNetwork.Messages.Valkyrie.Movement
 			writerm.WriteUInt32(this.NetworkID);
 			writerm.WriteInt32(this.X);
 			writerm.WriteInt32(this.Y);
+
+			writerm.WriteInt32 (this.Direction);
 			writerm.WriteString(this.Animation);
 		}
 
@@ -46,6 +49,8 @@ namespace ValkyrieNetwork.Messages.Valkyrie.Movement
 			this.NetworkID = reader.ReadUInt32();
 			this.X = reader.ReadInt32();
 			this.Y = reader.ReadInt32();
+
+			this.Direction = reader.ReadInt32();
 			this.Animation = reader.ReadString();
 		}
 	}

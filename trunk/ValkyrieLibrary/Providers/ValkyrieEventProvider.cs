@@ -84,16 +84,31 @@ namespace Valkyrie.Library.Providers
 
 		public bool HandleEvent (BaseCharacter player, ActivationTypes activation)
 		{
-			bool handledevents = false;
 			MapPoint pos = player.GlobalTileLocation;
+			IEnumerable<IMapEvent> events = null;
+			bool handledevents = false;
 
-			if(activation == ActivationTypes.Activate || activation == ActivationTypes.Collision)
+			if(activation == ActivationTypes.OnMapEnter)
+			{
+				events = this.GetMapsEvents (player, pos).Where (e => e.Activation == ActivationTypes.OnMapEnter);
+			}
+			else if(activation == ActivationTypes.Activate || activation == ActivationTypes.Collision)
 			{
 				MapPoint newpt = player.GetLookValue();
 				pos = new MapPoint(pos.X + newpt.X, pos.Y + newpt.Y);
+
+				events = this.GetMapsEvents (player, pos);
+			}
+			else if(activation == ActivationTypes.Movement)
+			{
+				events = this.GetMapsEvents (player, pos);
 			}
 
-			foreach(IMapEvent mapevent in this.GetEvent(player, pos))
+			// If we didn't find any events, return.
+			if(events == null)
+				return false;
+
+			foreach(IMapEvent mapevent in events)
 			{
 				if(mapevent.Direction == Directions.Any || mapevent.Direction == player.Direction
 					&& mapevent.Activation == activation)
@@ -130,6 +145,39 @@ namespace Valkyrie.Library.Providers
 			}
 		}
 
+		public IEnumerable<IMapEvent> GetMapsEvents (BaseCharacter player, MapPoint position)
+		{
+			player.CurrentMap = this.context.SceneProvider.GetPositionableLocalMap (player);
+			MapPoint pos = player.LocalTileLocation;
+
+			if(pos.X < 0 || pos.Y < 0 || pos.X > player.CurrentMap.Map.MapSize.X || pos.Y > player.CurrentMap.Map.MapSize.Y)
+			{
+				// Find globally
+				MapHeader header = this.context.WorldManager.GetWorld (player.WorldName).GetLocalMapFromPoint (position);
+				MapPoint localpos = player.GlobalTileLocation - header.MapLocation;
+
+				// Ensure no crash
+				if(!this.events.ContainsKey (header.MapName))
+					this.events.Add (header.MapName, new List<IMapEvent> ());
+
+				return this.events[header.MapName].Where (m => m.Rectangle.Contains ((localpos).ToPoint ()));
+			}
+			else
+			{
+				MapPoint localpos = position - player.CurrentMap.MapLocation;
+
+				if(!this.events.ContainsKey (player.CurrentMap.MapName))
+					return new List<IMapEvent> ();
+
+				// Ensure no crash
+				if(!this.events.ContainsKey (player.CurrentMap.MapName))
+					this.events.Add (player.CurrentMap.MapName, new List<IMapEvent> ());
+
+				return this.events[player.CurrentMap.MapName].Where (m => m.Rectangle.Contains ((localpos).ToPoint ()));
+			}
+
+		}
+
 		public int GetMapsEventCount (Map map)
 		{
 			return this.GetMapsEventCount(map.Name);
@@ -148,30 +196,5 @@ namespace Valkyrie.Library.Providers
 		private IEngineContext context = null;
 		private bool isloaded = false;
 		private Dictionary<string, List<IMapEvent>> events = new Dictionary<string, List<IMapEvent>>();
-
-		private IEnumerable<IMapEvent> GetEvent (BaseCharacter player, MapPoint position)
-		{
-			player.CurrentMap = this.context.SceneProvider.GetPositionableLocalMap(player);
-			MapPoint pos = player.LocalTileLocation;
-
-			if(pos.X < 0 || pos.Y < 0 || pos.X > player.CurrentMap.Map.MapSize.X || pos.Y > player.CurrentMap.Map.MapSize.Y)
-			{
-				// Find globally
-				MapHeader header = this.context.WorldManager.GetWorld(player.WorldName).GetLocalMapFromPoint(position);
-				MapPoint localpos = player.GlobalTileLocation - header.MapLocation;
-
-				return this.events[header.MapName].Where(m => m.Rectangle.Contains((localpos).ToPoint()));
-			}
-			else
-			{
-				MapPoint localpos = position - player.CurrentMap.MapLocation;
-
-				if(!this.events.ContainsKey(player.CurrentMap.MapName))
-					return new List<IMapEvent>();
-
-				return this.events[player.CurrentMap.MapName].Where(m => m.Rectangle.Contains((localpos).ToPoint()));
-			}
-			
-		}
 	}
 }

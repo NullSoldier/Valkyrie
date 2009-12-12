@@ -11,7 +11,7 @@ namespace Valkyrie.Engine.Providers
 	public interface IMovementProvider
 		: IEngineProvider
 	{
-		void BeginMove(IMovable movable, Directions directioon);
+		void BeginMove(IMovable movable, Directions direction);
 		void BeginMoveDestination (IMovable movable, ScreenPoint destination);
 		void EndMove (IMovable movable, bool fireevent);
 

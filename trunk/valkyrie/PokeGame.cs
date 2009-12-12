@@ -129,7 +129,7 @@ namespace Valkyrie
 			// Send logout message to the server
 			if(this.Engine.IsLoaded && this.Engine.NetworkProvider.IsConnected && player != null)
 			{
-				var msg = new LogoutMessage() { NetworkID = player.NetworkID };
+				var msg = new LogoutMessage() { NetworkID = (uint)player.ID };
 
 				this.Engine.NetworkProvider.Send(msg);
 			}

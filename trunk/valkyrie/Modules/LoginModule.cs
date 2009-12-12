@@ -186,7 +186,7 @@ namespace Valkyrie.Modules
 				PokePlayer player = new PokePlayer()
 				{
 					Name = msg.Name,
-					NetworkID = this.assignednetworkID,
+					ID = this.assignednetworkID,
 					Location = new ScreenPoint(msg.Location.X, msg.Location.Y),
 					WorldName = msg.WorldName,
 					Gender = Genders.Male,

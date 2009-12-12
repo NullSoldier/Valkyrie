@@ -11,9 +11,6 @@ namespace ValkyrieGameServerConsole
 {
 	class Program
 	{
-		[DllImport("user32.dll", CharSet = CharSet.Auto)]
-		public static extern uint MessageBox(IntPtr hWnd, String text, String caption, uint type);
-
 		private static ValkyrieGameServer server;
 		private static bool Running = true;
 		private static Thread ServerThread;
@@ -24,7 +21,6 @@ namespace ValkyrieGameServerConsole
 				AppDomain.CurrentDomain.UnhandledException += Program.Program_UnhandledException;
 
 			Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
-			Trace.Refresh();
 
 			Program.ServerThread = new Thread(Program.StartServerA);
 			Program.ServerThread.Name = "Server Thread";
@@ -61,7 +57,7 @@ namespace ValkyrieGameServerConsole
 
 		private static void Program_UnhandledException(object sender, UnhandledExceptionEventArgs ev)
 		{
-			MessageBox(new IntPtr(0), ((Exception)ev.ExceptionObject).Message + Environment.NewLine + Environment.NewLine + ((Exception)ev.ExceptionObject).StackTrace, "Error!", 0);
+			Trace.WriteLine(Environment.NewLine + ((Exception)ev.ExceptionObject).Message + Environment.NewLine + Environment.NewLine + ((Exception)ev.ExceptionObject).StackTrace, "Error!");
 		}
 
 		public static void Server_UserLoggedIn (object sender, UserEventArgs ev)

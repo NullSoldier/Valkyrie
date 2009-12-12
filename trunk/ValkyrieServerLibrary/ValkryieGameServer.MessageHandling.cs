@@ -41,17 +41,17 @@ namespace ValkyrieServerLibrary.Core
 			Thread miscreader = new Thread((ParameterizedThreadStart)this.GenericMessageRunner);
 			miscreader.Name = "Misc Message Runner";
 			miscreader.IsBackground = true;
-			miscreader.Start(this.miscqueue);
+			miscreader.Start(new object[] {this.miscqueue, this.miscresetevent} );
 
 			Thread movereader = new Thread((ParameterizedThreadStart)this.GenericMessageRunner);
 			movereader.Name = "Movement Message Runner";
 			movereader.IsBackground = true;
-			movereader.Start(this.movequeue);
+			movereader.Start(new object[] {this.movequeue, this.moveresetevent} );
 
 			Thread loginreader = new Thread((ParameterizedThreadStart)this.GenericMessageRunner);
 			loginreader.Name = "Login Message Runner";
 			loginreader.IsBackground = true;
-			loginreader.Start(this.loginqueue);
+			loginreader.Start(new object[] {this.loginqueue, this.loginresetevent} );
 
 		}
 
@@ -60,6 +60,10 @@ namespace ValkyrieServerLibrary.Core
 		private Queue<MessageReceivedEventArgs> movequeue = new Queue<MessageReceivedEventArgs> (200);
 		private Queue<MessageReceivedEventArgs> loginqueue = new Queue<MessageReceivedEventArgs>(1000);
 		private Queue<MessageReceivedEventArgs> miscqueue = new Queue<MessageReceivedEventArgs>(400);
+
+		private AutoResetEvent moveresetevent = new AutoResetEvent (false);
+		private AutoResetEvent loginresetevent = new AutoResetEvent (false);
+		private AutoResetEvent miscresetevent = new AutoResetEvent (false);
 		
 		private List<Thread> readerthreads = new List<Thread>();
 
@@ -73,47 +77,64 @@ namespace ValkyrieServerLibrary.Core
 				case ClientMessageType.Connect:
 				case ClientMessageType.Disconnect:
 				case ClientMessageType.Login:
-					this.loginqueue.Enqueue(ev);
+					lock(this.loginqueue)
+					{
+						this.loginqueue.Enqueue (ev);
+						this.loginresetevent.Set ();
+					}
 					break;
 				case ClientMessageType.PlayerStartMoving:
 				case ClientMessageType.PlayerStopMoving:
 				case ClientMessageType.LocationData:
-					this.movequeue.Enqueue(ev);
+					lock(this.movequeue)
+					{
+						this.movequeue.Enqueue (ev);
+						this.moveresetevent.Set ();
+					}
 					break;
 				default:
-					this.miscqueue.Enqueue(ev);
+					lock(this.miscqueue)
+					{
+						this.miscqueue.Enqueue (ev);
+						this.miscresetevent.Set ();
+					}
 					break;
 			}
 		}
 
-		private void GenericMessageRunner(object queue)
+		private void GenericMessageRunner(object args)
 		{
-			Queue<MessageReceivedEventArgs> que = (Queue<MessageReceivedEventArgs>)queue;
+			var arguments = (object[]) args;
+
+			Queue<MessageReceivedEventArgs> que = (Queue<MessageReceivedEventArgs>) arguments[0];
+			AutoResetEvent resetevent = (AutoResetEvent)arguments[1];
 
 			while (true)
 			{
 				MessageReceivedEventArgs e;
 
-				if (que.Count <= 0)
+				resetevent.WaitOne ();
+
+				while(que.Count > 0)
 				{
-					Thread.Sleep(1);
-					continue;
+					lock(que)
+					{
+						e = que.Dequeue ();
+					}
+
+					if(e == null)
+						continue;
+
+					var msg = (e.Message as ClientMessage);
+					if(msg == null)
+					{
+						continue;
+					}
+
+					Action<MessageReceivedEventArgs> handler;
+					if(this.Handlers.TryGetValue (msg.MessageType, out handler))
+						handler (e);	
 				}
-				
-				e = que.Dequeue();
-
-				if (e == null)
-					continue;
-
-				var msg = (e.Message as ClientMessage);
-				if (msg == null)
-				{
-					Debugger.Break();
-				}
-
-				Action<MessageReceivedEventArgs> handler;
-				if (this.Handlers.TryGetValue(msg.MessageType, out handler))
-					handler(e);
 			}
 		}
 		#endregion
@@ -324,13 +345,14 @@ namespace ValkyrieServerLibrary.Core
 			player.Character.Animation = player.Character.Direction.ToString();
 			player.Character.Location = new ScreenPoint(message.MapX * 32, message.MapY * 32);
 
-			((ServerMovementProvider)this.movement).EndMoveLocation(player.Character, new MapPoint(message.MapX, message.MapY), player.Character.Animation);
+			//((ServerMovementProvider)this.movement).EndMoveLocation(player.Character, new MapPoint(message.MapX, message.MapY), player.Character.Animation);
 
 			PlayerStoppedMovingMessage movmsg = new PlayerStoppedMovingMessage();
 			movmsg.X = message.MapX * 32;
 			movmsg.Y = message.MapY * 32;
 			movmsg.NetworkID = player.NetworkID;
 			movmsg.Animation = message.Animation;
+			movmsg.Direction = message.Direction;
 
 			foreach(NetworkPlayer netplayer in this.players.GetPlayers())
 			{

@@ -6,6 +6,7 @@ using Valkyrie.Engine.Maps;
 using Valkyrie.Engine.Events;
 using Valkyrie.Engine.Characters;
 using System.Reflection;
+using Valkyrie.Engine.Core;
 
 namespace Valkyrie.Engine.Providers
 {
@@ -19,6 +20,7 @@ namespace Valkyrie.Engine.Providers
 		bool Remove (Map map, IMapEvent mapevent);
 		bool Remove (string mapname, IMapEvent mapevent);
 		bool HandleEvent (BaseCharacter character, ActivationTypes action);
+		IEnumerable<IMapEvent> GetMapsEvents (BaseCharacter charcter, MapPoint mappoint); 
 		IEnumerable<IMapEvent> GetMapsEvents (Map map);
 		IEnumerable<IMapEvent> GetMapsEvents (string mapname);
 		int GetMapsEventCount (Map map);

@@ -8,13 +8,20 @@ using Valkyrie.Library.Core;
 using Valkyrie.Engine.Animation;
 using Valkyrie.Engine.Core;
 using Valkyrie.Engine.Maps;
+using Valkyrie.Engine.Core.Characters;
 
 namespace Valkyrie.Engine.Characters
 {
     public abstract class BaseCharacter
-		: IMovable
+		: IMovable, IAnimatable
 	{
 		#region Properties
+
+		public object ID
+		{
+			get { return this.id; }
+			set { this.id = value; }
+		}
 
 		public Texture2D Sprite
 		{
@@ -22,15 +29,14 @@ namespace Valkyrie.Engine.Characters
 			set { this.sprite = value; }
 		}
 
-		public bool Animating
-		{
-			get { return this.animating; }
-			set { this.animating = value; }
-		}
+		#endregion
 
-		public Dictionary<string, FrameAnimation> Animations
+		#region IAnimatable Members
+
+		public bool IsAnimating
 		{
-			get { return this.animations; }
+			get { return this.isanimating; }
+			set { this.isanimating = value; }
 		}
 
 		public String CurrentAnimationName
@@ -41,48 +47,51 @@ namespace Valkyrie.Engine.Characters
 
 		public FrameAnimation CurrentAnimation
 		{
-			get { return this.Animations[this.CurrentAnimationName]; }
+			get { return this.animations[this.CurrentAnimationName]; }
+		}
+
+		public object AnimationTag
+		{
+			get { return this.animationtag; }
+			set { this.animationtag = value; }
+		}
+
+		public void AddAnimation (string name, FrameAnimation animation)
+		{
+			lock(this.animations)
+			{
+				this.animations.Add (name, animation);
+			}
+		}
+
+		public bool RemoveAnimation (string name)
+		{
+			lock(this.animations)
+			{
+				return this.animations.Remove (name);
+			}
+		}
+
+		public bool ContainsAnimation (string name)
+		{
+			lock(this.animations)
+			{
+				return this.animations.ContainsKey (name);
+			}
+		}
+
+		public bool ContainsAnimation (FrameAnimation animation)
+		{
+			lock(this.animations)
+			{
+				return this.animations.ContainsValue (animation);
+			}
 		}
 
 		#endregion
 
-		public virtual void Update(GameTime gameTime)
-		{
-            this.CurrentAnimation.Update(gameTime);
-		}
+		#region IPositionable Members
 
-        public MapPoint GetLookValue()
-        {
-            MapPoint point = new MapPoint(0,0);
-
-            if (this.Direction == Directions.North)
-                point = new MapPoint(0, -1);
-
-            else if (this.Direction == Directions.South)
-                point = new MapPoint(0, 1);
-
-            else if (this.Direction == Directions.West)
-                point = new MapPoint(-1, 0);
-
-            else if (this.Direction == Directions.East)
-                point = new MapPoint(1, 0);
-
-            return point;
-        }
-
-		private Texture2D sprite = null;
-		private Dictionary<string, FrameAnimation> animations = new Dictionary<string, FrameAnimation> ();
-		private Directions direction = Directions.South;
-		private ScreenPoint location = ScreenPoint.Zero;
-		private MapPoint lastmaplocation = MapPoint.Zero;
-		private string worldname = string.Empty;
-		private string currentworldname = string.Empty;
-		private string currentanimationname = string.Empty;
-		private bool animating = false;
-		private MapHeader currentmap = null;
-
-        #region IPositionable Members
-		
 		// Local mappoint
 		public MapPoint LastMapLocation
 		{
@@ -128,27 +137,27 @@ namespace Valkyrie.Engine.Characters
 			set { this.currentmap = value; }
 		}
 
-        #endregion
+		#endregion
 
 		#region IMovable Members
 
-		public void OnStartedMoving(object sender, EventArgs ev)
+		public void OnStartedMoving (object sender, EventArgs ev)
 		{
 			var handler = this.StartedMoving;
 
-			if (handler != null)
+			if(handler != null)
 				handler(this, ev);
 		}
 
-		public void OnStoppedMoving(object sender, EventArgs ev)
+		public void OnStoppedMoving (object sender, EventArgs ev)
 		{
 			var handler = this.StoppedMoving;
 
-			if (handler != null)
+			if(handler != null)
 				handler(this, ev);
 		}
 
-		public void OnTileLocationChanged(object sender, EventArgs ev)
+		public void OnTileLocationChanged (object sender, EventArgs ev)
 		{
 			var handler = this.TileLocationChanged;
 
@@ -179,28 +188,61 @@ namespace Valkyrie.Engine.Characters
 
 		#region ICollidable Members
 
-		public int Density { get; set; }
+		public int Density
+		{
+			get { return this.density; }
+			set { this.density = value; }
+		}
+
 		public event EventHandler Collided;
 
-		public void OnCollided(object sender, EventArgs e)
+		public void OnCollided (object sender, EventArgs e)
 		{
 			var handler = this.Collided;
 
-			if (handler != null)
+			if(handler != null)
 				handler(this, EventArgs.Empty);
 		}
 
-		public ScreenPoint GetLocation()
-		{
-			return this.Location;
-		}
-
-		public string GetWorld ()
-		{
-			return this.currentworldname;
-		}
-
 		#endregion
+
+		public virtual void Update(GameTime gameTime)
+		{
+            this.CurrentAnimation.Update(gameTime);
+		}
+
+        public MapPoint GetLookValue()
+        {
+            MapPoint point = new MapPoint(0,0);
+
+            if (this.Direction == Directions.North)
+                point = new MapPoint(0, -1);
+
+            else if (this.Direction == Directions.South)
+                point = new MapPoint(0, 1);
+
+            else if (this.Direction == Directions.West)
+                point = new MapPoint(-1, 0);
+
+            else if (this.Direction == Directions.East)
+                point = new MapPoint(1, 0);
+
+            return point;
+        }
+
+		private object id = null;
+		private Texture2D sprite = null;
+		private Directions direction = Directions.South;
+		private ScreenPoint location = ScreenPoint.Zero;
+		private MapPoint lastmaplocation = MapPoint.Zero;
+		private MapHeader currentmap = null;
+		private string worldname = string.Empty;
+		private Dictionary<string, FrameAnimation> animations = new Dictionary<string, FrameAnimation> ();
+		private string currentworldname = string.Empty;
+		private string currentanimationname = string.Empty;
+		private object animationtag = string.Empty;
+		private bool isanimating = false;
+		private int density = 1;
 	}
 
 	public enum Genders
