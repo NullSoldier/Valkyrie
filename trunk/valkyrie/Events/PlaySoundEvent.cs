@@ -6,6 +6,7 @@ using Valkyrie.Engine.Events;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Engine;
 using Valkyrie.Characters;
+using Microsoft.Xna.Framework;
 
 namespace Valkyrie.Library.Events
 {
@@ -30,7 +31,7 @@ namespace Valkyrie.Library.Events
 			var sound = context.SoundManager.GetSound (soundfilename);
 
 			if(sound != null)
-				context.SoundProvider.PlaySound (sound, Convert.ToBoolean(loop));
+				context.SoundProvider.PlaySound (sound, ((loop == "1") ? true : false));
 		}
 
 		public IEnumerable<string> GetParameterNames ()

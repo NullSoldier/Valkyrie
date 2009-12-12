@@ -40,13 +40,19 @@ namespace Valkyrie.Library.Managers
 
 		public void AddSound (string FileName)
 		{
-			this.AddSound(FileName, new SoundPlayer(Path.Combine(Environment.CurrentDirectory, Path.Combine(SoundRoot, FileName))));
+			FileInfo info = new FileInfo (Path.Combine(Environment.CurrentDirectory, Path.Combine(SoundRoot, FileName)));
+			if(info.Exists)
+				this.AddSound(FileName, new SoundPlayer(info.FullName));
 		}
 
 		public SoundPlayer GetSound (string FileName)
 		{
 			if(!this.Resources.ContainsKey(FileName))
 				this.AddSound(FileName);
+			
+			// If we couldn't find it
+			if(!this.Resources.ContainsKey (FileName))
+				return null;
 
 			return this.Resources[FileName];
 		}

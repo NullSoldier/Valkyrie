@@ -14,7 +14,7 @@ namespace Valkyrie.Engine.Providers
 		: IEngineProvider
 	{
 		void Update (GameTime gameTime);
-		MapHeader GetPositionableLocalMap (IPositionable positionable);
+		MapHeader GetPositionableLocalMap (BaseCharacter positionable);
 
 		void Draw (SpriteBatch spriteBatch);
 		void DrawCamera (SpriteBatch spriteBatch, string cameraname);

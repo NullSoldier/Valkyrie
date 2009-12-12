@@ -90,7 +90,7 @@ namespace Valkyrie.Library.Providers
 
 			if(activation == ActivationTypes.OnMapEnter)
 			{
-				events = this.GetMapsEvents (player, pos).Where (e => e.Activation == ActivationTypes.OnMapEnter);
+				events = this.GetMapsEvents(player.CurrentMap.Map).Where (e => e.Activation == ActivationTypes.OnMapEnter);
 			}
 			else if(activation == ActivationTypes.Activate || activation == ActivationTypes.Collision)
 			{

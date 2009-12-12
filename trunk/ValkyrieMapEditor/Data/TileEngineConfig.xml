@@ -2,6 +2,7 @@
 <XnaContent>
   <Config>
     <GraphicsRoot>Graphics</GraphicsRoot>
+    <SoundsRoot>Sounds</SoundsRoot>
     <MapRoot>Maps</MapRoot>
     <DataRoot>Data</DataRoot>
     <DefaultModule>Menu</DefaultModule>

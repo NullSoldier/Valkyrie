@@ -307,7 +307,7 @@ namespace Valkyrie.Modules
 	        if( !this.IsLoaded )
 	            this.Load(this.context);
 
-			this.context.SoundProvider.PlayBGM(this.context.SoundManager.GetSound("PalletTown.wav"), true);
+			//this.context.SoundProvider.PlayBGM(this.context.SoundManager.GetSound("PalletTown.wav"), true);
 	    }
 
 	    public void Deactivate()

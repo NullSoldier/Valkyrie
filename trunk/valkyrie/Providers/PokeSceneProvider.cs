@@ -62,14 +62,14 @@ namespace Valkyrie.Providers
 		/// </summary>
 		/// <param name="positionable"></param>
 		/// <returns></returns>
-		public MapHeader GetPositionableLocalMap (IPositionable positionable)
+		public MapHeader GetPositionableLocalMap (BaseCharacter positionable)
 		{
 			if(positionable.CurrentMap != null)
 				return positionable.CurrentMap;
 			else
 			{
 				this.ResolvePositionableCurrentMap (positionable);
-				this.ResolvePositionableCurrentMap (positionable);
+				this.context.EventProvider.HandleEvent (positionable, ActivationTypes.OnMapEnter);
 			}
 
 			return positionable.CurrentMap;
