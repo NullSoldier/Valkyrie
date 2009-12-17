@@ -111,6 +111,16 @@ namespace ValkyrieServerLibrary.Core
 			}
 		}
 
+		public bool ContainsPlayer (NetworkPlayer player)
+		{
+			return this.players.ContainsValue (player);
+		}
+
+		public bool ContainsPlayer (uint networkid)
+		{
+			return this.players.ContainsKey (networkid);
+		}
+
 		#endregion
 	}
 }

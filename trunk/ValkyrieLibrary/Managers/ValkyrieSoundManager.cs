@@ -9,6 +9,9 @@ using Microsoft.Xna.Framework.Audio;
 using System.IO;
 using Valkyrie.Engine;
 using System.Media;
+using System.Runtime.InteropServices;
+using NAudio.Wave;
+using Valkyrie.Engine.Core.Sound;
 
 namespace Valkyrie.Library.Managers
 {
@@ -28,33 +31,61 @@ namespace Valkyrie.Library.Managers
 			this.SoundRoot = soundroot;
 		}
 
-		public void AddSound (string Name, SoundPlayer newSound)
+		public void AddSound (string Name, AudioSource newSound)
 		{
 			this.Resources.Add(Name, newSound);
 		}
 
-		public void AddSound (SoundPlayer newSound)
-		{
-			this.Resources.Add(new FileInfo(newSound.SoundLocation).Name, newSound);
-		}
-
 		public void AddSound (string FileName)
 		{
-			FileInfo info = new FileInfo (Path.Combine(Environment.CurrentDirectory, Path.Combine(SoundRoot, FileName)));
-			if(info.Exists)
-				this.AddSound(FileName, new SoundPlayer(info.FullName));
+			FileInfo file = new FileInfo (Path.Combine(Environment.CurrentDirectory,
+				Path.Combine(this.context.Configuration[EngineConfigurationName.SoundsRoot], FileName)));
+			if(!file.Exists)
+				return;
+
+			WaveStream readerstream = new WaveFileReader (file.FullName);
+
+			readerstream = new BlockAlignReductionStream (readerstream);
+
+			if(readerstream.WaveFormat.Encoding != WaveFormatEncoding.Pcm)
+			{
+				readerstream = WaveFormatConversionStream.CreatePcmStream (readerstream);
+			}
+
+			if(readerstream.WaveFormat.BitsPerSample != 16)
+			{
+				var format = new WaveFormat (readerstream.WaveFormat.SampleRate, 16,
+					readerstream.WaveFormat.Channels);
+
+				readerstream = new WaveFormatConversionStream (format, readerstream);
+			}
+
+			byte[] data = new byte[readerstream.Length];
+
+			int position = 0;
+			while(true)
+			{
+				int result = readerstream.ReadByte ();
+				if(result == -1)
+					break;
+
+				data[position] = Convert.ToByte (result);
+				position++;
+			}
+			
+			this.AddSound (file.Name, new AudioSource(data, (uint)readerstream.WaveFormat.SampleRate, 1.0f, readerstream.WaveFormat.Channels));
 		}
 
-		public SoundPlayer GetSound (string FileName)
+		public AudioSource GetSound (string fileName)
 		{
-			if(!this.Resources.ContainsKey(FileName))
-				this.AddSound(FileName);
+			if(!this.Resources.ContainsKey (fileName))
+				this.AddSound (fileName);
 			
 			// If we couldn't find it
-			if(!this.Resources.ContainsKey (FileName))
+			if(!this.Resources.ContainsKey (fileName))
 				return null;
 
-			return this.Resources[FileName];
+			return this.Resources[fileName];
 		}
 
 		public bool ContainsSound (string FileName)
@@ -64,9 +95,6 @@ namespace Valkyrie.Library.Managers
 
 		public void ClearCache ()
 		{
-			foreach(var resource in this.Resources)
-				resource.Value.Dispose();
-
 			this.Resources.Clear();
 		}
 
@@ -74,7 +102,6 @@ namespace Valkyrie.Library.Managers
 		{
 			if(this.Resources.Keys.Contains(resourcename))
 			{
-				this.Resources[resourcename].Dispose();
 				this.Resources.Remove(resourcename);
 			}
 			else
@@ -83,7 +110,7 @@ namespace Valkyrie.Library.Managers
 
 		#endregion
 
-		private Dictionary<string, SoundPlayer> Resources = new Dictionary<string, SoundPlayer>();
+		private Dictionary<string, AudioSource> Resources = new Dictionary<string, AudioSource> ();
 		private IEngineContext context = null;
 		private string soundroot = string.Empty;
 		private bool isloaded = false;

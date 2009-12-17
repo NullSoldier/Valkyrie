@@ -5,6 +5,7 @@ using System.Text;
 using Valkyrie.Engine.Providers;
 using Microsoft.Xna.Framework.Audio;
 using System.Media;
+using Valkyrie.Engine.Core.Sound;
 
 namespace Valkyrie.Engine.Managers
 {
@@ -15,12 +16,11 @@ namespace Valkyrie.Engine.Managers
 
 		void Load (string soundroot);
 
-		void AddSound (string Name, SoundPlayer newSound);
-		void AddSound (SoundPlayer newSound);
-		void AddSound (string FileName);
+		void AddSound (string name, AudioSource newSound);
+		void AddSound (string filename);
 
-		SoundPlayer GetSound (string FileName);
-		bool ContainsSound (string FileName);
+		AudioSource GetSound (string filename);
+		bool ContainsSound (string filename);
 
 		void ClearCache ();
 		void ClearFromCache (string resourcename);

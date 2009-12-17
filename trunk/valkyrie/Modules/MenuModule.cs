@@ -23,12 +23,7 @@ namespace Valkyrie.Modules
 
 		public void Update(GameTime gameTime)
 		{
-			this.KeyManager.Update();
-
-			if (this.loaded)
-			{
-
-			}
+			//this.KeyManager.Update();
 		}
 
 		public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -47,11 +42,11 @@ namespace Valkyrie.Modules
 		{
 			this.context = enginecontext;
 
-			this.KeyManager = new KeybindController();
-			this.KeyManager.AddKey(Keys.Enter, "MainMenuEnter");
-			this.KeyManager.KeyUp += MainMenu_KeyPressed;
+			//this.KeyManager = new KeybindController();
+			//this.KeyManager.AddKey(Keys.Enter, "MainMenuEnter");
+			//this.KeyManager.KeyUp += MainMenu_KeyPressed;
 
-			this.player.IsLooped = true;
+			//this.player.IsLooped = true;
 			//this.player.Play(this.video);
 
 			this.loaded = true;
@@ -67,7 +62,9 @@ namespace Valkyrie.Modules
 
 		public void Activate()
 		{
-			this.player.Resume();
+			this.context.ModuleProvider.PushModule ("Login");
+
+			//this.player.Resume();
 
 			if (!this.loaded)
 				this.Load(this.context);
@@ -75,7 +72,7 @@ namespace Valkyrie.Modules
 
 		public void Deactivate()
 		{
-			this.player.Pause();
+			//this.player.Pause();
 
 			if (this.loaded)
 				this.Unload();
@@ -91,7 +88,7 @@ namespace Valkyrie.Modules
 		}
 
 		private IEngineContext context = null;
-		private KeybindController KeyManager;
+		//private KeybindController KeyManager;
 		private bool loaded = false;
 		private Video video = null;
 		private VideoPlayer player = new VideoPlayer();

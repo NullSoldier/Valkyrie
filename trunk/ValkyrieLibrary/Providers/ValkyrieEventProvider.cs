@@ -88,6 +88,9 @@ namespace Valkyrie.Library.Providers
 			IEnumerable<IMapEvent> events = null;
 			bool handledevents = false;
 
+			if(player.CurrentMap == null)
+				player.CurrentMap = this.context.SceneProvider.GetPositionableLocalMap (player);
+
 			if(activation == ActivationTypes.OnMapEnter)
 			{
 				events = this.GetMapsEvents(player.CurrentMap.Map).Where (e => e.Activation == ActivationTypes.OnMapEnter);

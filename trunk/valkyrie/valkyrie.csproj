@@ -107,7 +107,6 @@
     <Compile Include="Providers\NetworkMovementProvider.cs" />
     <Compile Include="Providers\PokeMovementProvider.cs" />
     <Compile Include="Providers\PokeSceneProvider.cs" />
-    <Compile Include="Providers\PokeSoundProvider.cs" />
     <Compile Include="Providers\PokeNetworkProvider.cs" />
     <Compile Include="Modules\GameModule.cs" />
     <Compile Include="Modules\LoginModule.cs" />
@@ -156,6 +155,7 @@
     <Content Include="Graphics\NurseJoy.png" />
     <Content Include="Graphics\Pallet_House\Pallet_House_01.png" />
     <Content Include="Graphics\RetardSprite.png" />
+    <Content Include="Maps\Main\Celadon_Town.xml" />
     <Content Include="Maps\Main\Cerulean_Town.xml" />
     <Content Include="Maps\Main\Cinnibar_Island.xml" />
     <Content Include="Maps\Main\Fuschia_Town.xml" />
@@ -183,9 +183,16 @@
     <Content Include="Maps\Main\Route8_Route.xml" />
     <Content Include="Maps\Main\Route9_Route.xml" />
     <Content Include="Maps\Main\Saffron_Town.xml" />
+    <Content Include="Maps\Main\Vermillion_Town.xml" />
     <Content Include="Media\PokemonIntro.avi">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="OpenAL32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="OpenALSoft.License.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Graphics\Main\Pallet_Town.png">
     </None>
     <None Include="Graphics\Main\Pewter_Town.png">

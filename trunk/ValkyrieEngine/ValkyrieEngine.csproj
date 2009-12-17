@@ -109,6 +109,7 @@
     <Compile Include="Core\Points\MapPoint.cs" />
     <Compile Include="Core\Points\ScreenPoint.cs" />
     <Compile Include="Core\ReadOnlyDictionary.cs" />
+    <Compile Include="Core\Sound\AudioSource.cs" />
     <Compile Include="IEngineContext.cs" />
     <Compile Include="Managers\ISoundManager.cs" />
     <Compile Include="Managers\IWorldManager.cs" />

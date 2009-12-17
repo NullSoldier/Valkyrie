@@ -1,43 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
+using System.Runtime.InteropServices;
+using Gablarski;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Valkyrie.Library.Core;
-using System.Xml;
-using System.IO;
-using Valkyrie.Library;
 using Microsoft.Xna.Framework.Input;
-using System.Diagnostics;
-using Valkyrie.Library.Core.Messages;
+using Valkyrie.Characters;
+using Valkyrie.Engine;
+using Valkyrie.Engine.Characters;
+using Valkyrie.Engine.Core;
+using Valkyrie.Engine.Events;
+using Valkyrie.Engine.Input;
+using Valkyrie.Engine.Maps;
+using Valkyrie.Engine.Providers;
+using Valkyrie.Library.Camera;
 using Valkyrie.Library.Network;
-using Gablarski;
-using ValkyrieServerLibrary.Network.Messages.Valkyrie;
-using System.Runtime.InteropServices;
+using Valkyrie.Providers;
 using ValkyrieNetwork.Messages.Valkyrie;
 using ValkyrieNetwork.Messages.Valkyrie.Movement;
-using Valkyrie.Engine;
-using Valkyrie.Characters;
-using Valkyrie.Engine.Input;
-using Valkyrie.Engine.Events;
-using Valkyrie.Engine.Characters;
-using Valkyrie.Library.Camera;
-using Valkyrie.Engine.Core;
-using Valkyrie.Engine.Providers;
-using Valkyrie.Providers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
-using Microsoft.Xna.Framework;
-using Valkyrie.Engine.Providers;
-using Gablarski;
-using Valkyrie.Engine.Characters;
-using Valkyrie.Engine.Core;
-using Valkyrie.Engine;
-using Valkyrie.Engine.Maps;
+using ValkyrieServerLibrary.Network.Messages.Valkyrie;
 
 namespace Valkyrie.Modules
 {
@@ -79,6 +61,7 @@ namespace Valkyrie.Modules
 
 			this.scene.Update(gameTime);
 			this.context.MovementProvider.Update(gameTime);
+			this.context.SoundProvider.Update (gameTime);
 			this.networkmovementprovider.Update(gameTime);
 
 			foreach(var player in this.network.GetPlayers())

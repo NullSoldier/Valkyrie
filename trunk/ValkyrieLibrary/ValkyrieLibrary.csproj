@@ -153,6 +153,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Gablarski.OpenAL\Gablarski.OpenAL.csproj">
+      <Project>{4B71AD86-B6E7-4833-82B0-3CF38A128984}</Project>
+      <Name>Gablarski.OpenAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NAudio\NAudio.csproj">
+      <Project>{DA4F02E3-0B5E-42CD-B8D9-5583FA51D66E}</Project>
+      <Name>NAudio</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ValkyrieEngine\ValkyrieEngine.csproj">
       <Project>{12722697-BA6D-4EED-8E90-50C6094AA407}</Project>
       <Name>ValkyrieEngine</Name>

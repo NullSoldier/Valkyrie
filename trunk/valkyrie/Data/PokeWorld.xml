@@ -7,18 +7,21 @@
       <X>63</X>
       <Y>0</Y>
     </MapLoc>
+
     <MapLoc>
       <Name>Route2_Route</Name>
       <Uri>Main\Route2_Route.xml</Uri>
       <X>75</X>
       <Y>40</Y>
     </MapLoc>
+    
     <MapLoc>
       <Name>Pallet_Town</Name>
       <Uri>Main\Pallet_Town.xml</Uri>
       <X>75</X>
       <Y>200</Y>
     </MapLoc>
+    
     <MapLoc>
       <Name>Route1_Route</Name>
       <Uri>Main\Route1_Route.xml</Uri>
@@ -33,13 +36,13 @@
       <Y>120</Y>
     </MapLoc>
 
-    <MapLoc>
+   <MapLoc>
       <Name>Route22_Route</Name>
       <Uri>Main\Route22_Route.xml</Uri>
-      <X>15</X>
-      <Y>129</Y>
+      <X>12</X>
+      <Y>127</Y>
     </MapLoc>
-    
+
     <MapLoc>
       <Name>Route21_Route</Name>
       <Uri>Main\Route21_Route.xml</Uri>
@@ -51,174 +54,189 @@
       <Name>Cinnibar_Island</Name>
       <Uri>Main\Cinnibar_Island.xml</Uri>
       <X>75</X>
-      <Y>318</Y>
+      <Y>319</Y>
     </MapLoc>
+    
     <MapLoc>
       <Name>Fuschia_Town</Name>
       <Uri>Main\Fuschia_Town.xml</Uri>
       <X>207</X>
-      <Y>239</Y>
+      <Y>241</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route18_Route</Name>
       <Uri>Main\Route18_Route.xml</Uri>
       <X>145</X>
-      <Y>248</Y>
+      <Y>250</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route17_Route</Name>
       <Uri>Main\Route17_Route.xml</Uri>
       <X>142</X>
-      <Y>88</Y>
+      <Y>90</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route16_Route</Name>
       <Uri>Main\Route16_Route.xml</Uri>
       <X>142</X>
-      <Y>68</Y>
-    </MapLoc>
+      <Y>70</Y>
+    </MapLoc>-->
     
     <MapLoc>
       <Name>Route15_Route</Name>
       <Uri>Main\Route15_Route.xml</Uri>
       <X>255</X>
-      <Y>248</Y>  
+      <Y>250</Y>  
     </MapLoc>
 
     <MapLoc>
       <Name>Route14_Route</Name>
       <Uri>Main\Route14_Route.xml</Uri>
       <X>327</X>
-      <Y>208</Y>
+      <Y>210</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route13_Route</Name>
       <Uri>Main\Route13_Route.xml</Uri>
       <X>351</X>
-      <Y>208</Y>
+      <Y>210</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route12_Route</Name>
       <Uri>Main\Route12_Route.xml</Uri>
       <X>399</X>
-      <Y>88</Y>
+      <Y>90</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route11_Route</Name>
       <Uri>Main\Route11_Route.xml</Uri>
       <X>327</X>
-      <Y>148</Y>
+      <Y>150</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route20_Route</Name>
       <Uri>Main\Route20_Route.xml</Uri>
       <X>99</X>
-      <Y>318</Y>
+      <Y>319</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route19_Route</Name>
       <Uri>Main\Route19_Route.xml</Uri>
       <X>219</X>
-      <Y>278</Y>
+      <Y>279</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route3_Route</Name>
       <Uri>Main\Route3_Route.xml</Uri>
       <X>111</X>
-      <Y>11</Y>
+      <Y>10</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route4_Route</Name>
       <Uri>Main\Route4_Route.xml</Uri>
       <X>171</X>
-      <Y>-9</Y>
+      <Y>-10</Y>
     </MapLoc>
-
+   
     <MapLoc>
       <Name>Cerulean_Town</Name>
       <Uri>Main\Cerulean_Town.xml</Uri>
       <X>279</X>
-      <Y>-19</Y>
+      <Y>-20</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route9_Route</Name>
       <Uri>Main\Route9_Route.xml</Uri>
       <X>327</X>
-      <Y>-9</Y>
+      <Y>-10</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route24_Route</Name>
       <Uri>Main\Route24_Route.xml</Uri>
       <X>291</X>
-      <Y>-59</Y>
+      <Y>-60</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route25_Route</Name>
       <Uri>Main\Route25_Route.xml</Uri>
       <X>315</X>
-      <Y>-59</Y>
+      <Y>-60</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route5_Route</Name>
       <Uri>Main\Route5_Route.xml</Uri>
       <X>285</X>
-      <Y>21</Y>
+      <Y>20</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Saffron_Town</Name>
       <Uri>Main\Saffron_Town.xml</Uri>
       <X>269</X>
-      <Y>54</Y>
+      <Y>53</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route6_Route</Name>
       <Uri>Main\Route6_Route.xml</Uri>
       <X>291</X>
-      <Y>101</Y>
+      <Y>100</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Vermillion_Town</Name>
+      <Uri>Main\Vermillion_Town.xml</Uri>
+      <X>279</X>
+      <Y>140</Y>
+    </MapLoc>
+
+    <MapLoc>
+      <Name>Celadon_Town.xml</Name>
+      <Uri>Main\Celadon_Town.xml</Uri>
+      <X>195</X>
+      <Y>60</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route8_Route</Name>
       <Uri>Main\Route8_Route.xml</Uri>
       <X>327</X>
-      <Y>71</Y>
+      <Y>70</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route7_Route</Name>
       <Uri>Main\Route7_Route.xml</Uri>
       <X>255</X>
-      <Y>71</Y>
+      <Y>70</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Lavender_Town</Name>
       <Uri>Main\Lavender_Town.xml</Uri>
       <X>399</X>
-      <Y>71</Y>
+      <Y>70</Y>
     </MapLoc>
 
     <MapLoc>
       <Name>Route10_Route</Name>
       <Uri>Main\Route10_Route.xml</Uri>
       <X>399</X>
-      <Y>-9</Y>
+      <Y>-10</Y>
     </MapLoc>
     
   </World>

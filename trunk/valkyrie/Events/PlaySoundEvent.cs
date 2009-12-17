@@ -31,7 +31,7 @@ namespace Valkyrie.Library.Events
 			var sound = context.SoundManager.GetSound (soundfilename);
 
 			if(sound != null)
-				context.SoundProvider.PlaySound (sound, ((loop == "1") ? true : false));
+				context.SoundProvider.PlayBGM (sound, ((loop == "1") ? true : false));
 		}
 
 		public IEnumerable<string> GetParameterNames ()

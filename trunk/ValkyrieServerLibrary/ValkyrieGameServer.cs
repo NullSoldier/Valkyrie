@@ -36,7 +36,7 @@ namespace ValkyrieServerLibrary.Core
 
 		private bool Started = false;
 		private bool Loaded = false;
-		private uint LastNetworkID = 0;
+		//private uint LastNetworkID = 0;
 
 		public event EventHandler<UserEventArgs> UserLoggedIn;
 		public event EventHandler<UserEventArgs> UserLoggedOut;
@@ -134,16 +134,19 @@ namespace ValkyrieServerLibrary.Core
 			player.State = PlayerState.LoggedOut;
 
 			if(player != null)
-				this.Disconnect(player.Connection);			
+				this.Disconnect (player.Connection);
 		}
 
 		public void Disconnect(IConnection connection)
 		{
+			connection.MessageReceived -= this.Server_MessageReceived;
+			connection.Disconnected -= this.Server_Disconnected;
+
 			if(connection.IsConnected)
 				connection.Disconnect();
 
 			NetworkPlayer player = this.players.GetPlayer(connection);
-
+			
 			this.players.RemovePlayer(connection);
 
 			// fire logged out event

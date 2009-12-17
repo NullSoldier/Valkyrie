@@ -26,6 +26,8 @@ using Valkyrie.Providers;
 using Valkyrie.Engine.Providers;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Engine.Core;
+using Microsoft.Xna.Framework.Audio;
+using System.Media;
 
 namespace Valkyrie.Modules
 {
@@ -51,6 +53,7 @@ namespace Valkyrie.Modules
 		        return;
 
 		    this.keycontroller.Update();
+			this.context.SoundProvider.Update (gameTime);
 		}
 
 		public void Draw (SpriteBatch spriteBatch, GameTime gameTime)
@@ -77,8 +80,9 @@ namespace Valkyrie.Modules
 			this.keycontroller.AddKey(Keys.Enter, "Login");
 			this.keycontroller.KeyUp += keycontroller_KeyUp;
 
-			this.IsLoaded = true;
+			this.context.SoundManager.AddSound ("IntroMusic.wav");
 
+			this.IsLoaded = true;
 		}
 
 		public void Unload ()
@@ -96,12 +100,16 @@ namespace Valkyrie.Modules
 
 		public void Activate ()
 		{
+			this.context.SoundProvider.PlayBGM (this.context.SoundManager.GetSound ("IntroMusic.wav"), true);
+
 			if(!this.IsLoaded)
 				this.Load(this.context);
 		}
 
 		public void Deactivate ()
 		{
+			this.context.SoundProvider.StopBGM ();
+
 			if(this.IsLoaded)
 				this.Unload();
 		}

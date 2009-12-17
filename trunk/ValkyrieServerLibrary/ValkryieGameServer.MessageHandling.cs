@@ -163,7 +163,7 @@ namespace ValkyrieServerLibrary.Core
 				.Add(Restrictions.Eq("Password", msg.Password ))
 				.List<Account>().FirstOrDefault();
 			
-			if (account == null)
+			if (account == null || this.players.ContainsPlayer((uint)account.ID))
 			{
 				LoginFailedMessage failmsg = new LoginFailedMessage(ConnectionRejectedReason.BadLogin);
 				ev.Connection.Send(failmsg);
@@ -181,7 +181,7 @@ namespace ValkyrieServerLibrary.Core
 			NetworkPlayer player = new NetworkPlayer();
 			player.Character = character;
 			player.AccountID = account.ID;
-			player.NetworkID = ++this.LastNetworkID;
+			player.NetworkID = (uint)account.ID;
 			player.Connection = ev.Connection;
 			player.Character.MapChunkName = this.GetChunkName(player.Character.WorldName, player.Character.MapLocation);
 			player.State = PlayerState.LoggedIn;
@@ -312,7 +312,10 @@ namespace ValkyrieServerLibrary.Core
 
 			PlayerStartMovingMessage message = (PlayerStartMovingMessage)ev.Message;
 
-			NetworkPlayer player = this.players[ev.Connection];
+			NetworkPlayer player = this.players[message.NetworkID];
+			if(player == null)
+				return;
+
 			player.Character.Speed = message.Speed;
 			player.Character.MoveDelay = message.MoveDelay;
 
