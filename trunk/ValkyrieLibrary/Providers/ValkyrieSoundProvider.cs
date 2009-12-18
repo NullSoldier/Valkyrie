@@ -22,8 +22,6 @@ namespace Valkyrie.Library.Providers
 
 		public void PlayBGM (AudioSource sound, bool loop)
 		{
-			return;
-
 			SourceBuffer buffer = SourceBuffer.Generate ();
 			buffer.Buffer (sound.PCM, ((sound.Channels == 1) ? AudioFormat.Mono16Bit : AudioFormat.Stereo16Bit), sound.Frequency);
 			
@@ -64,59 +62,60 @@ namespace Valkyrie.Library.Providers
 
 		public void Update (GameTime gameTime)
 		{
-			return;
-
 			List<LeasedAudioSource> remove = new List<LeasedAudioSource> ();
 
 			// Revise, total crap
-			foreach(var source in this.leased)
+			lock(this.leased)
 			{
-				source.LastTimeUpdated += gameTime.ElapsedGameTime.Milliseconds;
-
-				if(source.LastTimeUpdated > 60)
+				foreach(var source in this.leased)
 				{
-					if(source.FadeState == FadeState.FadeOut)
+					source.LastTimeUpdated += gameTime.ElapsedGameTime.Milliseconds;
+
+					if(source.LastTimeUpdated > 60)
 					{
-						if((source.Source.Gain - 0.1f) < source.Source.MinimumGain)
+						if(source.FadeState == FadeState.FadeOut)
 						{
-							source.Source.Gain = source.Source.MinimumGain;
-
-							if(source.LastTimeUpdated >= 1000)
+							if((source.Source.Gain - 0.1f) < source.Source.MinimumGain)
 							{
-								source.Source.Stop ();
+								source.Source.Gain = source.Source.MinimumGain;
 
-								if(this.nextbgmsource.Source != null)
+								if(source.LastTimeUpdated >= 1000)
 								{
-									// Play the next BGM now that the current one has faded out
-									this.currentbgmsource = this.nextbgmsource;
-									this.currentbgmsource.Source.Play ();
+									source.Source.Stop ();
+
+									if(this.nextbgmsource.Source != null)
+									{
+										// Play the next BGM now that the current one has faded out
+										this.currentbgmsource = this.nextbgmsource;
+										this.currentbgmsource.Source.Play ();
+									}
 								}
 							}
-						}
-						else
-						{
-							source.Source.Gain -= 0.1f;
-							source.LastTimeUpdated = 0;
+							else
+							{
+								source.Source.Gain -= 0.1f;
+								source.LastTimeUpdated = 0;
+							}
 						}
 					}
-				}
 
-				if(source.Source.State == SourceState.Paused
-					|| source.Source.State == SourceState.Stopped)
-				{
-					if(source.Loop && source.FadeState == FadeState.None)
+					if(source.Source.State == SourceState.Paused
+						|| source.Source.State == SourceState.Stopped)
 					{
-						source.Source.Replay ();
-						continue;
+						if(source.Loop && source.FadeState == FadeState.None)
+						{
+							source.Source.Replay ();
+							continue;
+						}
+
+						remove.Add (source);
+						source.Source.Dispose ();
 					}
-
-					remove.Add (source);
-					source.Source.Dispose ();
 				}
-			}
 
-			foreach(var source in remove)
-				this.leased.Remove (source);
+				foreach(var source in remove)
+					this.leased.Remove (source);
+			}
 		}
 
 		public void LoadEngineContext (IEngineContext context)

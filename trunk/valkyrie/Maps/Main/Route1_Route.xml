@@ -152,6 +152,29 @@
       </Size>
       <Parameters />
     </Event>
+    <Event>
+      <Type>Valkyrie.Library.Events.PlaySoundEvent</Type>
+      <Activation>8</Activation>
+      <Dir>Any</Dir>
+      <Location>
+        <X>0</X>
+        <Y>0</Y>
+      </Location>
+      <Size>
+        <X>1</X>
+        <Y>1</Y>
+      </Size>
+      <Parameters>
+        <Parameter>
+          <Name>FileName</Name>
+          <Value>TravelMusic.wav</Value>
+        </Parameter>
+        <Parameter>
+          <Name>LoopSound</Name>
+          <Value>1</Value>
+        </Parameter>
+      </Parameters>
+    </Event>
   </Events>
   <AnimatedTiles>
     <AnimatedTile>

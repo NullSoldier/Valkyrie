@@ -12,6 +12,7 @@ using System.Media;
 using System.Runtime.InteropServices;
 using NAudio.Wave;
 using Valkyrie.Engine.Core.Sound;
+using System.Threading;
 
 namespace Valkyrie.Library.Managers
 {
@@ -19,6 +20,8 @@ namespace Valkyrie.Library.Managers
 		: ISoundManager
 	{
 		#region Properties and Methods
+
+		public event EventHandler<SoundLoadedEventArgs> SoundLoaded;
 
 		public string SoundRoot
 		{
@@ -88,6 +91,14 @@ namespace Valkyrie.Library.Managers
 			return this.Resources[fileName];
 		}
 
+		public void GetSoundA (string filename)
+		{
+			Thread thread = new Thread (this.GetSound);
+			thread.IsBackground = true;
+			thread.Name = "Sound Loader Loading " + filename;
+			thread.Start ((object)filename);
+		}
+
 		public bool ContainsSound (string FileName)
 		{
 			return (this.Resources.ContainsKey(FileName));
@@ -114,6 +125,15 @@ namespace Valkyrie.Library.Managers
 		private IEngineContext context = null;
 		private string soundroot = string.Empty;
 		private bool isloaded = false;
+
+		private void GetSound (object fileName)
+		{
+			this.GetSound ((string) fileName);
+
+			var handler = this.SoundLoaded;
+			if(handler != null)
+				handler (this, new SoundLoadedEventArgs (fileName.ToString()));
+		}
 
 		#region IEngineProvider Members
 

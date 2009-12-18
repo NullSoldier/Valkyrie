@@ -20,9 +20,29 @@ namespace Valkyrie.Engine.Managers
 		void AddSound (string filename);
 
 		AudioSource GetSound (string filename);
+		void GetSoundA (string filename);
 		bool ContainsSound (string filename);
+
+		event EventHandler<SoundLoadedEventArgs> SoundLoaded;
 
 		void ClearCache ();
 		void ClearFromCache (string resourcename);
+	}
+
+	public class SoundLoadedEventArgs
+		: EventArgs
+	{
+		public SoundLoadedEventArgs (string name)
+		{
+			this.Name = name;
+		}
+
+		public string Name
+		{
+			get { return this.name; }
+			set { this.name = value; }
+		}
+
+		private string name;
 	}
 }

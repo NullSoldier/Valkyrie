@@ -7,6 +7,7 @@ using Valkyrie.Engine.Characters;
 using Valkyrie.Engine;
 using Valkyrie.Characters;
 using Microsoft.Xna.Framework;
+using Valkyrie.Engine.Managers;
 
 namespace Valkyrie.Library.Events
 {
@@ -25,13 +26,14 @@ namespace Valkyrie.Library.Events
 
 		public void Trigger (BaseCharacter character, IEngineContext context)
 		{
-			var soundfilename = this.Parameters["FileName"];
-			var loop = this.Parameters["LoopSound"];
+			if(this.context == null)
+				this.context = context;
 
-			var sound = context.SoundManager.GetSound (soundfilename);
+			var soundfilename = this.lastsoundrequested = this.Parameters["FileName"];
+			var loop = this.lastloop = this.Parameters["LoopSound"];
 
-			if(sound != null)
-				context.SoundProvider.PlayBGM (sound, ((loop == "1") ? true : false));
+			context.SoundManager.SoundLoaded += this.Event_SoundLoaded;
+			context.SoundManager.GetSoundA (soundfilename);
 		}
 
 		public IEnumerable<string> GetParameterNames ()
@@ -49,5 +51,19 @@ namespace Valkyrie.Library.Events
 
 			return clone;
 		}
+
+		private void Event_SoundLoaded (object sender, SoundLoadedEventArgs ev)
+		{
+			if(ev.Name == this.lastsoundrequested)
+			{
+				var sound = this.context.SoundManager.GetSound (ev.Name);
+				if(sound != null)
+					context.SoundProvider.PlayBGM (sound, ((this.lastloop == "1") ? true : false));
+			}
+		}
+
+		private string lastsoundrequested;
+		private string lastloop;
+		private IEngineContext context;
 	}
 }
