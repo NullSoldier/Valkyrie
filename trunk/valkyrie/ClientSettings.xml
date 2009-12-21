@@ -10,8 +10,8 @@
   </Server>
 
   <Login>
-    <Username>NullSoldier</Username>
-    <Password>tgw104</Password>
+    <Username>Username</Username>
+    <Password>Password</Password>
   </Login>
   
 </Client> 
