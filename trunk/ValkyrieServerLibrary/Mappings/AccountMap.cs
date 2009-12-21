@@ -13,10 +13,10 @@ namespace ValkyrieServerLibrary.Mappings
 		public AccountMap()
 		{
 			Table("`accounts`");
-			Id(a => a.ID, "`accountID`");
+			Id(a => a.ID, "`ID`");
 			
-			Map(a => a.Username, "`accountUsername`");
-			Map(a => a.Password, "`accountPassword`");
+			Map(a => a.Username, "`Username`");
+			Map(a => a.Password, "`Password`");
 		}
 	}
 }

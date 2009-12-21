@@ -110,8 +110,9 @@ namespace ValkyrieServerLibrary.Core
 			ev.Connection.MessageReceived -= this.Server_MessageReceived;
 			ev.Connection.Disconnected -= this.Server_Disconnected;
 
-			if(this.players.GetPlayer(ev.Connection).State == PlayerState.LoggedIn)
-				this.Disconnect(ev.Connection);
+			var player = this.players.GetPlayer (ev.Connection);
+			if(player != null && player.State == PlayerState.LoggedIn)
+				this.Disconnect (ev.Connection);
 		}
 
 		public void Stop()

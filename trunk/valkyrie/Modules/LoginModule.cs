@@ -28,6 +28,7 @@ using Valkyrie.Engine.Characters;
 using Valkyrie.Engine.Core;
 using Microsoft.Xna.Framework.Audio;
 using System.Media;
+using System.Security.Cryptography;
 
 namespace Valkyrie.Modules
 {
@@ -154,10 +155,27 @@ namespace Valkyrie.Modules
 
 				LoginMessage msg = new LoginMessage();
 				msg.Username = username;
-				msg.Password = password;
+				msg.Password = this.EncodePassword (password).Replace ("-", String.Empty);
 				this.context.NetworkProvider.Send(msg);
 			}
 		}
+
+		public string EncodePassword (string originalPassword)
+		{
+			MD5CryptoServiceProvider x = new MD5CryptoServiceProvider ();
+
+			byte[] bs = System.Text.Encoding.UTF8.GetBytes (originalPassword);
+			bs = x.ComputeHash (bs);
+
+			StringBuilder s = new StringBuilder ();
+			foreach(byte b in bs)
+			{
+				s.Append (b.ToString ("x2").ToLower ());
+			}
+			
+			return s.ToString ();
+		}
+
 
 		private void TestMessageReceived (object sender, MessageReceivedEventArgs ev)
 		{

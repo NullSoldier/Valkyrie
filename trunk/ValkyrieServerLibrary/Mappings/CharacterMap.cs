@@ -15,15 +15,16 @@ namespace ValkyrieServerLibrary.Mappings
 		{
 			Table("`characters`");
 
-			Id(c => c.ID, "`characterID`");
-			Map(c => c.Name, "`characterName`");
+			Id(c => c.ID, "`ID`");
+			Map (c => c.AccountID, "`AccountID`");
+			Map(c => c.Name, "`Name`");
 
-			Map(c => c.Direction, "`characterDirection`").CustomType<Directions> ();
-			Map(c => c.MapX, "`characterMapX`");
-			Map(c => c.MapY, "`characterMapY`");
+			Map(c => c.Direction, "`Direction`").CustomType<Directions> ();
+			Map(c => c.MapX, "`MapX`");
+			Map(c => c.MapY, "`MapY`");
 
-			Map(c => c.TileSheet, "`characterTileSheet`");
-			Map(c => c.WorldName, "`characterWorld`");
+			Map(c => c.TileSheet, "`TileSheet`");
+			Map(c => c.WorldName, "`World`");
 		}
 	}
 }

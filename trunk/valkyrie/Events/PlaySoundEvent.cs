@@ -32,8 +32,7 @@ namespace Valkyrie.Library.Events
 			var soundfilename = this.lastsoundrequested = this.Parameters["FileName"];
 			var loop = this.lastloop = this.Parameters["LoopSound"];
 
-			context.SoundManager.SoundLoaded += this.Event_SoundLoaded;
-			context.SoundManager.GetSoundA (soundfilename);
+			context.SoundManager.GetSoundAsync (soundfilename, this.SoundLoaded);
 		}
 
 		public IEnumerable<string> GetParameterNames ()
@@ -52,7 +51,7 @@ namespace Valkyrie.Library.Events
 			return clone;
 		}
 
-		private void Event_SoundLoaded (object sender, SoundLoadedEventArgs ev)
+		private void SoundLoaded (SoundLoadedEventArgs ev)
 		{
 			if(ev.Name == this.lastsoundrequested)
 			{

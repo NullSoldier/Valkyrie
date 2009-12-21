@@ -21,8 +21,6 @@ namespace Valkyrie.Library.Managers
 	{
 		#region Properties and Methods
 
-		public event EventHandler<SoundLoadedEventArgs> SoundLoaded;
-
 		public string SoundRoot
 		{
 			get { return this.soundroot; }
@@ -91,12 +89,12 @@ namespace Valkyrie.Library.Managers
 			return this.Resources[fileName];
 		}
 
-		public void GetSoundA (string filename)
+		public void GetSoundAsync (string filename, Action<SoundLoadedEventArgs> callback)
 		{
 			Thread thread = new Thread (this.GetSound);
 			thread.IsBackground = true;
 			thread.Name = "Sound Loader Loading " + filename;
-			thread.Start ((object)filename);
+			thread.Start (new object[] {filename, callback});
 		}
 
 		public bool ContainsSound (string FileName)
@@ -126,13 +124,16 @@ namespace Valkyrie.Library.Managers
 		private string soundroot = string.Empty;
 		private bool isloaded = false;
 
-		private void GetSound (object fileName)
+		private void GetSound (object args)
 		{
-			this.GetSound ((string) fileName);
+			var objargs = (object[]) args;
+			var filename = (string) objargs[0];
 
-			var handler = this.SoundLoaded;
+			this.GetSound (filename);
+
+			var handler = (Action<SoundLoadedEventArgs>)objargs[1];
 			if(handler != null)
-				handler (this, new SoundLoadedEventArgs (fileName.ToString()));
+				handler (new SoundLoadedEventArgs (filename));
 		}
 
 		#region IEngineProvider Members

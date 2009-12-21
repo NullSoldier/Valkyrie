@@ -18,6 +18,11 @@ namespace ValkyrieServerLibrary.Entities
 			get; set;
 		}
 
+		public virtual int AccountID
+		{
+			get; set;
+		}
+
 		public virtual string Name
 		{
 			get; set;

@@ -171,7 +171,7 @@ namespace ValkyrieServerLibrary.Core
 			}
 			
 			Character character = this.session.CreateCriteria<Character> ()
-			.Add(Restrictions.Eq("ID", account.ID))
+			.Add(Restrictions.Eq("AccountID", account.ID))
 			.List<Character>().FirstOrDefault();
 
 			character.Location = new ScreenPoint(character.MapX * 32, character.MapY * 32);

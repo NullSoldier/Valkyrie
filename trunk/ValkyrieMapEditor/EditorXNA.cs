@@ -24,6 +24,7 @@ using Valkyrie.Engine;
 using System.Xml;
 using Valkyrie.Library.Providers;
 using Valkyrie.Library.Managers;
+using ValkyrieMapEditor.Providers;
 
 
 namespace ValkyrieMapEditor
@@ -119,7 +120,7 @@ namespace ValkyrieMapEditor
 			this.Engine.Load(new ValkyrieSceneProvider(this.GraphicsDevice),
 				new ValkyrieEventProvider(),
 				new ValkyrieNetworkProvider(),
-				new ValkyrieSoundProvider(),
+				new MapEditorSoundProvider(),
 				new ValkyrieModuleProvider(),
 				new ValkyrieMovementProvider(),
 				new ValkyrieCollisionProvider(),

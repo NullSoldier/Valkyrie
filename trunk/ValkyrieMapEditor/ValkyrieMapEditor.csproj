@@ -148,6 +148,7 @@
     <Compile Include="Core\TileBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Providers\MapEditorSoundProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\world.png" />
