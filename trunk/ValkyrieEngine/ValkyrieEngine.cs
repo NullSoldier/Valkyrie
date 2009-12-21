@@ -72,6 +72,12 @@ namespace Valkyrie.Engine
 			get { return this.collisionprovider; }
 		}
 
+		public IVoiceChatProvider VoiceChatProvider
+		{
+			get { return this.voicechatprovider; }
+		}
+
+
 		public IWorldManager WorldManager
 		{
 			get { return this.worldmanager; }
@@ -89,7 +95,7 @@ namespace Valkyrie.Engine
 
 		#endregion
 
-		public void Load (ISceneProvider draw, IEventProvider events, INetworkProvider network, ISoundProvider sound, IModuleProvider modules, IMovementProvider movement, ICollisionProvider collision, IWorldManager world, ITextureManager texture, ISoundManager soundmanager)
+		public void Load (ISceneProvider draw, IEventProvider events, INetworkProvider network, ISoundProvider sound, IModuleProvider modules, IMovementProvider movement, ICollisionProvider collision, IVoiceChatProvider voicechat, IWorldManager world, ITextureManager texture, ISoundManager soundmanager)
 		{
 			this.drawprovider = draw;
 			this.drawprovider.LoadEngineContext(this);
@@ -111,6 +117,9 @@ namespace Valkyrie.Engine
 
 			this.collisionprovider = collision;
 			this.collisionprovider.LoadEngineContext(this);
+
+			this.voicechatprovider = voicechat;
+			this.voicechatprovider.LoadEngineContext (this);
 
 			this.texturemanager = texture;
 			this.texturemanager.LoadEngineContext(this);			
@@ -146,6 +155,7 @@ namespace Valkyrie.Engine
 		private IModuleProvider moduleprovider;
 		private IMovementProvider movementprovider;
 		private ICollisionProvider collisionprovider;
+		private IVoiceChatProvider voicechatprovider;
 
 		private IWorldManager worldmanager;
 		private ITextureManager texturemanager;

@@ -15,6 +15,12 @@ namespace Valkyrie.Library.Providers
 	public class ValkyrieSoundProvider
 		: ISoundProvider
 	{
+		public float MasterGainModifier
+		{
+			get { return this.mastergainmodifer; }
+			set { this.mastergainmodifer = value; }
+		}
+
 		public void PlaySound (AudioSource sound, bool loop)
 		{
 			
@@ -142,6 +148,7 @@ namespace Valkyrie.Library.Providers
 		private LeasedAudioSource currentbgmsource;
 		private LeasedAudioSource nextbgmsource;
 		private List<LeasedAudioSource> leased = new List<LeasedAudioSource> ();
+		private float mastergainmodifer = 0;
 		private bool isloaded = false;
 	}
 

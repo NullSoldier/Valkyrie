@@ -251,4 +251,13 @@
       <Y>0</Y>
     </MapLoc>
   </World>
+
+  <World Name="Natural_Interiors">
+    <MapLoc>
+      <Name>Viridian_Forest</Name>
+      <Uri>Natural_Interiors/Viridian_Forest.xml</Uri>
+      <X>0</X>
+      <Y>0</Y>
+    </MapLoc>
+  </World>
 </Worlds>

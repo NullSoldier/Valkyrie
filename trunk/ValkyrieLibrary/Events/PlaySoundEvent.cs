@@ -5,7 +5,6 @@ using System.Text;
 using Valkyrie.Engine.Events;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Engine;
-using Valkyrie.Characters;
 using Microsoft.Xna.Framework;
 using Valkyrie.Engine.Managers;
 

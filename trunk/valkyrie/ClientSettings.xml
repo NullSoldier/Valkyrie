@@ -5,11 +5,13 @@
     <Name>Kanto</Name>
     <Address>127.0.0.1</Address>
     <Port>6112</Port>
+    <GablarskiHost></GablarskiHost>
+    <GablarskiPort></GablarskiPort>
   </Server>
 
   <Login>
-    <Username>testuser</Username>
-    <Password>testpassword</Password>
+    <Username>NullSoldier</Username>
+    <Password>tgw104</Password>
   </Login>
   
 </Client> 

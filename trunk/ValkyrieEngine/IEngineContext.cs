@@ -17,6 +17,7 @@ namespace Valkyrie.Engine
 		IModuleProvider ModuleProvider { get; }
 		IMovementProvider MovementProvider { get; }
 		ICollisionProvider CollisionProvider { get; }
+		IVoiceChatProvider VoiceChatProvider { get; }
 
 		IWorldManager WorldManager { get; }
 		ITextureManager TextureManager { get; }

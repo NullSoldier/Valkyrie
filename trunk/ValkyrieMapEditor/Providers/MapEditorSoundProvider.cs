@@ -12,42 +12,38 @@ namespace ValkyrieMapEditor.Providers
 	public class MapEditorSoundProvider
 		: ISoundProvider
 	{
-		#region ISoundProvider Members
+		public float MasterGainModifier { get; set; }
 
 		public void PlaySound (AudioSource sound, bool loop)
 		{
-
+			throw new NotImplementedException ();
 		}
 
 		public void PlayBGM (AudioSource sound, bool loop)
 		{
-			
+			throw new NotImplementedException ();
 		}
 
 		public void StopBGM ()
 		{
-			
+			throw new NotImplementedException ();
 		}
 
 		public void Update (GameTime gameTime)
 		{
-			
+			throw new NotImplementedException ();
 		}
-
-		#endregion
-
-		#region IEngineProvider Members
 
 		public void LoadEngineContext (IEngineContext context)
 		{
-			
+			this.isloaded = true;
 		}
 
 		public bool IsLoaded
 		{
-			get { return true; }
+			get { return this.isloaded; }
 		}
 
-		#endregion
+		private bool isloaded = false;
 	}
 }

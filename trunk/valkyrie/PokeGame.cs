@@ -106,6 +106,7 @@ namespace Valkyrie
 				new ValkyrieModuleProvider(),
 				new ValkyrieMovementProvider(),
 				new ValkyrieCollisionProvider(),
+				new ValkyrieVoiceChatProvider (),
 				worldmanager,
 				texturemanager,
 				new ValkyrieSoundManager());

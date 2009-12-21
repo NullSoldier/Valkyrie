@@ -114,8 +114,9 @@ namespace ValkyrieMapEditor.Core
 				this.EndSelectedPoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
 
 				var tmpRect = this.GetSelectionRectangle(this.SelectedPoint, this.EndSelectedPoint);
+				var camera = this.context.SceneProvider.GetCamera("camera1");
 
-				this.CreateOrEditEvent(new Rectangle(tmpRect.X / 32, tmpRect.Y / 32, tmpRect.Width / 32, tmpRect.Height / 32));
+				this.CreateOrEditEvent (new Rectangle ((tmpRect.X + ((int)camera.MapOffset.X * -1)) / 32, (tmpRect.Y + ((int)camera.MapOffset.Y * -1)) / 32, tmpRect.Width / 32, tmpRect.Height / 32));
 
 				this.SelectedPoint = new Point(-1, -1);
 				this.EndSelectedPoint = new Point(-1, -1);
@@ -129,7 +130,7 @@ namespace ValkyrieMapEditor.Core
 			// Render all of the events
 			foreach (IMapEvent mapevent in this.context.EventProvider.GetMapsEvents(MapEditorManager.CurrentMap.Name))
 			{
-				// Where on the screen?\
+				// Where on the screen?
 				Point newLoc = new Point((int)camera.MapOffset.X + (int)camera.CameraOffset.X + (mapevent.Rectangle.X * MapEditorManager.CurrentMap.TileSize),
 					 (int)camera.MapOffset.Y + (int)camera.CameraOffset.Y + (mapevent.Rectangle.Y * MapEditorManager.CurrentMap.TileSize));
 
@@ -157,6 +158,8 @@ namespace ValkyrieMapEditor.Core
 			if(this.currentmapevent == null && SelectedPoint.X != -1 && SelectedPoint.Y != -1)
 			{
 				var rectangle = this.GetSelectionRectangle(this.SelectedPoint, this.EndSelectedPoint);
+				//rectangle.X += (int)camera.MapOffset.X;
+				//rectangle.Y += (int) camera.MapOffset.Y;
 
 				Texture2D texture = EditorXNA.CreateSelectRectangle(rectangle.Width, rectangle.Height);
 

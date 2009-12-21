@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework;
 using Valkyrie.Engine.Events;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Engine;
+using Valkyrie.Engine.Maps;
+using Valkyrie.Engine.Core;
 
 namespace Valkyrie.Events
 {
@@ -27,10 +29,28 @@ namespace Valkyrie.Events
 
 		public void Trigger (BaseCharacter character, IEngineContext context)
 		{
-			String name = this.Parameters["World"];
+			String worldname = this.Parameters["World"];
 			String pos = this.Parameters["EntryPointName"];
 
-			throw new NotImplementedException();
+			IMapEvent tmpevent = null;
+			MapHeader tmpheader = null;
+
+			foreach(MapHeader header in context.WorldManager.GetWorld(worldname).Maps.Values)
+			{
+				tmpevent = context.EventProvider.GetMapsEvents(header.Map).Where( m => m.GetStringType() == "EntryPoint" && m.Parameters["Name"] == pos).FirstOrDefault();
+				if(tmpevent != null)
+				{
+					tmpheader = header;
+					break;
+				}
+			}
+
+			if(tmpevent == null || tmpheader == null)
+				return;
+
+			character.WorldName = worldname;
+			character.Location = new MapPoint (tmpevent.Rectangle.X + tmpheader.MapLocation.X,
+															tmpevent.Rectangle.Y + tmpheader.MapLocation.Y).ToScreenPoint ();
 		}
 
 		public IEnumerable<string> GetParameterNames ()

@@ -94,6 +94,8 @@
     <Compile Include="Events\EntryPointEvent.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Events\PlaySoundEvent.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="Managers\ValkyrieSoundManager.cs" />
     <Compile Include="Managers\ValkyrieTextureManager.cs" />
     <Compile Include="MovementItem.cs" />
@@ -105,6 +107,7 @@
     <Compile Include="Providers\ValkyrieNetworkProvider.cs" />
     <Compile Include="Providers\ValkyrieSceneProvider.cs" />
     <Compile Include="Providers\ValkyrieSoundProvider.cs" />
+    <Compile Include="Providers\ValkyrieVoiceChatProvider.cs" />
     <Compile Include="Providers\XMLMapProvider.cs" />
     <Compile Include="Providers\XMLWorldProvider.cs" />
     <Compile Include="Managers\ValkyrieWorldManager.cs" />

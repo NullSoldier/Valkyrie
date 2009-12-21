@@ -34,7 +34,10 @@ namespace Valkyrie.Library.Managers
 
 		public void AddSound (string Name, AudioSource newSound)
 		{
-			this.Resources.Add(Name, newSound);
+			lock(this.Resources)
+			{
+				this.Resources.Add (Name, newSound);
+			}
 		}
 
 		public void AddSound (string FileName)
@@ -79,14 +82,17 @@ namespace Valkyrie.Library.Managers
 
 		public AudioSource GetSound (string fileName)
 		{
-			if(!this.Resources.ContainsKey (fileName))
-				this.AddSound (fileName);
-			
-			// If we couldn't find it
-			if(!this.Resources.ContainsKey (fileName))
-				return null;
+			lock(this.Resources)
+			{
+				if(!this.Resources.ContainsKey (fileName))
+					this.AddSound (fileName);
+				
+				// If we couldn't find it
+				if(!this.Resources.ContainsKey (fileName))
+					return null;
 
-			return this.Resources[fileName];
+				return this.Resources[fileName];
+			}
 		}
 
 		public void GetSoundAsync (string filename, Action<SoundLoadedEventArgs> callback)
@@ -99,22 +105,31 @@ namespace Valkyrie.Library.Managers
 
 		public bool ContainsSound (string FileName)
 		{
-			return (this.Resources.ContainsKey(FileName));
+			lock(this.Resources)
+			{
+				return (this.Resources.ContainsKey (FileName));
+			}
 		}
 
 		public void ClearCache ()
 		{
-			this.Resources.Clear();
+			lock(this.Resources)
+			{
+				this.Resources.Clear ();
+			}
 		}
 
 		public void ClearFromCache (string resourcename)
 		{
-			if(this.Resources.Keys.Contains(resourcename))
+			lock(this.Resources)
 			{
-				this.Resources.Remove(resourcename);
+				if(this.Resources.Keys.Contains (resourcename))
+				{
+					this.Resources.Remove (resourcename);
+				}
+				else
+					throw new ArgumentException ("Resource does not exist in the cache"); // uneccessary?
 			}
-			else
-				throw new ArgumentException("Resource does not exist in the cache"); // uneccessary?
 		}
 
 		#endregion

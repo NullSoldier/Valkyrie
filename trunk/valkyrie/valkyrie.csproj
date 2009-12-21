@@ -99,7 +99,6 @@
     <Compile Include="Events\JumpEvent.cs" />
     <Compile Include="Events\JumpPadEvent.cs" />
     <Compile Include="Events\LoadEvent.cs" />
-    <Compile Include="Events\PlaySoundEvent.cs" />
     <Compile Include="Events\RickRollEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
@@ -129,7 +128,7 @@
     <Content Include="Data\keys.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Graphics\FireRedSprite.png" />
+    <Content Include="Graphics\FemaleSprite.png" />
     <Content Include="Graphics\Intro\Cline.png" />
     <Content Include="Graphics\Intro\Copyright.png" />
     <Content Include="Graphics\Intro\GrassOverlay.png" />
@@ -152,8 +151,11 @@
     <Content Include="Graphics\Main\Route22_Route.png" />
     <Content Include="Graphics\Main\Route3_Route.png">
     </Content>
+    <Content Include="Graphics\MaleSprite2.png" />
+    <Content Include="Graphics\Natural_Interiors\Viridian_Forest.png" />
     <Content Include="Graphics\NurseJoy.png" />
     <Content Include="Graphics\Pallet_House\Pallet_House_01.png" />
+    <Content Include="Graphics\PoliceMan.png" />
     <Content Include="Graphics\RetardSprite.png" />
     <Content Include="Maps\Main\Celadon_Town.xml" />
     <Content Include="Maps\Main\Cerulean_Town.xml" />
@@ -184,6 +186,7 @@
     <Content Include="Maps\Main\Route9_Route.xml" />
     <Content Include="Maps\Main\Saffron_Town.xml" />
     <Content Include="Maps\Main\Vermillion_Town.xml" />
+    <Content Include="Maps\Natural_Interiors\Viridian_Forest.xml" />
     <Content Include="Media\PokemonIntro.avi">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

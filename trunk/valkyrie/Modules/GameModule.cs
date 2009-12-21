@@ -136,7 +136,9 @@ namespace Valkyrie.Modules
 			this.scene.GetPlayer("player1").StoppedMoving += this.GameModule_StoppedMoving;
 			this.scene.GetPlayer("player1").TileLocationChanged += this.GameModule_TileLocationChanged;
 			this.scene.GetPlayer("player1").Collided += this.GameModule_Collided;
-			this.scene.GetPlayer("player1").TileLocationChanged += TestTileLocationChanged; // for testing purposes
+
+			this.context.VoiceChatProvider.UserStartedTalking += this.GameModule_UserStartedTalking;
+			this.context.VoiceChatProvider.UserStoppedTalking += this.GameModule_UserStoppedTalking;
 
 			this.context.SoundManager.AddSound("PalletTown.wav");
 			
@@ -267,19 +269,6 @@ namespace Valkyrie.Modules
 				return;
 		}
 
-		public void TestTileLocationChanged(object sender, EventArgs e)
-	    {
-	        // Send Test
-			//LocationUpdateMessage msg = new LocationUpdateMessage();
-			//msg.X = TileEngine.Player.Location.X;
-			//msg.Y = TileEngine.Player.Location.Y;
-			//msg.Animation = TileEngine.Player.CurrentAnimationName;
-			//msg.NetworkID = TileEngine.NetworkID;
-			//msg.Direction = (int)TileEngine.Player.Direction;
-			//TileEngine.NetworkManager.Send(msg);
-	        // End Send Test
-	    }
-
 	    public void Unload()
 	    {
 
@@ -300,6 +289,27 @@ namespace Valkyrie.Modules
 
 	    #endregion
 
+		private void GameModule_UserStartedTalking (object sender, TalkingChangedEventArgs ev)
+		{
+			lock(this.talkingcountlock)
+			{
+				this.talkingcount++;
+
+				this.context.SoundProvider.MasterGainModifier = 0;
+			}
+		}
+
+		private void GameModule_UserStoppedTalking (object sender, TalkingChangedEventArgs ev)
+		{
+			lock(this.talkingcountlock)
+			{
+				this.talkingcount--;
+
+				if(talkingcount == 0)
+					this.context.SoundProvider.MasterGainModifier = 0;
+			}
+		}
+
 		private void GameModule_Collided (object sender, EventArgs ev)
 	    {
 	        this.context.EventProvider.HandleEvent((BaseCharacter)sender, ActivationTypes.Collision);
@@ -308,8 +318,6 @@ namespace Valkyrie.Modules
 		private void GameModule_TileLocationChanged (object sender, EventArgs ev)
 	    {
 			this.context.EventProvider.HandleEvent((BaseCharacter)sender, ActivationTypes.Movement);
-
-	        this.TestTileLocationChanged(this, EventArgs.Empty);
 	    }
 
 	    private void GameModule_StartedMoving(object sender, EventArgs ev)
@@ -356,34 +364,40 @@ namespace Valkyrie.Modules
 
 	    private void GameModule_KeyDown(object sender, KeyPressedEventArgs ev)
 	    {
-	        if (this.IsDir(ev.KeyPressed))
-	        {
-	            UpdateDirection(ev.KeyPressed);
+			var player = this.scene.GetPlayer ("player1");
 
-				var player = this.scene.GetPlayer ("player1");
-	            if (!player.IgnoreMoveInput)
-	            {
+			if(this.IsDir (ev.KeyPressed))
+			{
+				UpdateDirection (ev.KeyPressed);
+
+				if(!player.IgnoreMoveInput)
+				{
 					Directions direction = Directions.Any;
 
-	                switch (this.KeybindController.GetKeyAction(CrntDir))
-	                {
-	                    case "MoveUp":
+					switch(ev.Action)
+					{
+						case "MoveUp":
 							direction = Directions.North;
-	                        break;
-	                    case "MoveDown":
+							break;
+						case "MoveDown":
 							direction = Directions.South;
-	                        break;
-	                    case "MoveLeft":
+							break;
+						case "MoveLeft":
 							direction = Directions.West;
-	                        break;
-	                    case "MoveRight":
+							break;
+						case "MoveRight":
 							direction = Directions.East;
-	                        break;
-	                }
+							break;
+					}
 
 					this.context.MovementProvider.BeginMove (player, direction);
-	            }
-	        }
+				}
+			}
+			else
+			{
+				if(ev.Action == "VoiceChat")
+					this.context.VoiceChatProvider.BeginTalk (player);
+			}
 	    }
 
 	    private void GameModule_KeyUp(object sender, KeyPressedEventArgs ev)
@@ -437,6 +451,9 @@ namespace Valkyrie.Modules
 					this.context.MovementProvider.EndMove(player, true);
 	            }
 	        }
+
+			if(ev.Action == "VoiceChat")
+				this.context.VoiceChatProvider.EndTalk (player);
 	    }
 
 	    private void UpdateDirection(Keys NewDir)
@@ -494,17 +511,20 @@ namespace Valkyrie.Modules
 		private IEngineContext context = null;
 		private PokeNetworkProvider network = null;
 		private PokeSceneProvider scene = null;
-		private bool isloaded = false;
 		private KeybindController KeybindController = new KeybindController();
 		private Keys CrntDir = Keys.None;
 		private GraphicsDevice graphicsdevice = null;
-		private bool silentstep = false;
 
+		private object talkingcountlock = new object();
+		private int talkingcount = 0;
+
+		private bool isloaded = false;
 		private bool underlayer = true;
 		private bool baselayer = true;
 		private bool middlelayer = true;
 		private bool toplayer = true;
 		private bool showplayers = true;
+		private bool silentstep = false;
 
 		private NetworkMovementProvider networkmovementprovider = null;
 		//private PokePlayer player = null;

@@ -12,6 +12,8 @@ namespace Valkyrie.Engine.Providers
 	public interface ISoundProvider
 		: IEngineProvider
 	{
+		float MasterGainModifier { get; set; }
+
 		void PlaySound (AudioSource sound, bool loop);
 		void PlayBGM (AudioSource sound, bool loop);
 		void StopBGM ();
