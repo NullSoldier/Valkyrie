@@ -53,7 +53,7 @@ namespace ValkyrieServerLibrary.Core
 			this.players = new NetworkPlayerCache();
 
 			this.server = new NetworkServerConnectionProvider();
-			this.server.Port = 6112;
+			this.server.Port = 6116;
 
 			this.settings = settings;
 		}

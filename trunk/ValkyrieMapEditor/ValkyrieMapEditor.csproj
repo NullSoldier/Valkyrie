@@ -149,6 +149,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Providers\MapEditorSoundProvider.cs" />
+    <Compile Include="Providers\MapEditorVoiceChatProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\world.png" />

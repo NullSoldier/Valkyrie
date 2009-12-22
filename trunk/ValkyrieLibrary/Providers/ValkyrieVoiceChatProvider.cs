@@ -86,7 +86,7 @@ namespace Valkyrie.Library.Providers
 			if (character == null)
 				throw new ArgumentNullException ("character");
 
-			gb.Audio.EndCapture (voice, gb.CurrentChannel);
+			gb.Audio.EndCapture (voice);
 		}
 
 		// Loads the engine context which you can use to access the other providers
@@ -250,7 +250,7 @@ namespace Valkyrie.Library.Providers
 			else
 				coptions.Mode = AudioEngineCaptureMode.Explicit;
 
-			gb.Audio.Attach (capture, AudioFormat.Mono16Bit, this.voice, coptions);
+			gb.Audio.Attach (capture, Gablarski.Audio.AudioFormat.Mono16Bit, this.voice, coptions);
 		}
 		
 		private void TearDownGablarski()

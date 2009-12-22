@@ -124,7 +124,7 @@ namespace ValkyrieMapEditor
 				new ValkyrieModuleProvider(),
 				new ValkyrieMovementProvider(),
 				new ValkyrieCollisionProvider(),
-				new ValkyrieVoiceChatProvider(),
+				new MapEditorVoiceChatProvider(),
 				worldmanager,
 				new ValkyrieTextureManager(this.Content, this.GraphicsDevice),
 				new ValkyrieSoundManager());
