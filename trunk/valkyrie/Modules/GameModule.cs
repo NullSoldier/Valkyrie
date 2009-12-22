@@ -296,7 +296,7 @@ namespace Valkyrie.Modules
 			{
 				this.talkingcount++;
 
-				this.context.SoundProvider.MasterGainModifier = 0;
+				this.context.SoundProvider.MasterGainModifier = -0.15f;
 			}
 		}
 
@@ -307,7 +307,7 @@ namespace Valkyrie.Modules
 				this.talkingcount--;
 
 				if(talkingcount == 0)
-					this.context.SoundProvider.MasterGainModifier = 0;
+					this.context.SoundProvider.MasterGainModifier = -0.3f;
 			}
 		}
 
@@ -396,8 +396,10 @@ namespace Valkyrie.Modules
 			}
 			else
 			{
-				if(ev.Action == "VoiceChat")
+				if(ev.Action == "VoiceChat" && this.context.VoiceChatProvider.IsConnected)
+				{
 					this.context.VoiceChatProvider.BeginTalk (player);
+				}
 			}
 	    }
 
@@ -455,7 +457,7 @@ namespace Valkyrie.Modules
 	            }
 	        }
 
-			if(ev.Action == "VoiceChat")
+			if(ev.Action == "VoiceChat" && this.context.VoiceChatProvider.IsConnected)
 				this.context.VoiceChatProvider.EndTalk (player);
 	    }
 

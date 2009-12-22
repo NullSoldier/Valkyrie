@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Valkyrie.Engine.Providers;
 using Valkyrie.Engine;
+using Valkyrie.Engine.Characters;
 
 namespace ValkyrieMapEditor.Providers
 {
