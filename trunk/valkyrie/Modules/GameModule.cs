@@ -110,20 +110,21 @@ namespace Valkyrie.Modules
 			
 			this.scene.AddCamera("camera1", new ValkyrieCamera(0, 0, 800, 600) { WorldName = this.scene.GetPlayer("player1").WorldName });
 
-	        this.KeybindController.AddKey(Keys.Left, "MoveLeft");
-	        this.KeybindController.AddKey(Keys.Up, "MoveUp");
-	        this.KeybindController.AddKey(Keys.Down, "MoveDown");
-	        this.KeybindController.AddKey(Keys.Right, "MoveRight");
-	        this.KeybindController.AddKey(Keys.Q, "Noclip");
-			this.KeybindController.AddKey(Keys.Add, "ZoomIn");
-			this.KeybindController.AddKey(Keys.Subtract, "ZoomOut");
-			this.KeybindController.AddKey(Keys.NumPad6, "SpeedUp");
-			this.KeybindController.AddKey(Keys.NumPad9, "SlowDown");
-			this.KeybindController.AddKey(Keys.F1, "ToggleUnderlayer");
-			this.KeybindController.AddKey(Keys.F2, "ToggleBaselayer");
-			this.KeybindController.AddKey(Keys.F3, "ToggleMiddlelayer");
-			this.KeybindController.AddKey(Keys.F4, "ToggleToplayer");
-			this.KeybindController.AddKey(Keys.F5, "TogglePlayers");
+	        this.KeybindController.AddKey (Keys.Left, "MoveLeft");
+	        this.KeybindController.AddKey (Keys.Up, "MoveUp");
+	        this.KeybindController.AddKey (Keys.Down, "MoveDown");
+	        this.KeybindController.AddKey (Keys.Right, "MoveRight");
+	        this.KeybindController.AddKey (Keys.Q, "Noclip");
+			this.KeybindController.AddKey (Keys.Add, "ZoomIn");
+			this.KeybindController.AddKey (Keys.Subtract, "ZoomOut");
+			this.KeybindController.AddKey (Keys.NumPad6, "SpeedUp");
+			this.KeybindController.AddKey (Keys.NumPad9, "SlowDown");
+			this.KeybindController.AddKey (Keys.F1, "ToggleUnderlayer");
+			this.KeybindController.AddKey (Keys.F2, "ToggleBaselayer");
+			this.KeybindController.AddKey (Keys.F3, "ToggleMiddlelayer");
+			this.KeybindController.AddKey (Keys.F4, "ToggleToplayer");
+			this.KeybindController.AddKey (Keys.F5, "TogglePlayers");
+			this.KeybindController.AddKey (Keys.Z, "VoiceChat");
 
 	        this.KeybindController.KeyDown += this.GameModule_KeyDown;
 	        this.KeybindController.KeyUp += this.GameModule_KeyUp;
