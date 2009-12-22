@@ -313,6 +313,8 @@ xcopy "$(ProjectDir)\Graphics" "$(SolutionDir)ValkyrieMapEditor\$(OutDir)\Graphi
 xcopy "$(TargetPath)" "$(SolutionDir)ValkyrieMapEditor\$(OutDir)" /S /Y /I
 
 xcopy "$(ProjectDir)\Maps" "$(SolutionDir)ValkyrieGameServer\$(OutDir)\Maps" /S /Y /I
-xcopy "$(ProjectDir)\Data\PokeWorld.xml" "$(SolutionDir)ValkyrieGameServer\$(OutDir)\Maps" /S /Y /I</PostBuildEvent>
+xcopy "$(ProjectDir)\Data\PokeWorld.xml" "$(SolutionDir)ValkyrieGameServer\$(OutDir)\Maps" /S /Y /I
+
+xcopy /Y "$(SolutionDir)lib\libcelt.*" "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

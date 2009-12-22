@@ -35,10 +35,8 @@ namespace Valkyrie.Engine.Providers
 
 		public object ID
 		{
-			get { return this.id; }
-			set { this.id = value; }
+			get;
+			private set;
 		}
-
-		private object id;
 	}
 }
