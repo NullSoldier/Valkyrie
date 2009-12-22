@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,12 +10,18 @@ using Gablarski.Client;
 using Gablarski.Network;
 using Gablarski.Audio;
 using Gablarski.Messages;
+using Gablarski.OpenAL;
 
 namespace Valkyrie.Library.Providers
 {
 	public class ValkyrieVoiceChatProvider
 		: IVoiceChatProvider
 	{
+		public ValkyrieVoiceChatProvider (ValkyrieSoundProvider sound)
+		{
+			this.oalContext = sound.audiocontext;
+		}
+		
 		public event EventHandler<TalkingChangedEventArgs> UserStartedTalking;
 		public event EventHandler<TalkingChangedEventArgs> UserStoppedTalking;
 		public event EventHandler Connected;
@@ -105,6 +111,7 @@ namespace Valkyrie.Library.Providers
 		private GablarskiClient gb;
 		private AudioSource voice;
 		
+		private Context oalContext;
 		private IPlaybackProvider playback; 
 		private ICaptureProvider capture;
 		
@@ -116,7 +123,7 @@ namespace Valkyrie.Library.Providers
 			if (gb != null)
 				return;
 
-			playback = new OpenALPlaybackProvider();
+			playback = new OpenALPlaybackProvider (oalContext);
 			playback.Device = playback.DefaultDevice;
 
 			capture = new OpenALCaptureProvider();

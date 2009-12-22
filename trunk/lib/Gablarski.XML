@@ -187,12 +187,12 @@
             Stops the audio engine and clears all attachments.
             </summary>
         </member>
-        <member name="M:Gablarski.Audio.IAudioEngine.BeginCapture(Gablarski.Audio.AudioSource,Gablarski.ChannelInfo)">
+        <member name="M:Gablarski.Audio.IAudioEngine.BeginCapture(Gablarski.Audio.AudioSource,System.Collections.Generic.IEnumerable{Gablarski.ChannelInfo})">
             <summary>
             Begins an explicit capture for <paramref name="source"/>.
             </summary>
             <param name="source"></param>
-            <param name="channel"></param>
+            <param name="channels"></param>
             <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="channel"/> are <c>null</c>.</exception>
             <exception cref="T:System.InvalidOperationException"><see cref="P:Gablarski.Audio.IAudioEngine.AudioSender"/> is not set or <paramref name="source"/> is configured for <see cref="F:Gablarski.Audio.AudioEngineCaptureMode.Activated"/>.</exception>
         </member>
@@ -270,18 +270,16 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is <c>null</c>.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="source"/> does not belong to you.</exception>
         </member>
-        <member name="M:Gablarski.Audio.IAudioSender.SendAudioData(Gablarski.Audio.AudioSource,Gablarski.ChannelInfo,System.Byte[])">
+        <member name="M:Gablarski.Audio.IAudioSender.SendAudioData(Gablarski.Audio.AudioSource,Gablarski.Messages.TargetType,System.Int32[],System.Byte[])">
             <summary>
             Sends a frame of audio data to the source
             </summary>
             <param name="source">The source to send from.</param>
-            <param name="channel">The channel to send to.</param>
-            <param name="data"></param>
+            <param name="frame"></param>
             <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is <c>null</c>.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="source"/> does not belong to you.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="channel"/> is <c>null</c>.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="data"/> is <c>null</c>.</exception>
-            <exception cref="T:System.ArgumentException"><paramref name="data"/> is empty.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="frame"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="frame"/> is empty.</exception>
         </member>
         <member name="M:Gablarski.Audio.IAudioSender.EndSending(Gablarski.Audio.AudioSource)">
             <summary>
@@ -1671,7 +1669,10 @@
             Clears the source manager of all sources.
             </summary>
         </member>
-        <member name="M:Gablarski.Client.ClientSourceManager.BeginSending(Gablarski.Audio.AudioSource)">
+        <member name="M:Gablarski.Client.ClientSourceManager.ToggleIgnore(Gablarski.Audio.AudioSource)">
+            <returns>The new state of ignore on <paramref name="source"/>.</returns>
+        </member>
+        <member name="M:Gablarski.Client.ClientSourceManager.Gablarski#Audio#IAudioSender#BeginSending(Gablarski.Audio.AudioSource)">
             <summary>
             Sends notifications that you're begining to send audio from <paramref name="source"/> to <paramref name="channel"/>.
             </summary>
@@ -1679,20 +1680,18 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is <c>null</c>.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="source"/> does not belong to you.</exception>
         </member>
-        <member name="M:Gablarski.Client.ClientSourceManager.SendAudioData(Gablarski.Audio.AudioSource,Gablarski.ChannelInfo,System.Byte[])">
+        <member name="M:Gablarski.Client.ClientSourceManager.Gablarski#Audio#IAudioSender#SendAudioData(Gablarski.Audio.AudioSource,Gablarski.Messages.TargetType,System.Int32[],System.Byte[])">
             <summary>
             Sends a frame of audio data to the source
             </summary>
             <param name="source">The source to send from.</param>
-            <param name="channel">The channel to send to.</param>
             <param name="data"></param>
             <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is <c>null</c>.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="source"/> does not belong to you.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="channel"/> is <c>null</c>.</exception>
             <exception cref="T:System.ArgumentNullException"><paramref name="data"/> is <c>null</c>.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="data"/> is empty.</exception>
         </member>
-        <member name="M:Gablarski.Client.ClientSourceManager.EndSending(Gablarski.Audio.AudioSource)">
+        <member name="M:Gablarski.Client.ClientSourceManager.Gablarski#Audio#IAudioSender#EndSending(Gablarski.Audio.AudioSource)">
             <summary>
             Sends notifications that you're finished sending audio from <paramref name="source"/> to <paramref name="channel"/>.
             </summary>
@@ -1700,9 +1699,6 @@
             <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is <c>null</c>.</exception>
             <exception cref="T:System.ArgumentException"><paramref name="source"/> does not belong to you.</exception>
             <exception cref="T:System.ArgumentNullException"><paramref name="channel"/> is <c>null</c>.</exception>
-        </member>
-        <member name="M:Gablarski.Client.ClientSourceManager.ToggleIgnore(Gablarski.Audio.AudioSource)">
-            <returns>The new state of ignore on <paramref name="source"/>.</returns>
         </member>
         <member name="E:Gablarski.Client.ClientSourceManager.ReceivedSourceList">
             <summary>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -149,7 +149,7 @@ namespace Valkyrie.Library.Providers
 
 		private IEngineContext context = null;
 		private PlaybackDevice device = null;
-		private Context audiocontext = null;
+		internal Context audiocontext = null;
 		private LeasedAudioSource currentbgmsource;
 		private LeasedAudioSource nextbgmsource;
 		private List<LeasedAudioSource> leased = new List<LeasedAudioSource> ();
