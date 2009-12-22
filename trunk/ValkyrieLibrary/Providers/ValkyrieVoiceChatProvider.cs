@@ -130,7 +130,7 @@ namespace Valkyrie.Library.Providers
 			gb.CurrentUser.ReceivedLoginResult += HandleGbCurrentUserReceivedLoginResult;
 			gb.CurrentUser.ReceivedJoinResult += HandleGbCurrentUserReceivedJoinResult;
 
-			gb.Sources.ReceivedSourceList += new EventHandler<ReceivedListEventArgs<AudioSource>>(HandleGbSourcesReceivedSourceList);
+			gb.Sources.ReceivedSourceList += HandleGbSourcesReceivedSourceList;
 			gb.Sources.ReceivedAudioSource += HandleGbSourcesReceivedAudioSource;
 			gb.Sources.AudioSourceStarted += HandleGbSourcesAudioSourceStarted;
 			gb.Sources.AudioSourceStopped += HandleGbSourcesAudioSourceStopped;
@@ -162,6 +162,7 @@ namespace Valkyrie.Library.Providers
 				case SourceResult.Succeeded:
 					this.voice = e.Source;
 					SetupSource();
+					OnConnected (this, EventArgs.Empty);
 
 					break;
 
@@ -214,6 +215,13 @@ namespace Valkyrie.Library.Providers
 			var disconnected = Disconnected;
 			if (disconnected != null)
 				disconnected (this, EventArgs.Empty);
+		}
+
+		private void OnConnected (object sender, EventArgs e)
+		{
+			var connected = Connected;
+			if (connected != null)
+				connected (this, EventArgs.Empty);
 		}
 
 		void HandleGbConnected (object sender, EventArgs e)
