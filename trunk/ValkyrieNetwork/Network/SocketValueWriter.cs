@@ -41,7 +41,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace Gablarski.Network
+namespace Valkyrie.Network
 {
 	public class SocketValueWriter
 		: IValueWriter

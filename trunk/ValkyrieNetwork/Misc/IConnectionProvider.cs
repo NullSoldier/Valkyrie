@@ -36,9 +36,10 @@
 
 using System;
 using System.Net;
-using Gablarski.Messages;
+using Valkyrie;
+using Valkyrie.Messages;
 
-namespace Gablarski
+namespace Valkyrie
 {
 	public interface IConnectionProvider
 	{

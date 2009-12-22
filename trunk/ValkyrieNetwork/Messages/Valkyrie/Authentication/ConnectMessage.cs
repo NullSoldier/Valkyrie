@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gablarski.Messages;
-using Gablarski;
 
-namespace ValkyrieNetwork.Messages.Valkyrie
+using Valkyrie.Messages;
+
+namespace Valkyrie.Messages.Valkyrie
 {
 	public class ConnectMessage
 		: ClientMessage
@@ -21,12 +21,12 @@ namespace ValkyrieNetwork.Messages.Valkyrie
 			set;
 		}
 
-		public override void WritePayload(Gablarski.IValueWriter writerm)
+		public override void WritePayload(IValueWriter writerm)
 		{
 			writerm.WriteVersion(this.Version);
 		}
 
-		public override void ReadPayload(Gablarski.IValueReader reader)
+		public override void ReadPayload(IValueReader reader)
 		{
 			this.Version = reader.ReadVersion();
 		}

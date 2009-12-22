@@ -39,8 +39,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net;
+using Valkyrie;
 
-namespace Gablarski
+namespace Valkyrie
 {
 	/// <summary>
 	/// Contract for a client -> server connection.

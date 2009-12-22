@@ -40,9 +40,10 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Reflection.Emit;
-using Mono.Rocks;
+using Cadenza;
 
-namespace Gablarski.Messages
+
+namespace Valkyrie.Messages
 {
 	public abstract class MessageBase
 	{
@@ -85,7 +86,7 @@ namespace Gablarski.Messages
 
 		static MessageBase ()
 		{
-			#if NOEMIT
+#if NOEMIT
 
 			MessageTypes = new ReadOnlyDictionary<ushort,Func<MessageBase>> (new Dictionary<ushort, Func<MessageBase>>
 			{
@@ -121,28 +122,28 @@ namespace Gablarski.Messages
 			    { (ushort)ClientMessageType.RequestMute, () => new RequestMuteMessage() }
 			});
 
-			#else
+#else
 
 			Type msgb = typeof(MessageBase);
 			Dictionary<ushort, Func<MessageBase>> messageTypes = new Dictionary<ushort, Func<MessageBase>>();
 			foreach (Type t in Assembly.GetExecutingAssembly ().GetTypes ().Where (t => msgb.IsAssignableFrom (t) && !t.IsAbstract))
 			{
-			    var ctor = t.GetConstructor (Type.EmptyTypes);
+				var ctor = t.GetConstructor (Type.EmptyTypes);
 
-			    var dctor = new DynamicMethod (t.Name, msgb, null);
-			    var il = dctor.GetILGenerator ();
+				var dctor = new DynamicMethod (t.Name, msgb, null);
+				var il = dctor.GetILGenerator ();
 
-			    il.Emit (OpCodes.Newobj, ctor);
-			    il.Emit (OpCodes.Ret);
+				il.Emit (OpCodes.Newobj, ctor);
+				il.Emit (OpCodes.Ret);
 
-			    Func<MessageBase> dctord = (Func<MessageBase>)dctor.CreateDelegate (typeof (Func<MessageBase>));
-			    MessageBase dud = dctord();
-			    messageTypes.Add (dud.MessageTypeCode, dctord);
+				Func<MessageBase> dctord = (Func<MessageBase>)dctor.CreateDelegate (typeof (Func<MessageBase>));
+				MessageBase dud = dctord();
+				messageTypes.Add (dud.MessageTypeCode, dctord);
 			}
 
 			MessageTypes = new ReadOnlyDictionary<ushort, Func<MessageBase>> (messageTypes);
 
-			#endif
+#endif
 		}
 	}
 }

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gablarski.Messages;
+
+using Valkyrie.Messages;
 
 namespace Valkyrie.Library.Network
 {
@@ -38,7 +39,7 @@ namespace Valkyrie.Library.Network
 			set;
 		}
 
-		public override void WritePayload(Gablarski.IValueWriter writerm)
+		public override void WritePayload(IValueWriter writerm)
 		{
 			writerm.WriteUInt32(this.NetworkID);
 			writerm.WriteString(this.CharacterName);
@@ -46,7 +47,7 @@ namespace Valkyrie.Library.Network
 			writerm.WriteByte((byte)this.Action);
 		}
 
-		public override void ReadPayload(Gablarski.IValueReader reader)
+		public override void ReadPayload(IValueReader reader)
 		{
 			this.NetworkID = reader.ReadUInt32();
 			this.CharacterName = reader.ReadString();

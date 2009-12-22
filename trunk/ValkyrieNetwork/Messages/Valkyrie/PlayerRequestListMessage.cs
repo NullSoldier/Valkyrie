@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gablarski.Messages;
+using Valkyrie;
+using Valkyrie.Messages;
 
 namespace ValkyrieServerLibrary.Network.Messages.Valkyrie
 {
@@ -14,12 +15,12 @@ namespace ValkyrieServerLibrary.Network.Messages.Valkyrie
 		{
 		}
 
-		public override void WritePayload(Gablarski.IValueWriter writerm)
+		public override void WritePayload (IValueWriter writerm)
 		{
 			
 		}
 
-		public override void ReadPayload(Gablarski.IValueReader reader)
+		public override void ReadPayload (IValueReader reader)
 		{
 			
 		}

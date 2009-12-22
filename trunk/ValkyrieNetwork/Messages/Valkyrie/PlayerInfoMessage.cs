@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gablarski.Messages;
+using Valkyrie;
 using Valkyrie.Library.Core.Messages;
 using System.Drawing;
+using Valkyrie.Messages;
 
 namespace ValkyrieServerLibrary.Network.Messages.Valkyrie
 {
@@ -75,7 +76,7 @@ namespace ValkyrieServerLibrary.Network.Messages.Valkyrie
 			set;
 		}
 
-		public override void WritePayload(Gablarski.IValueWriter writer)
+		public override void WritePayload(IValueWriter writer)
 		{
 			writer.WriteUInt32(this.NetworkID);
 
@@ -91,7 +92,7 @@ namespace ValkyrieServerLibrary.Network.Messages.Valkyrie
 			writer.WriteString(this.TileSheet);
 		}
 
-		public override void ReadPayload(Gablarski.IValueReader reader)
+		public override void ReadPayload(IValueReader reader)
 		{
 			this.NetworkID = reader.ReadUInt32();
 

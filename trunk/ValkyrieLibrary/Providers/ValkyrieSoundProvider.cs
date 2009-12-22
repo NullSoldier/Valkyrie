@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Gablarski.Audio;
 using Valkyrie.Engine.Providers;
 using Valkyrie.Engine;
 using Microsoft.Xna.Framework.Audio;
 using System.Media;
 using Gablarski.OpenAL;
-using Valkyrie.Engine.Core.Sound;
 using Microsoft.Xna.Framework;
+using AudioFormat=Gablarski.OpenAL.AudioFormat;
+using AudioSource=Valkyrie.Engine.Core.Sound.AudioSource;
 
 namespace Valkyrie.Library.Providers
 {

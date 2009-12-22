@@ -38,9 +38,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gablarski.Messages;
+using Valkyrie;
+using Valkyrie.Messages;
 
-namespace Gablarski
+namespace Valkyrie
 {
 	/// <summary>
 	/// Contract for a connection in either direction.
@@ -84,10 +85,10 @@ namespace Gablarski
 		/// <param name="message">The message to send.</param>
 		public static void Send (this IEnumerable<IConnection> connections, MessageBase message)
 		{
-			#if DEBUG
+#if DEBUG
 			if (message == null)
 				throw new ArgumentNullException ("message");
-			#endif
+#endif
 
 			foreach (var connection in connections)
 				connection.Send (message);
@@ -101,12 +102,12 @@ namespace Gablarski
 		/// <param name="predicate">The connection predicate.</param>
 		public static void Send (this IEnumerable<IConnection> connections, MessageBase message, Func<IConnection, bool> predicate)
 		{
-			#if DEBUG
+#if DEBUG
 			if (message == null)
 				throw new ArgumentNullException ("message");
 			if (predicate == null)
 				throw new ArgumentNullException ("predicate");
-			#endif
+#endif
 
 			foreach (var connection in connections)
 			{
@@ -124,10 +125,10 @@ namespace Gablarski
 		public MessageReceivedEventArgs (IConnection connection, MessageBase message)
 			: base (connection)
 		{
-			#if DEBUG
+#if DEBUG
 			if (message == null)
 				throw new ArgumentNullException ("message");
-			#endif
+#endif
 
 			this.Message = message;
 		}

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Gablarski {
+namespace Valkyrie {
     using System;
     
     

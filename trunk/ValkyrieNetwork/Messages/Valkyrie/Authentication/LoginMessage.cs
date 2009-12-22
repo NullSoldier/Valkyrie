@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gablarski.Messages;
-using Gablarski;
+using Valkyrie.Messages;
 
 namespace Valkyrie.Library.Core.Messages
 {

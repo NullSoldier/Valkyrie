@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gablarski
+namespace Valkyrie
 {
 	/// <summary>
 	/// Media types

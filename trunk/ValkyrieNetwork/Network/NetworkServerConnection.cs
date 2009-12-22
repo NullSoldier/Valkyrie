@@ -38,9 +38,10 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using Gablarski.Messages;
+using Valkyrie;
+using Valkyrie.Messages;
 
-namespace Gablarski.Network
+namespace Valkyrie.Network
 {
 	public class NetworkServerConnection
 		: IConnection

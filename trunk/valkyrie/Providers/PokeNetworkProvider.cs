@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using Valkyrie.Engine.Providers;
 using Valkyrie.Engine;
-using Gablarski.Network;
 using System.Net;
 using System.Net.Sockets;
-using Gablarski;
 using Valkyrie.Characters;
-using Gablarski.Messages;
+using Valkyrie;
+using Valkyrie.Messages;
+using Valkyrie.Network;
 
 namespace Valkyrie.Providers
 {

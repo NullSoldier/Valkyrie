@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gablarski.Messages;
-using Gablarski;
+using Valkyrie;
+using Valkyrie.Messages;
 
 namespace Valkyrie.Engine.Providers
 {

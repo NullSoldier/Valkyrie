@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gablarski.Messages;
 using System.Drawing;
-using Gablarski;
+
+using Valkyrie.Messages;
 using ValkyrieServerLibrary.Network.Messages.Valkyrie;
 
 namespace Valkyrie.Library.Core.Messages

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gablarski.Messages;
+
+using Valkyrie.Messages;
 
 namespace Valkyrie.Library.Network
 {
@@ -20,12 +21,12 @@ namespace Valkyrie.Library.Network
 			set;
 		}
 
-		public override void WritePayload(Gablarski.IValueWriter writerm)
+		public override void WritePayload (IValueWriter writerm)
 		{
 			writerm.WriteUInt32(this.NetworkIDAssigned);
 		}
 
-		public override void ReadPayload(Gablarski.IValueReader reader)
+		public override void ReadPayload (IValueReader reader)
 		{
 			this.NetworkIDAssigned = reader.ReadUInt32();
 		}

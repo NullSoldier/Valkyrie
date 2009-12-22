@@ -39,7 +39,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Gablarski.Messages
+namespace Valkyrie.Messages
 {
 	/// <summary>
 	/// Client -> Server message

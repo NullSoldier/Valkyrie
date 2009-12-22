@@ -2,23 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gablarski.Messages;
-using Gablarski;
 using System.Threading;
-using ValkyrieNetwork.Messages.Valkyrie;
+using Valkyrie.Messages;
+using Valkyrie.Messages.Valkyrie;
 using Valkyrie.Library.Core.Messages;
 using System.Collections;
 using System.Diagnostics;
+using Valkyrie;
 using ValkyrieServerLibrary.Entities;
 using NHibernate.Criterion;
 using Valkyrie.Library.Network;
 using System.Drawing;
 using ValkyrieServerLibrary.Network.Messages.Valkyrie;
 using Valkyrie.Library.Core;
-using ValkyrieNetwork.Messages.Valkyrie.Movement;
+using Valkyrie.Messages.Valkyrie.Movement;
 using Valkyrie.Engine.Core;
 using Valkyrie.Engine.Characters;
-using ValkyrieNetwork.Messages.Valkyrie.Authentication;
+using Valkyrie.Messages.Valkyrie.Authentication;
 
 namespace ValkyrieServerLibrary.Core
 {

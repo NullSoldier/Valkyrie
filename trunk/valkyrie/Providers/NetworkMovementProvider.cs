@@ -8,10 +8,10 @@ using Valkyrie.Engine.Providers;
 using Valkyrie.Library.Core;
 using Microsoft.Xna.Framework;
 using Valkyrie.Engine;
-using Gablarski;
 using Valkyrie.Characters;
 using Valkyrie.Core.Characters;
 using Valkyrie.Library;
+using Cadenza;
 
 namespace Valkyrie.Providers
 {
@@ -35,7 +35,7 @@ namespace Valkyrie.Providers
 
 		public void EndMoveLocation (IMovable movable, MapPoint destination, string animationname)
 		{
-			lock(this.movablecache)
+			lock (this.movablecache)
 			{
 				if(!this.movablecache.ContainsKey(movable))
 					return;

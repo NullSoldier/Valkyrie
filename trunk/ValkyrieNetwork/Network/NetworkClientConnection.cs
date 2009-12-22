@@ -43,9 +43,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using Gablarski.Messages;
 
-namespace Gablarski.Network
+using Valkyrie;
+using Valkyrie.Messages;
+
+namespace Valkyrie.Network
 {
 	public class NetworkClientConnection
 		: IClientConnection
@@ -77,9 +79,9 @@ namespace Gablarski.Network
 		/// <exception cref="System.ArgumentNullException"><paramref name="message"/> is <c>null</c>.</exception>
 		public void Send (MessageBase message)
 		{
-			lock (sendQueue)
+			lock (this.sendQueue)
 			{
-				sendQueue.Enqueue (message);
+				this.sendQueue.Enqueue (message);
 			}
 
 			this.sendWait.Set ();
@@ -94,8 +96,8 @@ namespace Gablarski.Network
 
 			ManualResetEvent mre = new ManualResetEvent (false);
 
-			if (pinger != null)
-				pinger.Dispose (mre);
+			if (this.pinger != null)
+				this.pinger.Dispose (mre);
 
 			mre.WaitOne();
 
@@ -174,7 +176,7 @@ namespace Gablarski.Network
 			this.udp.Bind ((IPEndPoint)this.tcp.Client.LocalEndPoint);
 			Ping (endpoint);
 
-			pinger = new Timer (Ping, endpoint, 45000, 45000);
+			this.pinger = new Timer (Ping, endpoint, 45000, 45000);
 
 			Trace.WriteLine ("[Client] UDP Local Endpoint: " + this.udp.LocalEndPoint);
 
@@ -297,8 +299,8 @@ namespace Gablarski.Network
 
 					OnMessageReceived (new MessageReceivedEventArgs (this, msg));
 
-					if (rstream != null && running)
-						rstream.BeginRead (mbuffer, 0, 1, ReliableReceived, mbuffer);
+					if (this.rstream != null && this.running)
+						this.rstream.BeginRead (mbuffer, 0, 1, ReliableReceived, mbuffer);
 				}
 				else
 					this.Disconnect();
@@ -322,20 +324,20 @@ namespace Gablarski.Network
 
 			byte[] buffer = (byte[])result.AsyncState;
 
-			if (udp == null)
+			if (this.udp == null)
 				return;
 
 			try
 			{
-				if (udp.EndReceiveFrom (result, ref endpoint) == 0)
+				if (this.udp.EndReceiveFrom (result, ref endpoint) == 0)
 				{
-					Trace.WriteLineIf (VerboseTracing, "[Network] UDP EndReceiveFrom returned nothing.");
+					Trace.WriteLineIf (this.VerboseTracing, "[Network] UDP EndReceiveFrom returned nothing.");
 					return;
 				}
 
 				if (buffer[0] != 0x2A)
 				{
-					Trace.WriteLineIf (VerboseTracing, "[Network] Unreliable message failed sanity check.");
+					Trace.WriteLineIf (this.VerboseTracing, "[Network] Unreliable message failed sanity check.");
 					return;
 				}
 
@@ -345,7 +347,7 @@ namespace Gablarski.Network
 				MessageBase msg;
 				if (!MessageBase.GetMessage (mtype, out msg))
 				{
-					Trace.WriteLineIf (VerboseTracing, "[Network] Message type " + mtype + " not found from " + endpoint);
+					Trace.WriteLineIf (this.VerboseTracing, "[Network] Message type " + mtype + " not found from " + endpoint);
 					return;
 				}
 				else
@@ -366,8 +368,8 @@ namespace Gablarski.Network
 			{
 				this.uwaiting = false;
 
-				if (udp != null && running)
-					udp.BeginReceiveFrom (buffer, 0, buffer.Length, SocketFlags.None, ref endpoint, UnreliableReceive, buffer);
+				if (this.udp != null && this.running)
+					this.udp.BeginReceiveFrom (buffer, 0, buffer.Length, SocketFlags.None, ref endpoint, UnreliableReceive, buffer);
 			}
 		}
 	}

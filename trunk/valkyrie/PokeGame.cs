@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Xml;
-using Gablarski;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Valkyrie.Core;
@@ -16,8 +15,9 @@ using Valkyrie.Engine.Providers;
 using Valkyrie.Library.Providers;
 using Microsoft.Xna.Framework.Media;
 using Valkyrie.Library.Managers;
-using ValkyrieNetwork.Messages.Valkyrie.Authentication;
+using Valkyrie.Messages.Valkyrie.Authentication;
 using Valkyrie.Characters;
+using Valkyrie;
 
 namespace Valkyrie
 {

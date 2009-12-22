@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gablarski.Messages;
+using Valkyrie.Messages;
 
-namespace ValkyrieNetwork.Messages.Valkyrie
+namespace Valkyrie.Messages.Valkyrie
 {
 	public class PlayerLoadedMessage
 		: ClientMessage
@@ -21,12 +21,12 @@ namespace ValkyrieNetwork.Messages.Valkyrie
 			set;
 		}
 
-		public override void WritePayload (Gablarski.IValueWriter writer)
+		public override void WritePayload (IValueWriter writer)
 		{
 			writer.WriteUInt32(this.NetworkID);
 		}
 
-		public override void ReadPayload (Gablarski.IValueReader reader)
+		public override void ReadPayload (IValueReader reader)
 		{
 			this.NetworkID = reader.ReadUInt32();
 		}

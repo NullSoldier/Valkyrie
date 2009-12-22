@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gablarski.Messages;
-using Gablarski;
+using Valkyrie.Messages;
 
-namespace ValkyrieNetwork.Messages.Valkyrie
+namespace Valkyrie.Messages.Valkyrie
 {
 	public class PlayerStartMovingMessage
 		: ClientMessage

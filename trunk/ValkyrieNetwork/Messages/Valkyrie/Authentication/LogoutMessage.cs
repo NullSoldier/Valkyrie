@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gablarski.Messages;
-using Gablarski;
 
-namespace ValkyrieNetwork.Messages.Valkyrie.Authentication
+using Valkyrie.Messages;
+
+namespace Valkyrie.Messages.Valkyrie.Authentication
 {
 	public class LogoutMessage
 		: ClientMessage

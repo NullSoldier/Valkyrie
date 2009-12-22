@@ -41,7 +41,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.IO;
 
-namespace Gablarski
+namespace Valkyrie
 {
 	public static class Extensions
 	{

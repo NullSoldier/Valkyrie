@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
-using Gablarski.Messages;
-using Gablarski;
 
-namespace ValkyrieNetwork.Messages.Valkyrie
+
+using Valkyrie.Messages;
+
+namespace Valkyrie.Messages.Valkyrie
 {
 	public class LocationUpdateReceived
 		: ServerMessage

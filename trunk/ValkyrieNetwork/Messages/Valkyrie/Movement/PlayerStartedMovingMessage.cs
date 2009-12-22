@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gablarski.Messages;
-using System.Drawing;
 
-namespace ValkyrieNetwork.Messages.Valkyrie.Movement
+using System.Drawing;
+using Valkyrie.Messages;
+
+namespace Valkyrie.Messages.Valkyrie.Movement
 {
 	public class PlayerStartedMovingMessage
 		: ServerMessage
@@ -22,7 +23,7 @@ namespace ValkyrieNetwork.Messages.Valkyrie.Movement
 		public float Speed { get; set; }
 		public float MoveDelay { get; set; }
 
-		public override void WritePayload(Gablarski.IValueWriter writerm)
+		public override void WritePayload(IValueWriter writerm)
 		{
 			writerm.WriteUInt32(this.NetworkID);
 
@@ -33,7 +34,7 @@ namespace ValkyrieNetwork.Messages.Valkyrie.Movement
 			writerm.WriteBytes(BitConverter.GetBytes(this.MoveDelay));
 		}
 
-		public override void ReadPayload(Gablarski.IValueReader reader)
+		public override void ReadPayload(IValueReader reader)
 		{
 			this.NetworkID = reader.ReadUInt32();
 

@@ -38,11 +38,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Valkyrie.Messages;
 
-namespace Gablarski.Messages
+namespace Valkyrie.Messages
 {
-	// Next: 39
-
 	public enum ClientMessageType
 		: ushort
 	{
@@ -86,26 +85,4 @@ namespace Gablarski.Messages
 			protected set;
 		}
 	}
-
-	//public abstract class DualMessage
-	//    : MessageBase
-	//{
-	//    protected DualMessage (ClientMessage clientMessageType, ServerMessage serverMessageType)
-	//    {
-	//        this.ClientMessageType = clientMessageType;
-	//        this.ServerMessageType = serverMessageType;
-	//    }
-
-	//    public ClientMessage ClientMessageType
-	//    {
-	//        get;
-	//        protected set;
-	//    }
-
-	//    public ServerMessage ServerMessageType
-	//    {
-	//        get;
-	//        protected set;
-	//    }
-	//}
 }

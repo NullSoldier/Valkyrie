@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Valkyrie.Library.Network;
-using Gablarski;
+using Valkyrie;
 
 namespace ValkyrieServerLibrary.Core
 {

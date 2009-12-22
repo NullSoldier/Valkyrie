@@ -39,7 +39,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Gablarski
+namespace Valkyrie
 {
 	public interface IValueReader
 		: IDisposable

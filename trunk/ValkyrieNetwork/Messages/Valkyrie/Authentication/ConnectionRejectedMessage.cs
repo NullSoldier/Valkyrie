@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gablarski;
-using Gablarski.Messages;
-using Valkyrie.Library.Core.Messages;
 
-namespace ValkyrieNetwork.Messages.Valkyrie
+
+using Valkyrie.Library.Core.Messages;
+using Valkyrie.Messages;
+
+namespace Valkyrie.Messages.Valkyrie
 {
 	public class ConnectionRejectedMessage
 		: ServerMessage
@@ -22,12 +23,12 @@ namespace ValkyrieNetwork.Messages.Valkyrie
 			set;
 		}
 
-		public override void WritePayload(Gablarski.IValueWriter writerm)
+		public override void WritePayload(IValueWriter writerm)
 		{
 			writerm.WriteByte((byte)this.Reason);
 		}
 
-		public override void ReadPayload(Gablarski.IValueReader reader)
+		public override void ReadPayload(IValueReader reader)
 		{
 			this.Reason = (ConnectionRejectedReason)reader.ReadByte();
 		}

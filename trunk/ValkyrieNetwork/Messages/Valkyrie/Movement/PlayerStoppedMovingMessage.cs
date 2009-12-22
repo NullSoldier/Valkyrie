@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Gablarski.Messages;
-using Gablarski;
 using System.Drawing;
+using Valkyrie.Messages;
 
-namespace ValkyrieNetwork.Messages.Valkyrie.Movement
+namespace Valkyrie.Messages.Valkyrie.Movement
 {
 	public class PlayerStoppedMovingMessage
 		: ServerMessage

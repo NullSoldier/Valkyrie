@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Cadenza;
 using Valkyrie.Engine.Providers;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Engine;

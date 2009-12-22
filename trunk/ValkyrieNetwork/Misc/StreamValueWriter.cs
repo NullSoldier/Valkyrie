@@ -40,7 +40,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace Gablarski
+namespace Valkyrie
 {
 	public class StreamValueWriter
 		: IValueWriter

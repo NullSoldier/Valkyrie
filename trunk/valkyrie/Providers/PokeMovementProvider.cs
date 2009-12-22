@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Cadenza;
 using Valkyrie.Engine.Providers;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Engine;
 using Valkyrie.Engine.Core;
-using Gablarski;
 using Microsoft.Xna.Framework;
 
 namespace Valkyrie.Library.Providers
@@ -24,7 +24,7 @@ namespace Valkyrie.Library.Providers
 				this.EndMove(movable, true);
 			}
 
-			if(this.MovableCache.ContainsKey(movable))
+			if (this.MovableCache.ContainsKey (movable))
 				return;
 
 			movable.IsMoving = true;
@@ -44,7 +44,7 @@ namespace Valkyrie.Library.Providers
 
 		public void BeginMoveDestination (IMovable movable, ScreenPoint destination, bool fireevent)
 		{
-			if(movable.IsMoving || this.MovableCache.ContainsKey(movable))
+			if(movable.IsMoving || this.MovableCache.ContainsKey (movable))
 				this.EndMove(movable, fireevent);
 
 			movable.IgnoreMoveInput = true;

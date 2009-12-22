@@ -40,10 +40,11 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using Gablarski.Messages;
-using Mono.Rocks;
+using Cadenza;
+using Valkyrie;
+using Valkyrie.Messages;
 
-namespace Gablarski.Network
+namespace Valkyrie.Network
 {
 	public class NetworkServerConnectionProvider
 		: IConnectionProvider

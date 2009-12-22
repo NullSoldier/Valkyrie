@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Gablarski;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -17,8 +16,9 @@ using Valkyrie.Engine.Providers;
 using Valkyrie.Library.Camera;
 using Valkyrie.Library.Network;
 using Valkyrie.Providers;
-using ValkyrieNetwork.Messages.Valkyrie;
-using ValkyrieNetwork.Messages.Valkyrie.Movement;
+using Valkyrie.Messages.Valkyrie;
+using Valkyrie.Messages.Valkyrie.Movement;
+using Valkyrie;
 using ValkyrieServerLibrary.Network.Messages.Valkyrie;
 
 namespace Valkyrie.Modules
