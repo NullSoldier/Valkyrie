@@ -98,7 +98,9 @@ namespace Valkyrie
 
 			ValkyrieWorldManager worldmanager = new ValkyrieWorldManager(new Assembly[] { Assembly.GetExecutingAssembly(), Assembly.Load("ValkyrieLibrary") });
 			ValkyrieTextureManager texturemanager = new ValkyrieTextureManager(this.Content, this.GraphicsDevice);
+			
 			ValkyrieSoundProvider sound = new ValkyrieSoundProvider();
+        	sound.LoadEngineContext (Engine);
 
 			this.Engine.Load(new PokeSceneProvider(this.GraphicsDevice),
 				new ValkyrieEventProvider(),

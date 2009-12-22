@@ -129,9 +129,12 @@ namespace Valkyrie.Library.Providers
 			}
 		}
 
-		public void LoadEngineContext (IEngineContext context)
+		public void LoadEngineContext (IEngineContext engineContext)
 		{
-			this.context = context;
+			if (this.context != null)
+				return;
+
+			this.context = engineContext;
 
 			this.device = OpenAL.GetDefaultPlaybackDevice ();
 			if(!device.IsOpen)

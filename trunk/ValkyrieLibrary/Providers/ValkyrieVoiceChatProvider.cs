@@ -111,7 +111,7 @@ namespace Valkyrie.Library.Providers
 		private GablarskiClient gb;
 		private AudioSource voice;
 		
-		private Context oalContext;
+		private readonly Context oalContext;
 		private IPlaybackProvider playback; 
 		private ICaptureProvider capture;
 		
@@ -123,7 +123,7 @@ namespace Valkyrie.Library.Providers
 			if (gb != null)
 				return;
 
-			playback = new OpenALPlaybackProvider (oalContext);
+			playback = new OpenALPlaybackProvider (this.oalContext);
 			playback.Device = playback.DefaultDevice;
 
 			capture = new OpenALCaptureProvider();

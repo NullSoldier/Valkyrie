@@ -98,39 +98,19 @@ namespace Valkyrie.Engine
 		public void Load (ISceneProvider draw, IEventProvider events, INetworkProvider network, ISoundProvider sound, IModuleProvider modules, IMovementProvider movement, ICollisionProvider collision, IVoiceChatProvider voicechat, IWorldManager world, ITextureManager texture, ISoundManager soundmanager)
 		{
 			this.drawprovider = draw;
-			this.drawprovider.LoadEngineContext(this);
-
 			this.eventprovider = events;
-			this.eventprovider.LoadEngineContext(this);
-
 			this.networkprovider = network;
-			this.networkprovider.LoadEngineContext(this);
-
 			this.soundprovider = sound;
-			this.soundprovider.LoadEngineContext(this);
-
 			this.moduleprovider = modules;
-			this.moduleprovider.LoadEngineContext(this);
-
 			this.movementprovider = movement;
-			this.movementprovider.LoadEngineContext(this);
-
 			this.collisionprovider = collision;
-			this.collisionprovider.LoadEngineContext(this);
-
 			this.voicechatprovider = voicechat;
-			this.voicechatprovider.LoadEngineContext (this);
-
 			this.texturemanager = texture;
-			this.texturemanager.LoadEngineContext(this);			
-
 			this.worldmanager = world;
-			this.worldmanager.LoadEngineContext(this);
-
 			this.soundmanager = soundmanager;
-			this.soundmanager.LoadEngineContext(this);
 
-			this.IsLoaded = true;
+			LoadContexts (drawprovider, eventprovider, networkprovider, soundprovider, moduleprovider, movementprovider,
+			              collisionprovider, voicechatprovider, texturemanager, worldmanager, soundmanager);
 		}
 
 		public void Unload ()
@@ -163,5 +143,18 @@ namespace Valkyrie.Engine
 
 		private EngineConfiguration configuration;
 		private bool loaded = false;
+
+		private void LoadContexts (params IEngineProvider[] providers)
+		{
+			for (int i = 0; i < providers.Length; ++i)
+			{
+				//if (providers[i].IsLoaded)
+				//    continue;
+
+				providers[i].LoadEngineContext (this);
+			}
+
+			IsLoaded = true;
+		}
 	}
 }
