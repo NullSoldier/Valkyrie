@@ -5,13 +5,13 @@
     <Name>Kanto</Name>
     <Address>127.0.0.1</Address>
     <Port>6112</Port>
-    <GablarskiHost></GablarskiHost>
-    <GablarskiPort></GablarskiPort>
+    <GablarskiHost>pokemon.Valkyrie.com</GablarskiHost>
+    <GablarskiPort>6114</GablarskiPort>
   </Server>
 
   <Login>
-    <Username>Username</Username>
-    <Password>Password</Password>
+    <Username>User</Username>
+    <Password>Pass</Password>
   </Login>
-  
-</Client> 
+
+</Client>

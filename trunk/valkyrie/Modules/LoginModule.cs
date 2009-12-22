@@ -133,7 +133,7 @@ namespace Valkyrie.Modules
 				string port = doc.GetElementsByTagName("Port")[0].InnerText;
 				string username = doc.GetElementsByTagName("Username")[0].InnerText;
 				string password = doc.GetElementsByTagName("Password")[0].InnerText;
-				string gablarskiaddress = doc.GetElementsByTagName("GablarskiAddress")[0].InnerText;
+				string gablarskiaddress = doc.GetElementsByTagName ("GablarskiHost")[0].InnerText;
 				string gablarskiport = doc.GetElementsByTagName("GablarskiPort")[0].InnerText;
 
 				this.context.NetworkProvider.Disconnected += this.TestDisconnected;

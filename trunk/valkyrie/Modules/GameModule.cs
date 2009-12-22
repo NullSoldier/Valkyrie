@@ -418,11 +418,13 @@ namespace Valkyrie.Modules
 					camera.Scale(0.9);
 					break;
 				case "SpeedUp":
-					player.Speed += 5;
+					this.context.SoundProvider.MasterGainModifier += 0.1f;
+					//player.Speed += 5;
 					break;
 				case "SlowDown":
-					player.Speed -= 5;
-					if(player.Speed <= 0) player.Speed = 1;
+					this.context.SoundProvider.MasterGainModifier -= 0.1f;
+					//player.Speed -= 5;
+					//if(player.Speed <= 0) player.Speed = 1;
 					break;
 				case "TogglePlayers":
 					this.showplayers = !showplayers;
