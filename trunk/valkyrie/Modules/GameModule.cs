@@ -124,7 +124,7 @@ namespace Valkyrie.Modules
 			this.KeybindController.AddKey (Keys.F3, "ToggleMiddlelayer");
 			this.KeybindController.AddKey (Keys.F4, "ToggleToplayer");
 			this.KeybindController.AddKey (Keys.F5, "TogglePlayers");
-			this.KeybindController.AddKey (Keys.Z, "VoiceChat");
+			this.KeybindController.AddKey (Keys.T, "VoiceChat");
 
 	        this.KeybindController.KeyDown += this.GameModule_KeyDown;
 	        this.KeybindController.KeyUp += this.GameModule_KeyUp;

@@ -143,7 +143,7 @@ namespace Valkyrie.Modules
 				{
 					this.connecting = true;
 
-					this.context.VoiceChatProvider.ConnectAsync (gablarskiaddress, Convert.ToInt32 (gablarskiport), username, password);
+					this.context.VoiceChatProvider.ConnectAsync (gablarskiaddress, Convert.ToInt32 (gablarskiport), username, Helpers.MD5 (password));
 					this.context.NetworkProvider.Connect(address, Convert.ToInt32(port));
 				}
 				catch(SocketException)
@@ -159,27 +159,10 @@ namespace Valkyrie.Modules
 
 				LoginMessage msg = new LoginMessage();
 				msg.Username = username;
-				msg.Password = this.EncodePassword (password).Replace ("-", String.Empty);
+				msg.Password = Helpers.MD5 (password).Replace ("-", String.Empty);
 				this.context.NetworkProvider.Send(msg);
 			}
 		}
-
-		public string EncodePassword (string originalPassword)
-		{
-			MD5CryptoServiceProvider x = new MD5CryptoServiceProvider ();
-
-			byte[] bs = System.Text.Encoding.UTF8.GetBytes (originalPassword);
-			bs = x.ComputeHash (bs);
-
-			StringBuilder s = new StringBuilder ();
-			foreach(byte b in bs)
-			{
-				s.Append (b.ToString ("x2").ToLower ());
-			}
-			
-			return s.ToString ();
-		}
-
 
 		private void TestMessageReceived (object sender, MessageReceivedEventArgs ev)
 		{

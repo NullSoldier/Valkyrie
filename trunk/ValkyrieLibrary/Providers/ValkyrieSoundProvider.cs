@@ -9,8 +9,8 @@ using Microsoft.Xna.Framework.Audio;
 using System.Media;
 using Gablarski.OpenAL;
 using Microsoft.Xna.Framework;
-using AudioFormat=Gablarski.OpenAL.AudioFormat;
-using AudioSource=Valkyrie.Engine.Core.Sound.AudioSource;
+using AudioFormat = Gablarski.OpenAL.AudioFormat;
+using AudioSource = Valkyrie.Engine.Core.Sound.AudioSource;
 
 namespace Valkyrie.Library.Providers
 {
@@ -25,19 +25,19 @@ namespace Valkyrie.Library.Providers
 
 		public void PlaySound (AudioSource sound, bool loop)
 		{
-			
+
 		}
 
 		public void PlayBGM (AudioSource sound, bool loop)
 		{
 			SourceBuffer buffer = SourceBuffer.Generate ();
 			buffer.Buffer (sound.PCM, ((sound.Channels == 1) ? AudioFormat.Mono16Bit : AudioFormat.Stereo16Bit), sound.Frequency);
-			
+
 			if(this.currentbgmsource != null && this.currentbgmsource.Source != null &&
 				this.currentbgmsource.Source.IsPlaying)
 			{
-				Source source = Source.Generate();
-				source.Queue(buffer);
+				Source source = Source.Generate ();
+				source.Queue (buffer);
 
 				// If we already have BGM playing, fade it out
 				this.currentbgmsource.FadeState = FadeState.FadeOut;
@@ -47,7 +47,7 @@ namespace Valkyrie.Library.Providers
 			}
 			else
 			{
-				Source source = Source.Generate();
+				Source source = Source.Generate ();
 				source.QueueAndPlay (buffer);
 
 				// If nothing is currently playing
@@ -63,7 +63,7 @@ namespace Valkyrie.Library.Providers
 			if(this.currentbgmsource != null && this.currentbgmsource.Source != null)
 				this.currentbgmsource.Source.Stop ();
 
-			this.leased.Remove(this.nextbgmsource);
+			this.leased.Remove (this.nextbgmsource);
 			if(this.nextbgmsource != null && this.nextbgmsource.Source != null)
 				this.nextbgmsource.Source.Stop ();
 		}
@@ -77,15 +77,18 @@ namespace Valkyrie.Library.Providers
 			{
 				foreach(var source in this.leased)
 				{
+					// Alter the real gain with the gain modifier
+					source.Source.Gain = Helpers.Clamp (source.Gain + this.MasterGainModifier, 0, 1);
+
 					source.LastTimeUpdated += gameTime.ElapsedGameTime.Milliseconds;
 
 					if(source.LastTimeUpdated > 60)
 					{
 						if(source.FadeState == FadeState.FadeOut)
 						{
-							if((source.Source.Gain - 0.1f) < source.Source.MinimumGain)
+							if((source.Gain - 0.1f) < source.Source.MinimumGain)
 							{
-								source.Source.Gain = source.Source.MinimumGain;
+								source.Gain = source.Source.MinimumGain;
 
 								if(source.LastTimeUpdated >= 1000)
 								{
@@ -101,7 +104,7 @@ namespace Valkyrie.Library.Providers
 							}
 							else
 							{
-								source.Source.Gain -= 0.1f;
+								source.Gain -= 0.1f;
 								source.LastTimeUpdated = 0;
 							}
 						}
@@ -169,6 +172,7 @@ namespace Valkyrie.Library.Providers
 
 		public Source Source;
 		public FadeState FadeState = FadeState.None;
+		public float Gain = 1;
 		public bool Loop = false;
 		public int LastTimeUpdated = 0;
 	}
