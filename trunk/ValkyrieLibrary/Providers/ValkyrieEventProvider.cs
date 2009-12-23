@@ -28,6 +28,11 @@ namespace Valkyrie.Library.Providers
 			this.isloaded = true;
 		}
 
+		public void Unload ()
+		{
+			this.isloaded = false;
+		}
+
 		#region IEventProvider Members
 
 		public void Add (Map map, IMapEvent mapevent)

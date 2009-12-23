@@ -8,6 +8,7 @@ namespace Valkyrie.Engine.Providers
 	public interface IEngineProvider
 	{
 		void LoadEngineContext (IEngineContext context);
+		void Unload ();
 		bool IsLoaded { get; }
 	}
 }

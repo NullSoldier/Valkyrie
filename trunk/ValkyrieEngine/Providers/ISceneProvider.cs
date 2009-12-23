@@ -18,7 +18,7 @@ namespace Valkyrie.Engine.Providers
 
 		void Draw (SpriteBatch spriteBatch);
 		void DrawCamera (SpriteBatch spriteBatch, string cameraname);
-		void DrawCameraLayer (SpriteBatch spriteBatch, string cameraname, MapLayers layer);
+		void DrawCameraLayer (SpriteBatch spriteBatch, string cameraname, MapLayers layer, bool players);
 		void DrawAllCameras (SpriteBatch spriteBatch);
 		void DrawPlayer (SpriteBatch spriteBatch, string playername, BaseCamera camera);
 

@@ -96,6 +96,11 @@ namespace Valkyrie.Library.Providers
 			this.IsLoaded = true;
 		}
 
+		public void Unload ()
+		{
+			this.IsLoaded = false;
+		}
+
 		public bool IsLoaded
 		{
 			get;

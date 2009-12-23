@@ -19,7 +19,7 @@ namespace Valkyrie.Characters
 		public PokePlayer ()
 			: base()
 		{
-			this.Loaded = false;
+			this.IsLoaded = false;
 
 			if(this.Gender == Genders.Male)
 			{
@@ -41,17 +41,11 @@ namespace Valkyrie.Characters
 			this.CurrentAnimationName = "South";
 		}
 
-		public bool Loaded
-		{
-			get;
-			set;
-		}
-
 		public override void Update (GameTime gameTime)
 		{
 			this.CurrentAnimation.Update(gameTime);
 
-			if(this.Loaded)
+			if(this.IsLoaded)
 			{
 				base.Update(gameTime);
 			}

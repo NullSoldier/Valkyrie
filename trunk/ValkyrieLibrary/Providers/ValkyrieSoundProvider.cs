@@ -25,11 +25,13 @@ namespace Valkyrie.Library.Providers
 
 		public void PlaySound (AudioSource sound, bool loop)
 		{
-
+			if(!this.IsLoaded) return;
 		}
 
 		public void PlayBGM (AudioSource sound, bool loop)
 		{
+			if(!this.IsLoaded) return;
+
 			SourceBuffer buffer = SourceBuffer.Generate ();
 			buffer.Buffer (sound.PCM, ((sound.Channels == 1) ? AudioFormat.Mono16Bit : AudioFormat.Stereo16Bit), sound.Frequency);
 
@@ -43,7 +45,8 @@ namespace Valkyrie.Library.Providers
 				this.currentbgmsource.FadeState = FadeState.FadeOut;
 				this.nextbgmsource = new LeasedAudioSource (source, FadeState.None, loop);
 
-				this.leased.Add (nextbgmsource);
+				lock(this.leased)
+					this.leased.Add (nextbgmsource);
 			}
 			else
 			{
@@ -53,23 +56,31 @@ namespace Valkyrie.Library.Providers
 				// If nothing is currently playing
 				this.currentbgmsource = new LeasedAudioSource (source, FadeState.None, loop);
 
-				this.leased.Add (currentbgmsource);
+				lock(this.leased)
+					this.leased.Add (currentbgmsource);
 			}
 		}
 
 		public void StopBGM ()
 		{
-			this.leased.Remove (this.currentbgmsource);
-			if(this.currentbgmsource != null && this.currentbgmsource.Source != null)
-				this.currentbgmsource.Source.Stop ();
+			if(!this.IsLoaded) return;
 
-			this.leased.Remove (this.nextbgmsource);
-			if(this.nextbgmsource != null && this.nextbgmsource.Source != null)
-				this.nextbgmsource.Source.Stop ();
+			lock(this.leased)
+			{
+				this.leased.Remove (this.currentbgmsource);
+				if(this.currentbgmsource != null && this.currentbgmsource.Source != null)
+					this.currentbgmsource.Source.Stop ();
+
+				this.leased.Remove (this.nextbgmsource);
+				if(this.nextbgmsource != null && this.nextbgmsource.Source != null)
+					this.nextbgmsource.Source.Stop ();
+			}
 		}
 
 		public void Update (GameTime gameTime)
 		{
+			if(!this.IsLoaded) return;
+
 			List<LeasedAudioSource> remove = new List<LeasedAudioSource> ();
 
 			//Revise, total crap
@@ -145,6 +156,28 @@ namespace Valkyrie.Library.Providers
 			this.isloaded = true;
 		}
 
+		public void Unload ()
+		{
+			lock(this.leased)
+			{
+				if( currentbgmsource != null)
+					this.currentbgmsource.Source.Stop ();
+				
+				if( nextbgmsource != null)
+					this.nextbgmsource.Source.Stop ();
+
+				foreach(var leased in this.leased)
+					leased.Source.Stop ();
+
+				this.leased.Clear ();
+
+				this.audiocontext.Dispose ();
+				this.device.Dispose ();
+			}
+
+			this.isloaded = false;
+		}
+
 		public bool IsLoaded
 		{
 			get { return this.isloaded; }
@@ -156,7 +189,7 @@ namespace Valkyrie.Library.Providers
 		private LeasedAudioSource currentbgmsource;
 		private LeasedAudioSource nextbgmsource;
 		private List<LeasedAudioSource> leased = new List<LeasedAudioSource> ();
-		private float mastergainmodifer = -0.3f;
+		private float mastergainmodifer = -0.5f;
 		private bool isloaded = false;
 	}
 

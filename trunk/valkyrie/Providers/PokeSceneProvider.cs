@@ -85,12 +85,12 @@ namespace Valkyrie.Providers
 			this.DrawCamera(spriteBatch, this.cameras[cameraname]);
 		}
 
-		public void DrawCameraLayer (SpriteBatch spriteBatch, string cameraname, MapLayers layer)
+		public void DrawCameraLayer (SpriteBatch spriteBatch, string cameraname, MapLayers layer, bool players)
 		{
-			this.DrawCameraLayer(spriteBatch, this.cameras[cameraname], layer);
+			this.DrawCameraLayer(spriteBatch, this.cameras[cameraname], layer, players);
 		}
 
-		private void DrawCameraLayer (SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer)
+		private void DrawCameraLayer (SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer, bool players)
 		{
 			foreach(var header in this.context.WorldManager.GetWorld(camera.WorldName).Maps.Values)
 			{
@@ -101,6 +101,7 @@ namespace Valkyrie.Providers
 				this.device.Viewport = camera.Viewport;
 
 				this.DrawCameraLayer(spriteBatch, camera, layer, header);
+				this.DrawPlayersLayer (spriteBatch, camera, layer);
 
 				spriteBatch.End();
 			}
@@ -121,12 +122,29 @@ namespace Valkyrie.Providers
 
 		public void DrawPlayer (SpriteBatch spriteBatch, BaseCharacter player, BaseCamera camera)
 		{
-			this.playerrenderer.DrawBase(player, spriteBatch, camera);
+			this.playerrenderer.DrawLayer (player, spriteBatch, camera, MapLayers.BaseLayer);
 		}
 
 		#endregion
 
 		#region Private Draw Methods
+
+		private void DrawPlayersLayer (SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer)
+		{
+			// Draw network players
+			var network = (PokeNetworkProvider) this.context.NetworkProvider;
+			foreach(PokePlayer player in network.GetPlayers ())
+			{
+				if(player.IsLoaded)
+					this.playerrenderer.DrawLayer (player, spriteBatch, camera, layer);
+			}
+
+			foreach(BaseCharacter player in this.GetPlayers ().Values)
+			{
+				if(player.IsLoaded)
+					this.playerrenderer.DrawLayer (player, spriteBatch, camera, layer);
+			}
+		}
 
 		private void DrawCamera (SpriteBatch spriteBatch, BaseCamera camera)
 		{
@@ -149,7 +167,7 @@ namespace Valkyrie.Providers
 				var network = (PokeNetworkProvider)this.context.NetworkProvider;
 				foreach(PokePlayer player in network.GetPlayers())
 				{
-					if(player.Loaded)
+					if(player.IsLoaded)
 						this.DrawPlayer(spriteBatch, player, camera);
 				}
 
@@ -166,7 +184,7 @@ namespace Valkyrie.Providers
 			var network = (PokeNetworkProvider)this.context.NetworkProvider;
 			foreach(PokePlayer player in network.GetPlayers())
 			{
-				if(player.Loaded)
+				if(player.IsLoaded)
 					this.DrawPlayer(spriteBatch, player, camera);
 			}
 		}
@@ -280,6 +298,11 @@ namespace Valkyrie.Providers
 			this.context = context;
 
 			this.isloaded = true;
+		}
+
+		public void Unload ()
+		{
+			this.isloaded = false;
 		}
 
 		public bool IsLoaded

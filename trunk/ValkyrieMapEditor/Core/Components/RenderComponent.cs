@@ -119,18 +119,18 @@ namespace ValkyrieMapEditor.Core
 			    }
 				else if(MapEditorManager.CurrentLayer == MapLayers.MiddleLayer)
 				{
-					this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.UnderLayer);
-					this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.BaseLayer);
-					this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.MiddleLayer);
+					this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.UnderLayer, false);
+					this.context.SceneProvider.DrawCameraLayer (spriteBatch, "camera1", MapLayers.BaseLayer, false);
+					this.context.SceneProvider.DrawCameraLayer (spriteBatch, "camera1", MapLayers.MiddleLayer, false);
 				}
 				else if(MapEditorManager.CurrentLayer == MapLayers.BaseLayer)
 				{
-					this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.UnderLayer);
-					this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.BaseLayer);
+					this.context.SceneProvider.DrawCameraLayer (spriteBatch, "camera1", MapLayers.UnderLayer, false);
+					this.context.SceneProvider.DrawCameraLayer (spriteBatch, "camera1", MapLayers.BaseLayer, false);
 				}
 				else
 				{
-					this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.UnderLayer);
+					this.context.SceneProvider.DrawCameraLayer (spriteBatch, "camera1", MapLayers.UnderLayer, false);
 				}
 			}
 			else
@@ -141,19 +141,19 @@ namespace ValkyrieMapEditor.Core
 			    switch (MapEditorManager.CurrentLayer)
 			    {
 			        case MapLayers.UnderLayer:
-						this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.UnderLayer);
+						this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.UnderLayer, false);
 			            break;
 
 			        case MapLayers.BaseLayer:
-						this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.BaseLayer);
+						this.context.SceneProvider.DrawCameraLayer (spriteBatch, "camera1", MapLayers.BaseLayer, false);
 						break;
 
 					case MapLayers.MiddleLayer:
-						this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.MiddleLayer);
+						this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.MiddleLayer, false);
 						break;
 
 					case MapLayers.TopLayer:
-						this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.TopLayer);
+						this.context.SceneProvider.DrawCameraLayer(spriteBatch, "camera1", MapLayers.TopLayer, false);
 						break;
 
 					default:

@@ -205,7 +205,7 @@ namespace Valkyrie.Modules
 					Gender = Genders.Male,
 					Sprite = this.context.TextureManager.GetTexture(msg.TileSheet),
 					CurrentAnimationName = msg.Animation,
-					Loaded = true
+					IsLoaded = true
 				};
 
 				this.context.SceneProvider.AddPlayer("player1", player);

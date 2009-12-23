@@ -109,13 +109,14 @@ namespace Valkyrie.Engine
 			this.worldmanager = world;
 			this.soundmanager = soundmanager;
 
-			LoadContexts (drawprovider, eventprovider, networkprovider, soundprovider, moduleprovider, movementprovider,
+			this.LoadContexts (drawprovider, eventprovider, networkprovider, soundprovider, moduleprovider, movementprovider,
 			              collisionprovider, voicechatprovider, texturemanager, worldmanager, soundmanager);
 		}
 
 		public void Unload ()
 		{
-			this.IsLoaded = false;
+			this.UnloadContexts (drawprovider, eventprovider, networkprovider, soundprovider, moduleprovider, movementprovider,
+						collisionprovider, voicechatprovider, texturemanager, worldmanager, soundmanager);
 		}
 
 		public void Update (GameTime gameTime)
@@ -155,6 +156,16 @@ namespace Valkyrie.Engine
 			}
 
 			IsLoaded = true;
+		}
+
+		private void UnloadContexts (params IEngineProvider[] providers)
+		{
+			for(int i = 0; i < providers.Length; ++i)
+			{
+				providers[i].Unload ();
+			}
+
+			IsLoaded = false;
 		}
 	}
 }

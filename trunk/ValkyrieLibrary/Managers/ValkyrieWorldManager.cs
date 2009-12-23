@@ -128,6 +128,11 @@ namespace Valkyrie.Library.Managers
 			this.isloaded = true;
 		}
 
+		public void Unload ()
+		{
+			this.isloaded = false;
+		}
+
 		public bool IsLoaded
 		{
 			get { return this.isloaded; }

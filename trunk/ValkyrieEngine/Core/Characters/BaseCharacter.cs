@@ -29,6 +29,18 @@ namespace Valkyrie.Engine.Characters
 			set { this.sprite = value; }
 		}
 
+		public bool IsLoaded
+		{
+			get { return this.isloaded; }
+			set { this.isloaded = value; }
+		}
+
+		public bool IsTalking
+		{
+			get { return this.istalking; }
+			set { this.istalking = value; }
+		}
+
 		#endregion
 
 		#region IAnimatable Members
@@ -243,6 +255,8 @@ namespace Valkyrie.Engine.Characters
 		private object animationtag = string.Empty;
 		private bool isanimating = false;
 		private int density = 1;
+		private bool isloaded = false;
+		private bool istalking = false;
 	}
 
 	public enum Genders

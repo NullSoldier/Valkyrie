@@ -80,12 +80,12 @@ namespace Valkyrie.Library.Providers
 			this.DrawCamera(spriteBatch, this.cameras[cameraname]);
 		}
 
-		public void DrawCameraLayer (SpriteBatch spriteBatch, string cameraname, MapLayers layer)
+		public void DrawCameraLayer (SpriteBatch spriteBatch, string cameraname, MapLayers layer, bool players)
 		{
-			this.DrawCameraLayer (spriteBatch, this.cameras[cameraname], layer);
+			this.DrawCameraLayer (spriteBatch, this.cameras[cameraname], layer, players);
 		}
 
-		private void DrawCameraLayer (SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer)
+		private void DrawCameraLayer (SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer, bool players)
 		{
 			foreach(var header in this.context.WorldManager.GetWorld(camera.WorldName).Maps.Values)
 			{
@@ -261,6 +261,11 @@ namespace Valkyrie.Library.Providers
 			this.context = context;
 
 			this.isloaded = true;
+		}
+
+		public void Unload ()
+		{
+			this.isloaded = false;
 		}
 
 		public bool IsLoaded

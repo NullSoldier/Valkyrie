@@ -122,6 +122,22 @@ namespace Valkyrie.Library.Providers
 			this.isloaded = true;
 		}
 
+		public void Unload ()
+		{
+			lock(this.moduleSync)
+			{
+				foreach(IModule module in this.modules.Values)
+				{
+					module.Deactivate ();
+					module.Unload ();
+				}
+
+				this.modules.Clear ();
+			}
+				
+			this.isloaded = false;
+		}
+
 		private readonly Dictionary<string, IModule> modules = new Dictionary<string, IModule>();
 		private object moduleSync = new object();
 		private string currentmoduleName = string.Empty;

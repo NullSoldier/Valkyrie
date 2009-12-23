@@ -23,7 +23,7 @@ namespace Valkyrie.Engine.Input
 
 		public event EventHandler<KeyPressedEventArgs> KeyDown;
 		public event EventHandler<KeyPressedEventArgs> KeyUp;
-		public event EventHandler<KeyPressedEventArgs> KeyAction;
+		public event EventHandler<KeyPressedEventArgs> KeyPressed;
 
 		public string GetKeyAction (Keys key)
 		{
@@ -117,15 +117,20 @@ namespace Valkyrie.Engine.Input
 
 			foreach (Keys key in CurrentKeys)
 			{
-				// Key Pressed
-				if (KeyDefCollection.ContainsKey (key))
+				// When a key is pressed down (fire once)
+				if(KeyState.IsKeyDown (key)
+					&& this.KeyDefCollection.ContainsKey (key)
+					&& !this.pressedkeys.Contains (key))
 				{
-					var handler = this.KeyAction;
-					if(handler != null )
-						this.KeyAction (this, new KeyPressedEventArgs (key, KeyDefCollection[key].Action));
+					var handler = this.KeyPressed;
+					if(handler != null)
+					{
+						this.pressedkeys.Add (key);
+						this.KeyPressed (this, new KeyPressedEventArgs (key, KeyDefCollection[key].Action));
+					}
 				}
 
-				// Key Down
+				// When a key is down
 				if (KeyState.IsKeyDown(key)
 					&& this.KeyDefCollection.ContainsKey(key))
 				{
@@ -135,6 +140,7 @@ namespace Valkyrie.Engine.Input
 				}
 			}
 
+			// When a key is unpressed
 			foreach (Keys key in this.LastKeys)
 			{
 				if(!this.CurrentKeys.Contains(key))
@@ -143,14 +149,18 @@ namespace Valkyrie.Engine.Input
 						continue;
 
 					var handler = this.KeyUp;
-					if (handler != null)
-						this.KeyUp(this, new KeyPressedEventArgs(key, KeyDefCollection[key].Action));
+					if(handler != null)
+					{
+						this.pressedkeys.Remove (key);
+						this.KeyUp (this, new KeyPressedEventArgs (key, KeyDefCollection[key].Action));
+					}
 				}
 			}
 
 			LastKeys = CurrentKeys;
 		}
 
+		private List<Keys> pressedkeys = new List<Keys> ();
 	}
 
 	public class KeyPressedEventArgs : EventArgs

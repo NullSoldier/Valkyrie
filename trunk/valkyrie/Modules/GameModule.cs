@@ -80,21 +80,13 @@ namespace Valkyrie.Modules
 			spriteBatch.GraphicsDevice.Clear(Color.Black);
 
 			if(this.underlayer)
-				this.scene.DrawCameraLayer(spriteBatch, "camera1", MapLayers.UnderLayer);
+				this.scene.DrawCameraLayer (spriteBatch, "camera1", MapLayers.UnderLayer, this.showplayers);
 			if(this.baselayer)
-				this.scene.DrawCameraLayer(spriteBatch, "camera1", MapLayers.BaseLayer);
+				this.scene.DrawCameraLayer (spriteBatch, "camera1", MapLayers.BaseLayer, this.showplayers);
 			if(this.middlelayer)
-				this.scene.DrawCameraLayer(spriteBatch, "camera1", MapLayers.MiddleLayer);
-			if(this.showplayers)
-			{
-				spriteBatch.Begin();
-				this.scene.DrawPlayer(spriteBatch, "player1", this.scene.GetCamera("camera1"));
-				this.scene.DrawNetworkedPlayers(spriteBatch, this.scene.GetCamera("camera1"));
-				
-				spriteBatch.End();
-			}
+				this.scene.DrawCameraLayer (spriteBatch, "camera1", MapLayers.MiddleLayer, this.showplayers);
 			if(this.toplayer)
-				this.scene.DrawCameraLayer(spriteBatch, "camera1", MapLayers.TopLayer);			
+				this.scene.DrawCameraLayer (spriteBatch, "camera1", MapLayers.TopLayer, this.showplayers);			
 
 			//this.scene.DrawAllCameras(spriteBatch);
 	    }
@@ -126,6 +118,7 @@ namespace Valkyrie.Modules
 			this.KeybindController.AddKey (Keys.F5, "TogglePlayers");
 			this.KeybindController.AddKey (Keys.T, "VoiceChat");
 
+			this.KeybindController.KeyPressed += this.GameModule_KeyPressed;
 	        this.KeybindController.KeyDown += this.GameModule_KeyDown;
 	        this.KeybindController.KeyUp += this.GameModule_KeyUp;
 
@@ -181,7 +174,7 @@ namespace Valkyrie.Modules
 			{
 				PokePlayer player = new PokePlayer();
 				player.ID = message.NetworkID;
-				player.Loaded = false;
+				player.IsLoaded = false;
 
 				this.network.AddPlayer(message.NetworkID, player);
 
@@ -217,8 +210,8 @@ namespace Valkyrie.Modules
 			player.Location = new ScreenPoint(message.Location.X, message.Location.Y);
 			player.WorldName = message.WorldName;
 
-			if(!player.Loaded)
-				player.Loaded = true;
+			if(!player.IsLoaded)
+				player.IsLoaded = true;
 		}
 
 		public void Message_PlayerStartedMovingReceived (PlayerStartedMovingMessage message)
@@ -285,29 +278,58 @@ namespace Valkyrie.Modules
 
 	    public void Deactivate()
 	    {
-	        throw new NotImplementedException();
+	        
 	    }
 
 	    #endregion
 
 		private void GameModule_UserStartedTalking (object sender, TalkingChangedEventArgs ev)
 		{
+			// Find the player talking
+			BaseCharacter basecharacter = this.context.SceneProvider.GetPlayer ("player1");
+			if(Convert.ToUInt32(basecharacter.ID) == Convert.ToUInt32(ev.ID))
+			{
+				basecharacter.IsTalking = true;
+			}
+			else
+			{
+				// Look in networked players
+				basecharacter = this.network.GetPlayer (Convert.ToUInt32 (ev.ID));
+				if(basecharacter != null)
+					basecharacter.IsTalking = true;
+			}
+
+
 			lock(this.talkingcountlock)
 			{
 				this.talkingcount++;
 
-				this.context.SoundProvider.MasterGainModifier = -0.15f;
+				this.context.SoundProvider.MasterGainModifier = -0.80f;
 			}
 		}
 
 		private void GameModule_UserStoppedTalking (object sender, TalkingChangedEventArgs ev)
 		{
+			// Find the player that stopped
+			BaseCharacter basecharacter = this.context.SceneProvider.GetPlayer ("player1");
+			if(Convert.ToUInt32 (basecharacter.ID) == Convert.ToUInt32 (ev.ID))
+			{
+				basecharacter.IsTalking = false;
+			}
+			else
+			{
+				// Look in networked players
+				basecharacter = this.network.GetPlayer (Convert.ToUInt32 (ev.ID));
+				if(basecharacter != null)
+					basecharacter.IsTalking = false;
+			}
+
 			lock(this.talkingcountlock)
 			{
 				this.talkingcount--;
 
 				if(talkingcount == 0)
-					this.context.SoundProvider.MasterGainModifier = -0.3f;
+					this.context.SoundProvider.MasterGainModifier = -0.5f;
 			}
 		}
 
@@ -363,6 +385,16 @@ namespace Valkyrie.Modules
 			player.CurrentAnimationName = player.Direction.ToString();
 	    }
 
+		private void GameModule_KeyPressed (object sender, KeyPressedEventArgs ev)
+		{
+			var player = this.scene.GetPlayer ("player1");
+
+			if(ev.Action == "VoiceChat" && this.context.VoiceChatProvider.IsConnected)
+			{
+				this.context.VoiceChatProvider.BeginTalk (player);
+			}
+		}
+
 	    private void GameModule_KeyDown(object sender, KeyPressedEventArgs ev)
 	    {
 			var player = this.scene.GetPlayer ("player1");
@@ -392,13 +424,6 @@ namespace Valkyrie.Modules
 					}
 
 					this.context.MovementProvider.BeginMove (player, direction);
-				}
-			}
-			else
-			{
-				if(ev.Action == "VoiceChat" && this.context.VoiceChatProvider.IsConnected)
-				{
-					this.context.VoiceChatProvider.BeginTalk (player);
 				}
 			}
 	    }
