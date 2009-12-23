@@ -75,7 +75,7 @@ namespace Valkyrie.Library.Providers
 			if (character == null)
 				throw new ArgumentNullException ("character");
 			
-			if (voice == null)
+			if (voice == null || capture == null)
 				return;
 
 			gb.Audio.BeginCapture (voice, gb.CurrentChannel);
@@ -85,6 +85,9 @@ namespace Valkyrie.Library.Providers
 		{
 			if (character == null)
 				throw new ArgumentNullException ("character");
+
+			if (voice == null || capture == null)
+				return;
 
 			gb.Audio.EndCapture (voice);
 		}
@@ -133,6 +136,9 @@ namespace Valkyrie.Library.Providers
 
 			capture = new OpenALCaptureProvider();
 			capture.Device = capture.DefaultDevice;
+
+			if (capture.Device == null)
+				capture = null;
 			
 			gb = new GablarskiClient (new NetworkClientConnection());
 			gb.Connected += HandleGbConnected;
@@ -203,7 +209,10 @@ namespace Valkyrie.Library.Providers
 				return;
 			}
 			
-			gb.Sources.Request ("voice", 1);
+			if (capture != null)
+				gb.Sources.Request ("voice", 1);
+			else
+				OnConnected (this, EventArgs.Empty);
 		}
 
 		void HandleGbCurrentUserReceivedLoginResult (object sender, ReceivedLoginResultEventArgs e)
