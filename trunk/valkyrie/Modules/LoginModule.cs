@@ -29,6 +29,7 @@ using Valkyrie.Engine.Core;
 using Microsoft.Xna.Framework.Audio;
 using System.Media;
 using System.Security.Cryptography;
+using System.Diagnostics;
 
 namespace Valkyrie.Modules
 {

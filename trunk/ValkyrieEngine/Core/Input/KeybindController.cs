@@ -126,7 +126,7 @@ namespace Valkyrie.Engine.Input
 					if(handler != null)
 					{
 						this.pressedkeys.Add (key);
-						this.KeyPressed (this, new KeyPressedEventArgs (key, KeyDefCollection[key].Action));
+						handler (this, new KeyPressedEventArgs (key, KeyDefCollection[key].Action));
 					}
 				}
 
@@ -136,7 +136,7 @@ namespace Valkyrie.Engine.Input
 				{
 					var handler = this.KeyDown;
 					if(handler != null )
-						this.KeyDown(this, new KeyPressedEventArgs(key, KeyDefCollection[key].Action));
+						handler (this, new KeyPressedEventArgs (key, KeyDefCollection[key].Action));
 				}
 			}
 
@@ -152,7 +152,7 @@ namespace Valkyrie.Engine.Input
 					if(handler != null)
 					{
 						this.pressedkeys.Remove (key);
-						this.KeyUp (this, new KeyPressedEventArgs (key, KeyDefCollection[key].Action));
+						handler (this, new KeyPressedEventArgs (key, KeyDefCollection[key].Action));
 					}
 				}
 			}
