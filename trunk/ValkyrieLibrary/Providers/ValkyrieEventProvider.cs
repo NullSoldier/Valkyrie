@@ -118,6 +118,9 @@ namespace Valkyrie.Library.Providers
 
 			foreach(IMapEvent mapevent in events)
 			{
+				if(mapevent.Activation == ActivationTypes.Static)
+					continue;
+
 				if(mapevent.Direction == Directions.Any || mapevent.Direction == player.Direction
 					&& mapevent.Activation == activation)
 				{

@@ -19,6 +19,7 @@ using Valkyrie.Messages.Valkyrie.Movement;
 using Valkyrie.Engine.Core;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Messages.Valkyrie.Authentication;
+using NHibernate;
 
 namespace ValkyrieServerLibrary.Core
 {
@@ -158,7 +159,9 @@ namespace ValkyrieServerLibrary.Core
 		{
 			var msg = (LoginMessage)ev.Message;
 
-			Account account = this.session.CreateCriteria<Account>()
+			ISession session = this.sessionfactory.OpenSession ();
+
+			Account account = session.CreateCriteria<Account>()
 				.Add(Restrictions.Eq("Username", msg.Username ))
 				.Add(Restrictions.Eq("Password", msg.Password ))
 				.List<Account>().FirstOrDefault();
@@ -170,7 +173,7 @@ namespace ValkyrieServerLibrary.Core
 				return;
 			}
 			
-			Character character = this.session.CreateCriteria<Character> ()
+			Character character = session.CreateCriteria<Character> ()
 			.Add(Restrictions.Eq("AccountID", account.ID))
 			.List<Character>().FirstOrDefault();
 
@@ -207,7 +210,7 @@ namespace ValkyrieServerLibrary.Core
 			foreach (var tmp in this.players.GetPlayers())
 				tmp.Connection.Send(updatemsg);
 
-			
+			session.Close ();
 		}
 
 		private void LogoutRequestReceived (MessageReceivedEventArgs ev)
@@ -322,7 +325,7 @@ namespace ValkyrieServerLibrary.Core
 			var direction = (Directions)message.Direction;
 
 			// Should throw the movement onto the queue and then process it on each update
-			this.movement.BeginMove(player.Character, direction, message.Animation);
+			//this.movement.BeginMove(player.Character, direction, message.Animation);
 
 			PlayerStartedMovingMessage movmsg = new PlayerStartedMovingMessage();
 			movmsg.NetworkID = player.NetworkID;

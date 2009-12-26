@@ -24,7 +24,7 @@ namespace ValkyrieServerLibrary.Core
 	public partial class ValkyrieGameServer
 	{
 		private readonly NetworkServerConnectionProvider server;
-		private ISession session;
+		private ISessionFactory sessionfactory;
 		private Version MinimumVersion = new Version(0, 0, 0, 0);
 
 		private NetworkPlayerCache players;
@@ -83,10 +83,10 @@ namespace ValkyrieServerLibrary.Core
 
 			this.Load();
 
-			this.session = Fluently.Configure()
-				.Database(PostgreSQLConfiguration.Standard.ConnectionString(s => s.Host(this.settings[ServerSettingName.DatabaseAddress]).Username(this.settings[ServerSettingName.DatabaseUser]).Password(this.settings[ServerSettingName.DatabasePassword]).Database(this.settings[ServerSettingName.DatabaseName]).Port(Convert.ToInt32(this.settings[ServerSettingName.DatabasePort]))))
-				.Mappings(m => m.FluentMappings.AddFromAssembly(Assembly.GetExecutingAssembly()))
-				.BuildSessionFactory().OpenSession();
+			this.sessionfactory = Fluently.Configure ()
+				.Database (PostgreSQLConfiguration.Standard.ConnectionString (s => s.Host (this.settings[ServerSettingName.DatabaseAddress]).Username (this.settings[ServerSettingName.DatabaseUser]).Password (this.settings[ServerSettingName.DatabasePassword]).Database (this.settings[ServerSettingName.DatabaseName]).Port (Convert.ToInt32 (this.settings[ServerSettingName.DatabasePort]))))
+				.Mappings (m => m.FluentMappings.AddFromAssembly (Assembly.GetExecutingAssembly ()))
+				.BuildSessionFactory ();
 
 			this.server.StartListening();
 			this.server.ConnectionMade += this.Server_ConnectionMade;
@@ -124,7 +124,7 @@ namespace ValkyrieServerLibrary.Core
 
 			this.server.StopListening();
 			this.server.ConnectionMade -= this.Server_ConnectionMade;
-			this.session.Disconnect();
+			this.sessionfactory.Close();
 
 			this.Started = false;
 		}
@@ -167,8 +167,10 @@ namespace ValkyrieServerLibrary.Core
 
 		private void SaveCharacter(Character character)
 		{
-			this.session.SaveOrUpdate(character);
-			this.session.Flush();
+			ISession session = this.sessionfactory.OpenSession ();
+			session.SaveOrUpdate(character);
+			session.Flush();
+			session.Close ();
 		}
 
 		private void LoadWorlds()

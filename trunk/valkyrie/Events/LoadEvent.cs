@@ -48,9 +48,14 @@ namespace Valkyrie.Events
 			if(tmpevent == null || tmpheader == null)
 				return;
 
+			context.MovementProvider.EndMove (character, false, true);
+
 			character.WorldName = worldname;
 			character.Location = new MapPoint (tmpevent.Rectangle.X + tmpheader.MapLocation.X,
 															tmpevent.Rectangle.Y + tmpheader.MapLocation.Y).ToScreenPoint ();
+			character.CurrentMap = null;
+
+			context.SceneProvider.GetCamera ("camera1").CenterOnCharacter (character);
 		}
 
 		public IEnumerable<string> GetParameterNames ()

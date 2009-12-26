@@ -131,7 +131,7 @@ namespace Valkyrie.Library.Providers
 			if (gb != null)
 				return;
 
-			playback = new OpenALPlaybackProvider (this.oalContext);
+			playback = new OpenALPlaybackProvider ();
 			playback.Device = playback.DefaultDevice;
 
 			capture = new OpenALCaptureProvider();

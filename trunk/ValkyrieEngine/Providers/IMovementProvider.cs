@@ -13,7 +13,7 @@ namespace Valkyrie.Engine.Providers
 	{
 		void BeginMove(IMovable movable, Directions direction);
 		void BeginMoveDestination (IMovable movable, ScreenPoint destination);
-		void EndMove (IMovable movable, bool fireevent);
+		void EndMove (IMovable movable, bool fireevent, bool forceend);
 
 		void Update(GameTime time);
 	}

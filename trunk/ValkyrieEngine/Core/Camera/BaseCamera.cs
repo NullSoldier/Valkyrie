@@ -131,6 +131,7 @@ namespace Valkyrie.Engine
 
 		public virtual void CenterOnCharacter(BaseCharacter Char)
 		{
+			this.worldname = Char.WorldName;
 			this.CenterOnPoint(Char.Location);
 		}
 

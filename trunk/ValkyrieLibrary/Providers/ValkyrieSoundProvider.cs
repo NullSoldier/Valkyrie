@@ -11,6 +11,7 @@ using Gablarski.OpenAL;
 using Microsoft.Xna.Framework;
 using AudioFormat = Gablarski.OpenAL.AudioFormat;
 using AudioSource = Valkyrie.Engine.Core.Sound.AudioSource;
+using Gablarski.OpenAL.Providers;
 
 namespace Valkyrie.Library.Providers
 {
@@ -32,18 +33,25 @@ namespace Valkyrie.Library.Providers
 		{
 			if(!this.IsLoaded) return;
 
-			SourceBuffer buffer = SourceBuffer.Generate ();
+			SourceBuffer buffer = this.GetBuffer ();
 			buffer.Buffer (sound.PCM, ((sound.Channels == 1) ? AudioFormat.Mono16Bit : AudioFormat.Stereo16Bit), sound.Frequency);
 
-			if(this.currentbgmsource != null && this.currentbgmsource.Source != null &&
-				this.currentbgmsource.Source.IsPlaying)
+			if(this.currentbgmsource != null && !this.currentbgmsource.IsDisposed &&
+				this.currentbgmsource.Source != null && this.currentbgmsource.Source.IsPlaying)
 			{
 				Source source = Source.Generate ();
 				source.Queue (buffer);
 
 				// If we already have BGM playing, fade it out
 				this.currentbgmsource.FadeState = FadeState.FadeOut;
-				this.nextbgmsource = new LeasedAudioSource (source, FadeState.None, loop);
+
+				if(this.nextbgmsource != null)
+				{
+					this.freebuffers.Push (this.nextbgmsource.DisposeAndReturn ());
+					this.leased.Remove (this.nextbgmsource);
+				}
+
+				this.nextbgmsource = new LeasedAudioSource (source, buffer, FadeState.None, loop);
 
 				lock(this.leased)
 					this.leased.Add (nextbgmsource);
@@ -54,7 +62,7 @@ namespace Valkyrie.Library.Providers
 				source.QueueAndPlay (buffer);
 
 				// If nothing is currently playing
-				this.currentbgmsource = new LeasedAudioSource (source, FadeState.None, loop);
+				this.currentbgmsource = new LeasedAudioSource (source, buffer, FadeState.None, loop);
 
 				lock(this.leased)
 					this.leased.Add (currentbgmsource);
@@ -68,12 +76,20 @@ namespace Valkyrie.Library.Providers
 			lock(this.leased)
 			{
 				this.leased.Remove (this.currentbgmsource);
-				if(this.currentbgmsource != null && this.currentbgmsource.Source != null)
-					this.currentbgmsource.Source.Stop ();
+				if(this.currentbgmsource != null && this.currentbgmsource.Source != null &&
+					!this.currentbgmsource.IsDisposed)
+				{
+					this.SetBuffer (this.currentbgmsource.DisposeAndReturn ());
+					this.leased.Remove (this.currentbgmsource);
+				}
 
 				this.leased.Remove (this.nextbgmsource);
-				if(this.nextbgmsource != null && this.nextbgmsource.Source != null)
-					this.nextbgmsource.Source.Stop ();
+				if(this.nextbgmsource != null && this.nextbgmsource.Source != null &&
+					!this.nextbgmsource.IsDisposed)
+				{
+					this.SetBuffer (this.nextbgmsource.DisposeAndReturn ());
+					this.leased.Remove (this.nextbgmsource);
+				}
 			}
 		}
 
@@ -121,8 +137,8 @@ namespace Valkyrie.Library.Providers
 			            }
 			        }
 
-			        if(source.Source.State == SourceState.Paused
-			            || source.Source.State == SourceState.Stopped)
+			        if(source.Source.State == SourceState.Paused ||
+						source.Source.State == SourceState.Stopped)
 			        {
 			            if(source.Loop && source.FadeState == FadeState.None)
 			            {
@@ -131,7 +147,7 @@ namespace Valkyrie.Library.Providers
 			            }
 
 			            remove.Add (source);
-			            source.Source.Dispose ();
+						this.freebuffers.Push (source.DisposeAndReturn ());
 			        }
 			    }
 
@@ -142,16 +158,16 @@ namespace Valkyrie.Library.Providers
 
 		public void LoadEngineContext (IEngineContext engineContext)
 		{
-			if (this.context != null)
-				return;
+			if (this.IsLoaded) return;
 
 			this.context = engineContext;
 
 			this.device = OpenAL.GetDefaultPlaybackDevice ();
-			if(!device.IsOpen)
-				device = device.Open ();
 
-			this.audiocontext = device.CreateAndActivateContext ();
+			var test = new OpenALPlaybackProvider ();
+			test.Open (this.device);
+
+			this.audiocontext = Context.CurrentContext;
 
 			this.isloaded = true;
 		}
@@ -160,12 +176,6 @@ namespace Valkyrie.Library.Providers
 		{
 			lock(this.leased)
 			{
-				if( currentbgmsource != null)
-					this.currentbgmsource.Source.Stop ();
-				
-				if( nextbgmsource != null)
-					this.nextbgmsource.Source.Stop ();
-
 				foreach(var leased in this.leased)
 					leased.Source.Stop ();
 
@@ -183,21 +193,54 @@ namespace Valkyrie.Library.Providers
 			get { return this.isloaded; }
 		}
 
+		private void RequireBuffers (int num)
+		{
+			lock(this.freebuffers)
+			{
+				if(this.freebuffers.Count < num)
+				{
+					int addcount = (num - this.freebuffers.Count);
+					for(int i = 0; i < addcount; i++)
+						freebuffers.Push (SourceBuffer.Generate ());
+				}
+			}
+		}
+
+		private SourceBuffer GetBuffer ()
+		{
+			lock(this.freebuffers)
+			{
+				this.RequireBuffers(4);
+				return this.freebuffers.Pop ();
+			}
+		}
+
+		private void SetBuffer (SourceBuffer buffer)
+		{
+			lock(this.freebuffers)
+			{
+				this.freebuffers.Push (buffer);
+			}
+		}
+
+
 		private IEngineContext context = null;
 		private PlaybackDevice device = null;
 		internal Context audiocontext = null;
 		private LeasedAudioSource currentbgmsource;
 		private LeasedAudioSource nextbgmsource;
 		private List<LeasedAudioSource> leased = new List<LeasedAudioSource> ();
+		private Stack<SourceBuffer> freebuffers = new Stack<SourceBuffer> ();
 		private float mastergainmodifer = -0.5f;
 		private bool isloaded = false;
 	}
 
 	public class LeasedAudioSource
 	{
-		public LeasedAudioSource (Source source, FadeState state, bool loop)
+		public LeasedAudioSource (Source source, SourceBuffer buffer, FadeState state, bool loop)
 		{
 			this.Source = source;
+			this.Buffer = buffer;
 			this.FadeState = state;
 			this.Loop = loop;
 
@@ -207,10 +250,25 @@ namespace Valkyrie.Library.Providers
 		}
 
 		public Source Source;
+		public SourceBuffer Buffer;
 		public FadeState FadeState = FadeState.None;
 		public float Gain = 1;
 		public bool Loop = false;
 		public int LastTimeUpdated = 0;
+		public bool IsDisposed { get { return this.isdisposed; } }
+
+		private Boolean isdisposed = false;
+
+		public SourceBuffer DisposeAndReturn ()
+		{
+			this.Source.Stop ();
+			this.Source.Dispose ();
+
+			this.isdisposed = true;
+
+			return this.Buffer;
+		}
+
 	}
 
 	public enum FadeState

@@ -22,7 +22,7 @@ namespace Valkyrie.Library.Providers
 				 if(movable.Direction == direction)
 					 return;
 
-				 this.EndMove(movable, true);
+				 this.EndMove(movable, true, false);
 			 }
 
 			 if(this.MovableCache.ContainsKey(movable))
@@ -46,7 +46,7 @@ namespace Valkyrie.Library.Providers
 		public void BeginMoveDestination (IMovable movable, ScreenPoint destination, bool fireevent)
 		{
 			 if (movable.IsMoving || this.MovableCache.ContainsKey(movable))
-				 this.EndMove(movable, fireevent);
+				 this.EndMove(movable, fireevent, false);
 
 			 movable.IgnoreMoveInput = true;
 			 movable.IsMoving = true;
@@ -60,13 +60,13 @@ namespace Valkyrie.Library.Providers
 
 		public void EndMove (IMovable movable)
 		{
-			this.EndMove(movable, true);
+			this.EndMove(movable, true, false);
 		}
 
-		public void EndMove (IMovable movable, bool fireevent)
+		public void EndMove (IMovable movable, bool fireevent, bool forceend)
 		{
 			if(this.MovableCache.ContainsKey(movable) && this.MovableCache[movable] == MovementType.TileBased
-				&& movable.IsMoving)
+				&& movable.IsMoving && !forceend)
 			{
 				ScreenPoint destination = this.GetNextScreenPointTile(movable);
 				if(this.context.CollisionProvider.CheckCollision(movable, destination))
@@ -137,7 +137,7 @@ namespace Valkyrie.Library.Providers
 
 						movable.OnStoppedMoving(this, EventArgs.Empty);
 					}
-					this.EndMove(movable, true);
+					this.EndMove(movable, true, false);
 				}
 
 				foreach(var movable in collided)
@@ -239,7 +239,13 @@ namespace Valkyrie.Library.Providers
 			else if(movable.Direction == Directions.East)
 				collision = new ScreenPoint(destination.X + 32, destination.Y);
 
+
+			MapPoint lastpoint = movable.GlobalTileLocation;
+
 			movable.Location = destination;
+
+			if(destination.ToMapPoint () != lastpoint)
+				movable.OnTileLocationChanged (movable, EventArgs.Empty);
 
 			if(destination == movable.MovingDestination)
 				movedok = false;
@@ -302,10 +308,12 @@ namespace Valkyrie.Library.Providers
 			}
 			else
 			{
+				MapPoint lastpoint = movable.GlobalTileLocation;
+
 				movable.Location = destination;
 
-				//if(movable.GlobalTileLocation != movable.LastMapLocation)
-					//movable.OnTileLocationChanged(this, EventArgs.Empty);
+				if(destination.ToMapPoint() != lastpoint)
+					movable.OnTileLocationChanged (movable, EventArgs.Empty);
 
 				if(movable.Location == movable.MovingDestination)
 				{

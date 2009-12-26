@@ -141,8 +141,13 @@
     <Content Include="Graphics\Intro\IntroSprites.png" />
     <Content Include="Graphics\Intro\PokemonSprites.png" />
     <Content Include="Graphics\Intro\SideGrass.png" />
+    <Content Include="Graphics\Main\Celadon_Town.png" />
+    <Content Include="Graphics\Main\Cerulean_Town.png" />
     <Content Include="Graphics\Main\Cinnibar_Island.png" />
     <Content Include="Graphics\Main\Fuschia_Town.png" />
+    <Content Include="Graphics\Main\Lavender_town.png" />
+    <Content Include="Graphics\Main\Route10_Route.png" />
+    <Content Include="Graphics\Main\Route11_Route.png" />
     <Content Include="Graphics\Main\Route12_Route.png" />
     <Content Include="Graphics\Main\Route13_route.png" />
     <Content Include="Graphics\Main\Route14_Route.png" />
@@ -153,14 +158,28 @@
     <Content Include="Graphics\Main\Route19_Route.png" />
     <Content Include="Graphics\Main\Route20_Route.png" />
     <Content Include="Graphics\Main\Route22_Route.png" />
+    <Content Include="Graphics\Main\Route23_Route_01.png" />
+    <Content Include="Graphics\Main\Route23_Route_02.png" />
+    <Content Include="Graphics\Main\Route24_Route.png" />
+    <Content Include="Graphics\Main\Route25_Route.png" />
     <Content Include="Graphics\Main\Route3_Route.png">
     </Content>
+    <Content Include="Graphics\Main\Route4_Route.png" />
+    <Content Include="Graphics\Main\Route5_Route.png" />
+    <Content Include="Graphics\Main\Route6_Route.png" />
+    <Content Include="Graphics\Main\Route7_Route.png" />
+    <Content Include="Graphics\Main\Route8_Route.png" />
+    <Content Include="Graphics\Main\Route9_Route.png" />
+    <Content Include="Graphics\Main\Saffron_Town.png" />
+    <Content Include="Graphics\Main\Vermillion_Town.png" />
     <Content Include="Graphics\MaleSprite2.png" />
     <Content Include="Graphics\Natural_Interiors\Viridian_Forest.png" />
     <Content Include="Graphics\NurseJoy.png" />
-    <Content Include="Graphics\Pallet_House\Pallet_House_01.png" />
+    <Content Include="Graphics\Interiors\Connector_Building_01.png" />
+    <Content Include="Graphics\Interiors\Pallet_House_01.png" />
     <Content Include="Graphics\PoliceMan.png" />
     <Content Include="Graphics\RetardSprite.png" />
+    <Content Include="Maps\Interiors\Connector_Building_02.xml" />
     <Content Include="Maps\Main\Celadon_Town.xml" />
     <Content Include="Maps\Main\Cerulean_Town.xml" />
     <Content Include="Maps\Main\Cinnibar_Island.xml" />
@@ -178,6 +197,8 @@
     <Content Include="Maps\Main\Route19_route.xml" />
     <Content Include="Maps\Main\Route20_Route.xml" />
     <Content Include="Maps\Main\Route22_Route.xml" />
+    <Content Include="Maps\Main\Route23_Route_01.xml" />
+    <Content Include="Maps\Main\Route23_Route_02.xml" />
     <Content Include="Maps\Main\Route24_Route.xml" />
     <Content Include="Maps\Main\Route25_Route.xml" />
     <Content Include="Maps\Main\Route3_Route.xml">
@@ -191,6 +212,7 @@
     <Content Include="Maps\Main\Saffron_Town.xml" />
     <Content Include="Maps\Main\Vermillion_Town.xml" />
     <Content Include="Maps\Natural_Interiors\Viridian_Forest.xml" />
+    <Content Include="Maps\Interiors\Connector_Building_01.xml" />
     <Content Include="Media\PokemonIntro.avi">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -222,7 +244,7 @@
     </None>
     <None Include="Maps\Main\Viridian_Town.xml">
     </None>
-    <None Include="Maps\Pallet_House_01\Pallet_House_01.xml">
+    <None Include="Maps\Interiors\Pallet_House_01.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Graphics\MaleSprite.png">
@@ -292,6 +314,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Graphics\Pallet_House\" />
     <Folder Include="UI\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -20,6 +20,7 @@ using Valkyrie.Messages.Valkyrie;
 using Valkyrie.Messages.Valkyrie.Movement;
 using Valkyrie;
 using ValkyrieServerLibrary.Network.Messages.Valkyrie;
+using Valkyrie.Library;
 
 namespace Valkyrie.Modules
 {
@@ -446,13 +447,10 @@ namespace Valkyrie.Modules
 					camera.Scale(0.9);
 					break;
 				case "SpeedUp":
-					this.context.SoundProvider.MasterGainModifier += 0.1f;
-					//player.Speed += 5;
+					player.Speed = Helpers.Clamp (player.Speed + 2, 2, 10);
 					break;
 				case "SlowDown":
-					this.context.SoundProvider.MasterGainModifier -= 0.1f;
-					//player.Speed -= 5;
-					//if(player.Speed <= 0) player.Speed = 1;
+					player.Speed = Helpers.Clamp(player.Speed - 2, 2, 10);
 					break;
 				case "TogglePlayers":
 					this.showplayers = !showplayers;
@@ -478,7 +476,7 @@ namespace Valkyrie.Modules
 	        {
 	            if (this.IsDir(ev.KeyPressed))
 	            {
-					this.context.MovementProvider.EndMove(player, true);
+					this.context.MovementProvider.EndMove(player, true, false);
 	            }
 	        }
 

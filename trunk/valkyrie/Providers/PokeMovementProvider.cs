@@ -21,7 +21,7 @@ namespace Valkyrie.Library.Providers
 				if(movable.Direction == direction)
 					return;
 
-				this.EndMove(movable, true);
+				this.EndMove (movable, true, false);
 			}
 
 			if (this.MovableCache.ContainsKey (movable))
@@ -45,7 +45,7 @@ namespace Valkyrie.Library.Providers
 		public void BeginMoveDestination (IMovable movable, ScreenPoint destination, bool fireevent)
 		{
 			if(movable.IsMoving || this.MovableCache.ContainsKey (movable))
-				this.EndMove(movable, fireevent);
+				this.EndMove (movable, fireevent, false);
 
 			movable.IgnoreMoveInput = true;
 			movable.IsMoving = true;
@@ -59,10 +59,10 @@ namespace Valkyrie.Library.Providers
 
 		public void EndMove (IMovable movable)
 		{
-			this.EndMove(movable, true);
+			this.EndMove(movable, true, false);
 		}
 
-		public void EndMove (IMovable movable, bool fireevent)
+		public void EndMove (IMovable movable, bool fireevent, bool forceend)
 		{
 			if(this.MovableCache.ContainsKey(movable) && this.MovableCache[movable] == MovementType.TileBased
 				&& movable.IsMoving)
@@ -136,7 +136,7 @@ namespace Valkyrie.Library.Providers
 
 						movable.OnStoppedMoving(this, EventArgs.Empty);
 					}
-					this.EndMove(movable, true);
+					this.EndMove(movable, true, false);
 				}
 
 				foreach(var movable in collided)
@@ -301,6 +301,9 @@ namespace Valkyrie.Library.Providers
 			}
 			else
 			{
+				if(destination.ToMapPoint () != movable.GlobalTileLocation)
+					movable.OnTileLocationChanged (this, EventArgs.Empty);
+
 				movable.Location = destination;
 
 				//if(movable.GlobalTileLocation != movable.LastMapLocation)
