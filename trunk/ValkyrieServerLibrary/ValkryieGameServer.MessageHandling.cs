@@ -162,7 +162,7 @@ namespace ValkyrieServerLibrary.Core
 			ISession session = this.sessionfactory.OpenSession ();
 
 			Account account = session.CreateCriteria<Account>()
-				.Add(Restrictions.Eq("Username", msg.Username ))
+				.Add(Restrictions.InsensitiveLike("Username", msg.Username ))
 				.Add(Restrictions.Eq("Password", msg.Password ))
 				.List<Account>().FirstOrDefault();
 			

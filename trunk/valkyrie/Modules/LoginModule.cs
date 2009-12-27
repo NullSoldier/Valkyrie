@@ -125,7 +125,7 @@ namespace Valkyrie.Modules
 				if(this.connecting)
 					return;
 
-				FileInfo file = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), "ClientSettings.xml"));
+				FileInfo file = new FileInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "PokeWorldOnline\\ClientSettings.xml"));
 
 				XmlDocument doc = new XmlDocument();
 				doc.Load(file.FullName);
@@ -145,7 +145,9 @@ namespace Valkyrie.Modules
 					this.connecting = true;
 
 					this.context.VoiceChatProvider.ConnectAsync (gablarskiaddress, Convert.ToInt32 (gablarskiport), username, Helpers.MD5 (password));
-					this.context.NetworkProvider.Connect(address, Convert.ToInt32(port));
+					bool result = this.context.NetworkProvider.Connect(address, Convert.ToInt32(port));
+					if(!result)
+						throw new SocketException ();
 				}
 				catch(SocketException)
 				{
@@ -153,7 +155,9 @@ namespace Valkyrie.Modules
 					this.context.NetworkProvider.Disconnected -= this.TestDisconnected;
 					this.context.NetworkProvider.MessageReceived -= this.TestMessageReceived;
 
-					MessageBox(new IntPtr(0), "Cannot connect to server.", "Server down", 0);
+					this.context.VoiceChatProvider.Disconnect ();
+
+					MessageBox(new IntPtr(0), "The server is currently offline.", "Server down", 0);
 					this.connecting = false;
 					return;
 				}
