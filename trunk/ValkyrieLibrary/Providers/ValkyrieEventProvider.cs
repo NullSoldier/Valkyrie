@@ -35,17 +35,20 @@ namespace Valkyrie.Library.Providers
 
 		#region IEventProvider Members
 
-		public void Add (Map map, IMapEvent mapevent)
+		public void AddEvent (Map map, IMapEvent mapevent)
 		{
-			this.Add(map.Name, mapevent);
+			this.AddEvent (map.Name, mapevent);
 		}
 
-		public void Add (string mapname, IMapEvent mapevent)
+		public void AddEvent (string mapname, IMapEvent mapevent)
 		{
 			lock(this.events)
 			{
 				if(!this.events.ContainsKey(mapname))
 					this.events.Add(mapname, new List<IMapEvent>());
+
+				if(this.events.Values.Where(e => e == mapevent).FirstOrDefault() != null)
+					throw new ArgumentException ("Event already exist.");
 
 				this.events[mapname].Add(mapevent);
 			}
@@ -71,12 +74,12 @@ namespace Valkyrie.Library.Providers
 			}
 		}
 
-		public bool Remove (Map map, IMapEvent mapevent)
+		public bool RemoveEvent (Map map, IMapEvent mapevent)
 		{
-			return this.Remove(map.Name, mapevent);
+			return this.RemoveEvent(map.Name, mapevent);
 		}
 
-		public bool Remove (string mapname, IMapEvent mapevent)
+		public bool RemoveEvent (string mapname, IMapEvent mapevent)
 		{
 			lock(this.events)
 			{
@@ -105,11 +108,11 @@ namespace Valkyrie.Library.Providers
 				MapPoint newpt = player.GetLookValue();
 				pos = new MapPoint(pos.X + newpt.X, pos.Y + newpt.Y);
 
-				events = this.GetMapsEvents (player, pos);
+				events = this.GetMapsEvents (player.WorldName, player.CurrentMap, pos);
 			}
 			else if(activation == ActivationTypes.Movement)
 			{
-				events = this.GetMapsEvents (player, pos);
+				events = this.GetMapsEvents (player.WorldName, player.CurrentMap, pos);
 			}
 
 			// If we didn't find any events, return.
@@ -156,16 +159,16 @@ namespace Valkyrie.Library.Providers
 			}
 		}
 
-		public IEnumerable<IMapEvent> GetMapsEvents (BaseCharacter player, MapPoint position)
+		public IEnumerable<IMapEvent> GetMapsEvents (string worldname, MapHeader mapheader, MapPoint globalposition)
 		{
-			player.CurrentMap = this.context.SceneProvider.GetPositionableLocalMap (player);
-			MapPoint pos = player.LocalTileLocation;
+			MapPoint pos = globalposition - mapheader.MapLocation;
 
-			if(pos.X < 0 || pos.Y < 0 || pos.X > player.CurrentMap.Map.MapSize.X || pos.Y > player.CurrentMap.Map.MapSize.Y)
+			// If the globalposition is not located in the mapheader
+			if(pos.X < 0 || pos.Y < 0 || pos.X > mapheader.Map.MapSize.X || pos.Y > mapheader.Map.MapSize.Y)
 			{
 				// Find globally
-				MapHeader header = this.context.WorldManager.GetWorld (player.WorldName).GetLocalMapFromPoint (position);
-				MapPoint localpos = player.GlobalTileLocation - header.MapLocation;
+				MapHeader header = this.context.WorldManager.GetWorld (worldname).GetLocalMapFromPoint (globalposition);
+				MapPoint localpos = globalposition - header.MapLocation;
 
 				// Ensure no crash
 				if(!this.events.ContainsKey (header.MapName))
@@ -175,16 +178,14 @@ namespace Valkyrie.Library.Providers
 			}
 			else
 			{
-				MapPoint localpos = position - player.CurrentMap.MapLocation;
-
-				if(!this.events.ContainsKey (player.CurrentMap.MapName))
+				if(!this.events.ContainsKey (mapheader.MapName))
 					return new List<IMapEvent> ();
 
 				// Ensure no crash
-				if(!this.events.ContainsKey (player.CurrentMap.MapName))
-					this.events.Add (player.CurrentMap.MapName, new List<IMapEvent> ());
+				if(!this.events.ContainsKey (mapheader.MapName))
+					this.events.Add (mapheader.MapName, new List<IMapEvent> ());
 
-				return this.events[player.CurrentMap.MapName].Where (m => m.Rectangle.Contains ((localpos).ToPoint ()));
+				return this.events[mapheader.MapName].Where (m => m.Rectangle.Contains ((pos).ToPoint ()));
 			}
 
 		}

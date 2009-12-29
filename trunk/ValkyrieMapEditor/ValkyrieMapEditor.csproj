@@ -13,7 +13,7 @@
     <XnaFrameworkVersion>v3.1</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
     <XnaCrossPlatformGroupID>2b18c882-f912-48ef-8896-26f396742eb9</XnaCrossPlatformGroupID>
-    <ApplicationIcon>Game.ico</ApplicationIcon>
+    <ApplicationIcon>Griffin.ico</ApplicationIcon>
     <Thumbnail>GameThumbnail.png</Thumbnail>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <FileUpgradeFlags>
@@ -162,6 +162,7 @@
     <Content Include="Graphics\EditorEvent.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Griffin.ico" />
     <Content Include="System.Data.SQLite.dll" />
     <None Include="Resources\layers.png" />
     <None Include="Resources\shape_handles.png" />

@@ -144,7 +144,7 @@ namespace Valkyrie.Modules
 				{
 					this.connecting = true;
 
-					this.context.VoiceChatProvider.ConnectAsync (gablarskiaddress, Convert.ToInt32 (gablarskiport), username, Helpers.MD5 (password));
+					//this.context.VoiceChatProvider.ConnectAsync (gablarskiaddress, Convert.ToInt32 (gablarskiport), username, Helpers.MD5 (password));
 					bool result = this.context.NetworkProvider.Connect(address, Convert.ToInt32(port));
 					if(!result)
 						throw new SocketException ();

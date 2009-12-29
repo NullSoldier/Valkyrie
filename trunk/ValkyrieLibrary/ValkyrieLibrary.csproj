@@ -123,6 +123,7 @@
     <Compile Include="Providers\ValkyrieNetworkProvider.cs" />
     <Compile Include="Providers\ValkyrieSceneProvider.cs" />
     <Compile Include="Providers\ValkyrieSoundProvider.cs" />
+    <Compile Include="Providers\ValkyrieSoundProviderNew.cs" />
     <Compile Include="Providers\ValkyrieVoiceChatProvider.cs" />
     <Compile Include="Providers\XMLMapProvider.cs" />
     <Compile Include="Providers\XMLWorldProvider.cs" />

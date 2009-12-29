@@ -29,8 +29,6 @@ namespace ValkyrieMapEditor
 
 		public frmMain()
 		{
-			this.Icon = Icon.FromHandle(Resources.imgLayers.GetHicon());
-
 			InitializeComponent();
 
 			this.pctTileSurface.Initialize();

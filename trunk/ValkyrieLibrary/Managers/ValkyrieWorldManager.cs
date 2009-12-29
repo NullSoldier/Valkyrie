@@ -66,8 +66,8 @@ namespace Valkyrie.Library.Managers
 		{
 			lock(this.worlds)
 			{
-				if(this.worlds.ContainsKey(world.Name)) // Optimize
-					throw new Exception(String.Format("World {0} already exists", world.Name));
+				if(this.worlds.ContainsKey(world.Name))
+					throw new WorldAlreadyExistsException (world.Name);
 
 				this.worlds.Add(world.Name, world);
 			}

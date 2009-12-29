@@ -164,7 +164,7 @@ namespace Valkyrie.Library.Providers
 						newEvent.Rectangle = new Rectangle(eventlocation.X, eventlocation.Y, size.X, size.Y);
 						newEvent.Activation = activation;
 
-						eventprovider.Add(Map, newEvent);
+						eventprovider.AddEvent (Map, newEvent);
 						
 						#endregion
 					}

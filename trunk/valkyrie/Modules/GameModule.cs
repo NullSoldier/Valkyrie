@@ -21,6 +21,7 @@ using Valkyrie.Messages.Valkyrie.Movement;
 using Valkyrie;
 using ValkyrieServerLibrary.Network.Messages.Valkyrie;
 using Valkyrie.Library;
+using System.Reflection;
 
 namespace Valkyrie.Modules
 {
@@ -88,8 +89,6 @@ namespace Valkyrie.Modules
 				this.scene.DrawCameraLayer (spriteBatch, "camera1", MapLayers.MiddleLayer, this.showplayers);
 			if(this.toplayer)
 				this.scene.DrawCameraLayer (spriteBatch, "camera1", MapLayers.TopLayer, this.showplayers);			
-
-			//this.scene.DrawAllCameras(spriteBatch);
 	    }
 
 	    public void Load(IEngineContext enginecontext)
@@ -529,7 +528,7 @@ namespace Valkyrie.Modules
 			else if(directon == Directions.East)
 				collision = new ScreenPoint (destination.X + 32 - (int) movable.Speed, destination.Y);
 
-			var collisionevent = this.context.EventProvider.GetMapsEvents(movable, collision.ToMapPoint()).Where( p => p.Activation == ActivationTypes.Collision && p.Direction == movable.Direction).FirstOrDefault();
+			var collisionevent = this.context.EventProvider.GetMapsEvents(movable.WorldName, movable.CurrentMap, collision.ToMapPoint()).Where( p => p.Activation == ActivationTypes.Collision && p.Direction == movable.Direction).FirstOrDefault();
 			if(collisionevent != null)
 				return false;
 

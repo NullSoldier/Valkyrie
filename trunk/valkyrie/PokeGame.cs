@@ -69,6 +69,9 @@ namespace Valkyrie
 		private float deltaFPSTime = 0;
 		private bool exitinggame = false;
 
+		private string version = Assembly.GetExecutingAssembly ().GetName ().Version.ToString ();
+		private Vector2 versionloc = Vector2.Zero;
+
 		private EngineConfiguration LoadEngineConfiguration ()
 		{
 			FileInfo info = new FileInfo(Path.Combine(Environment.CurrentDirectory, "Data/TileEngineConfig.xml"));
@@ -86,6 +89,9 @@ namespace Valkyrie
         protected override void Initialize()
         {
 			this.Engine = new ValkyrieEngine(this.LoadEngineConfiguration());
+			var description = Assembly.GetExecutingAssembly ().GetCustomAttributes (typeof (AssemblyDescriptionAttribute), true).FirstOrDefault ();
+			if(description != null)
+				this.version = string.Format ("{0} {1}", ((AssemblyDescriptionAttribute) description).Description, this.version);
 
             base.Initialize();
         }
@@ -117,11 +123,11 @@ namespace Valkyrie
 			this.Engine.ModuleProvider.AddModule(new MenuModule(Content.Load<Video>("PokemonIntro")));
 			this.Engine.ModuleProvider.AddModule(new LoginModule());
 			this.Engine.ModuleProvider.AddModule(new GameModule(this.GraphicsDevice));
-
 			this.Engine.ModuleProvider.GetModule("Menu").Load(this.Engine);
 			this.Engine.ModuleProvider.GetModule("Login").Load(this.Engine);
-
 			this.Engine.ModuleProvider.PushModule("Menu");
+
+			this.versionloc = new Vector2 (this.graphics.PreferredBackBufferWidth - (PokeGame.font.MeasureString (this.version).X + 5), this.graphics.PreferredBackBufferHeight - 20);
         }
 
         protected override void UnloadContent()
@@ -163,6 +169,10 @@ namespace Valkyrie
 
 			/* Draw the game */
 			this.Engine.Draw(spriteBatch, gameTime);
+
+			spriteBatch.Begin ();
+			spriteBatch.DrawString (PokeGame.font, this.version, this.versionloc, Color.Black);
+			spriteBatch.End ();
 
 			base.Draw(gameTime);
 		}

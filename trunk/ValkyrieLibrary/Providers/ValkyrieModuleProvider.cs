@@ -66,25 +66,25 @@ namespace Valkyrie.Library.Providers
 			}
 		}
 
-		public void RemoveModule (string name)
+		public bool RemoveModule (string name)
 		{
 			lock(this.moduleSync)
 			{
 				if(!this.modules.ContainsKey(name))
 					throw new KeyNotFoundException(string.Format("The module {0} does not exist in the module manager.", name));
 
-				this.modules.Remove(name);
+				return this.modules.Remove (name);
 			}
 		}
 
-		public void RemoveModule (IModule module)
+		public bool RemoveModule (IModule module)
 		{
 			lock(this.moduleSync)
 			{
 				if(!this.modules.ContainsKey(module.Name))
 					throw new KeyNotFoundException(string.Format("The module {0} does not exist in the module manager.", module.Name));
 
-				this.modules.Remove(module.Name);
+				return this.modules.Remove(module.Name);
 			}
 		}
 

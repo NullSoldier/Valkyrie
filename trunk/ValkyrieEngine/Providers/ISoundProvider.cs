@@ -12,12 +12,53 @@ namespace Valkyrie.Engine.Providers
 	public interface ISoundProvider
 		: IEngineProvider
 	{
+		/// <summary>
+		/// The master sound modifier that offsets the gain of all audio played.
+		/// </summary>
+		/// <remarks>
+		/// The maximum value is 1. The minimum value is 0.
+		/// </remarks>
 		float MasterGainModifier { get; set; }
 
+		/// <summary>
+		/// The sound modifier that offsets the gain of all sound effects played.
+		/// </summary>
+		/// <remarks>
+		/// The maximum value is 1. The minimum value is 0.
+		/// </remarks>
+		float SoundGainModifier { get; set; }
+
+		/// <summary>
+		/// The music modifier that offsets the gain of all background music played.
+		/// </summary>
+		/// <remarks>
+		/// The maximum value is 1. The minimum value is 0.
+		/// </remarks>
+		float MusicGainModifier { get; set; }
+
+		/// <summary>
+		/// Play a sound effect
+		/// </summary>
+		/// <param name="sound">The <seealso cref="AudioSource"/> to play.</param>
+		/// <param name="loop">Whether to loop the sound or not.</param>
 		void PlaySound (AudioSource sound, bool loop);
+
+		/// <summary>
+		/// Play background music
+		/// </summary>
+		/// <param name="sound">The <seealso cref="AudioSource"/> to play.</param>
+		/// <param name="loop">Whether to loop the music or not.</param>
 		void PlayBGM (AudioSource sound, bool loop);
+		
+		/// <summary>
+		/// Stop the current background music being played as well as any music that's queued to be played.
+		/// </summary>
 		void StopBGM ();
 
+		/// <summary>
+		/// Update all sounds and music being played.
+		/// </summary>
+		/// <param name="gameTime">The current GameTime.</param>
 		void Update (GameTime gameTime);
 	}
 }

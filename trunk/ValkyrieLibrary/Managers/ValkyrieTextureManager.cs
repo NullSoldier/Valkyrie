@@ -31,11 +31,6 @@ namespace Valkyrie.Library.Managers
 			set { this.textureroot = value; }
 		}
 
-		public void Load (string textureroot)
-		{
-			this.TextureRoot = textureroot;
-		}
-
 		public void AddTexture (string Name, Texture2D newTexture)
 		{
 			this.Resources.Add(Name, newTexture);
@@ -99,7 +94,7 @@ namespace Valkyrie.Library.Managers
 		public void LoadEngineContext (IEngineContext context)
 		{
 			this.context = context;
-			this.Load(this.context.Configuration[EngineConfigurationName.GraphicsRoot]);
+			this.TextureRoot = this.context.Configuration[EngineConfigurationName.GraphicsRoot];
 
 			this.isloaded = true;
 		}

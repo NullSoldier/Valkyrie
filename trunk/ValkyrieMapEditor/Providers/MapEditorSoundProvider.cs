@@ -13,6 +13,8 @@ namespace ValkyrieMapEditor.Providers
 		: ISoundProvider
 	{
 		public float MasterGainModifier { get; set; }
+		public float SoundGainModifier { get; set; }
+		public float MusicGainModifier { get; set; }
 
 		public void PlaySound (AudioSource sound, bool loop)
 		{

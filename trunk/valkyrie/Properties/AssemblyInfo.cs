@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("valkyrie")]
 [assembly: AssemblyProduct("valkyrie")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription ("Engager")]
 [assembly: AssemblyCompany("")]
 
 [assembly: AssemblyCopyright("Copyright ©  2008")]
@@ -30,4 +30,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion ("0.0.4.1")]

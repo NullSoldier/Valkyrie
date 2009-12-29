@@ -27,11 +27,6 @@ namespace Valkyrie.Library.Managers
 			set { this.soundroot = value; }
 		}
 
-		public void Load (string soundroot)
-		{
-			this.SoundRoot = soundroot;
-		}
-
 		public void AddSound (string Name, AudioSource newSound)
 		{
 			lock(this.Resources)
@@ -44,6 +39,7 @@ namespace Valkyrie.Library.Managers
 		{
 			FileInfo file = new FileInfo (Path.Combine(Environment.CurrentDirectory,
 				Path.Combine(this.context.Configuration[EngineConfigurationName.SoundsRoot], FileName)));
+
 			if(!file.Exists)
 				return;
 
@@ -156,7 +152,7 @@ namespace Valkyrie.Library.Managers
 		public void LoadEngineContext (IEngineContext context)
 		{
 			this.context = context;
-			this.Load(this.context.Configuration[EngineConfigurationName.SoundsRoot]);
+			this.SoundRoot = this.context.Configuration[EngineConfigurationName.SoundsRoot];
 
 			this.isloaded = true;
 		}

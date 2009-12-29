@@ -121,7 +121,6 @@ namespace Valkyrie.Library.Providers
 			location.Y = (int)camera.MapOffset.Y + player.Location.Y + 32 - player.CurrentAnimation.FrameRectangle.Height;
 
 			spriteBatch.Draw(player.Sprite, location, player.CurrentAnimation.FrameRectangle, Color.White);
-			//spriteBatch.DrawString(PokeGame.font, this.Name, new Vector2(this.DrawScreenLocation.X - (PokeGame.font.MeasureString(this.Name).X / 2) + 16, this.DrawScreenLocation.Y - 15), Color.Black)
 		}
 
 		#endregion
@@ -193,7 +192,7 @@ namespace Valkyrie.Library.Providers
 			lock(this.cameras)
 			{
 				if(!this.cameras.ContainsKey(name))
-					throw new Exception("Camera not found.");
+					throw new ArgumentException("Camera not found.");
 
 				return this.cameras[name];
 			}
@@ -208,6 +207,9 @@ namespace Valkyrie.Library.Providers
 		{
 			lock(this.cameras)
 			{
+				if(this.cameras.ContainsKey (name))
+					throw new ArgumentException ("Camera already exists");
+
 				this.cameras.Add(name, camera);
 			}
 		}
@@ -225,7 +227,7 @@ namespace Valkyrie.Library.Providers
 			lock(this.players)
 			{
 				if(!this.players.ContainsKey(name))
-					throw new Exception("Player not found");
+					throw new ArgumentException ("Player not found");
 
 				return this.players[name];
 			}
@@ -240,6 +242,9 @@ namespace Valkyrie.Library.Providers
 		{
 			lock(this.players)
 			{
+				if(this.players.ContainsKey (name))
+					throw new ArgumentException ("Player already exists");
+
 				this.players.Add(name, character);
 			}
 		}

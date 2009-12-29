@@ -87,7 +87,7 @@ namespace ValkyrieMapEditor.Core
 			}
 			else if(result == DialogResult.Abort)
 			{
-				this.context.EventProvider.Remove(MapEditorManager.CurrentMap.Name, mapevent);
+				this.context.EventProvider.RemoveEvent(MapEditorManager.CurrentMap.Name, mapevent);
 				MapEditorManager.OnMapChanged();
 			}
 

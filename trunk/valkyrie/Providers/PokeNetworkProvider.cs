@@ -62,6 +62,11 @@ namespace Valkyrie.Providers
 			return this.connection.IsConnected;
 		}
 
+		public void ConnectAsync (string server, int port)
+		{
+			throw new NotImplementedException ();
+		}
+
 		public void Disconnect ()
 		{
 			if(this.IsConnected)
