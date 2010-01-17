@@ -11,11 +11,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Engine.Maps;
-using Mono.Rocks;
 using Valkyrie.Engine.Core;
 using Valkyrie.Engine.Core.Characters;
 using Valkyrie.Library.Core.Characters;
 using Valkyrie.Engine.Events;
+using Cadenza;
+using Cadenza.Collections;
 
 namespace Valkyrie.Providers
 {

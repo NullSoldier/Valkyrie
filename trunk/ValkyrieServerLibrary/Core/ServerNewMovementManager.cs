@@ -2,50 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Diagnostics;
-using Cadenza;
-using Microsoft.Xna.Framework;
-using Valkyrie.Engine.Providers;
 using Valkyrie.Engine.Characters;
-using Valkyrie.Engine.Core;
-using Valkyrie.Engine;
-using Valkyrie.Library;
 using ValkyrieServerLibrary.Entities;
+using Valkyrie.Engine.Providers;
+using Valkyrie.Engine.Core;
+using Microsoft.Xna.Framework;
+using Valkyrie.Engine;
 
 namespace ValkyrieServerLibrary.Core
 {
-	public class ServerMovementProvider
+	public class ServerNewMovementProvider
 	{
 		#region Constructors
 
-		public ServerMovementProvider (ICollisionProvider collisionprovider)
+		public ServerNewMovementProvider (ICollisionProvider collisionprovider)
 		{
 			this.collisionprovider = collisionprovider;
 		}
 
 		#endregion
 
-		public event EventHandler<MovementChangedEventArgs> PlayerStartedMoving;
-		public event EventHandler<MovementChangedEventArgs> PlayerStoppedMoving;
+		public event EventHandler<MovementChangedEventArgs> PlayerMoved;
 		public event EventHandler<MovementChangedEventArgs> FailedMovementVerification;
-
-		public void BeginMove (Character movable, Directions direction, string animationname)
-		{
-			//this.AddToCache (movable, new MovementItem (ScreenPoint.Zero, MovementType.TileBased, direction, animationname));
-
-			//movable.OnStartedMoving (this, EventArgs.Empty);
-		}
-
-		public void EndMoveLocation (Character movable, MapPoint destination, string animationname)
-		{
-			//lock(this.movablecache)
-			//{
-			//    if(!this.movablecache.ContainsKey (movable))
-			//        return;
-
-			//    this.movablecache[movable].Enqueue (new MovementItem (destination.ToScreenPoint (), MovementType.Destination, Directions.Any, animationname));
-			//}
-		}
 
 		public void AddToProvider (Character character)
 		{
@@ -82,54 +60,42 @@ namespace ValkyrieServerLibrary.Core
 
 				foreach(var player in this.movablecache)
 				{
-					if(player.MoveHiatus)
-					{
-						// Add to remove and skip
-						toberemoved.Add (player);
-						continue;
-					}
-
 					MovementInfo moveitem = player.MovementQueue.FirstOrDefault ();
 
 					int speedmodifier = 1;
 					bool failedverification = false;
 
-					//Skip to the next moveitem when theres a destination in the queue
-					while(moveitem.Type == MovementType.TileBased && player.MovementQueue.Count > 1)
+					/* Fire player started moving event and do movement verification */
+					if(player.NextMoveActive)
 					{
-						player.MovementQueue.Dequeue ();
-						moveitem = player.MovementQueue.FirstOrDefault ();
-					}
-
-					player.Direction = moveitem.Direction;
-					player.Animation = moveitem.Animation;
-
-					// Notify player started moving and do verification
-					if(player.NextMoveActive && moveitem.Stage == MovementStage.StartMovement)
-					{
-						// Do start move verification
-						if(player.Location.ToMapPoint () != moveitem.Location.ToMapPoint ())
+						if(!this.collisionprovider.CheckCollision (player, moveitem.Location))
 						{
-							// Notify the server code that the user has failed a verifiation
-							var handlerfailed = this.FailedMovementVerification;
-							if(handlerfailed != null)
-								handlerfailed (this, new MovementChangedEventArgs (player, MovementStage.StartMovement, moveitem.Location));
+							// Walking through dense tiles
+							if(player.Density == 1)
+								failedverification = true;
+						}
+
+
+						if(failedverification)
+						{
+							// Kick the hacker out
+							toberemoved.Add (player);
+
+							var verifyhandler = this.FailedMovementVerification;
+							if(verifyhandler != null)
+								verifyhandler (this, new MovementChangedEventArgs (player, moveitem.Stage, moveitem.Location));
 
 							continue;
 						}
-
-						var handler = this.PlayerStartedMoving;
+						var handler = this.PlayerMoved;
 						if(handler != null)
 							handler (this, new MovementChangedEventArgs (player, MovementStage.StartMovement, moveitem.Location));
 
 						player.NextMoveActive = false;
 					}
-					else if(moveitem.Stage == MovementStage.EndMovement && moveitem.Location == ScreenPoint.Zero)
-					{
-						moveitem.Location = this.GetNextScreenPointTile (player);
-					}
 
-					// Note: shouldn't matter because movement type determines which method is called
+					player.Direction = moveitem.Direction;
+					player.Animation = moveitem.Animation;
 					player.MovingDestination = moveitem.Location;
 					player.LastMoveTime += time.ElapsedGameTime.Milliseconds;
 
@@ -137,12 +103,7 @@ namespace ValkyrieServerLibrary.Core
 					{
 						player.LastMoveTime = 0;
 
-						if(moveitem.Type == MovementType.TileBased)
-						{
-							if(!MoveTileBased (player, collided))
-								toberemoved.Add (player);
-						}
-						else
+						if(moveitem.Type == MovementType.Destination)
 						{
 							// Need to get the direction because destination based direction doesn't neccessarily have a specified direction
 							player.Direction = this.GetDirectionFromAnimation (player.Animation);
@@ -160,50 +121,6 @@ namespace ValkyrieServerLibrary.Core
 						movable.OnCollided (this, EventArgs.Empty);
 					}
 
-					// Remove players that either collided or reached their destination
-					if(movable.ClientMovementQueue.Count > 0)
-					{
-						bool failvalidation = false;
-						var item = movable.ClientMovementQueue.Dequeue();
-
-						// Check if in one tile in direction moving
-						MapPoint difference = item.Location.ToMapPoint () - movable.Location.ToMapPoint ();
-						if(difference.Y != 0 && (item.Direction == Directions.East || item.Direction == Directions.West))
-						{
-							failvalidation = true;
-						}
-						else if(difference.X != 0 && (item.Direction == Directions.North || item.Direction == Directions.South))
-						{
-							failvalidation = true;
-						}
-
-						// Collision on the destination tile
-						if (!this.collisionprovider.CheckCollision (movable, item.Location))
-						{
-							failvalidation = true;
-						}
-
-
-						if(failvalidation)
-						{
-							// Kick that hacker out!
-							this.RemoveFromProvider (movable);
-
-							var handler = this.FailedMovementVerification;
-							if(handler != null)
-								handler (this, new MovementChangedEventArgs (movable, MovementStage.EndMovement, movable.Location));
-
-							continue;
-						}
-
-						movable.Location = item.Location;
-						movable.MoveHiatus = false;
-					}
-					else
-					{
-						movable.MoveHiatus = true;
-					}
-					
 					movable.IsMoving = false;
 					movable.IgnoreMoveInput = false;
 					movable.NextMoveActive = true;
@@ -214,7 +131,7 @@ namespace ValkyrieServerLibrary.Core
 					if(movable.MovementQueue.Count == 0)
 						this.RemoveFromProvider (movable);
 
-					var stophandler = this.PlayerStoppedMoving;
+					var stophandler = this.PlayerMoved;
 					if(stophandler != null)
 						stophandler (this, new MovementChangedEventArgs (movable, MovementStage.EndMovement, movable.Location));
 				}
@@ -292,36 +209,6 @@ namespace ValkyrieServerLibrary.Core
 			return movedok;
 		}
 
-		private bool MoveTileBased (Character movable, List<Character> collided)
-		{
-			bool movedok = true;
-			float x = movable.Location.X;
-			float y = movable.Location.Y;
-
-			#region Destination calculation
-			if(movable.Direction == Directions.North)
-			{
-				y -= movable.Speed;
-			}
-			else if(movable.Direction == Directions.South)
-			{
-				y += movable.Speed;
-			}
-			else if(movable.Direction == Directions.East)
-			{
-				x += movable.Speed;
-			}
-			else if(movable.Direction == Directions.West)
-			{
-				x -= movable.Speed;
-			}
-			#endregion
-
-			movable.Location = new ScreenPoint ((int) x, (int) y);
-
-			return movedok;
-		}
-
 		private Directions GetDirectionFromAnimation (string animation)
 		{
 			if(animation.Contains ("North"))
@@ -379,20 +266,5 @@ namespace ValkyrieServerLibrary.Core
 
 			return new ScreenPoint ((int) x, (int) y);
 		}
-	}
-
-	public class MovementChangedEventArgs
-		: EventArgs
-	{
-		public MovementChangedEventArgs (Character character, MovementStage stage, ScreenPoint location)
-		{
-			this.Character = character;
-			this.Stage = stage;
-			this.location = location;
-		}
-
-		public Character Character { get; set; }
-		public MovementStage Stage { get; set; }
-		public ScreenPoint location { get; set; }
 	}
 }

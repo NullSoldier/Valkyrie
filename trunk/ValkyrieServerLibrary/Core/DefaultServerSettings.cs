@@ -23,6 +23,7 @@ namespace ValkyrieServerLibrary.Core
 			this[ServerSettingName.DropRate] = "1";
 
 			this[ServerSettingName.MapDirectory] = "Maps\\";
+			this[ServerSettingName.EventAssemblies] = "valkyrie.exe;ValkyrieLibrary.dll;ValkyrieEngine.dll";
 		}
 	}
 }

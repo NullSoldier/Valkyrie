@@ -18,6 +18,8 @@ using Valkyrie.Engine.Managers;
 using Valkyrie.Engine.Providers;
 using Valkyrie.Library.Managers;
 using Valkyrie.Engine.Core;
+using ValkyrieServerLibrary.Network.Messages.Valkyrie;
+using Valkyrie.Library.Providers;
 
 namespace ValkyrieServerLibrary.Core
 {
@@ -31,24 +33,32 @@ namespace ValkyrieServerLibrary.Core
 		private readonly GameServerSettings settings;
 
 		private readonly IWorldManager worlds;
-		private readonly ServerMovementProvider movement;
+		private readonly ServerNewMovementProvider movement;
 		private readonly ICollisionProvider collision;
 
 		private bool Started = false;
 		private bool Loaded = false;
+		private int RangeUpdateFrequency = 60;
 		//private uint LastNetworkID = 0;
 
 		public event EventHandler<UserEventArgs> UserLoggedIn;
 		public event EventHandler<UserEventArgs> UserLoggedOut;
 
 		Thread MovementUpdateThread;
+		Thread RangeUpdateThread;
 
 		public ValkyrieGameServer(GameServerSettings settings)
 			: this()
 		{
-			this.worlds = new ValkyrieWorldManager(new Assembly[] { });
+			var assemblies = settings[ServerSettingName.EventAssemblies].Split (';')
+				.Where ( s => !string.IsNullOrEmpty(s))
+				.Select ( s => Assembly.LoadFile(Path.Combine(Environment.CurrentDirectory, s)));
+
+			this.worlds = new ServerWorldManager(assemblies, settings[ServerSettingName.MapDirectory] );
 			this.collision = new ServerCollisionProvider(this.worlds);
-			this.movement = new ServerMovementProvider(this.collision);
+			this.movement = new ServerNewMovementProvider(this.collision);
+			this.movement.PlayerMoved += this.MovementProvider_PlayerMoved;
+			this.movement.FailedMovementVerification += this.MovementProvider_FailedVerify;
 
 			this.players = new NetworkPlayerCache();
 
@@ -95,6 +105,11 @@ namespace ValkyrieServerLibrary.Core
 			this.MovementUpdateThread.Name = "Movement Update";
 			this.MovementUpdateThread.IsBackground = false;
 			this.MovementUpdateThread.Start();
+
+			this.RangeUpdateThread = new Thread (this.UpdateRanges);
+			this.RangeUpdateThread.Name = "Range Update";
+			this.RangeUpdateThread.IsBackground = false;
+			this.RangeUpdateThread.Start ();
 
 			this.Started = true;
 		}
@@ -147,22 +162,25 @@ namespace ValkyrieServerLibrary.Core
 				connection.Disconnect();
 
 			NetworkPlayer player = this.players.GetPlayer(connection);
-			
-			this.players.RemovePlayer(connection);
-
-			// fire logged out event
-			var handler = this.UserLoggedOut;
-			if(handler != null)
-				handler(this, new UserEventArgs(player));
 
 			PlayerUpdateMessage updatemsg = new PlayerUpdateMessage();
 			updatemsg.Action = PlayerUpdateAction.Remove;
 			updatemsg.NetworkID = player.NetworkID;
 
-			foreach (var nplayer in this.players.GetPlayers())
-				nplayer.Connection.Send(updatemsg);
+			lock(this.players.PlayerLock)
+			{
+				foreach(var nplayer in this.players.PlayerRanges[player.NetworkID])
+					nplayer.Connection.Send (updatemsg);
+			}
+
+			this.players.RemovePlayer (connection);
 
 			this.SaveCharacter(player.Character);
+
+			// fire logged out event
+			var handler = this.UserLoggedOut;
+			if(handler != null)
+				handler (this, new UserEventArgs (player));
 		}
 
 		private void SaveCharacter(Character character)
@@ -175,7 +193,7 @@ namespace ValkyrieServerLibrary.Core
 
 		private void LoadWorlds()
 		{
-			//this.worlds.Load(new FileInfo(Path.Combine(Environment.CurrentDirectory, this.settings[ServerSettingName.MapDirectory] + "PokeWorld.xml")), new XMLMapProvider() );
+			this.worlds.Load(new Uri(Path.Combine(Environment.CurrentDirectory, this.settings[ServerSettingName.MapDirectory] + "PokeWorld.xml")), new ValkyrieEventProvider());
 		}
 
 		private string GetChunkName (string WorldName, MapPoint location)
@@ -199,6 +217,46 @@ namespace ValkyrieServerLibrary.Core
 				GameTime time = new GameTime(TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, span);
 				this.movement.Update(time);
                 Thread.Sleep(16);
+			}
+		}
+
+		private void UpdateRanges ()
+		{
+			while(this.Started)
+			{
+				var result = this.players.UpdateRanges ();
+
+				foreach(var player in result)
+				{
+					foreach(var playerchange in player.Value)
+					{
+						if(playerchange.State == RangeChangeStates.Add)
+						{
+							PlayerUpdateMessage updmsg = new PlayerUpdateMessage ()
+							{
+								NetworkID = playerchange.Player.NetworkID,
+								Action = PlayerUpdateAction.Add,
+								CharacterName = playerchange.Player.Character.Name,
+							};
+
+							player.Key.Connection.Send (updmsg);
+						}
+						else
+						{
+							PlayerUpdateMessage updmsg = new PlayerUpdateMessage ()
+							{
+								NetworkID = playerchange.Player.NetworkID,
+								Action = PlayerUpdateAction.Remove,
+								CharacterName = playerchange.Player.Character.Name,
+							};
+
+							player.Key.Connection.Send (updmsg);
+						}
+						
+					}
+				}
+
+				Thread.Sleep (this.RangeUpdateFrequency);
 			}
 		}
 	}

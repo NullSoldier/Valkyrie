@@ -3,31 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Valkyrie.Engine.Managers;
-using System.Reflection;
 using Valkyrie.Engine.Providers;
 using Valkyrie.Engine.Maps;
+using Cadenza;
+using Valkyrie.Library.Core;
 using Valkyrie.Engine;
+using System.Reflection;
 using Valkyrie.Library.Providers;
 using System.IO;
-using Valkyrie.Library.Core;
-using Cadenza;
 using Cadenza.Collections;
 
-namespace Valkyrie.Library.Managers
+namespace ValkyrieServerLibrary.Core
 {
-	public class ValkyrieWorldManager
+	public class ServerWorldManager
 		: IWorldManager
 	{
 		#region Constructor
 
-		public ValkyrieWorldManager (IEnumerable<Assembly> eventassemblies)
+		public ServerWorldManager (IEnumerable<Assembly> eventassemblies, string maproot)
 		{
-			this.mapprovider = new XMLMapProvider(eventassemblies);
+			this.mapprovider = new XMLMapProvider (eventassemblies);
+			this.maproot = maproot;
 		}
 
-		public ValkyrieWorldManager (IMapProvider mapprovider)
+		public ServerWorldManager (IMapProvider mapprovider, string maproot)
 		{
 			this.mapprovider = mapprovider;
+			this.maproot = maproot;
 		}
 
 		#endregion
@@ -38,14 +40,13 @@ namespace Valkyrie.Library.Managers
 		{
 			lock(this.worldmanagerSync)
 			{
-				this.worlds = this.WorldProvider.GetWorlds(location).ToDictionary(p => p.Name, p => p);
+				this.worlds = this.WorldProvider.GetWorlds (location).ToDictionary (p => p.Name, p => p);
 
-				string mapdirectory = Path.Combine(Environment.CurrentDirectory, this.maproot);
+				string mapdirectory = Path.Combine (Environment.CurrentDirectory, this.maproot);
 
-				foreach(MapHeader header in this.worlds.Values.SelectMany(p => p.Maps.Values))
+				foreach(MapHeader header in this.worlds.Values.SelectMany (p => p.Maps.Values))
 				{
-					header.Map = this.MapProvider.GetMap(new Uri(Path.Combine(mapdirectory, header.MapPath)), eventprovider);
-					header.Map.Texture = this.texturemanager.GetTexture(header.Map.TextureName);
+					header.Map = this.MapProvider.GetMap (new Uri (Path.Combine (mapdirectory, header.MapPath)), eventprovider);
 				}
 			}
 		}
@@ -66,10 +67,10 @@ namespace Valkyrie.Library.Managers
 		{
 			lock(this.worlds)
 			{
-				if(this.worlds.ContainsKey(world.Name))
+				if(this.worlds.ContainsKey (world.Name))
 					throw new WorldAlreadyExistsException (world.Name);
 
-				this.worlds.Add(world.Name, world);
+				this.worlds.Add (world.Name, world);
 			}
 		}
 
@@ -77,7 +78,7 @@ namespace Valkyrie.Library.Managers
 		{
 			lock(this.worlds)
 			{
-				return this.worlds.Remove(name);
+				return this.worlds.Remove (name);
 			}
 		}
 
@@ -85,7 +86,7 @@ namespace Valkyrie.Library.Managers
 		{
 			lock(this.worlds)
 			{
-				this.worlds.Clear();
+				this.worlds.Clear ();
 			}
 		}
 
@@ -93,8 +94,8 @@ namespace Valkyrie.Library.Managers
 		{
 			lock(this.worlds)
 			{
-				if(!this.worlds.ContainsKey(name))
-					throw new Exception("World not found");
+				if(!this.worlds.ContainsKey (name))
+					throw new Exception ("World not found");
 
 				return this.worlds[name];
 			}
@@ -102,16 +103,16 @@ namespace Valkyrie.Library.Managers
 
 		public ReadOnlyDictionary<string, World> GetWorlds ()
 		{
-			return new ReadOnlyDictionary<string, World>(this.worlds);
+			return new ReadOnlyDictionary<string, World> (this.worlds);
 		}
 
 		#endregion
 
-		private Dictionary<string, World> worlds = new Dictionary<string, World>();
+		private Dictionary<string, World> worlds = new Dictionary<string, World> ();
 		private string currentworldName = string.Empty;
-		private object worldmanagerSync = new object();
+		private object worldmanagerSync = new object ();
 
-		private IWorldProvider worldprovider = new XMLWorldProvider();
+		private IWorldProvider worldprovider = new XMLWorldProvider ();
 		private IMapProvider mapprovider;
 		private bool isloaded = false;
 		private string maproot = string.Empty;

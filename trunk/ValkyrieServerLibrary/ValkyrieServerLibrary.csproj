@@ -110,6 +110,8 @@
     <Compile Include="Core\PlayerState.cs" />
     <Compile Include="Core\ServerCollisionManager.cs" />
     <Compile Include="Core\ServerMovementManager.cs" />
+    <Compile Include="Core\ServerNewMovementManager.cs" />
+    <Compile Include="Core\ServerWorldManager.cs" />
     <Compile Include="Entities\Account.cs" />
     <Compile Include="Entities\Character.cs" />
     <Compile Include="Core\GameServerSettings.cs" />

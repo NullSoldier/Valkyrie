@@ -116,6 +116,7 @@
     <Compile Include="Managers\ValkyrieTextureManager.cs" />
     <Compile Include="MovementItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\ValkyrieAudioChatReceiver.cs" />
     <Compile Include="Providers\ValkyrieCollisionProvider.cs" />
     <Compile Include="Providers\ValkyrieEventProvider.cs" />
     <Compile Include="Providers\ValkyrieModuleProvider.cs" />

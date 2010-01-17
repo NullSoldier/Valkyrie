@@ -35,39 +35,55 @@ namespace Valkyrie.Library.Providers
 			set { this.musicgainmodifier = value; }
 		}
 
+		public bool IsMusicEnabled
+		{
+			get { return this.ismusicenabled; }
+			set { this.ismusicenabled = value; }
+		}
+
+		public bool IsSoundEnabled
+		{
+			get { return this.issoundenabled; }
+			set { this.issoundenabled = value; }
+		}
+
 		public void PlaySound (AudioSource sound, bool loop)
 		{
-
+			if(!this.IsSoundEnabled)
+				return;
 		}
 
 		public void PlayBGM (AudioSource sound, bool loop)
 		{
+			if(!this.IsMusicEnabled)
+				return;
+
 			SourceBuffer buffer = SourceBuffer.Generate ();
 			buffer.Buffer (sound.PCM, ((sound.Channels == 1) ? AudioFormat.Mono16Bit : AudioFormat.Stereo16Bit), sound.Frequency);
 
 			if(this.currentbgmsource != null && this.currentbgmsource.Source != null &&
-				this.currentbgmsource.Source.IsPlaying)
+			    this.currentbgmsource.Source.IsPlaying)
 			{
-				Source source = Source.Generate ();
-				source.Queue (buffer);
+			    Source source = Source.Generate ();
+			    source.Queue (buffer);
 
-				// If we already have BGM playing, fade it out
-				this.currentbgmsource.FadeState = FadeState.FadeOut;
-				this.nextbgmsource = new LeasedAudioSource (source, FadeState.None, loop);
+			    // If we already have BGM playing, fade it out
+			    this.currentbgmsource.FadeState = FadeState.FadeOut;
+			    this.nextbgmsource = new LeasedAudioSource (source, FadeState.None, loop);
 
-				lock(this.leased)
-					this.leased.Add (nextbgmsource);
+			    lock(this.leased)
+			        this.leased.Add (nextbgmsource);
 			}
 			else
 			{
-				Source source = Source.Generate ();
-				source.QueueAndPlay (buffer);
+			    Source source = Source.Generate ();
+			    source.QueueAndPlay (buffer);
 
-				// If nothing is currently playing
-				this.currentbgmsource = new LeasedAudioSource (source, FadeState.None, loop);
+			    // If nothing is currently playing
+			    this.currentbgmsource = new LeasedAudioSource (source, FadeState.None, loop);
 
-				lock(this.leased)
-					this.leased.Add (currentbgmsource);
+			    lock(this.leased)
+			        this.leased.Add (currentbgmsource);
 			}
 		}
 
@@ -188,6 +204,8 @@ namespace Valkyrie.Library.Providers
 		private float mastergainmodifer = 0;
 		private float soundgainmodifier = 0;
 		private float musicgainmodifier = -0.3f;
+		private bool ismusicenabled = false;
+		private bool issoundenabled = false;
 		private bool isloaded = false;
 	}
 

@@ -11,6 +11,7 @@ using Gablarski.Network;
 using Gablarski.Audio;
 using Gablarski.Messages;
 using Gablarski.OpenAL;
+using Gablarski;
 
 namespace Valkyrie.Library.Providers
 {
@@ -78,7 +79,12 @@ namespace Valkyrie.Library.Providers
 			if (voice == null || capture == null)
 				return;
 
-			gb.Audio.BeginCapture (voice, gb.CurrentChannel);
+			List<UserInfo> infos = new List<UserInfo> ();
+
+			foreach(var player in this.context.NetworkProvider.GetPlayers ())
+				infos.Add (gb.Users[Convert.ToInt32(player.ID)]);
+
+			gb.Audio.BeginCapture (voice, infos);
 		}
 
 		public void EndTalk (BaseCharacter character)
@@ -122,6 +128,7 @@ namespace Valkyrie.Library.Providers
 		private readonly Context oalContext;
 		private IPlaybackProvider playback; 
 		private ICaptureProvider capture;
+		private AudioEngine audioengine;
 		
 		private string username;
 		private string password;
@@ -137,10 +144,14 @@ namespace Valkyrie.Library.Providers
 			capture = new OpenALCaptureProvider();
 			capture.Device = capture.DefaultDevice;
 
+			audioengine = new AudioEngine ();
+
 			if (capture.Device == null)
 				capture = null;
 			
-			gb = new GablarskiClient (new NetworkClientConnection());
+			gb = new GablarskiClient (new NetworkClientConnection(), audioengine);
+			gb.Audio.AudioReceiver = new ValkyrieAudioChatReceiver (gb.Sources, this.context);
+
 			gb.Connected += HandleGbConnected;
 			gb.ConnectionRejected += HandleGbConnectionRejected;
 			gb.Disconnected += OnDisconnected;
@@ -210,7 +221,7 @@ namespace Valkyrie.Library.Providers
 			}
 			
 			if (capture != null)
-				gb.Sources.Request ("voice", 1);
+				gb.Sources.Request ("voice", 1, 48000, 512);
 			else
 				OnConnected (this, EventArgs.Empty);
 		}

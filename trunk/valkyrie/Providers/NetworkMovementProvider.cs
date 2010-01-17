@@ -12,6 +12,7 @@ using Valkyrie.Characters;
 using Valkyrie.Core.Characters;
 using Valkyrie.Library;
 using Cadenza;
+using Cadenza.Collections;
 
 namespace Valkyrie.Providers
 {
@@ -37,8 +38,9 @@ namespace Valkyrie.Providers
 		{
 			lock (this.movablecache)
 			{
-				if(!this.movablecache.ContainsKey(movable))
-					return;
+				if(!this.movablecache.ContainsKey (movable))
+					this.movablecache.Add (movable, new Queue<MovementItem> ());
+					//return
 
 				this.movablecache[movable].Enqueue(new MovementItem(destination.ToScreenPoint(), MovementType.Destination, Directions.Any, animationname));
 			}
@@ -62,7 +64,7 @@ namespace Valkyrie.Providers
 					int speedmodifier = 1;
 
 					// If we're behind on movement, increase the speed modifier
-					if(this.movablecache[player].Count > 4)
+					if(this.movablecache[player].Count > 6)
 						speedmodifier = 5;
 
 					/* If it's TileBased and there is more in the queue, skip it

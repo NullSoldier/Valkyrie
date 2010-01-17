@@ -7,12 +7,21 @@ using Valkyrie.Library.Core;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Engine.Core;
 using Valkyrie.Engine.Maps;
+using Valkyrie.Engine.Providers;
 
 namespace ValkyrieServerLibrary.Entities
 {
 	public class Character
 		: IMovable
 	{
+		public Character ()
+		{
+			this.MovementQueue = new Queue<MovementInfo> ();
+			this.ClientMovementQueue = new Queue<MovementInfo> ();
+
+			this.Density = 1;
+		}
+
 		public virtual int ID
 		{
 			get; set;
@@ -61,9 +70,13 @@ namespace ValkyrieServerLibrary.Entities
 
 		#region Non Persistent Members
 
+		public virtual uint NetworkID { get; set; }
+
 		public virtual string MapChunkName { get; set; }
 
 		public virtual bool Moving { get; set; }
+
+		public virtual bool NextMoveActive { get; set; }
 
 		public virtual string Animation { get; set; }
 
@@ -78,6 +91,12 @@ namespace ValkyrieServerLibrary.Entities
 				this.Location.X = value.Y * 32;
 			}
 		}
+
+		public virtual Queue<MovementInfo> MovementQueue { get; set; }
+
+		public virtual Queue<MovementInfo> ClientMovementQueue { get; set; }
+
+		public virtual bool MoveHiatus { get; set; }
 
 		#endregion
 
@@ -207,5 +226,29 @@ namespace ValkyrieServerLibrary.Entities
 		}
 
 		#endregion
+	}
+
+	public enum MovementStage
+	{
+		StartMovement,
+		EndMovement
+	}
+
+	public class MovementInfo
+	{
+		public MovementInfo (ScreenPoint location, Directions direction, MovementStage stage, MovementType type, string animation)
+		{
+			this.Location = location;
+			this.Direction = direction;
+			this.Stage = stage;
+			this.Type = type;
+			this.Animation = animation;
+		}
+
+		public ScreenPoint Location { get; set; }
+		public Directions Direction { get; private set; }
+		public MovementStage Stage {get; private set; }
+		public MovementType Type { get; private set; }
+		public string Animation { get; private set; }
 	}
 }

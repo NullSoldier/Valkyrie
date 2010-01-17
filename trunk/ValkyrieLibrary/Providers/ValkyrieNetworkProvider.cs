@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Sockets;
 using Valkyrie.Messages;
 using Valkyrie.Network;
+using Valkyrie.Engine.Characters;
 
 namespace Valkyrie.Library.Providers
 {
@@ -134,6 +135,36 @@ namespace Valkyrie.Library.Providers
 		}
 
 		private bool isloaded = false;
+
+		#endregion
+
+		#region INetworkProvider Members
+
+
+		public BaseCharacter GetPlayer (object networkid)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public IEnumerable<BaseCharacter> GetPlayers ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void AddPlayer (object networkid, BaseCharacter player)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public bool RemovePlayer (object networkid)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public bool ContainsPlayer (object networkid)
+		{
+			throw new NotImplementedException ();
+		}
 
 		#endregion
 	}

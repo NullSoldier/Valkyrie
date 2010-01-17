@@ -9,6 +9,7 @@ using Valkyrie.Engine;
 using Valkyrie.Engine.Core;
 using Gablarski;
 using Microsoft.Xna.Framework;
+using Cadenza.Collections;
 
 namespace Valkyrie.Library.Providers
 {
@@ -134,8 +135,6 @@ namespace Valkyrie.Library.Providers
 						movable.IgnoreMoveInput = false;
 
 						this.RemoveFromCache(movable);
-
-						movable.OnStoppedMoving(this, EventArgs.Empty);
 					}
 					this.EndMove(movable, true, false);
 				}

@@ -122,6 +122,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Content Include="ClientSettings.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\TileEngineConfig.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -215,12 +216,6 @@
     <Content Include="Media\PokemonIntro.avi">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="OpenAL32.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="OpenALSoft.License.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Graphics\Main\Pallet_Town.png">
     </None>
     <None Include="Graphics\Main\Pewter_Town.png">
@@ -333,10 +328,14 @@ xcopy "$(ProjectDir)\Sounds" "$(TargetDir)\Sounds" /S /Y /I
 xcopy "$(ProjectDir)\Graphics" "$(SolutionDir)ValkyrieMapEditor\$(OutDir)\Graphics" /S /Y /I
 
 xcopy "$(TargetPath)" "$(SolutionDir)ValkyrieMapEditor\$(OutDir)" /S /Y /I
+xcopy "$(TargetPath)" "$(SolutionDir)ValkyrieGameServer\$(OutDir)" /S /Y /I
+xcopy "$(TargetDir)\ValkyrieEngine.dll" "$(SolutionDir)ValkyrieGameServer\$(OutDir)" /Y /I
 
 xcopy "$(ProjectDir)\Maps" "$(SolutionDir)ValkyrieGameServer\$(OutDir)\Maps" /S /Y /I
 xcopy "$(ProjectDir)\Data\PokeWorld.xml" "$(SolutionDir)ValkyrieGameServer\$(OutDir)\Maps" /S /Y /I
 
-xcopy /Y "$(SolutionDir)lib\libcelt.*" "$(TargetDir)"</PostBuildEvent>
+xcopy /Y "$(SolutionDir)lib\libcelt.*" "$(TargetDir)"
+
+xcopy "$(ProjectDir)ClientSettings.xml" "C:\ProgramData\PokeWorldOnline" /Y /I</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -8,6 +8,7 @@ using Valkyrie.Engine.Characters;
 using Valkyrie.Engine;
 using Valkyrie.Engine.Core;
 using Microsoft.Xna.Framework;
+using Cadenza.Collections;
 
 namespace Valkyrie.Library.Providers
 {

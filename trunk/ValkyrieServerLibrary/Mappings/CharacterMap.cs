@@ -22,6 +22,7 @@ namespace ValkyrieServerLibrary.Mappings
 			Map(c => c.Direction, "`Direction`").CustomType<Directions> ();
 			Map(c => c.MapX, "`MapX`");
 			Map(c => c.MapY, "`MapY`");
+			Map (c => c.Speed, "`Speed`");
 
 			Map(c => c.TileSheet, "`TileSheet`");
 			Map(c => c.WorldName, "`World`");

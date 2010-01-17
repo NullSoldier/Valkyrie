@@ -90,9 +90,11 @@
     <Compile Include="Messages\Valkyrie\Authentication\LoginFailedMessage.cs" />
     <Compile Include="Messages\Valkyrie\Authentication\LoginMessage.cs" />
     <Compile Include="Messages\Valkyrie\Authentication\LoginSuccessMessage.cs" />
+    <Compile Include="Messages\Valkyrie\Movement\ClientMovementMessage.cs" />
     <Compile Include="Messages\Valkyrie\Movement\PlayerStartedMovingMessage.cs" />
     <Compile Include="Messages\Valkyrie\Movement\PlayerStopMovingMessage.cs" />
     <Compile Include="Messages\Valkyrie\Movement\PlayerStoppedMovingMessage.cs" />
+    <Compile Include="Messages\Valkyrie\Movement\ServerMovementMessage.cs" />
     <Compile Include="Messages\Valkyrie\PlayerInfoMessage.cs" />
     <Compile Include="Messages\Valkyrie\PlayerLoadedMessage.cs" />
     <Compile Include="Messages\Valkyrie\PlayerRequestListMessage.cs" />

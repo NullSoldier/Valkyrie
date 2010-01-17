@@ -22,6 +22,7 @@ using Valkyrie;
 using ValkyrieServerLibrary.Network.Messages.Valkyrie;
 using Valkyrie.Library;
 using System.Reflection;
+using ValkyrieNetwork.Messages.Valkyrie.Movement;
 
 namespace Valkyrie.Modules
 {
@@ -94,7 +95,7 @@ namespace Valkyrie.Modules
 	    public void Load(IEngineContext enginecontext)
 	    {
 			this.context = enginecontext;
-			this.network = (PokeNetworkProvider)enginecontext.NetworkProvider;
+			this.network = enginecontext.NetworkProvider;
 			this.scene = (PokeSceneProvider)enginecontext.SceneProvider;
 			this.networkmovementprovider = new NetworkMovementProvider(enginecontext.CollisionProvider);
 
@@ -141,7 +142,11 @@ namespace Valkyrie.Modules
 
 	    public void Game_MessageReceived(object sender, MessageReceivedEventArgs ev)
 	    {
-			if (ev.Message is PlayerUpdateMessage)
+			if(ev.Message is ServerMovementMessage)
+			{
+				this.Message_ServerMovementMessage((ServerMovementMessage)ev.Message);
+			}
+			else if (ev.Message is PlayerUpdateMessage)
 			{
 				this.Message_PlayerUpdateReceived((PlayerUpdateMessage)ev.Message);
 			}
@@ -167,6 +172,18 @@ namespace Valkyrie.Modules
 
 		#region Messages Received
 
+		public void Message_ServerMovementMessage (ServerMovementMessage message)
+		{
+			lock(this.networkmovementprovider)
+			{
+				PokePlayer player = (PokePlayer) this.network.GetPlayer (message.NetworkID);
+
+				if(player == null) return; // Wait till you load the person
+
+				this.networkmovementprovider.EndMoveLocation (player, new MapPoint (message.X / 32, message.Y / 32), message.Animation);
+			}
+		}
+
 		public void Message_PlayerUpdateReceived (PlayerUpdateMessage message)
 		{
 
@@ -178,8 +195,7 @@ namespace Valkyrie.Modules
 
 				this.network.AddPlayer(message.NetworkID, player);
 
-				PlayerRequestMessage msg = new PlayerRequestMessage();
-				msg.RequestedPlayerNetworkID = message.NetworkID;
+				PlayerRequestMessage msg = new PlayerRequestMessage () { RequestedPlayerNetworkID = message.NetworkID };
 
 				this.network.Send(msg);
 			}
@@ -201,7 +217,7 @@ namespace Valkyrie.Modules
 			}
 			else
 			{
-				player = this.network.GetPlayer(message.NetworkID);
+				player = (PokePlayer)this.network.GetPlayer(message.NetworkID);
 			}
 
 			player.Sprite = this.context.TextureManager.GetTexture(message.TileSheet);
@@ -340,49 +356,75 @@ namespace Valkyrie.Modules
 
 		private void GameModule_TileLocationChanged (object sender, EventArgs ev)
 	    {
-			this.context.EventProvider.HandleEvent((BaseCharacter)sender, ActivationTypes.Movement);
+			BaseCharacter player = (BaseCharacter) sender;
+
+			this.context.EventProvider.HandleEvent (player, ActivationTypes.Movement);
+
+			ClientMovementMessage msg = new ClientMovementMessage ()
+			{
+				NetworkID = (uint) player.ID,
+				X = player.Location.X,
+				Y = player.Location.Y,
+				Direction = (int) player.Direction,
+				Animation = player.CurrentAnimationName
+			};
+
+			this.network.Send (msg);
 	    }
 
 	    private void GameModule_StartedMoving(object sender, EventArgs ev)
 	    {
-	        PokePlayer player = (PokePlayer)sender;
+			var player = (BaseCharacter)sender;
 
 			if(string.IsNullOrEmpty (player.AnimationTag.ToString()))
-				player.CurrentAnimationName = "Walk" + player.Direction.ToString();
+			    player.CurrentAnimationName = "Walk" + player.Direction.ToString();
 
-			if(this.CollideBeforeMove (player, player.Direction))
-			{
-				this.silentstep = true;
-				return;
-			}
+			//if(this.CollideBeforeMove (player, player.Direction))
+			//{
+			//    this.silentstep = true;
+			//    return;
+			//}
 
-			PlayerStartMovingMessage msg = new PlayerStartMovingMessage();
-			msg.NetworkID = (uint)player.ID;
-			msg.Direction = (int)player.Direction;
-			msg.MovementType = (int)MovementType.TileBased;
-			msg.Animation = player.CurrentAnimationName;
-			msg.Speed = player.Speed;
-			msg.MoveDelay = player.MoveDelay;
-			this.network.Send(msg);
+			//PlayerStartMovingMessage msg = new PlayerStartMovingMessage();
+			//msg.NetworkID = (uint)player.ID;
+			//msg.Direction = (int)player.Direction;
+			//msg.MovementType = (int)MovementType.TileBased;
+			//msg.Animation = player.CurrentAnimationName;
+			//msg.X = player.Location.X;
+			//msg.Y = player.Location.Y;
+			//msg.Speed = player.Speed;
+			//msg.MoveDelay = player.MoveDelay;
+			//this.network.Send(msg);
 	    }
 
 	    private void GameModule_StoppedMoving(object sender, EventArgs ev)
 	    {
-	        PokePlayer player = (PokePlayer)sender;
+			var player = (BaseCharacter) sender;
 
-			if(!this.silentstep)
+			//if(!this.silentstep)
+			//{
+			//    PlayerStopMovingMessage msg = new PlayerStopMovingMessage ();
+			//    msg.NetworkID = (uint) player.ID;
+			//    msg.X = player.Location.X;
+			//    msg.Y = player.Location.Y;
+			//    msg.Animation = player.CurrentAnimationName;
+			//    this.network.Send (msg);
+			//}
+			//else
+			//    this.silentstep = false;
+
+			player.CurrentAnimationName = player.Direction.ToString ();
+
+			ClientMovementMessage msg = new ClientMovementMessage ()
 			{
-				PlayerStopMovingMessage msg = new PlayerStopMovingMessage ();
-				msg.NetworkID = (uint) player.ID;
-				msg.MapX = player.GlobalTileLocation.X;
-				msg.MapY = player.GlobalTileLocation.Y;
-				msg.Animation = player.CurrentAnimationName;
-				this.network.Send (msg);
-			}
-			else
-				this.silentstep = false;
+				NetworkID = (uint) player.ID,
+				X = player.Location.X,
+				Y = player.Location.Y,
+				Direction = (int) player.Direction,
+				Animation = player.CurrentAnimationName
+			};
 
-			player.CurrentAnimationName = player.Direction.ToString();
+			this.network.Send (msg);
 	    }
 
 		private void GameModule_KeyPressed (object sender, KeyPressedEventArgs ev)
@@ -536,8 +578,8 @@ namespace Valkyrie.Modules
 		}
 
 		private IEngineContext context = null;
-		private PokeNetworkProvider network = null;
 		private PokeSceneProvider scene = null;
+		private INetworkProvider network = null;
 		private KeybindController KeybindController = new KeybindController();
 		private Keys CrntDir = Keys.None;
 		private GraphicsDevice graphicsdevice = null;

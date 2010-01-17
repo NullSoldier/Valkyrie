@@ -9,8 +9,9 @@ using Valkyrie.Engine.Maps;
 using Valkyrie.Engine;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Engine.Core;
-using Mono.Rocks;
 using Valkyrie.Engine.Events;
+using Cadenza;
+using Cadenza.Collections;
 
 namespace Valkyrie.Library.Providers
 {

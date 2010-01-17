@@ -6,7 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Valkyrie.Engine.Maps;
 using Valkyrie.Engine.Characters;
-using Mono.Rocks;
+using Cadenza;
+using Cadenza.Collections;
 
 namespace Valkyrie.Engine.Providers
 {

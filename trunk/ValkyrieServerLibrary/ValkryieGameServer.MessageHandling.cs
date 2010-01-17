@@ -20,6 +20,8 @@ using Valkyrie.Engine.Core;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Messages.Valkyrie.Authentication;
 using NHibernate;
+using Valkyrie.Engine.Providers;
+using ValkyrieNetwork.Messages.Valkyrie.Movement;
 
 namespace ValkyrieServerLibrary.Core
 {
@@ -32,11 +34,11 @@ namespace ValkyrieServerLibrary.Core
 				{ClientMessageType.Connect, ClientConnected},
 				{ClientMessageType.Login, LoginRequestReceived},
 				{ClientMessageType.Logout, LogoutRequestReceived},
-				{ClientMessageType.LocationData, LocationDataReceived},
 				{ClientMessageType.PlayerStartMoving, PlayerStartMovingReceived},
 				{ClientMessageType.PlayerStopMoving, PlayerStopMovingReceived},
 				{ClientMessageType.PlayerInfoRequest, PlayerRequestReceived},
-				{ClientMessageType.PlayerRequest, PlayersRequestReceived}
+				{ClientMessageType.PlayerRequest, PlayersRequestReceived},
+				{ClientMessageType.ClientMovementMessage, ClientMovementMessageReceived}
 			};
 
 			Thread miscreader = new Thread((ParameterizedThreadStart)this.GenericMessageRunner);
@@ -60,7 +62,7 @@ namespace ValkyrieServerLibrary.Core
 
 		private Queue<MessageReceivedEventArgs> movequeue = new Queue<MessageReceivedEventArgs> (200);
 		private Queue<MessageReceivedEventArgs> loginqueue = new Queue<MessageReceivedEventArgs>(1000);
-		private Queue<MessageReceivedEventArgs> miscqueue = new Queue<MessageReceivedEventArgs>(400);
+		private Queue<MessageReceivedEventArgs> miscqueue = new Queue<MessageReceivedEventArgs> (400);
 
 		private AutoResetEvent moveresetevent = new AutoResetEvent (false);
 		private AutoResetEvent loginresetevent = new AutoResetEvent (false);
@@ -147,13 +149,13 @@ namespace ValkyrieServerLibrary.Core
 
 			if (msg.Version < this.MinimumVersion)
 			{
-				ConnectionRejectedMessage rejmsg = new ConnectionRejectedMessage ();
-				rejmsg.Reason = ConnectionRejectedReason.IncompatableVersion;
-				ev.Connection.Send (rejmsg);
+				ev.Connection.Send (new ConnectionRejectedMessage () { Reason = ConnectionRejectedReason.IncompatableVersion });
 
 				this.Disconnect(ev.Connection);
 			}
 		}
+
+		private uint networkid = 1;
 
 		private void LoginRequestReceived (MessageReceivedEventArgs ev)
 		{
@@ -168,23 +170,25 @@ namespace ValkyrieServerLibrary.Core
 			
 			if (account == null || this.players.ContainsPlayer((uint)account.ID))
 			{
-				LoginFailedMessage failmsg = new LoginFailedMessage(ConnectionRejectedReason.BadLogin);
-				ev.Connection.Send(failmsg);
+				ev.Connection.Send (new LoginFailedMessage (ConnectionRejectedReason.BadLogin));
 				return;
 			}
 			
 			Character character = session.CreateCriteria<Character> ()
-			.Add(Restrictions.Eq("AccountID", account.ID))
-			.List<Character>().FirstOrDefault();
+				.Add(Restrictions.Eq("AccountID", account.ID))
+				.List<Character>().FirstOrDefault();
 
 			character.Location = new ScreenPoint(character.MapX * 32, character.MapY * 32);
 			character.Animation = Enum.GetName (typeof(Directions), character.Direction);
+			character.NextMoveActive = true;
 
 			// Create player
 			NetworkPlayer player = new NetworkPlayer();
 			player.Character = character;
 			player.AccountID = account.ID;
-			player.NetworkID = (uint)account.ID;
+			//player.NetworkID = ++networkid;
+			player.NetworkID = (uint) account.ID;
+			player.Character.NetworkID = player.NetworkID;
 			player.Connection = ev.Connection;
 			player.Character.MapChunkName = this.GetChunkName(player.Character.WorldName, player.Character.MapLocation);
 			player.State = PlayerState.LoggedIn;
@@ -193,19 +197,19 @@ namespace ValkyrieServerLibrary.Core
 			this.players.AddPlayer(player);
 
 			// Send them authentication ID
-			var msgsuccess = new LoginSuccessMessage();
-			msgsuccess.NetworkIDAssigned = player.NetworkID;
-			player.Connection.Send(msgsuccess);
+			player.Connection.Send(new LoginSuccessMessage () { NetworkIDAssigned = player.NetworkID });
 
 			var handler = this.UserLoggedIn;
 			if(handler != null)
 				handler(this, new UserEventArgs(player));
 
 			// Update other players
-			var updatemsg = new PlayerUpdateMessage();
-			updatemsg.CharacterName = player.Character.Name;
-			updatemsg.NetworkID = player.NetworkID;
-			updatemsg.Action = PlayerUpdateAction.Add;
+			var updatemsg = new PlayerUpdateMessage ()
+			{
+				CharacterName = player.Character.Name,
+				NetworkID = player.NetworkID,
+				Action = PlayerUpdateAction.Add
+			};
 
 			foreach (var tmp in this.players.GetPlayers())
 				tmp.Connection.Send(updatemsg);
@@ -231,14 +235,16 @@ namespace ValkyrieServerLibrary.Core
 			if(player == null)
 				return;
 
-			PlayerInfoMessage infomsg = new PlayerInfoMessage();
-			infomsg.NetworkID = player.NetworkID;
-			infomsg.Name = player.Character.Name;
-			infomsg.Animation = player.Character.Animation;
-			infomsg.Moving = player.Character.Moving;
-			infomsg.TileSheet = player.Character.TileSheet;
-			infomsg.Location = new Point(player.Character.Location.X, player.Character.Location.Y);
-			infomsg.WorldName = player.Character.WorldName;
+			PlayerInfoMessage infomsg = new PlayerInfoMessage ()
+			{
+				NetworkID = player.NetworkID,
+				Name = player.Character.Name,
+				Animation = player.Character.Animation,
+				Moving = player.Character.Moving,
+				TileSheet = player.Character.TileSheet,
+				Location = new Point (player.Character.Location.X, player.Character.Location.Y),
+				WorldName = player.Character.WorldName
+			};
 
 			ev.Connection.Send(infomsg);
 		}
@@ -253,14 +259,16 @@ namespace ValkyrieServerLibrary.Core
 				if (player.Connection == ev.Connection)
 					continue;
 
-				PlayerInfoMessage infomsg = new PlayerInfoMessage();
-				infomsg.NetworkID = player.NetworkID;
-				infomsg.Name = player.Character.Name;
-				infomsg.Animation = player.Character.Animation;
-				infomsg.Moving = player.Character.Moving;
-				infomsg.TileSheet = player.Character.TileSheet;
-				infomsg.Location = new Point(player.Character.Location.X, player.Character.Location.Y);
-				infomsg.WorldName = player.Character.WorldName;
+				PlayerInfoMessage infomsg = new PlayerInfoMessage ()
+				{
+					NetworkID = player.NetworkID,
+					Name = player.Character.Name,
+					Animation = player.Character.Animation,
+					Moving = player.Character.Moving,
+					TileSheet = player.Character.TileSheet,
+					Location = new Point(player.Character.Location.X, player.Character.Location.Y),
+					WorldName = player.Character.WorldName
+				};
 
 				ev.Connection.Send(infomsg);
 			}
@@ -269,20 +277,6 @@ namespace ValkyrieServerLibrary.Core
 		#endregion
 
 		#region Movement
-
-		private void LocationDataReceived (MessageReceivedEventArgs ev)
-		{
-			/*var msg = (LocationUpdateMessage)ev.Message;
-
-			lock(this.players)
-			{
-				NetworkPlayer netplayer = this.players.GetPlayer(ev.Connection);
-				netplayer.Character.Animation = msg.Animation;
-				netplayer.Character.Location = new ScreenPoint(msg.Location.X, msg.Location.Y);
-				netplayer.Character.MapLocation = new MapPoint(msg.Location.X / 32, msg.Location.Y / 32);
-				netplayer.Character.Direction = (Directions)msg.Direction;
-			}*/
-		}
 
 		private void PlayerLoadedReceived (MessageReceivedEventArgs ev)
 		{
@@ -293,14 +287,16 @@ namespace ValkyrieServerLibrary.Core
 			if(player == null)
 				return;
 
-			PlayerInfoMessage infomsg = new PlayerInfoMessage();
-			infomsg.NetworkID = player.NetworkID;
-			infomsg.Name = player.Character.Name;
-			infomsg.Animation = player.Character.Animation;
-			infomsg.Moving = player.Character.Moving;
-			infomsg.TileSheet = player.Character.TileSheet;
-			infomsg.Location = new Point(player.Character.Location.X, player.Character.Location.Y);
-			infomsg.WorldName = player.Character.WorldName;
+			PlayerInfoMessage infomsg = new PlayerInfoMessage ()
+			{
+				NetworkID = player.NetworkID,
+				Name = player.Character.Name,
+				Animation = player.Character.Animation,
+				Moving = player.Character.Moving,
+				TileSheet = player.Character.TileSheet,
+				Location = new Point (player.Character.Location.X, player.Character.Location.Y),
+				WorldName = player.Character.WorldName
+			};
 
 			foreach(NetworkPlayer destPlayer in this.players.GetPlayers())
 			{
@@ -309,66 +305,136 @@ namespace ValkyrieServerLibrary.Core
 			}
 		}
 
+		Random rand = new Random (DateTime.Now.Millisecond);
+
 		private void PlayerStartMovingReceived (MessageReceivedEventArgs ev)
 		{
-			//Thread.Sleep(1000); // Simulate network lag of 1000 MS
-
+			//Thread.Sleep (5000);
 			PlayerStartMovingMessage message = (PlayerStartMovingMessage)ev.Message;
 
 			NetworkPlayer player = this.players[message.NetworkID];
 			if(player == null)
 				return;
 
-			player.Character.Speed = message.Speed;
-			player.Character.MoveDelay = message.MoveDelay;
-
 			var direction = (Directions)message.Direction;
 
-			// Should throw the movement onto the queue and then process it on each update
-			//this.movement.BeginMove(player.Character, direction, message.Animation);
+			// Add the movement item to the characters movement queue
+			player.Character.MovementQueue.Enqueue (new MovementInfo (new ScreenPoint(message.X, message.Y), direction, MovementStage.StartMovement, MovementType.TileBased, string.Format("Walk{0}", direction.ToString())));
 
-			PlayerStartedMovingMessage movmsg = new PlayerStartedMovingMessage();
-			movmsg.NetworkID = player.NetworkID;
-			movmsg.Direction = message.Direction;
-			movmsg.Speed = message.Speed;
-			movmsg.Animation = message.Animation;
-			movmsg.MoveDelay = player.Character.MoveDelay;
-			
-			foreach(NetworkPlayer destPlayer in this.players.GetPlayers())
-			{
-				if(destPlayer.Connection != player.Connection)
-					destPlayer.Connection.Send(movmsg);
-			}
+			if(!this.movement.ContainsCharacter(player.Character))
+				this.movement.AddToProvider (player.Character);
 		}
 
 		private void PlayerStopMovingReceived (MessageReceivedEventArgs ev)
 		{
-			// Process stop movement
-			// Send out stop message to all other players
+			//Thread.Sleep (5000);
 
 			PlayerStopMovingMessage message = (PlayerStopMovingMessage)ev.Message;
 			NetworkPlayer player = this.players.GetPlayer(message.NetworkID);
-			player.Character.Animation = player.Character.Direction.ToString();
-			player.Character.Location = new ScreenPoint(message.MapX * 32, message.MapY * 32);
 
-			//((ServerMovementProvider)this.movement).EndMoveLocation(player.Character, new MapPoint(message.MapX, message.MapY), player.Character.Animation);
+			// Get animation from last move item
+			var direction = Directions.Any;
+			string animation = "Any";
 
-			PlayerStoppedMovingMessage movmsg = new PlayerStoppedMovingMessage();
-			movmsg.X = message.MapX * 32;
-			movmsg.Y = message.MapY * 32;
-			movmsg.NetworkID = player.NetworkID;
-			movmsg.Animation = message.Animation;
-			movmsg.Direction = message.Direction;
-
-			foreach(NetworkPlayer netplayer in this.players.GetPlayers())
+			var item = player.Character.MovementQueue.LastOrDefault ();
+			if(item != null)
 			{
-				// Send out stopped moving message
-				if(netplayer.Connection != player.Connection)
-					netplayer.Connection.Send(movmsg);
+				animation = player.Character.MovementQueue.LastOrDefault ().Direction.ToString ();
+				direction = item.Direction;
 			}
-			
+
+
+			player.Character.ClientMovementQueue.Enqueue (new MovementInfo (new ScreenPoint(message.X, message.Y), direction, MovementStage.EndMovement, MovementType.Destination, animation));
+			player.Character.MovementQueue.Enqueue (new MovementInfo (ScreenPoint.Zero, direction, MovementStage.EndMovement, MovementType.Destination, animation));		
 		}
 
+		private void ClientMovementMessageReceived (MessageReceivedEventArgs ev)
+		{
+			ClientMovementMessage message = (ClientMovementMessage) ev.Message;
+			NetworkPlayer player = this.players.GetPlayer (message.NetworkID);
+
+			if(player == null)
+				return; // Must have gotten disconnected
+
+			Directions direction = (Directions)message.Direction;
+
+			player.Character.MovementQueue.Enqueue (new MovementInfo (new ScreenPoint (message.X, message.Y), direction, MovementStage.EndMovement, MovementType.Destination, message.Animation));
+
+			if(!this.movement.ContainsCharacter (player.Character))
+				this.movement.AddToProvider (player.Character);
+		}
+
+		private void MovementProvider_PlayerStartedMoving (object sender, MovementChangedEventArgs ev)
+		{
+			PlayerStartedMovingMessage movmsg = new PlayerStartedMovingMessage ()
+			{
+				NetworkID = ev.Character.NetworkID,
+				Direction = (int) ev.Character.Direction,
+				Speed = ev.Character.Speed,
+				Animation = ev.Character.Animation,
+				MoveDelay = ev.Character.MoveDelay
+			};
+
+			foreach(NetworkPlayer destPlayer in this.players.GetPlayers())
+			{
+			    if(destPlayer.NetworkID != ev.Character.NetworkID)
+			        destPlayer.Connection.Send(movmsg);
+			}
+		}
+
+		private void MovementProvider_PlayerStoppedMoving (object sender, MovementChangedEventArgs ev)
+		{
+			NetworkPlayer player = this.players[(uint) ev.Character.NetworkID];
+
+			PlayerStoppedMovingMessage movmsg = new PlayerStoppedMovingMessage ()
+			{
+				X = ev.Character.Location.X,
+				Y = ev.Character.Location.Y,
+				NetworkID = player.NetworkID,
+				Animation = ev.Character.Animation,
+				Direction = (int) ev.Character.Direction
+			};
+
+			foreach(NetworkPlayer netplayer in this.players.GetPlayers ())
+			{
+				// Send out stopped moving message
+				if(netplayer.NetworkID != ev.Character.NetworkID)
+					netplayer.Connection.Send (movmsg);
+			}
+		}
+
+		private void MovementProvider_PlayerMoved (object sender, MovementChangedEventArgs ev)
+		{
+			NetworkPlayer player = this.players[(uint) ev.Character.NetworkID];
+
+			if(player == null) // They must be disconnected
+				return;
+
+			ServerMovementMessage movmsg = new ServerMovementMessage ()
+			{
+				NetworkID = ev.Character.NetworkID,
+				X = ev.Character.Location.X,
+				Y = ev.Character.Location.Y,
+				Direction = (int)ev.Character.Direction,
+				Animation = ev.Character.Animation
+
+			};
+
+			lock(this.players.PlayerLock)
+			{
+				foreach(NetworkPlayer netplayer in this.players.PlayerRanges[player.NetworkID])
+				{
+					netplayer.Connection.Send (movmsg);
+				}
+			}
+		}
+
+		private void MovementProvider_FailedVerify (object sender, MovementChangedEventArgs ev)
+		{
+			var player = this.players.GetPlayer (ev.Character.NetworkID);
+
+			this.Disconnect (player.Connection);
+		}
 		#endregion
 	}
 }

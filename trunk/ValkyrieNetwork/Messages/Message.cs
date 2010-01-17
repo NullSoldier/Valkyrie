@@ -55,7 +55,8 @@ namespace Valkyrie.Messages
 		PlayerStartMoving = 29,
 		PlayerStopMoving = 31,
 		PlayerLoaded = 37,
-		Logout = 39
+		Logout = 39,
+		ClientMovementMessage = 41
 	}
 
 	public enum ServerMessageType
@@ -69,6 +70,7 @@ namespace Valkyrie.Messages
 		ConnectionRejected = 27,
 		PlayerStartedMoving = 33,
 		PlayerStoppedMoving = 35,
+		ServerMovementMessage = 43
 	}
 
 	public abstract class Message<TMessage>

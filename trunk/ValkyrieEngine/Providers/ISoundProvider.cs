@@ -37,6 +37,16 @@ namespace Valkyrie.Engine.Providers
 		float MusicGainModifier { get; set; }
 
 		/// <summary>
+		/// Determines whether music is enabled or disabled
+		/// </summary>
+		bool IsMusicEnabled { get; set; }
+
+		/// <summary>
+		/// Determines if sound effects within the game are enabled or disabled
+		/// </summary>
+		bool IsSoundEnabled { get; set; }
+
+		/// <summary>
 		/// Play a sound effect
 		/// </summary>
 		/// <param name="sound">The <seealso cref="AudioSource"/> to play.</param>

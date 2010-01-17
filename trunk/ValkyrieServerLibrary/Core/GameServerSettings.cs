@@ -19,7 +19,8 @@ namespace ValkyrieServerLibrary.Core
 		ExperienceRate,
 		DropRate,
 
-		MapDirectory
+		MapDirectory,
+		EventAssemblies
 	}
 
 	public class GameServerSettings

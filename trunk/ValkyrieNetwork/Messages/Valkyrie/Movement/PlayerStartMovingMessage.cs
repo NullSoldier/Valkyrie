@@ -19,6 +19,9 @@ namespace Valkyrie.Messages.Valkyrie
 		public int MovementType { get; set; }
 		public string Animation { get; set; }
 
+		public int X { get; set; }
+		public int Y { get; set; }
+
 		public float Speed { get; set; }
 		public float MoveDelay { get; set; }
 	
@@ -28,6 +31,9 @@ namespace Valkyrie.Messages.Valkyrie
 			writerm.WriteInt32(this.Direction);
 			writerm.WriteInt32(this.MovementType);
 			writerm.WriteString(this.Animation);
+
+			writerm.WriteInt32 (this.X);
+			writerm.WriteInt32 (this.Y);
 
 			writerm.WriteBytes(BitConverter.GetBytes(this.Speed));
 			writerm.WriteBytes(BitConverter.GetBytes(this.MoveDelay));
@@ -39,6 +45,9 @@ namespace Valkyrie.Messages.Valkyrie
 			this.Direction = reader.ReadInt32();
 			this.MovementType = reader.ReadInt32();
 			this.Animation = reader.ReadString();
+
+			this.X = reader.ReadInt32 ();
+			this.Y = reader.ReadInt32 ();
 
 			this.Speed = BitConverter.ToSingle(reader.ReadBytes(), 0);
 			this.MoveDelay = BitConverter.ToSingle(reader.ReadBytes(), 0);

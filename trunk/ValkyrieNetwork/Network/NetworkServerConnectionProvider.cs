@@ -290,7 +290,7 @@ namespace Valkyrie.Network
 			try
 			{
 				var state = (Tuple<NetworkServerConnection, byte[]>)result.AsyncState;
-				connection = state._1;
+				connection = state.Item1;
 				var stream = connection.ReliableStream;
 
 				if (stream.EndRead (result) == 0)
@@ -299,7 +299,7 @@ namespace Valkyrie.Network
 					return;
 				}
 
-				if (state._2[0] == 0x2A)
+				if (state.Item2[0] == 0x2A)
 				{
 					ushort type = connection.ReliableReader.ReadUInt16 ();
 					MessageBase msg;
@@ -312,7 +312,7 @@ namespace Valkyrie.Network
 				}
 
 				if (connection.IsConnected)
-					stream.BeginRead (state._2, 0, 1, ReliableReceive, state);
+					stream.BeginRead (state.Item2, 0, 1, ReliableReceive, state);
 				else
 					connection.Disconnect ();
 			}

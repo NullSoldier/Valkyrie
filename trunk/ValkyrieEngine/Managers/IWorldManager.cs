@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using Valkyrie.Engine.Providers;
 using Valkyrie.Engine.Maps;
-using Mono.Rocks;
+using Cadenza;
+using Cadenza.Collections;
 
 namespace Valkyrie.Engine.Managers
 {

@@ -41,6 +41,7 @@ using System.Text;
 using System.Reflection;
 using System.Reflection.Emit;
 using Cadenza;
+using Cadenza.Collections;
 
 
 namespace Valkyrie.Messages

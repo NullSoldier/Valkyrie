@@ -10,6 +10,7 @@ using Valkyrie.Characters;
 using Valkyrie;
 using Valkyrie.Messages;
 using Valkyrie.Network;
+using Valkyrie.Engine.Characters;
 
 namespace Valkyrie.Providers
 {
@@ -79,18 +80,19 @@ namespace Valkyrie.Providers
 				this.connection.Send(message);
 		}
 
-		public PokePlayer GetPlayer (uint networkid)
+		public BaseCharacter GetPlayer (object networkid)
 		{
 			lock(this.players)
 			{
-				if(this.players.ContainsKey(networkid))
-					return this.players[networkid];
+				var id = Convert.ToUInt32 (networkid);
+				if(this.players.ContainsKey(id))
+					return this.players[id];
 			}
 
 			return null;
 		}
 
-		public IEnumerable<PokePlayer> GetPlayers ()
+		public IEnumerable<BaseCharacter> GetPlayers ()
 		{
 			lock(this.players)
 			{
@@ -98,29 +100,29 @@ namespace Valkyrie.Providers
 			}
 		}
 
-		public void AddPlayer (uint networkid, PokePlayer player)
+		public void AddPlayer (object networkid, BaseCharacter player)
 		{
 			lock(this.players)
 			{
-				if(!this.players.ContainsKey(networkid))
-					this.players.Add(networkid, player);
+				if(!this.players.ContainsKey ((uint)networkid))
+					this.players.Add ((uint)networkid, player);
 			}
 		}
 
-		public bool RemovePlayer (uint networkid)
+		public bool RemovePlayer (object networkid)
 		{
 
 			lock(this.players)
 			{
-				return this.players.Remove(networkid);
+				return this.players.Remove ((uint)networkid);
 			}
 		}
 
-		public bool ContainsPlayer (uint networkid)
+		public bool ContainsPlayer (object networkid)
 		{
 			lock(this.players)
 			{
-				return this.players.ContainsKey(networkid);
+				return this.players.ContainsKey((uint)networkid);
 			}
 		}
 
@@ -130,7 +132,7 @@ namespace Valkyrie.Providers
 		private event EventHandler connected;
 		private event EventHandler<ConnectionEventArgs> disconnected;
 		private event EventHandler<MessageReceivedEventArgs> messagereceived;
-		private Dictionary<uint, PokePlayer> players = new Dictionary<uint, PokePlayer>();
+		private Dictionary<uint, BaseCharacter> players = new Dictionary<uint, BaseCharacter> ();
 
 		private void Load ()
 		{
