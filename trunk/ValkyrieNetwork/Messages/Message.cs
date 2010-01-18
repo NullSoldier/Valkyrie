@@ -46,31 +46,26 @@ namespace Valkyrie.Messages
 		: ushort
 	{
 		Connect = 1,
-		Login = 3,
-		Disconnect = 9,
+		Login = 2,
+		Disconnect = 3,
+		
+		PlayerRequest = 4,
+		PlayerInfoRequest = 5,
+		PlayerLoaded = 6,
 
-		LocationData = 11,
-		PlayerRequest = 19,
-		PlayerInfoRequest = 21,
-		PlayerStartMoving = 29,
-		PlayerStopMoving = 31,
-		PlayerLoaded = 37,
-		Logout = 39,
-		ClientMovementMessage = 41
+		Logout = 7,
+		ClientMovementMessage = 8
 	}
 
 	public enum ServerMessageType
 		: ushort
 	{
-		LoginFailed = 13,
-		LoginSuccess = 15,
-		PlayerUpdate = 17,
-		PlayerInfo = 23,
-		LocationReceived = 25,
-		ConnectionRejected = 27,
-		PlayerStartedMoving = 33,
-		PlayerStoppedMoving = 35,
-		ServerMovementMessage = 43
+		LoginFailed = 9,
+		LoginSuccess = 10,
+		PlayerUpdate = 11,
+		PlayerInfo = 12,
+		ConnectionRejected = 14,
+		ServerMovementMessage = 15
 	}
 
 	public abstract class Message<TMessage>

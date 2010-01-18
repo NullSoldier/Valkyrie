@@ -1,25 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using Valkyrie.Library.Network;
+using System.Reflection;
+using System.Threading;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
-using System.Reflection;
+using Microsoft.Xna.Framework;
 using NHibernate;
 using Valkyrie;
-using Valkyrie.Network;
-using ValkyrieServerLibrary.Entities;
-using System.IO;
-using Valkyrie.Library.Core;
-using System.Threading;
-using Microsoft.Xna.Framework;
+using Valkyrie.Engine.Core;
 using Valkyrie.Engine.Managers;
 using Valkyrie.Engine.Providers;
-using Valkyrie.Library.Managers;
-using Valkyrie.Engine.Core;
-using ValkyrieServerLibrary.Network.Messages.Valkyrie;
+using Valkyrie.Library.Network;
 using Valkyrie.Library.Providers;
+using Valkyrie.Network;
+using ValkyrieServerLibrary.Entities;
 
 namespace ValkyrieServerLibrary.Core
 {

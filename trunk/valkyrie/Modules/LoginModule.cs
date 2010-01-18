@@ -162,9 +162,12 @@ namespace Valkyrie.Modules
 					return;
 				}
 
-				LoginMessage msg = new LoginMessage();
-				msg.Username = username;
-				msg.Password = Helpers.MD5 (password).Replace ("-", String.Empty);
+				LoginMessage msg = new LoginMessage ()
+				{
+					Username = username,
+					Password = Helpers.MD5 (password).Replace ("-", String.Empty)
+				};
+
 				this.context.NetworkProvider.Send(msg);
 			}
 		}
@@ -219,7 +222,7 @@ namespace Valkyrie.Modules
 			}
 		}
 
-		private void TestDisconnected (object sender, EventArgs ev)
+		private void TestDisconnected (object sender, ConnectionEventArgs ev)
 		{
 			Environment.Exit(0);
 		}

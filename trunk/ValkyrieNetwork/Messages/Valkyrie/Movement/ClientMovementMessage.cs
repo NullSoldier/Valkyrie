@@ -5,7 +5,7 @@ using System.Text;
 using Valkyrie.Messages;
 using Valkyrie;
 
-namespace ValkyrieNetwork.Messages.Valkyrie.Movement
+namespace Valkyrie.Messages.Movement
 {
 	public class ClientMovementMessage
 		: ClientMessage

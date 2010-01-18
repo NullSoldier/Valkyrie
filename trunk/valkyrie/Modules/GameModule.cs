@@ -17,12 +17,11 @@ using Valkyrie.Library.Camera;
 using Valkyrie.Library.Network;
 using Valkyrie.Providers;
 using Valkyrie.Messages.Valkyrie;
-using Valkyrie.Messages.Valkyrie.Movement;
 using Valkyrie;
 using ValkyrieServerLibrary.Network.Messages.Valkyrie;
 using Valkyrie.Library;
 using System.Reflection;
-using ValkyrieNetwork.Messages.Valkyrie.Movement;
+using Valkyrie.Messages.Movement;
 
 namespace Valkyrie.Modules
 {
@@ -154,14 +153,6 @@ namespace Valkyrie.Modules
 			{
 				this.Message_PlayerInfoReceived((PlayerInfoMessage)ev.Message);
 			}
-			else if(ev.Message is PlayerStartedMovingMessage)
-			{
-				this.Message_PlayerStartedMovingReceived((PlayerStartedMovingMessage)ev.Message);
-			}
-			else if(ev.Message is PlayerStoppedMovingMessage)
-			{
-				this.Message_PlayerStoppedMovingReceived((PlayerStoppedMovingMessage)ev.Message);
-			}
 		}
 
 		public void Game_Disconnected (object sender, ConnectionEventArgs ev)
@@ -228,37 +219,6 @@ namespace Valkyrie.Modules
 
 			if(!player.IsLoaded)
 				player.IsLoaded = true;
-		}
-
-		public void Message_PlayerStartedMovingReceived (PlayerStartedMovingMessage message)
-		{
-		    if(!this.network.ContainsPlayer(message.NetworkID))
-		        return;
-
-			lock(this.network)
-			{
-				PokePlayer player = (PokePlayer)this.network.GetPlayer(message.NetworkID);
-
-				if(player == null) return; // Wait till you load the person
-
-				var direction = (Directions)message.Direction;
-
-				this.networkmovementprovider.BeginMove(player, direction, message.Animation);
-			}
-		}
-
-		public void Message_PlayerStoppedMovingReceived (PlayerStoppedMovingMessage message)
-		{
-			lock(this.networkmovementprovider)
-			{
-				PokePlayer player = (PokePlayer)this.network.GetPlayer(message.NetworkID);
-
-				if(player == null) return; // Wait till you load the person
-				
-				player.StoppedMoving += this.NetworkPlayer_Stopped;
-
-				this.networkmovementprovider.EndMoveLocation(player, new MapPoint(message.X / 32, message.Y / 32), message.Animation);
-			}
 		}
 		
 		#endregion
@@ -378,40 +338,11 @@ namespace Valkyrie.Modules
 
 			if(string.IsNullOrEmpty (player.AnimationTag.ToString()))
 			    player.CurrentAnimationName = "Walk" + player.Direction.ToString();
-
-			//if(this.CollideBeforeMove (player, player.Direction))
-			//{
-			//    this.silentstep = true;
-			//    return;
-			//}
-
-			//PlayerStartMovingMessage msg = new PlayerStartMovingMessage();
-			//msg.NetworkID = (uint)player.ID;
-			//msg.Direction = (int)player.Direction;
-			//msg.MovementType = (int)MovementType.TileBased;
-			//msg.Animation = player.CurrentAnimationName;
-			//msg.X = player.Location.X;
-			//msg.Y = player.Location.Y;
-			//msg.Speed = player.Speed;
-			//msg.MoveDelay = player.MoveDelay;
-			//this.network.Send(msg);
 	    }
 
 	    private void GameModule_StoppedMoving(object sender, EventArgs ev)
 	    {
 			var player = (BaseCharacter) sender;
-
-			//if(!this.silentstep)
-			//{
-			//    PlayerStopMovingMessage msg = new PlayerStopMovingMessage ();
-			//    msg.NetworkID = (uint) player.ID;
-			//    msg.X = player.Location.X;
-			//    msg.Y = player.Location.Y;
-			//    msg.Animation = player.CurrentAnimationName;
-			//    this.network.Send (msg);
-			//}
-			//else
-			//    this.silentstep = false;
 
 			player.CurrentAnimationName = player.Direction.ToString ();
 
