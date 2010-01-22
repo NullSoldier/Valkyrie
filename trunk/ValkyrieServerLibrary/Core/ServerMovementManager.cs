@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
-using Cadenza;
+using Cadenza.Collections;
 using Microsoft.Xna.Framework;
 using Valkyrie.Engine.Providers;
 using Valkyrie.Engine.Characters;

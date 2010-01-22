@@ -82,7 +82,7 @@ namespace Valkyrie.Library.Providers
 			List<UserInfo> infos = new List<UserInfo> ();
 
 			foreach(var player in this.context.NetworkProvider.GetPlayers ())
-				infos.Add (gb.Users[Convert.ToInt32(player.ID)]);
+				infos.Add (gb.Users[Convert.ToInt32 (player.ID)]);
 
 			gb.Audio.BeginCapture (voice, infos);
 		}
@@ -144,12 +144,12 @@ namespace Valkyrie.Library.Providers
 			capture = new OpenALCaptureProvider();
 			capture.Device = capture.DefaultDevice;
 
-			audioengine = new AudioEngine ();
-
 			if (capture.Device == null)
 				capture = null;
-			
-			gb = new GablarskiClient (new NetworkClientConnection(), audioengine);
+
+			AudioEngine audioengine = new AudioEngine ();
+
+			gb = new GablarskiClient (new NetworkClientConnection (), audioengine);
 			gb.Audio.AudioReceiver = new ValkyrieAudioChatReceiver (gb.Sources, this.context);
 
 			gb.Connected += HandleGbConnected;

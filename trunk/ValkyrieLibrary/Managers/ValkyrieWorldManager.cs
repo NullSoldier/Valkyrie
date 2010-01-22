@@ -10,7 +10,6 @@ using Valkyrie.Engine;
 using Valkyrie.Library.Providers;
 using System.IO;
 using Valkyrie.Library.Core;
-using Cadenza;
 using Cadenza.Collections;
 
 namespace Valkyrie.Library.Managers

@@ -11,7 +11,6 @@ using Valkyrie.Engine;
 using Valkyrie.Characters;
 using Valkyrie.Core.Characters;
 using Valkyrie.Library;
-using Cadenza;
 using Cadenza.Collections;
 
 namespace Valkyrie.Providers

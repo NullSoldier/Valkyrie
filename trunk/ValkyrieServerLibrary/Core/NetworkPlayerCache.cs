@@ -5,7 +5,6 @@ using System.Text;
 using Valkyrie.Library.Network;
 using Valkyrie;
 using Microsoft.Xna.Framework;
-using Cadenza;
 using Cadenza.Collections;
 
 namespace ValkyrieServerLibrary.Core

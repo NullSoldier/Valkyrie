@@ -10,7 +10,6 @@ using Valkyrie.Engine;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Engine.Core;
 using Valkyrie.Engine.Events;
-using Cadenza;
 using Cadenza.Collections;
 
 namespace Valkyrie.Library.Providers

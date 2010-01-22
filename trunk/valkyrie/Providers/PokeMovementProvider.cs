@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Cadenza;
+using Cadenza.Collections;
 using Valkyrie.Engine.Providers;
 using Valkyrie.Engine.Characters;
 using Valkyrie.Engine;
 using Valkyrie.Engine.Core;
 using Microsoft.Xna.Framework;
-using Cadenza.Collections;
 
 namespace Valkyrie.Library.Providers
 {

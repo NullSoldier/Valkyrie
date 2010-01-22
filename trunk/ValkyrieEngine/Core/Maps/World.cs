@@ -6,7 +6,6 @@ using System.Xml;
 using System.IO;
 using Valkyrie.Engine.Core;
 using Microsoft.Xna.Framework;
-using Cadenza;
 using Cadenza.Collections;
 
 namespace Valkyrie.Engine.Maps

@@ -40,9 +40,11 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using Cadenza;
+using Cadenza.Collections;
 using Valkyrie;
 using Valkyrie.Messages;
+using Cadenza.Collections;
+using Cadenza;
 
 namespace Valkyrie.Network
 {
