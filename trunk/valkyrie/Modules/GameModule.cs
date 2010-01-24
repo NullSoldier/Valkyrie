@@ -22,6 +22,7 @@ using ValkyrieServerLibrary.Network.Messages.Valkyrie;
 using Valkyrie.Library;
 using System.Reflection;
 using Valkyrie.Messages.Movement;
+using System.Threading;
 
 namespace Valkyrie.Modules
 {
@@ -135,6 +136,10 @@ namespace Valkyrie.Modules
 			this.context.VoiceChatProvider.UserStoppedTalking += this.GameModule_UserStoppedTalking;
 
 			this.context.SoundManager.AddSound("PalletTown.wav");
+
+			this.context.VoiceChatProvider.Disconnected += VoiceChatProvider_Disconnected;
+			this.context.VoiceChatProvider.Connected += VoiceChatProvider_Connected;
+			this.VoiceChatCheckStart ();
 			
 	        this.IsLoaded = true;
 	    }
@@ -507,6 +512,50 @@ namespace Valkyrie.Modules
 
 			return !this.context.CollisionProvider.CheckCollision (movable, collision);
 		}
+
+		#region Voice Chat
+		private bool retryvoice = false;
+
+		public void VoiceChatProvider_Connected (object sender, EventArgs e)
+		{
+			this.retryvoice = false;
+		}
+
+		public void VoiceChatProvider_Disconnected (object sender, EventArgs e)
+		{
+			this.VoiceChatCheckStart ();
+		}
+
+		private void VoiceChatCheckStart ()
+		{
+			lock(this.context.VoiceChatProvider)
+			{
+				// Only do when not connected and not currently trying to reconnect
+				if(!this.context.VoiceChatProvider.IsConnected && !this.retryvoice)
+				{
+					this.retryvoice = true;
+
+					Thread thread = new Thread (this.VoiceChatReconnection)
+					{
+						Name = "Reconnect Voice Chat Thread",
+						IsBackground = false
+					};
+					thread.Start ();
+				}
+			}
+		}
+
+		private void VoiceChatReconnection()
+		{
+			while(!this.context.VoiceChatProvider.IsConnected)
+			{
+				this.context.VoiceChatProvider.ConnectAsync (PokeGame.logindata[0], Convert.ToInt32 (PokeGame.logindata[1]), PokeGame.logindata[2], PokeGame.logindata[3]);
+
+				Thread.Sleep (20000);
+			}
+		}
+
+		#endregion
 
 		private IEngineContext context = null;
 		private PokeSceneProvider scene = null;

@@ -46,6 +46,7 @@ namespace Valkyrie
 		public GraphicsDeviceManager graphics { get; set; }
 		public SpriteBatch spriteBatch { get; set; }
 		public static SpriteFont font { get; set; }
+		public static string[] logindata { get; set; }
 
 		public bool ExitingGame
 		{
@@ -172,6 +173,15 @@ namespace Valkyrie
 
 			spriteBatch.Begin ();
 			spriteBatch.DrawString (PokeGame.font, this.version, this.versionloc, Color.Black);
+
+			if(this.Engine.IsLoaded)
+			{
+				string voicechatstatus = string.Format("Connected to Voice Chat: {0}", this.Engine.VoiceChatProvider.IsConnected.ToString ());
+				float statusmod = PokeGame.font.MeasureString (voicechatstatus).X - 90;
+
+				spriteBatch.DrawString (PokeGame.font, "Connected to Voice Chat: " + this.Engine.VoiceChatProvider.IsConnected.ToString (), new Vector2 (this.versionloc.X - statusmod, this.versionloc.Y - 20), Color.Black);
+			}
+
 			spriteBatch.End ();
 
 			base.Draw(gameTime);

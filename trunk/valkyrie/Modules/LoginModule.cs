@@ -137,6 +137,8 @@ namespace Valkyrie.Modules
 				string gablarskiaddress = doc.GetElementsByTagName ("GablarskiHost")[0].InnerText;
 				string gablarskiport = doc.GetElementsByTagName("GablarskiPort")[0].InnerText;
 
+				PokeGame.logindata = new string[] {gablarskiaddress, gablarskiport, username, password};
+
 				this.context.NetworkProvider.Disconnected += this.TestDisconnected;
 				this.context.NetworkProvider.MessageReceived += this.TestMessageReceived;
 
