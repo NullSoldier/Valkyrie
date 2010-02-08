@@ -58,61 +58,65 @@ namespace ValkyrieServerLibrary.Core
 			{
 				int count = this.movablecache.Count;
 
-				foreach(var player in this.movablecache)
+				try
 				{
-					MovementInfo moveitem = player.MovementQueue.FirstOrDefault ();
-
-					int speedmodifier = 1;
-					bool failedverification = false;
-
-					/* Fire player started moving event and do movement verification */
-					if(player.NextMoveActive)
+					foreach(var player in this.movablecache)
 					{
-						if(!this.collisionprovider.CheckCollision (player, moveitem.Location))
+						MovementInfo moveitem = player.MovementQueue.FirstOrDefault ();
+
+						int speedmodifier = 1;
+						bool failedverification = false;
+
+						/* Fire player started moving event and do movement verification */
+						if(player.NextMoveActive)
 						{
-							// Walking through dense tiles
-							if(player.Density == 1)
-								failedverification = true;
-						}
+							if(!this.collisionprovider.CheckCollision (player, moveitem.Location))
+							{
+								// Walking through dense tiles
+								if(player.Density == 1)
+									failedverification = true;
+							}
 
 
-						if(failedverification)
-						{
-							// Kick the hacker out
-							toberemoved.Add (player);
-
-							var verifyhandler = this.FailedMovementVerification;
-							if(verifyhandler != null)
-								verifyhandler (this, new MovementChangedEventArgs (player, moveitem.Stage, moveitem.Location));
-
-							continue;
-						}
-						var handler = this.PlayerMoved;
-						if(handler != null)
-							handler (this, new MovementChangedEventArgs (player, MovementStage.StartMovement, moveitem.Location));
-
-						player.NextMoveActive = false;
-					}
-
-					player.Direction = moveitem.Direction;
-					player.Animation = moveitem.Animation;
-					player.MovingDestination = moveitem.Location;
-					player.LastMoveTime += time.ElapsedGameTime.Milliseconds;
-
-					if(player.LastMoveTime >= player.MoveDelay)
-					{
-						player.LastMoveTime = 0;
-
-						if(moveitem.Type == MovementType.Destination)
-						{
-							// Need to get the direction because destination based direction doesn't neccessarily have a specified direction
-							player.Direction = this.GetDirectionFromAnimation (player.Animation);
-
-							if(!MoveDestinationBased (player, collided, speedmodifier))
+							if(failedverification)
+							{
+								// Kick the hacker out
 								toberemoved.Add (player);
+
+								var verifyhandler = this.FailedMovementVerification;
+								if(verifyhandler != null)
+									verifyhandler (this, new MovementChangedEventArgs (player, moveitem.Stage, moveitem.Location));
+
+								continue;
+							}
+							var handler = this.PlayerMoved;
+							if(handler != null)
+								handler (this, new MovementChangedEventArgs (player, MovementStage.StartMovement, moveitem.Location));
+
+							player.NextMoveActive = false;
+						}
+
+						player.Direction = moveitem.Direction;
+						player.Animation = moveitem.Animation;
+						player.MovingDestination = moveitem.Location;
+						player.LastMoveTime += time.ElapsedGameTime.Milliseconds;
+
+						if(player.LastMoveTime >= player.MoveDelay)
+						{
+							player.LastMoveTime = 0;
+
+							if(moveitem.Type == MovementType.Destination)
+							{
+								// Need to get the direction because destination based direction doesn't neccessarily have a specified direction
+								player.Direction = this.GetDirectionFromAnimation (player.Animation);
+
+								if(!MoveDestinationBased (player, collided, speedmodifier))
+									toberemoved.Add (player);
+							}
 						}
 					}
 				}
+				catch { }
 
 				foreach(var movable in toberemoved)
 				{
