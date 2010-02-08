@@ -6,11 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Net;
-using Valkyrie.Library.Core.Messages;
-using Valkyrie.Library.Network;
 using Valkyrie.Characters;
 using Valkyrie;
-using ValkyrieServerLibrary.Network.Messages.Valkyrie;
 using Valkyrie.Library.Core;
 using System.Net.Sockets;
 using System.IO;
@@ -30,6 +27,9 @@ using Microsoft.Xna.Framework.Audio;
 using System.Media;
 using System.Security.Cryptography;
 using System.Diagnostics;
+using Valkyrie.Library.Core.Messages;
+using Valkyrie.Library.Network;
+using ValkyrieServerLibrary.Network.Messages.Valkyrie;
 
 namespace Valkyrie.Modules
 {
@@ -125,7 +125,7 @@ namespace Valkyrie.Modules
 				if(this.connecting)
 					return;
 
-				FileInfo file = new FileInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "PokeWorldOnline\\ClientSettings.xml"));
+				FileInfo file = new FileInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PokeWorldOnline\\ClientSettings.xml"));
 
 				XmlDocument doc = new XmlDocument();
 				doc.Load(file.FullName);
@@ -137,7 +137,7 @@ namespace Valkyrie.Modules
 				string gablarskiaddress = doc.GetElementsByTagName ("GablarskiHost")[0].InnerText;
 				string gablarskiport = doc.GetElementsByTagName("GablarskiPort")[0].InnerText;
 
-				PokeGame.logindata = new string[] {gablarskiaddress, gablarskiport, username, password};
+				PokeGame.logindata = new string[] { gablarskiaddress, gablarskiport, username, Helpers.MD5 (password)};
 
 				this.context.NetworkProvider.Disconnected += this.TestDisconnected;
 				this.context.NetworkProvider.MessageReceived += this.TestMessageReceived;

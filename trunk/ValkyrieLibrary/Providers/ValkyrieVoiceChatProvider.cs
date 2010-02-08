@@ -58,8 +58,8 @@ namespace Valkyrie.Library.Providers
 				throw new ArgumentNullException ("username");
 			if (passWord == null)
 				throw new ArgumentNullException ("password");
-			
-			SetupGablarski();
+
+			SetupGablarski ((this.setupcount >= 1));
 			
 			this.username = userName;
 			this.password = passWord;
@@ -82,7 +82,12 @@ namespace Valkyrie.Library.Providers
 			List<UserInfo> infos = new List<UserInfo> ();
 
 			foreach(var player in this.context.NetworkProvider.GetPlayers ())
-				infos.Add (gb.Users[Convert.ToInt32 (player.ID)]);
+			{
+				var user = gb.Users[Convert.ToInt32 (player.ID)];
+
+				if(user != null)
+					infos.Add (user);
+			}
 
 			gb.Audio.BeginCapture (voice, infos);
 		}
@@ -107,6 +112,8 @@ namespace Valkyrie.Library.Providers
 
 		public void Unload ()
 		{
+			this.TearDownGablarski ();
+
 			this.IsLoaded = false;
 		}
 
@@ -120,6 +127,7 @@ namespace Valkyrie.Library.Providers
 		private IEngineContext context;
 		
 		private readonly object key = new object();
+		private int setupcount = 0;
 		
 		private bool useVA;
 		private GablarskiClient gb;
@@ -132,11 +140,16 @@ namespace Valkyrie.Library.Providers
 		
 		private string username;
 		private string password;
-		
-		private void SetupGablarski()
+
+		private void SetupGablarski ()
 		{
-			if (gb != null)
-				return;
+			this.SetupGablarski (false);
+		}
+
+		private void SetupGablarski (bool reconnect)
+		{
+			if (gb != null && !reconnect)
+				return;				
 
 			playback = new OpenALPlaybackProvider ();
 			playback.Device = playback.DefaultDevice;
@@ -163,6 +176,8 @@ namespace Valkyrie.Library.Providers
 			gb.Sources.ReceivedAudioSource += HandleGbSourcesReceivedAudioSource;
 			gb.Sources.AudioSourceStarted += HandleGbSourcesAudioSourceStarted;
 			gb.Sources.AudioSourceStopped += HandleGbSourcesAudioSourceStopped;
+
+			this.setupcount++;
 		}
 
 		void HandleGbSourcesReceivedSourceList(object sender, ReceivedListEventArgs<AudioSource> e)
