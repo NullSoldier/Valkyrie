@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XnaContent xmlns:Pipeline="Microsoft.Xna.Framework.Content.Pipeline">
+  <Asset Type="Pipeline:BuildItemCollection">
+    <BuildSuccessful>true</BuildSuccessful>
+    <Settings>
+      <TargetPlatform>Windows</TargetPlatform>
+      <BuildConfiguration>Debug</BuildConfiguration>
+      <CompressContent>false</CompressContent>
+      <RootDirectory>C:\Users\NullSoldier\Documents\Code Work Area\Project Prolium\trunk\src\Windows Client\WinProlium\Content\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\NullSoldier\Documents\Code Work Area\Project Prolium\trunk\src\Windows Client\WinProlium\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\NullSoldier\Documents\Code Work Area\Project Prolium\trunk\src\Windows Client\WinProlium\Content\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\NullSoldier\Documents\Code Work Area\Project Prolium\trunk\src\Windows Client\WinProlium\bin\x86\Debug\Content\</OutputDirectory>
+    </Settings>
+    <Assemblies>
+      <Assembly>
+        <Key>C:\Windows\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\3.1.0.0__6d5c3888ef60e27d\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
+        <Value>2010-03-15T10:08:01.1301906-04:00</Value>
+      </Assembly>
+    </Assemblies>
+  </Asset>
+</XnaContent>
