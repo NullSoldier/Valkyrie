@@ -1,6 +1,0 @@
-C:\Users\NullSoldier\Documents\Code Work Area\Project Prolium\trunk\src\Windows Client\WinProlium\bin\x86\Debug\WinProlium.exe
-C:\Users\NullSoldier\Documents\Code Work Area\Project Prolium\trunk\src\Windows Client\WinProlium\bin\x86\Debug\WinProlium.pdb
-C:\Users\NullSoldier\Documents\Code Work Area\Project Prolium\trunk\src\Windows Client\WinProlium\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\NullSoldier\Documents\Code Work Area\Project Prolium\trunk\src\Windows Client\WinProlium\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-C:\Users\NullSoldier\Documents\Code Work Area\Project Prolium\trunk\src\Windows Client\WinProlium\obj\x86\Debug\WinProlium.exe
-C:\Users\NullSoldier\Documents\Code Work Area\Project Prolium\trunk\src\Windows Client\WinProlium\obj\x86\Debug\WinProlium.pdb
