@@ -43,7 +43,7 @@ namespace Valkyrie.Library.Managers
 
 				foreach(MapHeader header in this.worlds.Values.SelectMany(p => p.Maps.Values))
 				{
-					header.Map = this.MapProvider.GetMap(new Uri(Path.Combine(mapdirectory, header.MapPath)), eventprovider);
+					header.Map = this.MapProvider.GetMap(Path.Combine(mapdirectory, header.MapPath), eventprovider);
 					header.Map.Texture = this.texturemanager.GetTexture(header.Map.TextureName);
 				}
 			}

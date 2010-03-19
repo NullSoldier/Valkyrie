@@ -89,7 +89,7 @@ namespace ValkyrieMapEditor
 
 		public static Map LoadMap(string path, IMapProvider provider)
 		{
-			var map = provider.GetMap(new Uri(path), MapEditorManager.GameInstance.Engine.EventProvider);
+			var map = provider.GetMap(path, MapEditorManager.GameInstance.Engine.EventProvider);
 			map.Texture = GameInstance.Engine.TextureManager.GetTexture(map.TextureName);
 			
 			return map;

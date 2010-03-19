@@ -41,6 +41,7 @@ namespace Valkyrie.Engine.Providers
 		/// Runs update logic on the current module.
 		/// </summary>
 		/// <param name="gameTime">The current gameTime.</param>
+        /// <exception cref="InvalidOperatingException">Thrown when there is no module currently active.</exception>
 		void UpdateCurrent (GameTime gameTime);
 
 		/// <summary>
@@ -48,6 +49,7 @@ namespace Valkyrie.Engine.Providers
 		/// </summary>
 		/// <param name="spriteBatch">The spriteBatch to render to.</param>
 		/// <param name="gameTime">The current gameTime.</param>
+        /// <exception cref="InvalidOperatingException">Thrown when there is no module currently active.</exception>
 		void DrawCurrent (SpriteBatch spriteBatch, GameTime gameTime);
 
 		/// <summary>

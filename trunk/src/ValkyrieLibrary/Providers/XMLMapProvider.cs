@@ -28,8 +28,10 @@ namespace Valkyrie.Library.Providers
 
 		#endregion
 
-		public Map GetMap (Uri location, IEventProvider eventprovider)
+		public Map GetMap (string filepath, IEventProvider eventprovider)
 		{
+            Uri location = new Uri(filepath);
+
 			FileInfo MapPath = new FileInfo(location.LocalPath);
 			if(!MapPath.Exists)
 				throw new ArgumentException("Invalid file path. Map does not exist.", "location");

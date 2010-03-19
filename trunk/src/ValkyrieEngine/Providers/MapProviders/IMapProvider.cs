@@ -10,6 +10,6 @@ namespace Valkyrie.Engine.Providers
 {
 	public interface IMapProvider
 	{
-		Map GetMap (Uri location, IEventProvider eventprovider);
+		Map GetMap (string filepath, IEventProvider eventprovider);
 	}
 }

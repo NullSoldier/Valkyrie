@@ -5,6 +5,7 @@ using System.Text;
 using Valkyrie.Engine;
 using Valkyrie.Engine.Core;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Valkyrie.Library.Camera
 {

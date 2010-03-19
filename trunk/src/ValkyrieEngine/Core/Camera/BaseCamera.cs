@@ -31,12 +31,14 @@ namespace Valkyrie.Engine
 		public BaseCamera (int x, int y, int width, int height)
 		{
 			this.screen = new Rectangle(x, y, width, height);
+            this.frame = new Rectangle(x, y, width, height);
 			this.viewport = new Viewport() { X = x, Y = y, Width = width, Height = height };
 		}
 
 		public BaseCamera (Viewport viewport)
 		{
 			this.screen = new Rectangle(viewport.X, viewport.Y, viewport.Width, viewport.Height);
+            this.frame = new Rectangle(viewport.X, viewport.Y, viewport.Width, viewport.Height);
 			this.viewport = viewport;
 		}
 
@@ -44,10 +46,12 @@ namespace Valkyrie.Engine
 
 		#region Public Methods/Properties
 
+        public Rectangle Frame {get { return this.frame; } }
 		public Rectangle Screen { get { return this.screen; } }
 		public Viewport Viewport { get { return this.viewport; } }
+        public Vector2 CameraOffset { get { return this.cameraoffset; } }
 		public List<ICameraEffect> Effects { get { return this.effects; } }
-		public Vector2 CameraOffset { get { return this.cameraoffset; } }
+        public RenderTarget2D RenderBuffer { get { return this.renderbuffer; } } 
 
 		public Vector2 MapOffset
 		{
@@ -60,6 +64,12 @@ namespace Valkyrie.Engine
 			get { return this.manualcontrol; }
 			set { this.manualcontrol = value; }
 		}
+
+        public bool StretchToFit
+        {
+            get { return this.stretch; }
+            set { this.stretch = value; }
+        }
 
 		public event EventHandler<EffectFinishedEventArgs> EffectFinished
 		{
@@ -83,6 +93,14 @@ namespace Valkyrie.Engine
 				return sp;
 			}
 		}
+
+        public void LoadRenderBuffer(GraphicsDevice device)
+        {
+            this.renderbuffer = new RenderTarget2D(device, this.screen.Width, this.screen.Height, 1, SurfaceFormat.Color);
+            this.device = device;
+
+            this.isloaded = true;
+        }
 
 		public void Push()
 		{
@@ -117,6 +135,8 @@ namespace Valkyrie.Engine
 		{
 			this.screen = new Rectangle(x, y, width, height);
 			this.viewport = new Viewport() { X = x, Y = y, Width = width, Height = height };
+
+            this.renderbuffer = new RenderTarget2D(this.device, width, height, 1, SurfaceFormat.Color);
 		}
 
 		public void CenterOriginOnPoint(Point Point)
@@ -180,17 +200,24 @@ namespace Valkyrie.Engine
 
 		public void Scale(double x, double y)
         {
+            if (!this.isloaded) throw new InvalidOperationException("The camera has not yet been loaded");
+
 			this.ResizeScreen(new Rectangle(Screen.X, Screen.Y, (int)(Screen.Width * (1.0 / x)), (int)(Screen.Height * (1.0 / y))));
 		}
 
 		#endregion
 
 		private Rectangle screen = Rectangle.Empty;
+        private Rectangle frame = Rectangle.Empty;
 		private Vector2 mapoffset = Vector2.Zero;
 		private Vector2 cameraoffset = Vector2.Zero;
 		private Viewport viewport; // eh?
+        private RenderTarget2D renderbuffer;
+        private GraphicsDevice device;
 		private bool manualcontrol = true;
+        private bool stretch = false;
 		private string worldname = string.Empty;
+        private bool isloaded = false;
 
 		private List<ICameraEffect> effects = new List<ICameraEffect>();
 		private event EventHandler<EffectFinishedEventArgs> effectfinished;

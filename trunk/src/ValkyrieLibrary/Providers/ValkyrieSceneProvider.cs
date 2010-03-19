@@ -129,6 +129,8 @@ namespace Valkyrie.Library.Providers
 
 		private void DrawCamera (SpriteBatch spriteBatch, BaseCamera camera)
 		{
+            this.device.SetRenderTarget(0, camera.RenderBuffer);
+
 			foreach(var header in this.context.WorldManager.GetWorld(camera.WorldName).Maps.Values)
 			{
 				if(!header.IsVisible(camera))
@@ -149,6 +151,14 @@ namespace Valkyrie.Library.Providers
 				spriteBatch.End();
 			}
 
+            this.device.SetRenderTarget(0, null);
+
+            spriteBatch.Begin();
+            if (camera.StretchToFit)
+                spriteBatch.Draw(camera.RenderBuffer.GetTexture(), camera.Frame, Color.White);
+            else
+                spriteBatch.Draw(camera.RenderBuffer.GetTexture(), Vector2.Zero, camera.Screen, Color.White);
+            spriteBatch.End();
 		}
 
 		private void DrawCameraLayer (SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer, MapHeader header)
@@ -285,6 +295,7 @@ namespace Valkyrie.Library.Providers
 		private IEngineContext context = null;
 		private GraphicsDevice device = null;
 		private bool isloaded = false;
+        private RenderTarget2D texturebuffer = null;
 
 		private bool ResolvePositionableCurrentMap (IPositionable player)
 		{

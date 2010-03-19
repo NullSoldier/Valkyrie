@@ -16,6 +16,16 @@ namespace Valkyrie.Engine.Maps
 	{
 		#region Constructors
 
+        public MapHeader (Map map)
+            : this (map, MapPoint.Zero) { }
+
+        public MapHeader(Map map, MapPoint location)
+        {
+            this.map = map;
+            this.mapname = map.Name;
+            this.maplocation = location;
+        }
+
 		public MapHeader (string mapname, MapPoint point, string location)
 		{
 			this.MapName = mapname;

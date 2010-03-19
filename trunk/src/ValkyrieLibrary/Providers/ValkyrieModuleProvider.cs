@@ -38,8 +38,10 @@ namespace Valkyrie.Library.Providers
 
 		public void UpdateCurrent (GameTime gameTime)
 		{
-			if(!this.IsLoaded)
-				throw new ProviderNotLoadedException();
+            if (!this.IsLoaded)
+                throw new ProviderNotLoadedException();
+            else if (this.CurrentModule == null)
+                throw new InvalidOperationException("No module has been pushed to the front.");
 
 			this.CurrentModule.Update(gameTime);
 		}
@@ -48,6 +50,8 @@ namespace Valkyrie.Library.Providers
 		{
 			if(!this.IsLoaded)
 				throw new ProviderNotLoadedException();
+            else if (this.CurrentModule == null)
+                throw new InvalidOperationException("No module has been pushed to the front.");
 
 			this.CurrentModule.Draw(spriteBatch, gameTime);
 		}
