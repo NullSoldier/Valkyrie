@@ -55,7 +55,7 @@ namespace ValkyrieMapEditor.Core
 			{
 				var camera = this.context.SceneProvider.GetCamera("camera1");
 
-			    MapPoint point = new MapPoint((e.Location.X - (int)camera.MapOffset.X) / 32, (e.Location.Y - (int)camera.MapOffset.Y) / 32);
+                MapPoint point = new MapPoint((e.Location.X - (int)camera.Location.X) / 32, (e.Location.Y - (int)camera.Location.Y) / 32);
 
 				if(e.Button == MouseButtons.Left)
 				{
@@ -81,8 +81,8 @@ namespace ValkyrieMapEditor.Core
 					var camera = this.context.SceneProvider.GetCamera("camera1");
 
 					Rectangle destRectangle = new Rectangle(0, 0, MapEditorManager.CurrentMap.TileSize, MapEditorManager.CurrentMap.TileSize);
-					destRectangle.X = (int)camera.MapOffset.X + (int)camera.CameraOffset.X + (x * MapEditorManager.CurrentMap.TileSize);
-					destRectangle.Y = (int)camera.MapOffset.Y + (int)camera.CameraOffset.Y + (y * MapEditorManager.CurrentMap.TileSize);
+                    destRectangle.X = (int)camera.Location.X + (int)camera.CameraOffset.X + (x * MapEditorManager.CurrentMap.TileSize);
+                    destRectangle.Y = (int)camera.Location.Y + (int)camera.CameraOffset.Y + (y * MapEditorManager.CurrentMap.TileSize);
 
 			        spriteBatch.Draw(this.CollisionSprite, destRectangle, new Rectangle(0, 0, this.CollisionSprite.Width, this.CollisionSprite.Height), Color.White);
 			    }

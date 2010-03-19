@@ -14,7 +14,7 @@ namespace Valkyrie.Library.Camera
 		: ICameraEffect
 	{
 		public TweenEffect(BaseCamera camera, ScreenPoint endpoint, int time)
-			: this(new ScreenPoint((int)camera.MapOffset.X * -1, (int)camera.MapOffset.Y * -1), endpoint, time)
+            : this(new ScreenPoint((int)camera.Location.X * -1, (int)camera.Location.Y * -1), endpoint, time)
 		{
 		}
 
@@ -57,7 +57,7 @@ namespace Valkyrie.Library.Camera
 
 		public void Draw(BaseCamera camera)
 		{
-			camera.MapOffset = new Vector2(this.CurrentLocation.X * -1, this.CurrentLocation.Y * -1);
+            camera.Location = new ScreenPoint(this.CurrentLocation.X * -1, this.CurrentLocation.Y * -1);
 		}
 
 		#endregion

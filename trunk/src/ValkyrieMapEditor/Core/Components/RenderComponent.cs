@@ -9,6 +9,7 @@ using Valkyrie.Library.Core;
 using Valkyrie.Library;
 using Valkyrie.Engine;
 using Valkyrie.Engine.Maps;
+using Valkyrie.Engine.Core;
 
 namespace ValkyrieMapEditor.Core
 {
@@ -36,28 +37,28 @@ namespace ValkyrieMapEditor.Core
 			    if (MapEditorManager.CurrentMap != null)
 			    {
 			        // Move the X origin
-					int DisplayedWidth = (MapEditorManager.CurrentMap.MapSize.X * MapEditorManager.CurrentMap.TileSize) + (int)camera.MapOffset.X;
+                    int DisplayedWidth = (MapEditorManager.CurrentMap.MapSize.X * MapEditorManager.CurrentMap.TileSize) + (int)camera.Location.X;
 			        if (DisplayedWidth < e.Width)
 			        {
 						if(MapEditorManager.CurrentMap.MapSize.X * MapEditorManager.CurrentMap.TileSize < e.Width)
-							camera.CenterOriginOnPoint(0, (int)(camera.MapOffset.Y * -1));
+                            camera.CenterOriginOnPoint(0, (int)(camera.Location.Y * -1));
 						else
 						{
 							int newOffset = (e.Width - DisplayedWidth);
-							camera.CenterOriginOnPoint((int)(camera.MapOffset.X * -1) - newOffset, (int)(camera.MapOffset.Y * -1));
+                            camera.CenterOriginOnPoint((int)(camera.Location.X * -1) - newOffset, (int)(camera.Location.Y * -1));
 						}
 					}
 
 			        // Move the Y origin
-					int DisplayedHeight = (MapEditorManager.CurrentMap.MapSize.Y * MapEditorManager.CurrentMap.TileSize) + (int)camera.MapOffset.Y;
+                    int DisplayedHeight = (MapEditorManager.CurrentMap.MapSize.Y * MapEditorManager.CurrentMap.TileSize) + (int)camera.Location.Y;
 					if(DisplayedHeight < e.Height)
 					{
 						if(MapEditorManager.CurrentMap.MapSize.Y * MapEditorManager.CurrentMap.TileSize < e.Height)
-							camera.CenterOriginOnPoint((int)(camera.MapOffset.X * -1), 0);
+                            camera.CenterOriginOnPoint((int)(camera.Location.X * -1), 0);
 						else
 						{
 							int newOffset = (e.Height - DisplayedHeight);
-							camera.CenterOriginOnPoint((int)(camera.MapOffset.X * -1), (int)(camera.MapOffset.Y * -1) - newOffset);
+                            camera.CenterOriginOnPoint((int)(camera.Location.X * -1), (int)(camera.Location.Y * -1) - newOffset);
 						}
 					}
 			    }
@@ -75,15 +76,15 @@ namespace ValkyrieMapEditor.Core
 			if (e.Type == ScrollEventType.EndScroll)
 			    return;
 
-			int x = (int)(camera.MapOffset.X) * -1;
-			int y = (int)(camera.MapOffset.Y) * -1;
+            int x = (int)(camera.Location.X) * -1;
+            int y = (int)(camera.Location.Y) * -1;
 
 			if(e.ScrollOrientation == ScrollOrientation.VerticalScroll)
 				y += dif * MapEditorManager.CurrentMap.TileSize;
 			else
 				x += dif * MapEditorManager.CurrentMap.TileSize;
 
-			camera.CenterOriginOnPoint(new Point(x, y));
+            camera.CenterOriginOnPoint(new ScreenPoint(x, y));
         }
 
         public void OnMouseDown(object sender, MouseEventArgs ev)

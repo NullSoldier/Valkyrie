@@ -24,85 +24,71 @@ namespace Valkyrie.Engine
 		}
 
 		public BaseCamera (Rectangle screen)
-			 : this(screen.X, screen.Y, screen.Width, screen.Height)
-		{
-		}
+			 : this(screen.X, screen.Y, screen.Width, screen.Height) { }
 
 		public BaseCamera (int x, int y, int width, int height)
 		{
 			this.screen = new Rectangle(x, y, width, height);
-            this.frame = new Rectangle(x, y, width, height);
-			this.viewport = new Viewport() { X = x, Y = y, Width = width, Height = height };
-		}
-
-		public BaseCamera (Viewport viewport)
-		{
-			this.screen = new Rectangle(viewport.X, viewport.Y, viewport.Width, viewport.Height);
-            this.frame = new Rectangle(viewport.X, viewport.Y, viewport.Width, viewport.Height);
-			this.viewport = viewport;
+            this.halfscreen = new ScreenPoint(screen.Width / 2, screen.Height / 2);
 		}
 
 		#endregion
 
 		#region Public Methods/Properties
 
-        public Rectangle Frame {get { return this.frame; } }
-		public Rectangle Screen { get { return this.screen; } }
-		public Viewport Viewport { get { return this.viewport; } }
-        public Vector2 CameraOffset { get { return this.cameraoffset; } }
-		public List<ICameraEffect> Effects { get { return this.effects; } }
-        public RenderTarget2D RenderBuffer { get { return this.renderbuffer; } } 
+		public Rectangle Screen
+        {
+            get { return this.screen; }
+        }
 
-		public Vector2 MapOffset
-		{
-			get { return this.mapoffset; }
-			set { this.mapoffset = value; }
-		}
+        public ScreenPoint Origin
+        {
+            get { return this.mapoffset - this.halfscreen; }
+            set { this.mapoffset = value + this.halfscreen; }
+        }
+        // ScreenPoint((int)(this.mapoffset.X * -1), (int)(this.mapoffset.Y * -1)); }
 
-		public bool ManualControl
+        public ScreenPoint CameraOffset
+        {
+            get { return this.cameraoffset; }
+            set { this.cameraoffset = value; }
+        }
+
+        public ScreenPoint Offset
+        {
+            get
+            {
+                ScreenPoint sp = new ScreenPoint(0, 0);
+                sp.X = (int)this.Location.X + (int)this.CameraOffset.X;
+                sp.Y = (int)this.Location.Y + (int)this.CameraOffset.Y;
+                return sp;
+            }
+        }
+
+        #region Camera Effects
+
+        public List<ICameraEffect> Effects
+        {
+            get { return this.effects; }
+        }
+
+        public event EventHandler<EffectFinishedEventArgs> EffectFinished
+        {
+            add { this.effectfinished += value; }
+            remove { this.effectfinished -= value; }
+        }
+
+        #endregion
+
+        public bool ManualControl
 		{
 			get { return this.manualcontrol; }
 			set { this.manualcontrol = value; }
 		}
 
-        public bool StretchToFit
-        {
-            get { return this.stretch; }
-            set { this.stretch = value; }
-        }
+        #region Stack Management
 
-		public event EventHandler<EffectFinishedEventArgs> EffectFinished
-		{
-			add { this.effectfinished += value; }
-			remove { this.effectfinished -= value; }
-		}
-
-		public Point CameraOrigin
-		{
-			get { return new Point((int)(this.MapOffset.X * -1), (int)(this.MapOffset.Y * -1)); }
-			set { this.MapOffset = new Vector2(value.X * -1, value.Y * -1); }
-		}
-
-		public ScreenPoint Offset
-		{
-			get
-			{
-				ScreenPoint sp = new ScreenPoint(0, 0);
-				sp.X = (int)this.MapOffset.X + (int)this.CameraOffset.X;
-				sp.Y = (int)this.MapOffset.Y + (int)this.CameraOffset.Y;
-				return sp;
-			}
-		}
-
-        public void LoadRenderBuffer(GraphicsDevice device)
-        {
-            this.renderbuffer = new RenderTarget2D(device, this.screen.Width, this.screen.Height, 1, SurfaceFormat.Color);
-            this.device = device;
-
-            this.isloaded = true;
-        }
-
-		public void Push()
+        public void Push()
 		{
 			this.camStack.Push(new BaseCamera(this));
 		}
@@ -115,15 +101,17 @@ namespace Valkyrie.Engine
 		public void SetCamera(BaseCamera cam)
 		{
 			this.screen = new Rectangle(cam.Screen.X, cam.Screen.Y, cam.Screen.Width, cam.Screen.Height);
-			this.mapoffset = new Vector2(cam.MapOffset.X, cam.MapOffset.Y);
-			this.cameraoffset = new Vector2(cam.CameraOffset.X, cam.CameraOffset.Y);
+            this.halfscreen = new ScreenPoint(screen.Width / 2, screen.Height / 2);
 
-			this.viewport = new Viewport() { X = cam.screen.X, Y = cam.screen.Y, Width = cam.screen.Width, Height = cam.screen.Height};
+            this.mapoffset = new ScreenPoint(cam.Location.X, cam.Location.Y);
+            this.cameraoffset = new ScreenPoint (cam.CameraOffset.X, cam.CameraOffset.Y);
 		}
+
+        #endregion
 
 		public bool CheckIsVisible(Rectangle rect)
 		{
-			return (this.screen.Intersects(rect) == true);
+            return (new Rectangle(Origin.X, Origin.Y, Screen.Width, Screen.Height).Intersects(rect) == true);
 		}
 
 		public void ResizeScreen (Rectangle rectangle)
@@ -134,19 +122,19 @@ namespace Valkyrie.Engine
 		public void ResizeScreen (int x, int y, int width, int height)
 		{
 			this.screen = new Rectangle(x, y, width, height);
-			this.viewport = new Viewport() { X = x, Y = y, Width = width, Height = height };
+            this.halfscreen = new ScreenPoint(screen.Width / 2, screen.Height / 2);
+        }
 
-            this.renderbuffer = new RenderTarget2D(this.device, width, height, 1, SurfaceFormat.Color);
-		}
+        #region Center Methods
 
-		public void CenterOriginOnPoint(Point Point)
+        public void CenterOriginOnPoint(ScreenPoint Point)
 		{
-			this.MapOffset = new Vector2(Point.X * -1, Point.Y * -1);
+            this.Origin = new ScreenPoint(Point.X * -1, Point.Y * -1);
 		}
 
 		public void CenterOriginOnPoint(int x, int y)
 		{
-			this.CenterOriginOnPoint(new Point(x, y));
+            this.CenterOriginOnPoint(new ScreenPoint(x, y));
 		}
 
 		public virtual void CenterOnCharacter(BaseCharacter Char)
@@ -157,67 +145,85 @@ namespace Valkyrie.Engine
 
 		public void CenterOnPoint(ScreenPoint Point)
 		{
-			int prepvaluex = Point.X * -1;
-			prepvaluex += (this.Screen.Width / 2);
+            this.Location = Point;
+        }
 
-			int prepvaluey = Point.Y * -1;
-			prepvaluey += (this.Screen.Height / 2);
+        #endregion
 
-			Vector2 loc = new Vector2(prepvaluex, prepvaluey);
-			this.MapOffset = loc;
-		}
+        #region Matrix Methods/Properties
 
-		public void Update(GameTime gameTime)
-		{
-			List<ICameraEffect> removed = new List<ICameraEffect>();
-
-			lock (this.Effects)
-			{
-				foreach (var effect in this.Effects)
-				{
-					effect.Update(gameTime);
-					effect.Draw(this);
-
-					if (effect.Finished)
-						removed.Add(effect);
-				}
-
-				foreach (var effect in removed)
-				{
-					var handler = this.effectfinished;
-					if (handler != null)
-						handler(this, new EffectFinishedEventArgs(effect));
-
-					this.Effects.Remove(effect);
-				}
-			}
-		}
-
-		public void Scale (double scale)
-		{
-			this.Scale(scale, scale);
-		}
-
-		public void Scale(double x, double y)
+        public float Rotation
         {
-            if (!this.isloaded) throw new InvalidOperationException("The camera has not yet been loaded");
+            get { return this.rotate; }
+        }
 
-			this.ResizeScreen(new Rectangle(Screen.X, Screen.Y, (int)(Screen.Width * (1.0 / x)), (int)(Screen.Height * (1.0 / y))));
-		}
+        public float Zoom
+        {
+            get { return this.zoom; }
+        }
+
+        public void Scale(float scale)
+        {
+            this.zoom = scale;
+        }
+
+        public void Rotate(float radians)
+        {
+            this.rotate = radians;
+        }
+
+        public Matrix TransformMatrix
+        {
+            get
+            {
+                return
+                    Matrix.CreateTranslation(new Vector3(-Location.X, -Location.Y, 0)) *
+                    Matrix.CreateRotationZ(this.rotate) *
+                    Matrix.CreateScale(this.zoom) *
+                    Matrix.CreateTranslation(new Vector3(Screen.Width * 0.5f, Screen.Height * 0.5f, 0));
+            }
+        }
+
+        #endregion
 
 		#endregion
 
+        public void Update(GameTime gameTime)
+        {
+            List<ICameraEffect> removed = new List<ICameraEffect>();
+
+            lock (this.Effects)
+            {
+                foreach (var effect in this.Effects)
+                {
+                    effect.Update(gameTime);
+                    effect.Draw(this);
+
+                    if (effect.Finished)
+                        removed.Add(effect);
+                }
+
+                foreach (var effect in removed)
+                {
+                    var handler = this.effectfinished;
+                    if (handler != null)
+                        handler(this, new EffectFinishedEventArgs(effect));
+
+                    this.Effects.Remove(effect);
+                }
+            }
+        }
+
 		private Rectangle screen = Rectangle.Empty;
-        private Rectangle frame = Rectangle.Empty;
-		private Vector2 mapoffset = Vector2.Zero;
-		private Vector2 cameraoffset = Vector2.Zero;
-		private Viewport viewport; // eh?
-        private RenderTarget2D renderbuffer;
-        private GraphicsDevice device;
-		private bool manualcontrol = true;
-        private bool stretch = false;
+        private ScreenPoint mapoffset = ScreenPoint.Zero;
+        private ScreenPoint cameraoffset = ScreenPoint.Zero; // Uneeded
+        private ScreenPoint halfscreen = ScreenPoint.Zero;
+		
+        private bool manualcontrol = true;
 		private string worldname = string.Empty;
-        private bool isloaded = false;
+
+        private float zoom = 1f;
+        private float rotate = 0f;
 
 		private List<ICameraEffect> effects = new List<ICameraEffect>();
 		private event EventHandler<EffectFinishedEventArgs> effectfinished;
@@ -237,14 +243,8 @@ namespace Valkyrie.Engine
 
 		public ScreenPoint Location
 		{
-			get
-			{
-				return new ScreenPoint(this.CameraOrigin.X, this.CameraOrigin.Y);
-			}
-			set
-			{
-				this.CameraOrigin = value.ToPoint();
-			}
+            get { return this.mapoffset;  }
+			set { this.mapoffset = value; }
 		}
 
 		public string WorldName

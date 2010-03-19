@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Valkyrie.Engine.Camera;
 using Valkyrie.Engine;
+using Valkyrie.Engine.Core;
 
 namespace Valkyrie.Library.Camera
 {
@@ -16,7 +17,7 @@ namespace Valkyrie.Library.Camera
 			this.Magnitude = magnitude;
 			this.Time = time;
 			this.SpeedDelay = delay;
-			this.OriginalOffset = camera.MapOffset;
+            this.OriginalOffset = camera.Location;
 
 			this.Finished = false;
 		}
@@ -28,8 +29,8 @@ namespace Valkyrie.Library.Camera
 		private int LastTimeQuake { get; set; }
 		private int TotalQuakeTime { get; set; }
 
-		private Vector2 CurrentOffset { get; set; }
-		private Vector2 OriginalOffset
+        private ScreenPoint CurrentOffset { get; set; }
+        private ScreenPoint OriginalOffset
 		{
 			get { return this.originaloffset; }
 			set
@@ -39,7 +40,7 @@ namespace Valkyrie.Library.Camera
 			}
 		}
 
-		private Vector2 originaloffset;
+        private ScreenPoint originaloffset;
 
 		#region ICameraEffect Members
 
@@ -54,7 +55,7 @@ namespace Valkyrie.Library.Camera
 
 			if (this.LastTimeQuake > this.SpeedDelay)
 			{
-				this.CurrentOffset = new Vector2(this.OriginalOffset.X + rand.Next(this.Magnitude * -1, this.Magnitude),
+                this.CurrentOffset = new ScreenPoint(this.OriginalOffset.X + rand.Next(this.Magnitude * -1, this.Magnitude),
 					this.OriginalOffset.Y + rand.Next(this.Magnitude * -1, this.Magnitude));
 
 				this.LastTimeQuake = 0;
@@ -68,7 +69,7 @@ namespace Valkyrie.Library.Camera
 
 		public void Draw(BaseCamera camera)
 		{
-			camera.MapOffset = CurrentOffset;
+            camera.Location = CurrentOffset;
 		}
 
 		#endregion

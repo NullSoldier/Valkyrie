@@ -87,17 +87,24 @@ namespace Valkyrie.Library.Providers
 
 		private void DrawCameraLayer (SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer, bool players)
 		{
+            throw new NotImplementedException();
+
 			foreach(var header in this.context.WorldManager.GetWorld(camera.WorldName).Maps.Values)
 			{
 				if(!header.IsVisible(camera))
 					continue;
 
+                //this.device.SetRenderTarget(0, camera.RenderBuffer);
+
 				spriteBatch.Begin();
-				this.device.Viewport = camera.Viewport;
 
 				this.DrawCameraLayer(spriteBatch, camera, layer, header);
 
 				spriteBatch.End();
+
+                //this.device.SetRenderTarget(0, null);
+
+
 			}
 		}
 
@@ -117,8 +124,8 @@ namespace Valkyrie.Library.Providers
 		public void DrawPlayer (SpriteBatch spriteBatch, BaseCharacter player, BaseCamera camera)
 		{
 			Vector2 location = new Vector2();
-			location.X = (int)camera.MapOffset.X + player.Location.X + 32 / 2 - player.CurrentAnimation.FrameRectangle.Width / 2;
-			location.Y = (int)camera.MapOffset.Y + player.Location.Y + 32 - player.CurrentAnimation.FrameRectangle.Height;
+            location.X = player.Location.X + 32 / 2 - player.CurrentAnimation.FrameRectangle.Width / 2;
+            location.Y = player.Location.Y + 32 - player.CurrentAnimation.FrameRectangle.Height;
 
 			spriteBatch.Draw(player.Sprite, location, player.CurrentAnimation.FrameRectangle, Color.White);
 		}
@@ -129,15 +136,13 @@ namespace Valkyrie.Library.Providers
 
 		private void DrawCamera (SpriteBatch spriteBatch, BaseCamera camera)
 		{
-            this.device.SetRenderTarget(0, camera.RenderBuffer);
 
 			foreach(var header in this.context.WorldManager.GetWorld(camera.WorldName).Maps.Values)
 			{
 				if(!header.IsVisible(camera))
 					continue;
 
-				spriteBatch.Begin();
-				this.device.Viewport = camera.Viewport;
+				spriteBatch.Begin (SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState, camera.TransformMatrix);
 
 				this.DrawCameraLayer(spriteBatch, camera, MapLayers.UnderLayer, header);
 				this.DrawCameraLayer(spriteBatch, camera, MapLayers.BaseLayer, header);
@@ -151,14 +156,7 @@ namespace Valkyrie.Library.Providers
 				spriteBatch.End();
 			}
 
-            this.device.SetRenderTarget(0, null);
-
-            spriteBatch.Begin();
-            if (camera.StretchToFit)
-                spriteBatch.Draw(camera.RenderBuffer.GetTexture(), camera.Frame, Color.White);
-            else
-                spriteBatch.Draw(camera.RenderBuffer.GetTexture(), Vector2.Zero, camera.Screen, Color.White);
-            spriteBatch.End();
+            
 		}
 
 		private void DrawCameraLayer (SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer, MapHeader header)
@@ -172,7 +170,7 @@ namespace Valkyrie.Library.Providers
 			Check.NullArgument(header, "header");
 
 			Map currentMap = header.Map;
-			ScreenPoint camOffset = camera.Offset;
+            ScreenPoint camOffset = ScreenPoint.Zero;// camera.Offset;
 			int tileSize = currentMap.TileSize;
 
 			for(int y = 0; y < currentMap.MapSize.Y; y++)

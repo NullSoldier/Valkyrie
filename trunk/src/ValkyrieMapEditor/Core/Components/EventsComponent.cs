@@ -49,9 +49,9 @@ namespace ValkyrieMapEditor.Core
 			MapEditorManager.IgnoreInput = true;
 
 			var camera = this.context.SceneProvider.GetCamera("camera1");
-			
-			int xOffset = (int)camera.MapOffset.X / 32 + (int)camera.CameraOffset.X;
-			int yOffset = (int)camera.MapOffset.Y / 32 + (int)camera.CameraOffset.Y;
+
+            int xOffset = (int)camera.Location.X / 32 + (int)camera.CameraOffset.X;
+            int yOffset = (int)camera.Location.Y / 32 + (int)camera.CameraOffset.Y;
 
 			IMapEvent mapevent = this.context.EventProvider.GetMapsEvents(MapEditorManager.CurrentMap.Name).Where(e => e.Rectangle.Intersects(selectedRect)).FirstOrDefault();
 
@@ -116,7 +116,7 @@ namespace ValkyrieMapEditor.Core
 				var tmpRect = this.GetSelectionRectangle(this.SelectedPoint, this.EndSelectedPoint);
 				var camera = this.context.SceneProvider.GetCamera("camera1");
 
-				this.CreateOrEditEvent (new Rectangle ((tmpRect.X + ((int)camera.MapOffset.X * -1)) / 32, (tmpRect.Y + ((int)camera.MapOffset.Y * -1)) / 32, tmpRect.Width / 32, tmpRect.Height / 32));
+                this.CreateOrEditEvent(new Rectangle((tmpRect.X + ((int)camera.Location.X * -1)) / 32, (tmpRect.Y + ((int)camera.Location.Y * -1)) / 32, tmpRect.Width / 32, tmpRect.Height / 32));
 
 				this.SelectedPoint = new Point(-1, -1);
 				this.EndSelectedPoint = new Point(-1, -1);
@@ -131,8 +131,8 @@ namespace ValkyrieMapEditor.Core
 			foreach (IMapEvent mapevent in this.context.EventProvider.GetMapsEvents(MapEditorManager.CurrentMap.Name))
 			{
 				// Where on the screen?
-				Point newLoc = new Point((int)camera.MapOffset.X + (int)camera.CameraOffset.X + (mapevent.Rectangle.X * MapEditorManager.CurrentMap.TileSize),
-					 (int)camera.MapOffset.Y + (int)camera.CameraOffset.Y + (mapevent.Rectangle.Y * MapEditorManager.CurrentMap.TileSize));
+                Point newLoc = new Point((int)camera.Location.X + (int)camera.CameraOffset.X + (mapevent.Rectangle.X * MapEditorManager.CurrentMap.TileSize),
+                     (int)camera.Location.Y + (int)camera.CameraOffset.Y + (mapevent.Rectangle.Y * MapEditorManager.CurrentMap.TileSize));
 
 				Texture2D border = EditorXNA.CreateSelectRectangleFilled(mapevent.Rectangle.Width * 32, mapevent.Rectangle.Height * 32, new Color(136, 0, 21, 255), new Color(255, 128, 128, 160));
 

@@ -78,7 +78,6 @@ namespace Valkyrie.Engine.Core
             return new ScreenPoint(a.X - b, a.Y - b);
         }
 
-
         public static ScreenPoint operator +(ScreenPoint a, double b)
         {
             return new ScreenPoint((int)(a.X + b), (int)(a.Y + b));
