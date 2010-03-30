@@ -9,19 +9,42 @@ namespace Valkyrie.Engine.Core
 {
     public class BasePoint : IEquatable<BasePoint>
     {
-        public int X
+        public float X
         {
-            get;
-            set;
+            get { return this.floatx; }
+            set
+            {
+                this.floatx = value;
+                this.intx = (int)value;
+            }
         }
 
-        public int Y
+        public float Y
         {
-            get;
-            set;
+            get { return this.floaty; }
+            set
+            {
+                this.floaty = value;
+                this.inty = (int)value;
+            }
         }
 
-        public BasePoint(int x, int y)
+        public int IntX
+        {
+            get { return (int)X; }
+            set { this.floatx = (float)value; }
+        }
+
+        public int IntY
+        {
+            get { return inty; }
+            set { this.floaty = (float)value; }
+        }
+
+        private float floatx=0f, floaty=0f;
+        private int intx=0, inty=0;
+
+        public BasePoint(float x, float y)
         {
             this.X = x;
             this.Y = y;
@@ -46,17 +69,17 @@ namespace Valkyrie.Engine.Core
 
         public Point ToPoint()
         {
-            return new Point(this.X, this.Y);
+            return new Point((int)this.X, (int)this.Y);
         }
 
         public Vector2 ToVector2()
         {
-            return new Vector2((float)X, (float)Y);
+            return new Vector2(X, Y);
         }
 
         public Rectangle ToRect(Point size)
         {
-            return new Rectangle(this.X, this.Y, size.X, size.Y);
+            return new Rectangle((int)this.X, (int)this.Y, size.X, size.Y);
         }
 
         public static BasePoint operator +(BasePoint a, BasePoint b)

@@ -61,7 +61,7 @@ namespace ValkyrieMapEditor.Core
 			{
 				var camera = this.context.SceneProvider.GetCamera("camera1");
 
-				MapPoint tileLocation = new MapPoint((ev.X - (int)camera.MapOffset.X) / 32, (ev.Y - (int)camera.MapOffset.Y) / 32);
+				MapPoint tileLocation = new MapPoint((ev.X - (int)camera.Location.X) / 32, (ev.Y - (int)camera.Location.Y) / 32);
 				MapPoint tilesheetPoint = new MapPoint(MapEditorManager.SelectedTilesRectangle.X, MapEditorManager.SelectedTilesRectangle.Y);
 
 				int oldvalue = MapEditorManager.CurrentMap.GetLayerValue(tileLocation, MapEditorManager.CurrentLayer);

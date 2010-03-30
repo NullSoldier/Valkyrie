@@ -30,6 +30,14 @@ namespace Valkyrie.Engine
 		{
 			this.screen = new Rectangle(x, y, width, height);
             this.halfscreen = new ScreenPoint(screen.Width / 2, screen.Height / 2);
+
+            this.Viewport = new Viewport()
+            {
+                X = x,
+                Y = y,
+                Width = width,
+                Height = height
+            };
 		}
 
 		#endregion
@@ -46,8 +54,7 @@ namespace Valkyrie.Engine
             get { return this.mapoffset - this.halfscreen; }
             set { this.mapoffset = value + this.halfscreen; }
         }
-        // ScreenPoint((int)(this.mapoffset.X * -1), (int)(this.mapoffset.Y * -1)); }
-
+        
         public ScreenPoint CameraOffset
         {
             get { return this.cameraoffset; }
@@ -63,6 +70,17 @@ namespace Valkyrie.Engine
                 sp.Y = (int)this.Location.Y + (int)this.CameraOffset.Y;
                 return sp;
             }
+        }
+
+        public Viewport Viewport
+        {
+            get { return this.viewport; }
+            set { this.viewport = value; }
+        }
+
+        public Vector2 CurrentSize
+        {
+            get { return Vector2.Multiply(new Vector2(this.screen.Width, this.screen.Height), 1 / zoom); }
         }
 
         #region Camera Effects
@@ -111,7 +129,7 @@ namespace Valkyrie.Engine
 
 		public bool CheckIsVisible(Rectangle rect)
 		{
-            return (new Rectangle(Origin.X, Origin.Y, Screen.Width, Screen.Height).Intersects(rect) == true);
+            return (new Rectangle(Origin.IntX, Origin.IntY, Screen.Width, Screen.Height).Intersects(rect) == true);
 		}
 
 		public void ResizeScreen (Rectangle rectangle)
@@ -177,7 +195,7 @@ namespace Valkyrie.Engine
             get
             {
                 return
-                    Matrix.CreateTranslation(new Vector3(-Location.X, -Location.Y, 0)) *
+                    Matrix.CreateTranslation(new Vector3(-Location.IntX, -Location.IntY, 0)) *
                     Matrix.CreateRotationZ(this.rotate) *
                     Matrix.CreateScale(this.zoom) *
                     Matrix.CreateTranslation(new Vector3(Screen.Width * 0.5f, Screen.Height * 0.5f, 0));
@@ -218,6 +236,7 @@ namespace Valkyrie.Engine
         private ScreenPoint mapoffset = ScreenPoint.Zero;
         private ScreenPoint cameraoffset = ScreenPoint.Zero; // Uneeded
         private ScreenPoint halfscreen = ScreenPoint.Zero;
+        private Viewport viewport;
 		
         private bool manualcontrol = true;
 		private string worldname = string.Empty;

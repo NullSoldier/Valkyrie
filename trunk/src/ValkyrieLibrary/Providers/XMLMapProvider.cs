@@ -163,7 +163,7 @@ namespace Valkyrie.Library.Providers
 						IMapEvent newEvent = this.CreateEventFromString(type);
 						newEvent.Direction = dir;
 						newEvent.Parameters = parameters;
-						newEvent.Rectangle = new Rectangle(eventlocation.X, eventlocation.Y, size.X, size.Y);
+                        newEvent.Rectangle = new Rectangle(eventlocation.IntX, eventlocation.IntY, size.IntX, size.IntY);
 						newEvent.Activation = activation;
 
 						eventprovider.AddEvent (Map, newEvent);

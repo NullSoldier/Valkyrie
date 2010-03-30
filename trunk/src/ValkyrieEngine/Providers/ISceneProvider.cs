@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework;
 using Valkyrie.Engine.Maps;
 using Valkyrie.Engine.Characters;
 using Cadenza.Collections;
+using System.Collections.ObjectModel;
+using Valkyrie.Engine.Core.Scene;
 
 namespace Valkyrie.Engine.Providers
 {
@@ -122,5 +124,9 @@ namespace Valkyrie.Engine.Providers
 		/// </summary>
 		/// <returns>A non-modifiable dictionary of all players.</returns>
 		ReadOnlyDictionary<string, BaseCharacter> GetPlayers ();
+
+        void AddRenderer(IRenderer renderer, MapLayers layer);
+        bool RemoveRenderer(IRenderer renderer);
+        ReadOnlyCollection<IRenderer> GetRenderers();
 	}
 }

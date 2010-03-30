@@ -9,7 +9,8 @@ namespace Valkyrie.Engine.Core
 {
     public class ScreenPoint : BasePoint
     {
-        public ScreenPoint(int x, int y) : base(x,y)
+        public ScreenPoint(float x, float y)
+            : base(x, y)
         {
         }
 
@@ -21,7 +22,7 @@ namespace Valkyrie.Engine.Core
         {
         }
 
-        public ScreenPoint(MapPoint mapPoint) : base((mapPoint*32).ToPoint())
+        public ScreenPoint(MapPoint mapPoint) : base((mapPoint * 32).ToPoint())
         {
         }
 
@@ -29,7 +30,7 @@ namespace Valkyrie.Engine.Core
         {
         }
 
-        public ScreenPoint(Vector2 vect) : base((int)vect.X, (int)vect.Y)
+        public ScreenPoint(Vector2 vect) : base(vect.X, vect.Y)
         {
         }
 

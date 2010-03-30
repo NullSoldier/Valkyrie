@@ -12,7 +12,7 @@ namespace Valkyrie.Engine.Core
     // one unit in a map point represents 32 units in a screen point
     public class MapPoint : BasePoint
     {
-        public MapPoint(int x, int y) : base(x,y)
+        public MapPoint(float x, float y) : base(x, y)
         {
         }
 

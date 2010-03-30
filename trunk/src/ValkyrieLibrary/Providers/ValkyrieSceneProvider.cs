@@ -11,6 +11,8 @@ using Valkyrie.Engine.Characters;
 using Valkyrie.Engine.Core;
 using Valkyrie.Engine.Events;
 using Cadenza.Collections;
+using Valkyrie.Engine.Core.Scene;
+using System.Collections.ObjectModel;
 
 namespace Valkyrie.Library.Providers
 {
@@ -30,26 +32,29 @@ namespace Valkyrie.Library.Providers
 
 		public void Update (GameTime gameTime)
 		{
-			foreach(BaseCamera camera in this.cameras.Values)
-				camera.Update(gameTime);
+            // Update all cameras
+            this.cameras.Values.ForEach (c => c.Update(gameTime));
 
-			foreach(BaseCharacter player in this.players.Values)
-			{
-				player.Update(gameTime);
+            // Update all players as well as their current map
+            this.players.Values.ForEach (p => {p.Update(gameTime); UpdateCurrentMap(p); });
 
-				// Update players current map
-				if(player.CurrentMap == null || player.LocalTileLocation.X < 0 || player.LocalTileLocation.Y < 0 ||
-					player.LocalTileLocation.X > player.CurrentMap.Map.MapSize.X || player.LocalTileLocation.Y > player.CurrentMap.Map.MapSize.Y)
-				{
-					this.ResolvePositionableCurrentMap(player);
-					this.context.EventProvider.HandleEvent (player, ActivationTypes.OnMapEnter);
-				}
-			}
+            // Update every map in every world
+			this.context.WorldManager.GetWorlds().SelectMany(w => w.Value.Maps.Values).Where( h => h.IsLoaded).ForEach( h => h.Map.Update(gameTime));
 
-			foreach(MapHeader header in this.context.WorldManager.GetWorlds().SelectMany(w => w.Value.Maps.Values).Where( h => h.IsLoaded))
-				header.Map.Update(gameTime);
+            // Update all renderers
+            this.renderers.SelectMany(r => r.Value).ForEach(r => r.Update(gameTime));
 		}
 
+        private void UpdateCurrentMap(BaseCharacter player)
+        {
+            // Update players current map
+            if (player.CurrentMap == null || player.LocalTileLocation.X < 0 || player.LocalTileLocation.Y < 0 ||
+                player.LocalTileLocation.X > player.CurrentMap.Map.MapSize.X || player.LocalTileLocation.Y > player.CurrentMap.Map.MapSize.Y)
+            {
+                this.ResolvePositionableCurrentMap(player);
+                this.context.EventProvider.HandleEvent(player, ActivationTypes.OnMapEnter);
+            }
+        }
 		/// <summary>
 		/// Garentees the return of the positionables local map if they are on one
 		/// </summary>
@@ -88,24 +93,6 @@ namespace Valkyrie.Library.Providers
 		private void DrawCameraLayer (SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer, bool players)
 		{
             throw new NotImplementedException();
-
-			foreach(var header in this.context.WorldManager.GetWorld(camera.WorldName).Maps.Values)
-			{
-				if(!header.IsVisible(camera))
-					continue;
-
-                //this.device.SetRenderTarget(0, camera.RenderBuffer);
-
-				spriteBatch.Begin();
-
-				this.DrawCameraLayer(spriteBatch, camera, layer, header);
-
-				spriteBatch.End();
-
-                //this.device.SetRenderTarget(0, null);
-
-
-			}
 		}
 
 		public void DrawAllCameras (SpriteBatch spriteBatch)
@@ -123,6 +110,9 @@ namespace Valkyrie.Library.Providers
 
 		public void DrawPlayer (SpriteBatch spriteBatch, BaseCharacter player, BaseCamera camera)
 		{
+            if (!player.IsVisible)
+                return;
+
 			Vector2 location = new Vector2();
             location.X = player.Location.X + 32 / 2 - player.CurrentAnimation.FrameRectangle.Width / 2;
             location.Y = player.Location.Y + 32 - player.CurrentAnimation.FrameRectangle.Height;
@@ -136,6 +126,8 @@ namespace Valkyrie.Library.Providers
 
 		private void DrawCamera (SpriteBatch spriteBatch, BaseCamera camera)
 		{
+            device.Viewport = camera.Viewport;
+            device.Clear(Color.CornflowerBlue);
 
 			foreach(var header in this.context.WorldManager.GetWorld(camera.WorldName).Maps.Values)
 			{
@@ -144,19 +136,28 @@ namespace Valkyrie.Library.Providers
 
 				spriteBatch.Begin (SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState, camera.TransformMatrix);
 
+                // Draw under
 				this.DrawCameraLayer(spriteBatch, camera, MapLayers.UnderLayer, header);
+                this.renderers[MapLayers.UnderLayer].ForEach(r => r.Draw(spriteBatch));
+
+                // Draw base
 				this.DrawCameraLayer(spriteBatch, camera, MapLayers.BaseLayer, header);
+                this.renderers[MapLayers.BaseLayer].ForEach(r => r.Draw(spriteBatch));
+
+                // Draw middle
 				this.DrawCameraLayer(spriteBatch, camera, MapLayers.MiddleLayer, header);
 
 				foreach(BaseCharacter player in this.players.Values)
 					this.DrawPlayer(spriteBatch, player, camera);
 
+                this.renderers[MapLayers.MiddleLayer].ForEach(r => r.Draw(spriteBatch));
+
+                //Draw top
 				this.DrawCameraLayer(spriteBatch, camera, MapLayers.TopLayer, header);
+                this.renderers[MapLayers.TopLayer].ForEach(r => r.Draw(spriteBatch));
 
 				spriteBatch.End();
 			}
-
-            
 		}
 
 		private void DrawCameraLayer (SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer, MapHeader header)
@@ -178,7 +179,7 @@ namespace Valkyrie.Library.Providers
 				for(int x = 0; x < currentMap.MapSize.X; x++)
 				{
 					ScreenPoint pos = new MapPoint(x, y).ToScreenPoint() + camOffset + header.MapLocation.ToScreenPoint();
-					Rectangle des = new Rectangle(pos.X, pos.Y, tileSize, tileSize);
+                    Rectangle des = new Rectangle(pos.IntX, pos.IntY, tileSize, tileSize);
 
 					if(!camera.CheckIsVisible(des))
 						continue;
@@ -265,6 +266,35 @@ namespace Valkyrie.Library.Providers
 			}
 		}
 
+        public void AddRenderer(IRenderer renderer, MapLayers layer)
+        {
+            lock (this.renderers)
+            {
+                this.renderers[layer].Add(renderer);
+            }
+        }
+
+        public bool RemoveRenderer (IRenderer renderer)
+        {
+            lock (this.renderers)
+            {
+                foreach (var value in Enum.GetValues(typeof(MapLayers)))
+                {
+                    if (this.renderers[(MapLayers)value].Remove(renderer))
+                        return true;
+                }
+                
+                return false;
+            }
+        }
+
+        public ReadOnlyCollection<IRenderer> GetRenderers()
+        {
+            lock (this.renderers)
+            {
+                return new ReadOnlyCollection<IRenderer> (this.renderers.SelectMany(p => p.Value).ToList());
+            }
+        }
 		#endregion
 
 		#region IEngineProvider Members
@@ -290,10 +320,18 @@ namespace Valkyrie.Library.Providers
 
 		private readonly Dictionary<string, BaseCamera> cameras = new Dictionary<string, BaseCamera>();
 		private readonly Dictionary<string, BaseCharacter> players = new Dictionary<string, BaseCharacter>();
+        private readonly Dictionary<MapLayers, List<IRenderer>> renderers = new Dictionary<MapLayers, List<IRenderer>>()
+        {
+            {MapLayers.BaseLayer, new List<IRenderer>() },
+            {MapLayers.CollisionLayer, new List<IRenderer>() },
+            {MapLayers.MiddleLayer, new List<IRenderer>() },
+            {MapLayers.TopLayer, new List<IRenderer>() },
+            {MapLayers.UnderLayer, new List<IRenderer>() }
+        };
+
 		private IEngineContext context = null;
 		private GraphicsDevice device = null;
 		private bool isloaded = false;
-        private RenderTarget2D texturebuffer = null;
 
 		private bool ResolvePositionableCurrentMap (IPositionable player)
 		{

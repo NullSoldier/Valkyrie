@@ -80,8 +80,8 @@ namespace Valkyrie.Engine.Maps
 			Rectangle mapSize = this.MapLocation.ToRect(this.Map.MapSize.ToPoint());
 
 			Rectangle cameraRect = new Rectangle(
-                camera.Origin.X / tilesize,
-				camera.Origin.Y / tilesize,
+                camera.Origin.IntX / tilesize,
+                camera.Origin.IntY / tilesize,
 				(camera.Screen.Width / this.Map.TileSize) + tilesize,
 				(camera.Screen.Height / this.Map.TileSize) + tilesize);
 

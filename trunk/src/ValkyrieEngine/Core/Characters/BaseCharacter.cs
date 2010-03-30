@@ -17,29 +17,16 @@ namespace Valkyrie.Engine.Characters
 	{
 		#region Properties
 
-		public object ID
-		{
-			get { return this.id; }
-			set { this.id = value; }
-		}
+        public object ID { get; set; }
+        public Texture2D Sprite { get; set; }
+        public bool IsLoaded { get; set; }
+        public bool IsTalking { get; set; }
 
-		public Texture2D Sprite
-		{
-			get { return this.sprite; }
-			set { this.sprite = value; }
-		}
-
-		public bool IsLoaded
-		{
-			get { return this.isloaded; }
-			set { this.isloaded = value; }
-		}
-
-		public bool IsTalking
-		{
-			get { return this.istalking; }
-			set { this.istalking = value; }
-		}
+        public bool IsVisible
+        {
+            get { return this.isvisible; }
+            set { this.isvisible = value; }
+        }
 
 		#endregion
 
@@ -216,6 +203,25 @@ namespace Valkyrie.Engine.Characters
 				handler(this, EventArgs.Empty);
 		}
 
+        public Point Size
+        {
+            get
+            {
+                if (this.CurrentAnimation == null ||
+                    this.CurrentAnimation.FrameRectangle == Rectangle.Empty)
+                {
+                    return Point.Zero;
+                }
+
+                return new Point(this.CurrentAnimation.FrameRectangle.Width, this.CurrentAnimation.FrameRectangle.Height);
+            }
+        }
+
+        public Rectangle BoundingBox
+        {
+            get { return new Rectangle(this.Location.IntX, this.Location.IntY, this.Size.X, this.Size.Y); }
+        }
+
 		#endregion
 
 		public virtual void Update(GameTime gameTime)
@@ -242,8 +248,6 @@ namespace Valkyrie.Engine.Characters
             return point;
         }
 
-		private object id = null;
-		private Texture2D sprite = null;
 		private Directions direction = Directions.South;
 		private ScreenPoint location = ScreenPoint.Zero;
 		private MapPoint lastmaplocation = MapPoint.Zero;
@@ -255,9 +259,8 @@ namespace Valkyrie.Engine.Characters
 		private object animationtag = string.Empty;
 		private bool isanimating = false;
 		private int density = 1;
-		private bool isloaded = false;
-		private bool istalking = false;
-	}
+        private bool isvisible = true;
+    }
 
 	public enum Genders
 	{

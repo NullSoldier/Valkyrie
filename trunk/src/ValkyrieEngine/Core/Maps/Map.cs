@@ -97,26 +97,26 @@ namespace Valkyrie.Engine.Maps
 
         public int GetLayerValue(MapPoint point, MapLayers layer)
 		{
-			if (point.X < 0 || (point.X > this.MapSize.X) || point.Y < 0 || (point.Y > this.MapSize.Y))
-				throw new ArgumentOutOfRangeException("point");
+			if (point.X < 0 || (point.X >= this.MapSize.X) || point.Y < 0 || (point.Y >= this.MapSize.Y))
+                return -2; // throw new ArgumentOutOfRangeException("point");
 
             switch (layer)
             {
                 default:
 				case MapLayers.UnderLayer:
-					return this.UnderLayer[point.Y * this.MapSize.X + point.X];
+					return this.UnderLayer[(int)(point.Y * this.MapSize.X + point.X)];
 
-                case MapLayers.BaseLayer: 
-                    return this.BaseLayer[point.Y * this.MapSize.X + point.X];
+                case MapLayers.BaseLayer:
+                    return this.BaseLayer[(int)(point.Y * this.MapSize.X + point.X)];
 
-                case MapLayers.MiddleLayer: 
-                    return this.MiddleLayer[point.Y * this.MapSize.X + point.X];
+                case MapLayers.MiddleLayer:
+                    return this.MiddleLayer[(int)(point.Y * this.MapSize.X + point.X)];
 
                 case MapLayers.TopLayer: 
-                    return this.TopLayer[point.Y * this.MapSize.X + point.X];
+                    return this.TopLayer[(int)(point.Y * this.MapSize.X + point.X)];
 
                 case MapLayers.CollisionLayer: 
-                    return this.CollisionLayer[point.Y * this.MapSize.X + point.X];
+                    return this.CollisionLayer[(int)(point.Y * this.MapSize.X + point.X)];
             }
 		}
        
@@ -129,25 +129,25 @@ namespace Valkyrie.Engine.Maps
             {
                 default:
 				case MapLayers.UnderLayer:
-					this.UnderLayer[point.Y * this.MapSize.X + point.X] = value; break;
+					this.UnderLayer[(int)(point.Y * this.MapSize.X + point.X)] = value; break;
 
                 case MapLayers.BaseLayer: 
-                    this.BaseLayer[point.Y * this.MapSize.X + point.X] = value; break;
+                    this.BaseLayer[(int)(point.Y * this.MapSize.X + point.X)] = value; break;
 
                 case MapLayers.MiddleLayer:
-                    this.MiddleLayer[point.Y * this.MapSize.X + point.X] = value; break;
+                    this.MiddleLayer[(int)(point.Y * this.MapSize.X + point.X)] = value; break;
 
                 case MapLayers.TopLayer: 
-                    this.TopLayer[point.Y * this.MapSize.X + point.X] = value; break;
+                    this.TopLayer[(int)(point.Y * this.MapSize.X + point.X)] = value; break;
 
                 case MapLayers.CollisionLayer:
-                    this.CollisionLayer[point.Y * this.MapSize.X + point.X] = value; break;
+                    this.CollisionLayer[(int)(point.Y * this.MapSize.X + point.X)] = value; break;
             }
         }
 
 		public int GetTileSetValue (MapPoint point)
 		{
-			return (point.Y * this.TilesPerRow + point.X);
+			return ((int)(point.Y * this.TilesPerRow + point.X));
 		}
 
 		public Rectangle GetLayerSourceRect(MapPoint point, MapLayers layer)
