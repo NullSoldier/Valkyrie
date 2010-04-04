@@ -8,11 +8,12 @@ namespace Valkyrie.Engine.Core.Characters
 {
 	public interface ICollidable
 	{
+		void OnCollided(object sender, EventArgs e);
 		event EventHandler Collided;
-		int Density { get; set; }
+
         Point Size { get; }
         Rectangle BoundingBox { get; }
 
-		void OnCollided (object sender, EventArgs e);
+		int Density { get; set; }
 	}
 }

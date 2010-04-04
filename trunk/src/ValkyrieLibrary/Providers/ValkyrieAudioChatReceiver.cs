@@ -45,7 +45,7 @@ namespace Valkyrie.Library.Providers
 		public void Receiver_ReceivedAudio (object sender, ReceivedAudioEventArgs e)
 		{
 			var foreignplayer = this.context.NetworkProvider.GetPlayer (e.Source.OwnerId);
-			var homeplayer = this.context.SceneProvider.GetPlayer ("player1");
+			var homeplayer = this.context.SceneProvider.Players["player1"];
 
 			if(foreignplayer == null || homeplayer == null)
 				return;

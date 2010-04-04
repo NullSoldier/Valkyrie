@@ -112,6 +112,10 @@
     </Compile>
     <Compile Include="Events\PlaySoundEvent.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="Managers\ValkyrieCameraManager.cs" />
+    <Compile Include="Managers\ValkyrieGenericManager.cs" />
+    <Compile Include="Managers\ValkyriePlayerManager.cs" />
+    <Compile Include="Managers\ValkyrieRendererManager.cs" />
     <Compile Include="Managers\ValkyrieSoundManager.cs" />
     <Compile Include="Managers\ValkyrieTextureManager.cs" />
     <Compile Include="MovementItem.cs" />

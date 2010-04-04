@@ -274,8 +274,8 @@ namespace Valkyrie.Engine
 
 		public MapHeader CurrentMap
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get;
+			set;
 		}
 
 		#endregion

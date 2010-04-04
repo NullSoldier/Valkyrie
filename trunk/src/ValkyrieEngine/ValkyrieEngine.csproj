@@ -116,6 +116,10 @@
     <Compile Include="Core\Scene\IRenderer.cs" />
     <Compile Include="Core\Sound\AudioSource.cs" />
     <Compile Include="IEngineContext.cs" />
+    <Compile Include="Managers\ICameraManager.cs" />
+    <Compile Include="Managers\IGenericManager.cs" />
+    <Compile Include="Managers\IPlayerManager.cs" />
+    <Compile Include="Managers\IRendererManager.cs" />
     <Compile Include="Managers\ISoundManager.cs" />
     <Compile Include="Managers\IWorldManager.cs" />
     <Compile Include="Managers\ITextureManager.cs" />

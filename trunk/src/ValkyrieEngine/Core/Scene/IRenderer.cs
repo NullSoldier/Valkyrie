@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Valkyrie.Engine.Core.Characters;
 
 namespace Valkyrie.Engine.Core.Scene
 {
@@ -11,5 +12,7 @@ namespace Valkyrie.Engine.Core.Scene
     {
         void Draw(SpriteBatch spriteBatch);
         void Update(GameTime gameTime);
+
+		IRenderable Drawable { get; }
     }
 }

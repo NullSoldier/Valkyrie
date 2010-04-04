@@ -13,288 +13,86 @@ using Valkyrie.Engine.Events;
 using Cadenza.Collections;
 using Valkyrie.Engine.Core.Scene;
 using System.Collections.ObjectModel;
+using Valkyrie.Engine.Managers;
+using Valkyrie.Library.Managers;
 
 namespace Valkyrie.Library.Providers
 {
-	public class ValkyrieSceneProvider
-		: ISceneProvider
+	public class ValkyrieSceneProvider : ISceneProvider
 	{
 		#region Constructors
 
-		public ValkyrieSceneProvider(GraphicsDevice graphicsdevice)
+		public ValkyrieSceneProvider(GraphicsDevice graphicsdevice, SpriteBatch spritebatch)
 		{
 			this.device = graphicsdevice;
+			this.spritebatch = spritebatch;
+
+			players = new ValkyriePlayerManager<BaseCharacter>();
+			cameras = new ValkyrieCameraManager<BaseCamera>();
+			renderers = new ValkyrieRendererManager();
 		}
 
 		#endregion
 
-		#region ISceneProvider Members
+		#region Public Properties / Methods
+
+		public IPlayerManager<BaseCharacter> Players { get { return this.players; } }
+		public ICameraManager<BaseCamera> Cameras { get { return this.cameras; } }
+		public IRendererManager Renderers { get { return this.renderers; } }
 
 		public void Update (GameTime gameTime)
 		{
-            // Update all cameras
-            this.cameras.Values.ForEach (c => c.Update(gameTime));
+			// Update all players as well as their current map
+			this.players.GetItems().Values.ForEach(p => { p.Update(gameTime); UpdateCurrentMap(p); });
 
-            // Update all players as well as their current map
-            this.players.Values.ForEach (p => {p.Update(gameTime); UpdateCurrentMap(p); });
+            // Update all cameras
+			this.Cameras.GetItems().Values.ForEach(c => { c.Update(gameTime); this.ResolvePositionableCurrentMap(c); });
 
             // Update every map in every world
 			this.context.WorldManager.GetWorlds().SelectMany(w => w.Value.Maps.Values).Where( h => h.IsLoaded).ForEach( h => h.Map.Update(gameTime));
 
             // Update all renderers
-            this.renderers.SelectMany(r => r.Value).ForEach(r => r.Update(gameTime));
+            this.renderers.GetItems().ForEach(r => r.Update(gameTime));
 		}
 
-        private void UpdateCurrentMap(BaseCharacter player)
-        {
-            // Update players current map
-            if (player.CurrentMap == null || player.LocalTileLocation.X < 0 || player.LocalTileLocation.Y < 0 ||
-                player.LocalTileLocation.X > player.CurrentMap.Map.MapSize.X || player.LocalTileLocation.Y > player.CurrentMap.Map.MapSize.Y)
-            {
-                this.ResolvePositionableCurrentMap(player);
-                this.context.EventProvider.HandleEvent(player, ActivationTypes.OnMapEnter);
-            }
-        }
 		/// <summary>
 		/// Garentees the return of the positionables local map if they are on one
 		/// </summary>
 		/// <param name="positionable"></param>
 		/// <returns></returns>
-		public MapHeader GetPositionableLocalMap (BaseCharacter positionable)
+		public MapHeader GetPositionableLocalMap(BaseCharacter positionable)
 		{
-			if(positionable.CurrentMap != null)
+			if (positionable.CurrentMap != null)
 				return positionable.CurrentMap;
 			else
 			{
-				this.ResolvePositionableCurrentMap (positionable);
-				this.context.EventProvider.HandleEvent (positionable, ActivationTypes.OnMapEnter);
+				this.ResolvePositionableCurrentMap(positionable);
+				this.context.EventProvider.HandleEvent(positionable, ActivationTypes.OnMapEnter);
 			}
 
 			return positionable.CurrentMap;
 		}
 
-		#region Public Draw Methods
-
-		public void Draw (SpriteBatch spriteBatch)
+		public void Draw ()
 		{
-			// Empty
+			this.Cameras.GetItems().Values.ForEach ( c => DrawCamera(spritebatch, c));
 		}
 
-		public void DrawCamera (SpriteBatch spriteBatch, string cameraname)
+		public void DrawCamera (string cameraname, bool players)
 		{
-			this.DrawCamera(spriteBatch, this.cameras[cameraname]);
+			this.DrawCamera(spritebatch, this.Cameras[cameraname]);
 		}
 
-		public void DrawCameraLayer (SpriteBatch spriteBatch, string cameraname, MapLayers layer, bool players)
+		public void DrawCameraLayer (string cameraname, MapLayers layer)
 		{
-			this.DrawCameraLayer (spriteBatch, this.cameras[cameraname], layer, players);
+			this.DrawCameraLayer(spritebatch, this.Cameras[cameraname], layer);
 		}
 
-		private void DrawCameraLayer (SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer, bool players)
+		public void DrawPlayer (string cameraname, string playername)
 		{
-            throw new NotImplementedException();
+			this.DrawPlayer(spritebatch, this.Players[playername], this.Cameras[cameraname]);
 		}
 
-		public void DrawAllCameras (SpriteBatch spriteBatch)
-		{
-			foreach(BaseCamera camera in this.cameras.Values)
-			{
-				this.DrawCamera(spriteBatch, camera);
-			}
-		}
-
-		public void DrawPlayer (SpriteBatch spriteBatch, string playername, BaseCamera camera)
-		{
-			this.DrawPlayer(spriteBatch, this.players[playername], camera);
-		}
-
-		public void DrawPlayer (SpriteBatch spriteBatch, BaseCharacter player, BaseCamera camera)
-		{
-            if (!player.IsVisible)
-                return;
-
-			Vector2 location = new Vector2();
-            location.X = player.Location.X + 32 / 2 - player.CurrentAnimation.FrameRectangle.Width / 2;
-            location.Y = player.Location.Y + 32 - player.CurrentAnimation.FrameRectangle.Height;
-
-			spriteBatch.Draw(player.Sprite, location, player.CurrentAnimation.FrameRectangle, Color.White);
-		}
-
-		#endregion
-
-		#region Private Draw Methods
-
-		private void DrawCamera (SpriteBatch spriteBatch, BaseCamera camera)
-		{
-            device.Viewport = camera.Viewport;
-            device.Clear(Color.CornflowerBlue);
-
-			foreach(var header in this.context.WorldManager.GetWorld(camera.WorldName).Maps.Values)
-			{
-				if(!header.IsVisible(camera))
-					continue;
-
-				spriteBatch.Begin (SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState, camera.TransformMatrix);
-
-                // Draw under
-				this.DrawCameraLayer(spriteBatch, camera, MapLayers.UnderLayer, header);
-                this.renderers[MapLayers.UnderLayer].ForEach(r => r.Draw(spriteBatch));
-
-                // Draw base
-				this.DrawCameraLayer(spriteBatch, camera, MapLayers.BaseLayer, header);
-                this.renderers[MapLayers.BaseLayer].ForEach(r => r.Draw(spriteBatch));
-
-                // Draw middle
-				this.DrawCameraLayer(spriteBatch, camera, MapLayers.MiddleLayer, header);
-
-				foreach(BaseCharacter player in this.players.Values)
-					this.DrawPlayer(spriteBatch, player, camera);
-
-                this.renderers[MapLayers.MiddleLayer].ForEach(r => r.Draw(spriteBatch));
-
-                //Draw top
-				this.DrawCameraLayer(spriteBatch, camera, MapLayers.TopLayer, header);
-                this.renderers[MapLayers.TopLayer].ForEach(r => r.Draw(spriteBatch));
-
-				spriteBatch.End();
-			}
-		}
-
-		private void DrawCameraLayer (SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer, MapHeader header)
-		{
-			this.DrawLayerMap(spriteBatch, camera, layer, header, Color.White);
-		}
-
-		private void DrawLayerMap (SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer, MapHeader header, Color tint)
-		{
-			Check.NullArgument(spriteBatch, "spriteBatch");
-			Check.NullArgument(header, "header");
-
-			Map currentMap = header.Map;
-            ScreenPoint camOffset = ScreenPoint.Zero;// camera.Offset;
-			int tileSize = currentMap.TileSize;
-
-			for(int y = 0; y < currentMap.MapSize.Y; y++)
-			{
-				for(int x = 0; x < currentMap.MapSize.X; x++)
-				{
-					ScreenPoint pos = new MapPoint(x, y).ToScreenPoint() + camOffset + header.MapLocation.ToScreenPoint();
-                    Rectangle des = new Rectangle(pos.IntX, pos.IntY, tileSize, tileSize);
-
-					if(!camera.CheckIsVisible(des))
-						continue;
-
-					Rectangle sourceRectangle = currentMap.GetLayerSourceRect(new MapPoint(x, y), layer);
-
-					if(sourceRectangle.IsEmpty)
-						continue;
-
-					spriteBatch.Draw(currentMap.Texture, des, sourceRectangle, tint);
-				}
-			}
-		}
-
-		#endregion
-
-		public BaseCamera GetCamera (string name)
-		{
-			lock(this.cameras)
-			{
-				if(!this.cameras.ContainsKey(name))
-					throw new ArgumentException("Camera not found.");
-
-				return this.cameras[name];
-			}
-		}
-
-		public ReadOnlyDictionary<string, BaseCamera> GetCameras ()
-		{
-			return new ReadOnlyDictionary<string, BaseCamera> (this.cameras);
-		}
-
-		public void AddCamera (string name, BaseCamera camera)
-		{
-			lock(this.cameras)
-			{
-				if(this.cameras.ContainsKey (name))
-					throw new ArgumentException ("Camera already exists");
-
-				this.cameras.Add(name, camera);
-			}
-		}
-
-		public bool RemoveCamera (string name)
-		{
-			lock(this.cameras)
-			{
-				return this.cameras.Remove(name);
-			}
-		}
-
-		public BaseCharacter GetPlayer (string name)
-		{
-			lock(this.players)
-			{
-				if(!this.players.ContainsKey(name))
-					throw new ArgumentException ("Player not found");
-
-				return this.players[name];
-			}
-		}
-
-		public ReadOnlyDictionary<string, BaseCharacter> GetPlayers ()
-		{
-			return new ReadOnlyDictionary<string, BaseCharacter>(this.players);
-		}
-
-		public void AddPlayer (string name, BaseCharacter character)
-		{
-			lock(this.players)
-			{
-				if(this.players.ContainsKey (name))
-					throw new ArgumentException ("Player already exists");
-
-				this.players.Add(name, character);
-			}
-		}
-
-		public bool RemoveCharacter (string name)
-		{
-			lock(this.players)
-			{
-				return this.players.Remove(name);
-			}
-		}
-
-        public void AddRenderer(IRenderer renderer, MapLayers layer)
-        {
-            lock (this.renderers)
-            {
-                this.renderers[layer].Add(renderer);
-            }
-        }
-
-        public bool RemoveRenderer (IRenderer renderer)
-        {
-            lock (this.renderers)
-            {
-                foreach (var value in Enum.GetValues(typeof(MapLayers)))
-                {
-                    if (this.renderers[(MapLayers)value].Remove(renderer))
-                        return true;
-                }
-                
-                return false;
-            }
-        }
-
-        public ReadOnlyCollection<IRenderer> GetRenderers()
-        {
-            lock (this.renderers)
-            {
-                return new ReadOnlyCollection<IRenderer> (this.renderers.SelectMany(p => p.Value).ToList());
-            }
-        }
 		#endregion
 
 		#region IEngineProvider Members
@@ -302,6 +100,10 @@ namespace Valkyrie.Library.Providers
 		public void LoadEngineContext (IEngineContext context)
 		{
 			this.context = context;
+			
+			this.players.LoadEngineContext(context);
+			this.cameras.LoadEngineContext(context);
+			this.renderers.LoadEngineContext(context);
 
 			this.isloaded = true;
 		}
@@ -318,19 +120,12 @@ namespace Valkyrie.Library.Providers
 
 		#endregion
 
-		private readonly Dictionary<string, BaseCamera> cameras = new Dictionary<string, BaseCamera>();
-		private readonly Dictionary<string, BaseCharacter> players = new Dictionary<string, BaseCharacter>();
-        private readonly Dictionary<MapLayers, List<IRenderer>> renderers = new Dictionary<MapLayers, List<IRenderer>>()
-        {
-            {MapLayers.BaseLayer, new List<IRenderer>() },
-            {MapLayers.CollisionLayer, new List<IRenderer>() },
-            {MapLayers.MiddleLayer, new List<IRenderer>() },
-            {MapLayers.TopLayer, new List<IRenderer>() },
-            {MapLayers.UnderLayer, new List<IRenderer>() }
-        };
-
 		private IEngineContext context = null;
 		private GraphicsDevice device = null;
+		private SpriteBatch spritebatch = null;
+		private IPlayerManager<BaseCharacter> players = null;
+		private ICameraManager<BaseCamera> cameras = null;
+		private IRendererManager renderers = null;		
 		private bool isloaded = false;
 
 		private bool ResolvePositionableCurrentMap (IPositionable player)
@@ -354,5 +149,102 @@ namespace Valkyrie.Library.Providers
 
 			return found;
 		}
+
+		private void UpdateCurrentMap(BaseCharacter player)
+		{
+			// Update players current map
+			if (player.CurrentMap == null || player.LocalTileLocation.X < 0 || player.LocalTileLocation.Y < 0 ||
+				player.LocalTileLocation.X > player.CurrentMap.Map.MapSize.X || player.LocalTileLocation.Y > player.CurrentMap.Map.MapSize.Y)
+			{
+				this.ResolvePositionableCurrentMap(player);
+				this.context.EventProvider.HandleEvent(player, ActivationTypes.OnMapEnter);
+			}
+		}
+
+		#region Private Draw Methods
+
+		private void DrawCamera(SpriteBatch spriteBatch, BaseCamera camera)
+		{
+			device.Viewport = camera.Viewport;
+			device.Clear(Color.CornflowerBlue);
+
+			foreach (var header in this.context.WorldManager.GetWorld(camera.WorldName).Maps.Values)
+			{
+				if (!header.IsVisible(camera))
+					continue;
+
+				spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState, camera.TransformMatrix);
+
+				// Draw under
+				this.DrawCameraLayer(spriteBatch, camera, MapLayers.UnderLayer);
+				this.renderers[MapLayers.UnderLayer].ForEach(r => r.Draw(spriteBatch));
+
+				// Draw base
+				this.DrawCameraLayer(spriteBatch, camera, MapLayers.BaseLayer);
+				this.renderers[MapLayers.BaseLayer].ForEach(r => r.Draw(spriteBatch));
+
+				// Draw middle
+				this.DrawCameraLayer(spriteBatch, camera, MapLayers.MiddleLayer);
+
+				foreach (BaseCharacter player in this.Players.GetItems().Values)
+					this.DrawPlayer (spriteBatch, player, camera);
+
+				this.renderers[MapLayers.MiddleLayer].ForEach(r => r.Draw(spriteBatch));
+
+				//Draw top
+				this.DrawCameraLayer(spriteBatch, camera, MapLayers.TopLayer);
+				this.renderers[MapLayers.TopLayer].ForEach(r => r.Draw(spriteBatch));
+
+				spriteBatch.End();
+			}
+		}
+
+		private void DrawCameraLayer(SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer)
+		{
+			this.DrawLayerMap(spriteBatch, camera, layer, camera.CurrentMap, Color.White);
+		}
+
+		private void DrawLayerMap(SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer, MapHeader header, Color tint)
+		{
+			Check.NullArgument(spriteBatch, "spriteBatch");
+			Check.NullArgument(header, "header");
+
+			Map currentMap = header.Map;
+			ScreenPoint camOffset = ScreenPoint.Zero;// camera.Offset;
+			int tileSize = currentMap.TileSize;
+
+			for (int y = 0; y < currentMap.MapSize.Y; y++)
+			{
+				for (int x = 0; x < currentMap.MapSize.X; x++)
+				{
+					ScreenPoint pos = new MapPoint(x, y).ToScreenPoint() + camOffset + header.MapLocation.ToScreenPoint();
+					Rectangle des = new Rectangle(pos.IntX, pos.IntY, tileSize, tileSize);
+
+					if (!camera.CheckIsVisible(des))
+						continue;
+
+					Rectangle sourceRectangle = currentMap.GetLayerSourceRect(new MapPoint(x, y), layer);
+
+					if (sourceRectangle.IsEmpty)
+						continue;
+
+					spriteBatch.Draw(currentMap.Texture, des, sourceRectangle, tint);
+				}
+			}
+		}
+
+		public void DrawPlayer(SpriteBatch spriteBatch, BaseCharacter player, BaseCamera camera)
+		{
+			if (!player.IsVisible)
+				return;
+
+			Vector2 location = new Vector2();
+			location.X = player.Location.X + 32 / 2 - player.CurrentAnimation.FrameRectangle.Width / 2;
+			location.Y = player.Location.Y + 32 - player.CurrentAnimation.FrameRectangle.Height;
+
+			spriteBatch.Draw(player.Sprite, location, player.CurrentAnimation.FrameRectangle, Color.White);
+		}
+
+		#endregion
 	}
 }
