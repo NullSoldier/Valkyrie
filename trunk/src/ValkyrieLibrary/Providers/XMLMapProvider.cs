@@ -103,23 +103,29 @@ namespace Valkyrie.Library.Providers
 
 					Map.CollisionLayer = Array.ConvertAll<string, int>(baseText, new Converter<string, int>(this.ConvertStringToInt));
 				}
-				else if(innerNodes[i].Name == "AnimatedTiles")
+				else if (innerNodes[i].Name == "OpaqueLayer")
+				{
+					string[] baseText = innerNodes[i].InnerText.Replace("\r\n", string.Empty).Replace("   ", string.Empty).Trim().Split(' ');
+
+					Map.OpaqueLayer = Array.ConvertAll<string, int>(baseText, new Converter<string, int>(this.ConvertStringToInt));
+				}
+				else if (innerNodes[i].Name == "AnimatedTiles")
 				{
 					XmlNodeList tiles = innerNodes[i].ChildNodes;
 
-					foreach(XmlNode node in tiles)
+					foreach (XmlNode node in tiles)
 					{
 						int tileID = 0;
 						int frameCount = 0;
 						Rectangle tileRect = Rectangle.Empty;
 
-						foreach(XmlNode subnode in node.ChildNodes)
+						foreach (XmlNode subnode in node.ChildNodes)
 						{
-							if(subnode.Name == "TileID")
+							if (subnode.Name == "TileID")
 								tileID = Convert.ToInt32(subnode.InnerText);
-							else if(subnode.Name == "FrameCount")
+							else if (subnode.Name == "FrameCount")
 								frameCount = Convert.ToInt32(subnode.InnerText);
-							else if(subnode.Name == "TileRect")
+							else if (subnode.Name == "TileRect")
 							{
 								var data = Array.ConvertAll<string, int>(subnode.InnerText.Split(' '), new Converter<string, int>(this.ConvertStringToInt));
 								tileRect = new Rectangle(data[0], data[1], data[2], data[3]);
@@ -130,13 +136,13 @@ namespace Valkyrie.Library.Providers
 						Map.AnimatedTiles.Add(tileID, new FrameAnimation(tileRect, frameCount));
 					}
 				}
-				else if(innerNodes[i].Name == "Events" )
+				else if (innerNodes[i].Name == "Events")
 				{
 					var root = innerNodes[i];
 
 					XmlNodeList events = root.ChildNodes;
 
-					foreach(XmlNode node in events)
+					foreach (XmlNode node in events)
 					{
 						#region Event Loading
 
@@ -147,9 +153,9 @@ namespace Valkyrie.Library.Providers
 						MapPoint size = MapPoint.Zero;
 						ActivationTypes activation = ActivationTypes.Static;
 
-						foreach(XmlNode cnode in node.ChildNodes)
+						foreach (XmlNode cnode in node.ChildNodes)
 						{
-							switch(cnode.Name)
+							switch (cnode.Name)
 							{
 								case "Type": type = cnode.InnerText; break;
 								case "Dir": dir = (Directions)Enum.Parse(typeof(Directions), cnode.InnerText); break;
@@ -163,11 +169,11 @@ namespace Valkyrie.Library.Providers
 						IMapEvent newEvent = this.CreateEventFromString(type);
 						newEvent.Direction = dir;
 						newEvent.Parameters = parameters;
-                        newEvent.Rectangle = new Rectangle(eventlocation.IntX, eventlocation.IntY, size.IntX, size.IntY);
+						newEvent.Rectangle = new Rectangle(eventlocation.IntX, eventlocation.IntY, size.IntX, size.IntY);
 						newEvent.Activation = activation;
 
-						eventprovider.AddEvent (Map, newEvent);
-						
+						eventprovider.AddEvent(Map, newEvent);
+
 						#endregion
 					}
 				}

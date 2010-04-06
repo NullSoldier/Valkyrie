@@ -23,7 +23,7 @@ namespace Valkyrie.Engine
 			this.SetCamera(camera);
 		}
 
-		public BaseCamera (Rectangle screen)
+		public BaseCamera(Rectangle screen)
 			 : this(screen.X, screen.Y, screen.Width, screen.Height) { }
 
 		public BaseCamera (int x, int y, int width, int height)
@@ -74,9 +74,15 @@ namespace Valkyrie.Engine
 
         public Viewport Viewport
         {
-            get { return this.viewport; }
+            get { return this.viewport;}
             set { this.viewport = value; }
         }
+
+		public RenderTarget2D Buffer
+		{
+			get { return this.buffer; }
+			set { this.buffer = value; }
+		}
 
         public Vector2 CurrentSize
         {
@@ -127,6 +133,13 @@ namespace Valkyrie.Engine
 
         #endregion
 
+		public void Load(GraphicsDevice device)
+		{
+			this.device = device;
+
+			this.buffer = new RenderTarget2D(device, Screen.Width, Screen.Height, 1, SurfaceFormat.Color);
+		}
+
 		public bool CheckIsVisible(Rectangle rect)
 		{
             return (new Rectangle(Origin.IntX, Origin.IntY, Screen.Width, Screen.Height).Intersects(rect) == true);
@@ -158,7 +171,9 @@ namespace Valkyrie.Engine
 		public virtual void CenterOnCharacter(BaseCharacter Char)
 		{
 			this.worldname = Char.WorldName;
-			this.CenterOnPoint(Char.Location);
+			this.CenterOnPoint(new ScreenPoint(
+										Char.Location.IntX + (Char.CurrentAnimation.FrameRectangle.Width / 2),
+										Char.Location.IntY + (Char.CurrentAnimation.FrameRectangle.Height / 2)));
 		}
 
 		public void CenterOnPoint(ScreenPoint Point)
@@ -237,6 +252,8 @@ namespace Valkyrie.Engine
         private ScreenPoint cameraoffset = ScreenPoint.Zero; // Uneeded
         private ScreenPoint halfscreen = ScreenPoint.Zero;
         private Viewport viewport;
+		private RenderTarget2D buffer;
+		private GraphicsDevice device;
 		
         private bool manualcontrol = true;
 		private string worldname = string.Empty;

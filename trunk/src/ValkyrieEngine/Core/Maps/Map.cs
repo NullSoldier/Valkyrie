@@ -49,6 +49,12 @@ namespace Valkyrie.Engine.Maps
 			set { this.collisionlayer = value; }
 		}
 
+		public int[] OpaqueLayer
+		{
+			get { return this.opaquelayer; }
+			set { this.opaquelayer = value; }
+		}
+
 		public MapPoint MapSize
 		{
 			get { return this.mapsize; }
@@ -117,6 +123,9 @@ namespace Valkyrie.Engine.Maps
 
                 case MapLayers.CollisionLayer: 
                     return this.CollisionLayer[(int)(point.Y * this.MapSize.X + point.X)];
+
+				case MapLayers.OpaqueLayer:
+					return this.OpaqueLayer[(int)(point.Y * this.MapSize.X + point.X)];
             }
 		}
        
@@ -142,6 +151,9 @@ namespace Valkyrie.Engine.Maps
 
                 case MapLayers.CollisionLayer:
                     this.CollisionLayer[(int)(point.Y * this.MapSize.X + point.X)] = value; break;
+
+				case MapLayers.OpaqueLayer:
+					this.OpaqueLayer[(int)(point.Y * this.MapSize.X + point.X)] = value; break;
             }
         }
 
@@ -173,6 +185,7 @@ namespace Valkyrie.Engine.Maps
 		private int[] middlelayer = new int[0];
 		private int[] toplayer = new int[0];
 		private int[] collisionlayer = new int[0];
+		private int[] opaquelayer = new int[0];
 
 		private MapPoint mapsize = MapPoint.Zero;
 		private int tilesize = 0;

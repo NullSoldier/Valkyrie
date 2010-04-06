@@ -16,6 +16,16 @@ namespace Valkyrie.Engine.Providers
 	public interface ISceneProvider : IEngineProvider
 	{
 		/// <summary>
+		/// Begins the scene
+		/// </summary>
+		void BeginScene();
+
+		/// <summary>
+		/// Ends the scene
+		/// </summary>
+		void EndScene();
+
+		/// <summary>
 		/// Update the current <seealso cref="ISceneProvider"/>.
 		/// </summary>
 		/// <param name="gameTime">The current gameTime.</param>

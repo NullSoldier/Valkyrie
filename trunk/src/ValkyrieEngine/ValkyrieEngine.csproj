@@ -113,6 +113,7 @@
     <Compile Include="Core\Points\BasePoint.cs" />
     <Compile Include="Core\Points\MapPoint.cs" />
     <Compile Include="Core\Points\ScreenPoint.cs" />
+    <Compile Include="Core\Scene\IFogRenderer.cs" />
     <Compile Include="Core\Scene\IRenderer.cs" />
     <Compile Include="Core\Sound\AudioSource.cs" />
     <Compile Include="IEngineContext.cs" />

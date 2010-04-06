@@ -11,6 +11,7 @@ namespace Valkyrie.Engine.Maps
 		BaseLayer=2,
 		MiddleLayer=4,
 		TopLayer=8,
-		CollisionLayer=16
+		CollisionLayer=16,
+		OpaqueLayer=32
 	};
 }
