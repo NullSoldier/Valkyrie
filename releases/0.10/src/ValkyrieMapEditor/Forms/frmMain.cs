@@ -489,11 +489,11 @@ namespace ValkyrieMapEditor
 			this.VerticalScroll.Visible = (MapEditorManager.CurrentMap.MapSize.Y * MapEditorManager.CurrentMap.TileSize > this.pctSurface.Size.Height);
 
 			int xTilesInView = ((this.pctSurface.Width + this.VerticalScroll.Width) / MapEditorManager.CurrentMap.TileSize);
-			int xUnseenAmount = MapEditorManager.CurrentMap.MapSize.X - xTilesInView;
+			int xUnseenAmount = MapEditorManager.CurrentMap.MapSize.IntX - xTilesInView;
 			this.HorizontalScroll.Maximum = xUnseenAmount + this.HorizontalScroll.LargeChange - 1;
 
 			int yTilesInView = ((this.pctSurface.Height + this.HorizontalScroll.Height) / MapEditorManager.CurrentMap.TileSize);
-			int yUnseenAmount = MapEditorManager.CurrentMap.MapSize.Y - yTilesInView;
+			int yUnseenAmount = MapEditorManager.CurrentMap.MapSize.IntY - yTilesInView;
 			this.VerticalScroll.Maximum = yUnseenAmount + this.VerticalScroll.LargeChange - 1;
 
 			///* Don't set to 0 when they aren't visible

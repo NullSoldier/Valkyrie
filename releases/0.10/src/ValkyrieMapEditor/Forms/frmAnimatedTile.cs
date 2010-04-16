@@ -40,7 +40,7 @@ namespace ValkyrieMapEditor.Forms
 		{
 			this.inTilePane.Initialize();
 
-			this.inTilePane.MaximumSize = new Size(this.map.MapSize.X, 0);
+			this.inTilePane.MaximumSize = new Size(this.map.MapSize.IntX, 0);
 			this.inTilePane.EnforceSize = true;
 			this.inTilePane.Image = this.tilesheetimage;
 			this.inTilePane.Size = this.inTilePane.Image.Size;

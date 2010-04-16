@@ -61,7 +61,7 @@
   <ItemGroup>
     <Reference Include="Cadenza, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Cadenza.dll</HintPath>
+      <HintPath>..\..\lib\Cadenza.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

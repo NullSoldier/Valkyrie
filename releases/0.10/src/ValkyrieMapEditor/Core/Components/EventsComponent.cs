@@ -48,7 +48,7 @@ namespace ValkyrieMapEditor.Core
         {
 			MapEditorManager.IgnoreInput = true;
 
-			var camera = this.context.SceneProvider.GetCamera("camera1");
+			var camera = this.context.SceneProvider.Cameras["camera1"];
 
             int xOffset = (int)camera.Location.X / 32 + (int)camera.CameraOffset.X;
             int yOffset = (int)camera.Location.Y / 32 + (int)camera.CameraOffset.Y;
@@ -75,9 +75,9 @@ namespace ValkyrieMapEditor.Core
 			if(mapevent != null)
 			{
 				if(!newEvent)
-					mapevent.Rectangle = new Rectangle(mapevent.Rectangle.X, mapevent.Rectangle.Y, size.X, size.Y);
+					mapevent.Rectangle = new Rectangle(mapevent.Rectangle.X, mapevent.Rectangle.Y, size.IntX, size.IntY);
 				else
-					mapevent.Rectangle = new Rectangle(selectedRect.X, selectedRect.Y, size.X, size.Y);
+					mapevent.Rectangle = new Rectangle(selectedRect.X, selectedRect.Y, size.IntX, size.IntY);
 			}
 
 			if(result == DialogResult.OK)
@@ -114,7 +114,7 @@ namespace ValkyrieMapEditor.Core
 				this.EndSelectedPoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
 
 				var tmpRect = this.GetSelectionRectangle(this.SelectedPoint, this.EndSelectedPoint);
-				var camera = this.context.SceneProvider.GetCamera("camera1");
+				var camera = this.context.SceneProvider.Cameras["camera1"];
 
                 this.CreateOrEditEvent(new Rectangle((tmpRect.X + ((int)camera.Location.X * -1)) / 32, (tmpRect.Y + ((int)camera.Location.Y * -1)) / 32, tmpRect.Width / 32, tmpRect.Height / 32));
 
@@ -125,7 +125,7 @@ namespace ValkyrieMapEditor.Core
 
         public void Draw(SpriteBatch spriteBatch)
         {
-			var camera = this.context.SceneProvider.GetCamera("camera1");
+			var camera = this.context.SceneProvider.Cameras["camera1"];
 
 			// Render all of the events
 			foreach (IMapEvent mapevent in this.context.EventProvider.GetMapsEvents(MapEditorManager.CurrentMap.Name))

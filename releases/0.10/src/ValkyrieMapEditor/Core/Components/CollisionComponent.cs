@@ -53,7 +53,7 @@ namespace ValkyrieMapEditor.Core
         {
 			if (MapEditorManager.CurrentMap != null)
 			{
-				var camera = this.context.SceneProvider.GetCamera("camera1");
+				var camera = this.context.SceneProvider.Cameras["camera1"];
 
                 MapPoint point = new MapPoint((e.Location.X - (int)camera.Location.X) / 32, (e.Location.Y - (int)camera.Location.Y) / 32);
 
@@ -78,7 +78,7 @@ namespace ValkyrieMapEditor.Core
 			        if (value == -1)
 			            continue;
 
-					var camera = this.context.SceneProvider.GetCamera("camera1");
+					var camera = this.context.SceneProvider.Cameras["camera1"];
 
 					Rectangle destRectangle = new Rectangle(0, 0, MapEditorManager.CurrentMap.TileSize, MapEditorManager.CurrentMap.TileSize);
                     destRectangle.X = (int)camera.Location.X + (int)camera.CameraOffset.X + (x * MapEditorManager.CurrentMap.TileSize);

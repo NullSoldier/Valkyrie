@@ -18,10 +18,10 @@ using Valkyrie.Engine.Events;
 
 namespace ValkyrieMapEditor
 {
-    public static class MapEditorManager
+	public static class MapEditorManager
 	{
 		#region Public Properties
-		
+
 		public static EditorXNA GameInstance
 		{
 			get { return gameinstance; }
@@ -75,7 +75,7 @@ namespace ValkyrieMapEditor
 			remove { mapchanged -= value; }
 		}
 
-		
+
 		#endregion
 
 		#region Public Methods
@@ -83,7 +83,7 @@ namespace ValkyrieMapEditor
 		public static void OnMapChanged()
 		{
 			var handler = mapchanged;
-			if(handler != null)
+			if (handler != null)
 				handler(null, EventArgs.Empty);
 		}
 
@@ -91,11 +91,11 @@ namespace ValkyrieMapEditor
 		{
 			var map = provider.GetMap(path, MapEditorManager.GameInstance.Engine.EventProvider);
 			map.Texture = GameInstance.Engine.TextureManager.GetTexture(map.TextureName);
-			
+
 			return map;
 		}
 
-		public static void SaveMap (Map map, FileInfo location)
+		public static void SaveMap(Map map, FileInfo location)
 		{
 			XmlDocument doc = new XmlDocument();
 
@@ -121,7 +121,7 @@ namespace ValkyrieMapEditor
 			var underlayer = doc.CreateElement("UnderLayer");
 
 			var underlayerbuilder = new StringBuilder();
-			for(int i = 0; i < map.UnderLayer.Length; i++)
+			for (int i = 0; i < map.UnderLayer.Length; i++)
 			{
 				underlayerbuilder.Append(map.UnderLayer[i]);
 				underlayerbuilder.Append(" ");
@@ -133,7 +133,7 @@ namespace ValkyrieMapEditor
 			var baselayer = doc.CreateElement("BaseLayer");
 
 			var baselayerbuilder = new StringBuilder();
-			for(int i = 0; i < map.BaseLayer.Length; i++)
+			for (int i = 0; i < map.BaseLayer.Length; i++)
 			{
 				baselayerbuilder.Append(map.BaseLayer[i]);
 				baselayerbuilder.Append(" ");
@@ -145,7 +145,7 @@ namespace ValkyrieMapEditor
 			var middlelayer = doc.CreateElement("MiddleLayer");
 
 			var middlelayerbuilder = new StringBuilder();
-			for(int i = 0; i < map.MiddleLayer.Length; i++)
+			for (int i = 0; i < map.MiddleLayer.Length; i++)
 			{
 				middlelayerbuilder.Append(map.MiddleLayer[i]);
 				middlelayerbuilder.Append(" ");
@@ -157,7 +157,7 @@ namespace ValkyrieMapEditor
 			var toplayer = doc.CreateElement("TopLayer");
 
 			var toplayerbuilder = new StringBuilder();
-			for(int i = 0; i < map.TopLayer.Length; i++)
+			for (int i = 0; i < map.TopLayer.Length; i++)
 			{
 				toplayerbuilder.Append(map.TopLayer[i]);
 				toplayerbuilder.Append(" ");
@@ -169,7 +169,7 @@ namespace ValkyrieMapEditor
 			var collisionLayer = doc.CreateElement("CollisionLayer");
 
 			var collisionlayerbuilder = new StringBuilder();
-			for(int i = 0; i < map.CollisionLayer.Length; i++)
+			for (int i = 0; i < map.CollisionLayer.Length; i++)
 			{
 				collisionlayerbuilder.Append(map.CollisionLayer[i]);
 				collisionlayerbuilder.Append(" ");
@@ -179,7 +179,7 @@ namespace ValkyrieMapEditor
 
 			// Events
 			var eventLayer = doc.CreateElement("Events");
-			foreach(IMapEvent mapevent in GameInstance.Engine.EventProvider.GetMapsEvents(map.Name))
+			foreach (IMapEvent mapevent in GameInstance.Engine.EventProvider.GetMapsEvents(map.Name))
 			{
 				eventLayer.AppendChild(EventToXmlNode(mapevent, doc));
 			}
@@ -187,7 +187,7 @@ namespace ValkyrieMapEditor
 			// Animations
 			var animations = doc.CreateElement("AnimatedTiles");
 
-			foreach(var FrameAnimation in map.AnimatedTiles.Values)
+			foreach (var FrameAnimation in map.AnimatedTiles.Values)
 			{
 				var tileNode = doc.CreateElement("AnimatedTile");
 
@@ -227,7 +227,7 @@ namespace ValkyrieMapEditor
 			doc.Save(location.FullName);
 		}
 
-		public static void SetCurrentMap (Map map)
+		public static void SetCurrentMap(Map map)
 		{
 			GameInstance.Engine.WorldManager.ClearWorlds();
 
@@ -240,32 +240,32 @@ namespace ValkyrieMapEditor
 			world.AddMap(header);
 
 			GameInstance.Engine.WorldManager.AddWorld(world);
-			GameInstance.Engine.SceneProvider.GetCameras().FirstOrDefault().Value.CenterOriginOnPoint(0, 0);
+			GameInstance.Engine.SceneProvider.Cameras.GetItems().FirstOrDefault().Value.CenterOriginOnPoint(0, 0);
 		}
 
-		public static Map ApplyMapProperties (Map oldMap)
+		public static Map ApplyMapProperties(Map oldMap)
 		{
 			return MapEditorManager.ResizeMap(oldMap, oldMap.MapSize);
 		}
 
-		public static Map ResizeMap (Map map, MapPoint newsize)
+		public static Map ResizeMap(Map map, MapPoint newsize)
 		{
 			Map newMap = new Map();
 			newMap.Name = map.Name;
 			newMap.TextureName = map.TextureName;
 			newMap.Texture = map.Texture;
 			newMap.TileSize = map.TileSize;
-			foreach(var animation in map.AnimatedTiles)
+			foreach (var animation in map.AnimatedTiles)
 				newMap.AnimatedTiles.Add(animation.Key, animation.Value);
 
 			newMap.MapSize = newsize;
-			newMap.UnderLayer = new int[newsize.X * newsize.Y];
-			newMap.BaseLayer = new int[newsize.X * newsize.Y];
-			newMap.MiddleLayer = new int[newsize.X * newsize.Y];
-			newMap.TopLayer = new int[newsize.X * newsize.Y];
-			newMap.CollisionLayer = new int[newsize.X * newsize.Y];
+			newMap.UnderLayer = new int[newsize.IntX * newsize.IntY];
+			newMap.BaseLayer = new int[newsize.IntX * newsize.IntY];
+			newMap.MiddleLayer = new int[newsize.IntX * newsize.IntY];
+			newMap.TopLayer = new int[newsize.IntX * newsize.IntY];
+			newMap.CollisionLayer = new int[newsize.IntX * newsize.IntY];
 
-			for(int i = 0; i < (newMap.MapSize.X * newMap.MapSize.Y); i++)
+			for (int i = 0; i < (newMap.MapSize.X * newMap.MapSize.Y); i++)
 			{
 				newMap.UnderLayer[i] = -1;
 				newMap.BaseLayer[i] = -1;
@@ -274,19 +274,19 @@ namespace ValkyrieMapEditor
 				newMap.CollisionLayer[i] = -1;
 			}
 
-			for(int y = 0; y < newsize.Y; y++)
+			for (int y = 0; y < newsize.Y; y++)
 			{
-				for(int x = 0; x < newsize.X; x++)
+				for (int x = 0; x < newsize.X; x++)
 				{
 					// If it's outside the Y range always fill with -1
-					if(y >= map.MapSize.Y)
+					if (y >= map.MapSize.Y)
 					{
 						newMap.SetLayerValue(new MapPoint(x, y), MapLayers.UnderLayer, -1);
 						continue;
 					}
 
 					// If it's outside the X range but not the Y range, fill with 0
-					if(x >= map.MapSize.X)
+					if (x >= map.MapSize.X)
 					{
 						newMap.SetLayerValue(new MapPoint(x, y), MapLayers.UnderLayer, -1);
 						continue;
@@ -316,7 +316,7 @@ namespace ValkyrieMapEditor
 		private static bool noevents = false;
 		private static event EventHandler mapchanged;
 
-		private static XmlNode EventToXmlNode (IMapEvent mapevent, XmlDocument doc)
+		private static XmlNode EventToXmlNode(IMapEvent mapevent, XmlDocument doc)
 		{
 			XmlElement xmlevent = doc.CreateElement("Event");
 
@@ -338,7 +338,7 @@ namespace ValkyrieMapEditor
 
 			XmlElement parmRoot = doc.CreateElement("Parameters");
 
-			foreach(var parm in mapevent.Parameters)
+			foreach (var parm in mapevent.Parameters)
 			{
 				XmlElement pname = doc.CreateElement("Name");
 				pname.InnerText = parm.Key;
@@ -378,7 +378,7 @@ namespace ValkyrieMapEditor
 		//    }
 		//}
 		#endregion
-    }
+	}
 
 	public enum Tools
 	{
@@ -388,10 +388,10 @@ namespace ValkyrieMapEditor
 		Select
 	}
 
-    public enum ViewMode
-    {
-        All,
-        Below,
-        Dim
-    }
+	public enum ViewMode
+	{
+		All,
+		Below,
+		Dim
+	}
 }

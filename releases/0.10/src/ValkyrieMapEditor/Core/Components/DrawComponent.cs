@@ -59,7 +59,7 @@ namespace ValkyrieMapEditor.Core
 			}
 			else if(MapEditorManager.CurrentTool == Tools.Bucket)
 			{
-				var camera = this.context.SceneProvider.GetCamera("camera1");
+				var camera = this.context.SceneProvider.Cameras["camera1"];
 
 				MapPoint tileLocation = new MapPoint((ev.X - (int)camera.Location.X) / 32, (ev.Y - (int)camera.Location.Y) / 32);
 				MapPoint tilesheetPoint = new MapPoint(MapEditorManager.SelectedTilesRectangle.X, MapEditorManager.SelectedTilesRectangle.Y);
@@ -67,7 +67,7 @@ namespace ValkyrieMapEditor.Core
 				int oldvalue = MapEditorManager.CurrentMap.GetLayerValue(tileLocation, MapEditorManager.CurrentLayer);
 				int newvalue = MapEditorManager.CurrentMap.GetTileSetValue(tilesheetPoint);
 
-				this.FloodFill(tileLocation.X, tileLocation.Y, oldvalue, newvalue);
+				this.FloodFill(tileLocation.IntX, tileLocation.IntY, oldvalue, newvalue);
 
 				MapEditorManager.OnMapChanged();
 			}
@@ -96,7 +96,7 @@ namespace ValkyrieMapEditor.Core
 					// Process
 					int xtile = 0;
 					int ytile = 0;
-					var camera = MapEditorManager.GameInstance.Engine.SceneProvider.GetCamera("camera1");
+					var camera = MapEditorManager.GameInstance.Engine.SceneProvider.Cameras["camera1"];
 
 					for(int y = 0; y < selectrect.Height / 32; y++)
 					{
@@ -104,7 +104,7 @@ namespace ValkyrieMapEditor.Core
 						{
 							// Figure out location on map
 							// Set it to proper tile
-							MapPoint tileLocation = new MapPoint((selectrect.X - (int)camera.MapOffset.X) / 32, (selectrect.Y - (int)camera.MapOffset.Y) / 32);
+							MapPoint tileLocation = new MapPoint((selectrect.X - (int)camera.Offset.IntX) / 32, (selectrect.Y - (int)camera.Offset.IntY) / 32);
 							MapPoint tilesheetPoint = new MapPoint(MapEditorManager.SelectedTilesRectangle.X + xtile, MapEditorManager.SelectedTilesRectangle.Y + ytile);
 							MapPoint point = new MapPoint(tileLocation.X + x, tileLocation.Y + y);
 
@@ -150,7 +150,7 @@ namespace ValkyrieMapEditor.Core
 				return;
 
 			var mouseState = Mouse.GetState();
-			var camera = this.context.SceneProvider.GetCamera("camera1");
+			var camera = this.context.SceneProvider.Cameras["camera1"];
 
 			// Common properties
 			Texture2D selectbox = null;
@@ -158,8 +158,8 @@ namespace ValkyrieMapEditor.Core
 			Point newLoc = Point.Zero;
 
 			if(mouseState.X > 0 && mouseState.Y > 0 &&
-				mouseState.X < this.context.SceneProvider.GetCamera("camera1").Screen.Width &&
-				mouseState.Y < this.context.SceneProvider.GetCamera("camera1").Screen.Height)
+				mouseState.X < this.context.SceneProvider.Cameras["camera1"].Screen.Width &&
+				mouseState.Y < this.context.SceneProvider.Cameras["camera1"].Screen.Height)
 			{
 				if(MapEditorManager.CurrentTool == Tools.Pencil)
 				{
@@ -202,9 +202,9 @@ namespace ValkyrieMapEditor.Core
 				if(startpoint != this.GetNegativeOne())
 				{
 					pos = this.GetSelectionRectangle(this.startpoint, this.endpoint);
-					
-					newLoc = new Point((int)camera.MapOffset.X + (int)camera.CameraOffset.X + pos.X,
-					 (int)camera.MapOffset.Y + (int)camera.CameraOffset.Y + pos.Y);
+
+					newLoc = new Point((int)camera.Offset.IntX + (int)camera.CameraOffset.X + pos.X,
+					 (int)camera.Offset.IntY + (int)camera.CameraOffset.Y + pos.Y);
 
 					selectbox = EditorXNA.CreateSelectRectangleFilled(pos.Width, pos.Height, new Color(93, 134, 212, 255), new Color(160, 190, 234, 160));
 				}
@@ -231,11 +231,11 @@ namespace ValkyrieMapEditor.Core
 			// Is the left mouse pressed and in the map's range?
 			if(mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed && mouseState.X > 0 && mouseState.Y > 0)
 			{
-				var camera = this.context.SceneProvider.GetCamera("camera1");
+				var camera = this.context.SceneProvider.Cameras["camera1"];
 
 				if(MapEditorManager.CurrentTool == Tools.Pencil)
 				{
-					MapPoint tileLocation = new MapPoint((mouseState.X - (int)camera.MapOffset.X) / 32, (mouseState.Y - (int)camera.MapOffset.Y) / 32);
+					MapPoint tileLocation = new MapPoint((mouseState.X - (int)camera.Offset.IntX) / 32, (mouseState.Y - (int)camera.Offset.IntY) / 32);
 					MapHeader header = this.context.WorldManager.GetWorld("Default").Maps[MapEditorManager.CurrentMap.Name];
 
 					if(header.TilePointInMapLocal(tileLocation))

@@ -74,8 +74,8 @@ namespace ValkyrieMapEditor
 
 				this.inTileSet.Text = Path.Combine(Environment.CurrentDirectory, Path.Combine(MapEditorManager.GameInstance.Engine.Configuration[EngineConfigurationName.GraphicsRoot], map.TextureName));
 
-				this.inMapWidth.Value = this.map.MapSize.X;
-				this.inMapHeight.Value = this.map.MapSize.Y;
+				this.inMapWidth.Value = this.map.MapSize.IntX;
+				this.inMapHeight.Value = this.map.MapSize.IntY;
 
 				this.inTileSize.Value = this.map.TileSize;
 			}

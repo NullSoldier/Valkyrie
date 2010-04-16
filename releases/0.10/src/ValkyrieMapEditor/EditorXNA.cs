@@ -117,7 +117,7 @@ namespace ValkyrieMapEditor
 
 			ValkyrieWorldManager worldmanager = new ValkyrieWorldManager(new XMLMapProvider(new Assembly[] { }));
 
-			this.Engine.Load(new ValkyrieSceneProvider(this.GraphicsDevice),
+			this.Engine.Load(new ValkyrieSceneProvider(this.GraphicsDevice, this.spriteBatch),
 				new ValkyrieEventProvider(),
 				new ValkyrieNetworkProvider(),
 				new MapEditorSoundProvider(),
@@ -129,8 +129,8 @@ namespace ValkyrieMapEditor
 				new ValkyrieTextureManager(this.Content, this.GraphicsDevice),
 				new ValkyrieSoundManager());
 
-			this.Engine.SceneProvider.AddCamera("camera1", new BaseCamera (this.GraphicsDevice.Viewport.TitleSafeArea) { WorldName = "Default" });
-			this.Engine.SceneProvider.GetCamera("camera1").CenterOriginOnPoint (0, 0);
+			this.Engine.SceneProvider.Cameras.AddItem ("camera1", new BaseCamera (this.GraphicsDevice.Viewport.TitleSafeArea) { WorldName = "Default" });
+			this.Engine.SceneProvider.Cameras["camera1"].CenterOriginOnPoint (0, 0);
 			
 			this.SelectionSprite = Texture2D.FromFile(this.GraphicsDevice, "Graphics/EditorSelection.png");
 
