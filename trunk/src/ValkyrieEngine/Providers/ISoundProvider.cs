@@ -46,19 +46,14 @@ namespace Valkyrie.Engine.Providers
 		/// </summary>
 		bool IsSoundEnabled { get; set; }
 
-		/// <summary>
-		/// Play a sound effect
-		/// </summary>
-		/// <param name="sound">The <seealso cref="AudioSource"/> to play.</param>
-		/// <param name="loop">Whether to loop the sound or not.</param>
-		void PlaySound (AudioSource sound, bool loop);
+		void PlaySound (string sound, bool loop);
 
 		/// <summary>
 		/// Play background music
 		/// </summary>
 		/// <param name="sound">The <seealso cref="AudioSource"/> to play.</param>
 		/// <param name="loop">Whether to loop the music or not.</param>
-		void PlayBGM (AudioSource sound, bool loop);
+		void PlayBGM (string sound, bool loop);
 		
 		/// <summary>
 		/// Stop the current background music being played as well as any music that's queued to be played.

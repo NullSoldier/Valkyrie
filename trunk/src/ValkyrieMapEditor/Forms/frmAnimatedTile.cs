@@ -40,7 +40,7 @@ namespace ValkyrieMapEditor.Forms
 		{
 			this.inTilePane.Initialize();
 
-			this.inTilePane.MaximumSize = new Size(this.map.MapSize.X, 0);
+			this.inTilePane.MaximumSize = new Size(this.map.MapSize.IntX, 0);
 			this.inTilePane.EnforceSize = true;
 			this.inTilePane.Image = this.tilesheetimage;
 			this.inTilePane.Size = this.inTilePane.Image.Size;
@@ -58,11 +58,11 @@ namespace ValkyrieMapEditor.Forms
 			int newx = this.Size.Width;
 			int newy = this.splitTileManager.Panel1.Height;
 
-			if(this.Size.Width > this.inTilePane.Image.Size.Width)
-			    newx = this.inTilePane.Image.Size.Width + 6;
+			if (this.Size.Width > this.inTilePane.Image.Size.Width)
+				newx = this.inTilePane.Image.Size.Width + 6;
 
-			if(this.splitTileManager.Panel2.Height > this.inTilePane.Image.Size.Height)
-			    newy = this.inTilePane.Image.Size.Height;
+			if (this.splitTileManager.Panel2.Height > this.inTilePane.Image.Size.Height)
+				newy = this.inTilePane.Image.Size.Height;
 
 			this.Height = newy + this.splitTileManager.Panel2.Height;
 			this.Width = newx + 10;

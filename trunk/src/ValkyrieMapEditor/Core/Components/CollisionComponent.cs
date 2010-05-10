@@ -13,51 +13,51 @@ using Valkyrie.Engine.Maps;
 
 namespace ValkyrieMapEditor.Core
 {
-    public class CollisionComponent : IEditorComponent
-    {
-        private Texture2D CollisionSprite;
+	public class CollisionComponent : IEditorComponent
+	{
+		private Texture2D CollisionSprite;
 
-        public CollisionComponent()
-        {
+		public CollisionComponent()
+		{
 
-        }
+		}
 
-        public void LoadContent(GraphicsDevice graphicsDevice, IEngineContext context)
-        {
-            this.CollisionSprite = Texture2D.FromFile(graphicsDevice, "Graphics/EditorCollision.png");
+		public void LoadContent(GraphicsDevice graphicsDevice, IEngineContext context)
+		{
+			this.CollisionSprite = Texture2D.FromFile(graphicsDevice, "Graphics/EditorCollision.png");
 
 			this.context = context;
-        }
+		}
 
-        public void OnSizeChanged(object sender, ScreenResizedEventArgs e)
-        {
-        }
+		public void OnSizeChanged(object sender, ScreenResizedEventArgs e)
+		{
+		}
 
-        public void OnScrolled(object sender, ScrollEventArgs e)
-        {
-        }
+		public void OnScrolled(object sender, ScrollEventArgs e)
+		{
+		}
 
-        public void OnMouseDown(object sender, MouseEventArgs ev)
-        {
-        }
+		public void OnMouseDown(object sender, MouseEventArgs ev)
+		{
+		}
 
-        public void OnMouseMove(object sender, MouseEventArgs ev)
-        {
-        }
+		public void OnMouseMove(object sender, MouseEventArgs ev)
+		{
+		}
 
-        public void OnMouseUp(object sender, MouseEventArgs ev)
-        {
-        }
+		public void OnMouseUp(object sender, MouseEventArgs ev)
+		{
+		}
 
-        public void OnMouseClicked(object sender, MouseEventArgs e)
-        {
+		public void OnMouseClicked(object sender, MouseEventArgs e)
+		{
 			if (MapEditorManager.CurrentMap != null)
 			{
-				var camera = this.context.SceneProvider.GetCamera("camera1");
+				var camera = this.context.SceneProvider.Cameras["camera1"];
 
-                MapPoint point = new MapPoint((e.Location.X - (int)camera.Location.X) / 32, (e.Location.Y - (int)camera.Location.Y) / 32);
+				MapPoint point = new MapPoint((e.Location.X - (int)camera.Location.X) / 32, (e.Location.Y - (int)camera.Location.Y) / 32);
 
-				if(e.Button == MouseButtons.Left)
+				if (e.Button == MouseButtons.Left)
 				{
 					int value = MapEditorManager.CurrentMap.GetLayerValue(point, MapLayers.CollisionLayer);
 
@@ -65,35 +65,35 @@ namespace ValkyrieMapEditor.Core
 					MapEditorManager.OnMapChanged();
 				}
 			}
-        }
+		}
 
-        public void Draw(SpriteBatch spriteBatch)
-        {
+		public void Draw(SpriteBatch spriteBatch)
+		{
 			for (int y = 0; y < MapEditorManager.CurrentMap.MapSize.Y; y++)
 			{
-				for(int x = 0; x < MapEditorManager.CurrentMap.MapSize.X; x++)
-			    {
+				for (int x = 0; x < MapEditorManager.CurrentMap.MapSize.X; x++)
+				{
 					int value = MapEditorManager.CurrentMap.GetLayerValue(new MapPoint(x, y), MapLayers.CollisionLayer);
 
-			        if (value == -1)
-			            continue;
+					if (value == -1)
+						continue;
 
-					var camera = this.context.SceneProvider.GetCamera("camera1");
+					var camera = this.context.SceneProvider.Cameras["camera1"];
 
 					Rectangle destRectangle = new Rectangle(0, 0, MapEditorManager.CurrentMap.TileSize, MapEditorManager.CurrentMap.TileSize);
-                    destRectangle.X = (int)camera.Location.X + (int)camera.CameraOffset.X + (x * MapEditorManager.CurrentMap.TileSize);
-                    destRectangle.Y = (int)camera.Location.Y + (int)camera.CameraOffset.Y + (y * MapEditorManager.CurrentMap.TileSize);
+					destRectangle.X = (int)camera.Location.X + (x * MapEditorManager.CurrentMap.TileSize);
+					destRectangle.Y = (int)camera.Location.Y + (y * MapEditorManager.CurrentMap.TileSize);
 
-			        spriteBatch.Draw(this.CollisionSprite, destRectangle, new Rectangle(0, 0, this.CollisionSprite.Width, this.CollisionSprite.Height), Color.White);
-			    }
+					spriteBatch.Draw(this.CollisionSprite, destRectangle, new Rectangle(0, 0, this.CollisionSprite.Width, this.CollisionSprite.Height), Color.White);
+				}
 			}
-        }
+		}
 
-        public void Update(GameTime gameTime)
-        {
+		public void Update(GameTime gameTime)
+		{
 
-        }
+		}
 
 		private IEngineContext context = null;
-    }
+	}
 }

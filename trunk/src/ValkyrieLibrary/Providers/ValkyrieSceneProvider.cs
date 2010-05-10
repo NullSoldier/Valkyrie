@@ -22,7 +22,7 @@ namespace Valkyrie.Library.Providers
 	{
 		#region Constructors
 
-		public ValkyrieSceneProvider(GraphicsDevice graphicsdevice, SpriteBatch spritebatch)
+		public ValkyrieSceneProvider(GraphicsDevice graphicsdevice, SpriteBatch spritebatch, IFogRenderer fogrenderer)
 		{
 			this.device = graphicsdevice;
 			this.spritebatch = spritebatch;
@@ -30,6 +30,7 @@ namespace Valkyrie.Library.Providers
 			players = new ValkyriePlayerManager<BaseCharacter>();
 			cameras = new ValkyrieCameraManager<BaseCamera>();
 			renderers = new ValkyrieRendererManager();
+			this.fogrenderer = fogrenderer;
 		}
 
 		#endregion
@@ -39,7 +40,7 @@ namespace Valkyrie.Library.Providers
 		public IPlayerManager<BaseCharacter> Players { get { return this.players; } }
 		public ICameraManager<BaseCamera> Cameras { get { return this.cameras; } }
 		public IRendererManager Renderers { get { return this.renderers; } }
-		public Texture2D FogTexture { get { return null; } set { this.fogrenderer = new ValkyrieFogRenderer(value, 0.5f); } }
+		public IFogRenderer FogRenderer { get { return this.fogrenderer; } }
 
 		public void BeginScene()
 		{
@@ -48,8 +49,6 @@ namespace Valkyrie.Library.Providers
 
 		public void EndScene()
 		{
-			this.spritebatch.End();
-
 			this.isstarted = false;
 		}
 
@@ -68,19 +67,19 @@ namespace Valkyrie.Library.Providers
             this.renderers.GetItems().ForEach(r => r.Update(gameTime));
 		}
 
-		public void Draw ()
+		public void Draw (RenderFlags flags)
 		{
-			this.Cameras.GetItems().Values.ForEach ( c => DrawCamera(spritebatch, c));
+			this.Cameras.GetItems().Values.ForEach ( c => DrawCamera(spritebatch, c, flags));
 		}
 
-		public void DrawCamera (string cameraname, bool players)
+		public void DrawCamera (string cameraname, RenderFlags flags)
 		{
-			this.DrawCamera(spritebatch, this.Cameras[cameraname]);
+			this.DrawCamera(spritebatch, this.Cameras[cameraname], flags);
 		}
 
 		public void DrawCameraLayer (string cameraname, MapLayers layer)
 		{
-			this.DrawCameraLayer(spritebatch, this.Cameras[cameraname], layer, false);
+			this.DrawLayerMap (spritebatch, this.Cameras[cameraname], layer);
 		}
 
 		public void DrawPlayer (string cameraname, string playername)
@@ -146,6 +145,9 @@ namespace Valkyrie.Library.Providers
 
 		private bool ResolvePositionableCurrentMap (IPositionable player)
 		{
+			if (!this.NeedsResolveMap(player))
+				return true;
+
 			player.CurrentMap = null;
 
 			bool found = false;
@@ -168,37 +170,50 @@ namespace Valkyrie.Library.Providers
 
 		private void UpdateCurrentMap(BaseCharacter player)
 		{
+			Check.NullArgument<IPositionable>(player, "player");
+
 			// Update players current map
-			if (player.CurrentMap == null || player.LocalTileLocation.X < 0 || player.LocalTileLocation.Y < 0 ||
-				player.LocalTileLocation.X > player.CurrentMap.Map.MapSize.X || player.LocalTileLocation.Y > player.CurrentMap.Map.MapSize.Y)
+			if (player.CurrentMap == null
+				|| player.LocalTileLocation.X < 0
+				|| player.LocalTileLocation.Y < 0
+				|| player.LocalTileLocation.X > player.CurrentMap.Map.MapSize.X
+				|| player.LocalTileLocation.Y > player.CurrentMap.Map.MapSize.Y)
 			{
 				this.ResolvePositionableCurrentMap(player);
 				this.context.EventProvider.HandleEvent(player, ActivationTypes.OnMapEnter);
 			}
 		}
 
+		private bool NeedsResolveMap(IPositionable player)
+		{
+			Check.NullArgument<IPositionable>(player, "player");
+
+			var map = player.CurrentMap;
+			var loc = player.GlobalTileLocation;
+
+			if (map == null) return true;
+
+			var maprect = new Rectangle(map.MapLocation.IntX,
+										map.MapLocation.IntY,
+										map.Map.MapSize.IntX,
+										map.Map.MapSize.IntY);
+
+			return (!maprect.Contains(loc.IntX, loc.IntY));
+		}
+
 		#region Private Draw Methods
 
-		private void DrawCamera(SpriteBatch spriteBatch, BaseCamera camera)
+		private void DrawCamera(SpriteBatch spriteBatch, BaseCamera camera, RenderFlags flags)
 		{
 			device.Viewport = camera.Viewport;
 			device.Clear(Color.Black);
 
 			spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState, camera.TransformMatrix);
-			DrawPass(spriteBatch, camera, false); // Draw only non opaque
-			DrawPass(spriteBatch, camera, true); // Draw only opaque
+			DrawPass(spriteBatch, camera, flags); // Draw only non opaque
 			spriteBatch.End();
-
-			spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState, camera.TransformMatrix);
-			this.device.RenderState.SourceBlend = Blend.Zero;
-			this.device.RenderState.DestinationBlend = Blend.SourceColor;
-			this.fogrenderer.RenderFog(spriteBatch, camera, this.lastfoginfos, camera.GlobalTileLocation); // Render fog
-			spriteBatch.End();
-
-			this.lastfoginfos.Clear();
 		}
 
-		private void DrawPass(SpriteBatch spriteBatch, BaseCamera camera, bool opaquepass)
+		private void DrawPass(SpriteBatch spriteBatch, BaseCamera camera, RenderFlags flags)
 		{
 			foreach (var header in this.context.WorldManager.GetWorld(camera.WorldName).Maps.Values)
 			{
@@ -206,39 +221,39 @@ namespace Valkyrie.Library.Providers
 					continue;
 
 				// Draw under
-				this.DrawCameraLayer(spriteBatch, camera, MapLayers.UnderLayer, opaquepass);
-				if (!opaquepass)
-					this.renderers[MapLayers.UnderLayer].ForEach(r => r.Draw(spriteBatch));
+				this.DrawLayerMap(spriteBatch, camera, MapLayers.UnderLayer);
+				this.renderers[MapLayers.UnderLayer].ForEach(r => r.Draw(spriteBatch));
 
 				// Draw base
-				this.DrawCameraLayer(spriteBatch, camera, MapLayers.BaseLayer, opaquepass);
-				if (!opaquepass)
-					this.renderers[MapLayers.BaseLayer].ForEach(r => r.Draw(spriteBatch));
+				this.DrawLayerMap(spriteBatch, camera, MapLayers.BaseLayer);
+				this.renderers[MapLayers.BaseLayer].ForEach(r => r.Draw(spriteBatch));
 
 				// Draw middle
-				this.DrawCameraLayer(spriteBatch, camera, MapLayers.MiddleLayer, opaquepass);
+				this.DrawLayerMap(spriteBatch, camera, MapLayers.MiddleLayer);
 
-				if (!opaquepass)
+				if ((flags & RenderFlags.NoPlayers) != RenderFlags.NoPlayers)
 				{
 					foreach (BaseCharacter player in this.Players.GetItems().Values)
 						this.DrawPlayer(spriteBatch, player, camera);
-
-					this.renderers[MapLayers.MiddleLayer].ForEach(r => r.Draw(spriteBatch));
 				}
 
+				this.renderers[MapLayers.MiddleLayer].ForEach(r => r.Draw(spriteBatch));
+
 				//Draw top
-				this.DrawCameraLayer(spriteBatch, camera, MapLayers.TopLayer, opaquepass);
-				if (!opaquepass)
-					this.renderers[MapLayers.TopLayer].ForEach(r => r.Draw(spriteBatch));
+				this.DrawLayerMap(spriteBatch, camera, MapLayers.TopLayer);
+				this.renderers[MapLayers.TopLayer].ForEach(r => r.Draw(spriteBatch));
 			}
 		}
 
-		private void DrawCameraLayer(SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer, bool opaqueonly)
+		private void DrawLayerMap(SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer)
 		{
-			this.DrawLayerMap(spriteBatch, camera, layer, camera.CurrentMap, Color.White, opaqueonly);
+			if(camera.CurrentMap == null)
+				ResolvePositionableCurrentMap(camera);
+
+			this.DrawLayerMap(spriteBatch, camera, layer, camera.CurrentMap, Color.White);
 		}
 
-		private void DrawLayerMap(SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer, MapHeader header, Color tint, bool opaqueonly)
+		private void DrawLayerMap(SpriteBatch spriteBatch, BaseCamera camera, MapLayers layer, MapHeader header, Color tint)
 		{
 			Check.NullArgument(spriteBatch, "spriteBatch");
 			Check.NullArgument(header, "header");
@@ -261,13 +276,15 @@ namespace Valkyrie.Library.Providers
 					// Opaque only and not opaque
 					var opacity = currentMap.GetLayerValue(point, MapLayers.OpaqueLayer);
 
-					if (opaqueonly && opacity <= 0) // Only render opaque tiles
-						continue;
-					else if (!opaqueonly && opacity >= 1)
-						continue;
-					else if (opaqueonly && opacity >= 1)
+					if (opacity >= 1)
 					{
-						var info = new Rectangle(pos.IntX, pos.IntY, tileSize, tileSize);
+						var info = new Rectangle()
+						{
+							X = pos.IntX,
+							Y = pos.IntY,
+							Width = tileSize,
+							Height = tileSize
+						};
 
 						if(!this.lastfoginfos.Contains(info))
 							this.lastfoginfos.Add(info);
@@ -289,10 +306,13 @@ namespace Valkyrie.Library.Providers
 				return;
 
 			Vector2 location = new Vector2();
-			location.X = player.Location.X + 32 / 2 - player.CurrentAnimation.FrameRectangle.Width / 2;
+			location.X = player.Location.X;// +(32 / 2) - (player.CurrentAnimation.FrameRectangle.Width / 2);
 			location.Y = player.Location.Y + 32 - player.CurrentAnimation.FrameRectangle.Height;
 
 			spriteBatch.Draw(player.Sprite, location, player.CurrentAnimation.FrameRectangle, Color.White);
+
+			//if(this.FogRenderer.Texture != null)
+			//	spriteBatch.Draw(this.FogRenderer.Texture, new Rectangle((int)location.X, (int)location.Y, 32, 32), Color.White);
 		}
 
 		#endregion

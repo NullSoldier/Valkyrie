@@ -10,6 +10,9 @@ namespace Valkyrie.Engine.Core.Scene
 {
 	public interface IFogRenderer : IEngineProvider
 	{
+		float Opacity { get; set; }
+		Texture2D Texture { get; set; }
+
 		void RenderFog(SpriteBatch batch, BaseCamera camera, List<Rectangle> infos, MapPoint rayorigin);
 	}
 }

@@ -44,9 +44,9 @@ namespace ValkyrieMapEditor
 			get { return this.mapchanged; }
 			set
 			{
-				if(value)
+				if (value)
 				{
-					if(!this.Text.EndsWith("*"))
+					if (!this.Text.EndsWith("*"))
 					{
 						this.Text += "*";
 						this.btnSave.Enabled = true;
@@ -55,7 +55,7 @@ namespace ValkyrieMapEditor
 				}
 				else
 				{
-					if(this.Text.EndsWith("*"))
+					if (this.Text.EndsWith("*"))
 					{
 						this.Text = this.Text.Substring(0, this.Text.Length - 1);
 						this.btnSave.Enabled = false;
@@ -74,12 +74,12 @@ namespace ValkyrieMapEditor
 
 		#region Public Methods
 
-		public IntPtr getDrawSurface ()
+		public IntPtr getDrawSurface()
 		{
 			return pctSurface.Handle;
 		}
 
-		public IntPtr getDrawTilesSurface ()
+		public IntPtr getDrawTilesSurface()
 		{
 			return pctTileSurface.Handle;
 		}
@@ -90,7 +90,7 @@ namespace ValkyrieMapEditor
 		private FileInfo currentmaplocation = null;
 
 		#region UI Events
-		
+
 		private void frmMain_Load(object sender, EventArgs e)
 		{
 			this.lblVersion.Text = String.Format("Version: {0}", Assembly.GetExecutingAssembly().GetName().Version.ToString());
@@ -100,7 +100,7 @@ namespace ValkyrieMapEditor
 
 			// Do this last
 			var handler = this.ScreenResized;
-			if( handler != null)
+			if (handler != null)
 				this.ScreenResized(this, new ScreenResizedEventArgs(this.pctSurface.Size.Width, this.pctSurface.Size.Height));
 		}
 
@@ -109,17 +109,17 @@ namespace ValkyrieMapEditor
 			Application.Exit();
 		}
 
-		private void frmMain_Activated (object sender, EventArgs e)
+		private void frmMain_Activated(object sender, EventArgs e)
 		{
 			MapEditorManager.IgnoreInput = false;
 		}
 
-		private void frmMain_Deactivate (object sender, EventArgs e)
+		private void frmMain_Deactivate(object sender, EventArgs e)
 		{
 			MapEditorManager.IgnoreInput = true;
 		}
 
-		private void toolOpen_Click (object sender, EventArgs e)
+		private void toolOpen_Click(object sender, EventArgs e)
 		{
 			MapEditorManager.IgnoreInput = true;
 
@@ -128,7 +128,7 @@ namespace ValkyrieMapEditor
 			openDialog.Filter = "Valkyrie Maps|*.xml";
 
 			var result = openDialog.ShowDialog(this);
-			if(result == DialogResult.Cancel)
+			if (result == DialogResult.Cancel)
 				return;
 
 			this.LoadMap(new FileInfo(openDialog.FileName));
@@ -136,13 +136,13 @@ namespace ValkyrieMapEditor
 			MapEditorManager.IgnoreInput = false;
 		}
 
-		private void toolNew_Click (object sender, EventArgs e)
+		private void toolNew_Click(object sender, EventArgs e)
 		{
 			MapEditorManager.IgnoreInput = true;
 
 			frmProperty dialog = new frmProperty();
 			DialogResult result = dialog.ShowDialog(this);
-			if(result == DialogResult.Cancel)
+			if (result == DialogResult.Cancel)
 				return;
 
 			Map newMap = MapEditorManager.ApplyMapProperties(dialog.Map);
@@ -159,37 +159,37 @@ namespace ValkyrieMapEditor
 			MapEditorManager.IgnoreInput = false;
 		}
 
-		private void toolSave_Click (object sender, EventArgs e)
+		private void toolSave_Click(object sender, EventArgs e)
 		{
 			this.SaveMap();
 		}
 
-		private void toolClose_Click (object sender, EventArgs e)
+		private void toolClose_Click(object sender, EventArgs e)
 		{
-			if(this.MapChanged)
+			if (this.MapChanged)
 			{
 				DialogResult result = MessageBox.Show("Do you want to save changes to" + Environment.NewLine, "Save Changes", MessageBoxButtons.YesNoCancel);
 
-				if(result == DialogResult.Yes)
+				if (result == DialogResult.Yes)
 					this.SaveMap();
-				else if(result == DialogResult.Cancel)
+				else if (result == DialogResult.Cancel)
 					return;
 			}
 
 			this.Close();
 		}
 
-		private void btnMapProperties_Click (object sender, EventArgs e)
+		private void btnMapProperties_Click(object sender, EventArgs e)
 		{
-			if(MapEditorManager.CurrentMap != null)
+			if (MapEditorManager.CurrentMap != null)
 			{
 				frmProperty dialog = new frmProperty(MapEditorManager.CurrentMap);
 				var result = dialog.ShowDialog(this);
 
-				if(result == DialogResult.OK)
+				if (result == DialogResult.OK)
 				{
 					MapEditorManager.ApplyMapProperties(MapEditorManager.CurrentMap);
-					if(dialog.NewMapSize != dialog.LastMapSize)
+					if (dialog.NewMapSize != dialog.LastMapSize)
 					{
 						var tmpmap = MapEditorManager.ResizeMap(MapEditorManager.CurrentMap, dialog.NewMapSize);
 						MapEditorManager.SetCurrentMap(tmpmap);
@@ -204,7 +204,7 @@ namespace ValkyrieMapEditor
 			}
 		}
 
-		private void btnUnderLayer_Click (object sender, EventArgs e)
+		private void btnUnderLayer_Click(object sender, EventArgs e)
 		{
 			this.btnUnderLayer.Checked = true;
 
@@ -217,7 +217,7 @@ namespace ValkyrieMapEditor
 			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Draw);
 		}
 
-		private void btnBaseLayer_Click (object sender, EventArgs e)
+		private void btnBaseLayer_Click(object sender, EventArgs e)
 		{
 			this.btnBaseLayer.Checked = true;
 
@@ -230,7 +230,7 @@ namespace ValkyrieMapEditor
 			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Draw);
 		}
 
-		private void btnMiddleLayer_Click (object sender, EventArgs e)
+		private void btnMiddleLayer_Click(object sender, EventArgs e)
 		{
 			this.btnMiddleLayer.Checked = true;
 
@@ -243,7 +243,7 @@ namespace ValkyrieMapEditor
 			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Draw);
 		}
 
-		private void btnTopLayer_Click (object sender, EventArgs e)
+		private void btnTopLayer_Click(object sender, EventArgs e)
 		{
 			this.btnTopLayer.Checked = true;
 
@@ -256,12 +256,12 @@ namespace ValkyrieMapEditor
 			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Draw);
 		}
 
-		private void saveAsToolStripMenuItem_Click (object sender, EventArgs e)
+		private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			this.SaveMapAs();
 		}
 
-		private void SelectionChanged (object sender, TileSelectionChangedEventArgs ev)
+		private void SelectionChanged(object sender, TileSelectionChangedEventArgs ev)
 		{
 			MapEditorManager.SelectedTilesRectangle = new Microsoft.Xna.Framework.Rectangle(
 				ev.Selection.X,
@@ -270,32 +270,35 @@ namespace ValkyrieMapEditor
 				ev.Selection.Height);
 		}
 
-		private void btnHelp_Click (object sender, EventArgs e)
+		private void btnHelp_Click(object sender, EventArgs e)
 		{
-			foreach(ToolStripItem item in this.toolStripTools.Items)
+			foreach (ToolStripItem item in this.toolStripTools.Items)
 			{
-				if(item.DisplayStyle == ToolStripItemDisplayStyle.Image)
+				if (item.DisplayStyle == ToolStripItemDisplayStyle.Image)
 					item.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
 				else
 					item.DisplayStyle = ToolStripItemDisplayStyle.Image;
 			}
 		}
 
-		private void pctSurface_Resize (object sender, EventArgs e)
+		private void pctSurface_Resize(object sender, EventArgs e)
 		{
 			this.ScreenResized(this, new ScreenResizedEventArgs(this.pctSurface.Size.Width, this.pctSurface.Size.Height));
+			
 			this.UpdateScrollBars();
 		}
 
-		private void TileMap_Scroll (object sender, ScrollEventArgs e)
+		private void TileMap_Scroll(object sender, ScrollEventArgs e)
 		{
 			var handler = this.ScrolledMap;
 
-			if(handler != null)
+			if (handler != null)
 				this.ScrolledMap(sender, e);
+
+			MapEditorManager.GameInstance.Tick();
 		}
 
-		private void btnEvent_Click (object sender, EventArgs e)
+		private void btnEvent_Click(object sender, EventArgs e)
 		{
 			this.btnEvent.Checked = true;
 
@@ -307,7 +310,7 @@ namespace ValkyrieMapEditor
 			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Events);
 		}
 
-		private void btnCollisionLayer_Click (object sender, EventArgs e)
+		private void btnCollisionLayer_Click(object sender, EventArgs e)
 		{
 			this.btnCollisionLayer.Checked = true;
 
@@ -318,7 +321,7 @@ namespace ValkyrieMapEditor
 			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Collsion);
 		}
 
-		private void allLayersToolStripMenuItem_Click (object sender, EventArgs e)
+		private void allLayersToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			this.allLayersToolStripMenuItem.Checked = true;
 
@@ -327,7 +330,7 @@ namespace ValkyrieMapEditor
 			MapEditorManager.ViewMode = ViewMode.All;
 		}
 
-		private void currentLayerAndBelowToolStripMenuItem_Click (object sender, EventArgs e)
+		private void currentLayerAndBelowToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			this.currentLayerAndBelowToolStripMenuItem.Checked = true;
 
@@ -337,7 +340,7 @@ namespace ValkyrieMapEditor
 			MapEditorManager.ViewMode = ViewMode.Below;
 		}
 
-		private void dimOtherLayersToolStripMenuItem_Click (object sender, EventArgs e)
+		private void dimOtherLayersToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			this.dimOtherLayersToolStripMenuItem.Checked = true;
 
@@ -346,7 +349,7 @@ namespace ValkyrieMapEditor
 			MapEditorManager.ViewMode = ViewMode.Dim;
 		}
 
-		private void btnViewSelected_Click (object sender, EventArgs e)
+		private void btnViewSelected_Click(object sender, EventArgs e)
 		{
 			this.btnViewSelected.Checked = !this.btnViewSelected.Checked;
 			this.pctTileSurface.DisplayTileSelection = this.btnViewSelected.Checked;
@@ -354,7 +357,7 @@ namespace ValkyrieMapEditor
 			this.pctTileSurface.Invalidate();
 		}
 
-		private void btnAnimatedTileManager_Click (object sender, EventArgs e)
+		private void btnAnimatedTileManager_Click(object sender, EventArgs e)
 		{
 			MapEditorManager.IgnoreInput = true;
 
@@ -364,7 +367,7 @@ namespace ValkyrieMapEditor
 			MapEditorManager.IgnoreInput = false;
 		}
 
-		private void optionsToolStripMenuItem_Click (object sender, EventArgs e)
+		private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			MapEditorManager.IgnoreInput = true;
 
@@ -379,14 +382,13 @@ namespace ValkyrieMapEditor
 		#region Helper Methods
 
 		private void LoadMap(FileInfo MapLocation)
-        {
+		{
 			this.currentmaplocation = MapLocation;
 
 			MapEditorManager.GameInstance.Engine.TextureManager.ClearCache();
 			MapEditorManager.GameInstance.Engine.EventProvider.ClearEvents();
 
 			Map map = MapEditorManager.LoadMap(MapLocation.FullName, new GriffinMapProvider(this.GetAssemblies()));
-			MapEditorManager.SetCurrentMap(map);
 
 			this.Text = String.Format("{0} - {1}",
 				MapLocation.Name.Substring(0, MapLocation.Name.Length - MapLocation.Extension.Length).Replace('_', ' '),
@@ -396,26 +398,31 @@ namespace ValkyrieMapEditor
 			this.DisplayTileSheet(map);
 			this.UpdateScrollBars();
 
-			this.splitContainer2.Panel1.VerticalScroll.SmallChange = MapEditorManager.CurrentMap.TileSize;
-			this.splitContainer2.Panel1.HorizontalScroll.SmallChange = MapEditorManager.CurrentMap.TileSize;
+			this.splitContainer2.Panel1.VerticalScroll.SmallChange = map.TileSize;
+			this.splitContainer2.Panel1.HorizontalScroll.SmallChange = map.TileSize;
 
-			if(MapEditorManager.NoEvents || 
-				frmMain.EventHandlerTypes.Count() <= 0 )
+			if (MapEditorManager.NoEvents || frmMain.EventHandlerTypes.Count() <= 0)
 			{
 				this.btnEvent.Enabled = false;
 			}
-        }
+
+			this.pctTileSurface.SelectTiles(0, 0, 1, 1);
+
+			MapEditorManager.SetCurrentMap(map);
+		}
 
 		private void DisplayTileSheet(Map map)
 		{
-			this.pctTileSurface.Image = Image.FromFile(Path.Combine(MapEditorManager.GameInstance.Engine.Configuration[EngineConfigurationName.GraphicsRoot], map.TextureName));
+			this.pctTileSurface.Image = Image.FromFile(
+				Path.Combine(MapEditorManager.GameInstance.Engine.Configuration[EngineConfigurationName.GraphicsRoot], map.TextureName));
+
 			this.pctTileSurface.Size = this.pctTileSurface.Image.Size;
 			this.pctTileSurface.TileSize = new Point(map.TileSize, map.TileSize);
 			this.pctTileSurface.Invalidate();
 		}
 
-        private void DisplayMapProperties(Map map)
-        {
+		private void DisplayMapProperties(Map map)
+		{
 			this.lstSettings.Items.Clear();
 
 			this.lstSettings.Items.Add(new ListViewItem(new string[] { "Name", map.Name }));
@@ -427,9 +434,9 @@ namespace ValkyrieMapEditor
 			this.UpdateScrollBars(true);
 
 			this.EnableToolButtons(true);
-        }
+		}
 
-		private void EnableToolButtons (bool enabled)
+		private void EnableToolButtons(bool enabled)
 		{
 			this.btnAnimatedTileManager.Enabled = enabled;
 			this.btnMapProperties.Enabled = enabled;
@@ -446,31 +453,34 @@ namespace ValkyrieMapEditor
 			this.btnRect.Enabled = enabled;
 			this.btnFill.Enabled = enabled;
 			this.btnSelection.Enabled = enabled;
+			this.btnZoomNone.Enabled = enabled;
+			this.btnZoomMedium.Enabled = enabled;
+			this.btnZoomFar.Enabled = enabled;
 		}
 
-		private IEnumerable<Assembly> GetAssemblies ()
+		private IEnumerable<Assembly> GetAssemblies()
 		{
 			List<Assembly> assemblies = new List<Assembly>();
 
 			var results = Program.Settings.GetSetting("AssemblyDirectories").Split(';');
-			foreach(var result in results)
+			foreach (var result in results)
 			{
-                if (string.IsNullOrEmpty(result))
-                    continue;
+				if (string.IsNullOrEmpty(result))
+					continue;
 
-                try
-                {
-                    FileInfo info = new FileInfo(result);
-                    if (!info.Exists)
-                        continue;
+				try
+				{
+					FileInfo info = new FileInfo(result);
+					if (!info.Exists)
+						continue;
 
 
-                    assemblies.Add(Assembly.LoadFile(result));
-                }
-                catch
-                {
-                    continue; // Must be an invalid assembly path
-                }
+					assemblies.Add(Assembly.LoadFile(result));
+				}
+				catch
+				{
+					continue; // Must be an invalid assembly path
+				}
 			}
 
 			return assemblies;
@@ -483,36 +493,51 @@ namespace ValkyrieMapEditor
 
 		private void UpdateScrollBars(bool Reset)
 		{
-			if (MapEditorManager.CurrentMap == null) return;
+			if (!MapEditorManager.IsMapLoaded ) return;
 
-			this.HorizontalScroll.Visible = (MapEditorManager.CurrentMap.MapSize.X * MapEditorManager.CurrentMap.TileSize > this.pctSurface.Size.Width);
-			this.VerticalScroll.Visible = (MapEditorManager.CurrentMap.MapSize.Y * MapEditorManager.CurrentMap.TileSize > this.pctSurface.Size.Height);
+			var camera = MapEditorManager.GameInstance.Engine.SceneProvider.Cameras["camera1"];
+			
+			if(camera == null)
+				return;
 
-			int xTilesInView = ((this.pctSurface.Width + this.VerticalScroll.Width) / MapEditorManager.CurrentMap.TileSize);
-			int xUnseenAmount = MapEditorManager.CurrentMap.MapSize.X - xTilesInView;
-			this.HorizontalScroll.Maximum = xUnseenAmount + this.HorizontalScroll.LargeChange - 1;
+			int scaledtilesize = (int)((float)MapEditorManager.CurrentMap.TileSize * camera.Zoom);
+			this.HorizontalScroll.Visible = (MapEditorManager.CurrentMap.MapSize.IntX * scaledtilesize > this.pctSurface.Size.Width);
+			this.VerticalScroll.Visible = (MapEditorManager.CurrentMap.MapSize.IntY * scaledtilesize > this.pctSurface.Size.Height);
 
-			int yTilesInView = ((this.pctSurface.Height + this.HorizontalScroll.Height) / MapEditorManager.CurrentMap.TileSize);
-			int yUnseenAmount = MapEditorManager.CurrentMap.MapSize.Y - yTilesInView;
-			this.VerticalScroll.Maximum = yUnseenAmount + this.VerticalScroll.LargeChange - 1;
+			// Horizontal scroll
+			HorizontalScroll.Minimum = 0;
+			HorizontalScroll.SmallChange = (this.pctSurface.Width / scaledtilesize);
+			HorizontalScroll.LargeChange = (this.pctSurface.Width / (scaledtilesize / 2));
 
-			///* Don't set to 0 when they aren't visible
-			// * when there isnt enough map to show a scroll
-			// * bar the values for it are crazy!
-			//*/
+			HorizontalScroll.Maximum = (MapEditorManager.CurrentMap.MapSize.IntX * scaledtilesize) - pctSurface.Width;
+			HorizontalScroll.Maximum += HorizontalScroll.LargeChange;
+
+			// Veritcal scroll
+			VerticalScroll.Minimum = 0;
+			VerticalScroll.SmallChange = (this.pctSurface.Height / scaledtilesize);
+			VerticalScroll.LargeChange = (this.pctSurface.Height / (scaledtilesize / 2));
+
+			VerticalScroll.Maximum = (MapEditorManager.CurrentMap.MapSize.IntY * scaledtilesize) - pctSurface.Height;
+			VerticalScroll.Maximum += VerticalScroll.LargeChange;
+		
+
+			/* Don't set to 0 when they aren't visible
+			 * when there isnt enough map to show a scroll
+			 * bar the values for it are crazy!
+			*/
 			if (Reset && this.HorizontalScroll.Visible)
-			    this.HorizontalScroll.Value = 0;
+				this.HorizontalScroll.Value = 0;
 
 			if (Reset && this.VerticalScroll.Visible)
-			    this.VerticalScroll.Value = 0;
+				this.VerticalScroll.Value = 0;
 		}
 
 		private void SaveMap()
 		{
-			if(MapEditorManager.CurrentMap == null) return;
+			if (MapEditorManager.CurrentMap == null) return;
 
-			if(this.currentmaplocation == null || !this.currentmaplocation.Exists)
-			    this.SaveMapAs();
+			if (this.currentmaplocation == null || !this.currentmaplocation.Exists)
+				this.SaveMapAs();
 			else
 				MapEditorManager.SaveMap(MapEditorManager.CurrentMap, this.currentmaplocation);
 
@@ -521,7 +546,7 @@ namespace ValkyrieMapEditor
 
 		private void SaveMapAs()
 		{
-			if(MapEditorManager.CurrentMap == null) return;
+			if (MapEditorManager.CurrentMap == null) return;
 
 			SaveFileDialog dialog = new SaveFileDialog();
 			dialog.DefaultExt = ".xml";
@@ -529,7 +554,7 @@ namespace ValkyrieMapEditor
 
 			var result = dialog.ShowDialog();
 
-			if(result == DialogResult.None || result == DialogResult.Cancel)
+			if (result == DialogResult.None || result == DialogResult.Cancel)
 				return;
 
 			FileInfo file = new FileInfo(dialog.FileName);
@@ -541,7 +566,7 @@ namespace ValkyrieMapEditor
 
 		#endregion
 
-		private void btnRect_Click (object sender, EventArgs e)
+		private void btnRect_Click(object sender, EventArgs e)
 		{
 			this.btnRect.Checked = true;
 
@@ -551,10 +576,10 @@ namespace ValkyrieMapEditor
 			this.btnEvent.Checked = false;
 
 			MapEditorManager.CurrentTool = Tools.Rectangle;
-			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Draw);
+			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Rectangle);
 		}
 
-		private void btnPencil_Click (object sender, EventArgs e)
+		private void btnPencil_Click(object sender, EventArgs e)
 		{
 			this.btnPencil.Checked = true;
 
@@ -567,7 +592,7 @@ namespace ValkyrieMapEditor
 			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Draw);
 		}
 
-		private void btnFill_Click (object sender, EventArgs e)
+		private void btnFill_Click(object sender, EventArgs e)
 		{
 			this.btnFill.Checked = true;
 
@@ -577,10 +602,10 @@ namespace ValkyrieMapEditor
 			this.btnEvent.Checked = false;
 
 			MapEditorManager.CurrentTool = Tools.Bucket;
-			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Draw);
+			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Bucket);
 		}
 
-		private void btnSelection_Click (object sender, EventArgs e)
+		private void btnSelection_Click(object sender, EventArgs e)
 		{
 			this.btnSelection.Checked = true;
 
@@ -590,15 +615,15 @@ namespace ValkyrieMapEditor
 			this.btnEvent.Checked = false;
 
 			MapEditorManager.CurrentTool = Tools.Select;
-			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Draw);
+			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Select);
 		}
 
-		private IEnumerable<Type> LoadImplementers ()
+		private IEnumerable<Type> LoadImplementers()
 		{
 			return this.GetAssemblies().SelectMany(a => a.GetTypes()).Where(t => typeof(IMapEvent).IsAssignableFrom(t) && !t.IsInterface);
 		}
 
-		private void frmMain_MapChanged (object sender, EventArgs ev)
+		private void frmMain_MapChanged(object sender, EventArgs ev)
 		{
 			this.MapChanged = true;
 		}
@@ -609,14 +634,98 @@ namespace ValkyrieMapEditor
 
 		#endregion
 
-		private void frmMain_FormClosing (object sender, FormClosingEventArgs e)
+		private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if(this.MapChanged)
-			{
-				var result = MessageBox.Show(string.Format("Do you want to save changes to {0}?", MapEditorManager.CurrentMap.Name), "Griffin", MessageBoxButtons.YesNo);
-				if(result == DialogResult.Yes)
+			if (this.MapChanged)
+			{				
+				var result = MessageBox.Show(string.Format("Do you want to save changes to {0}?", MapEditorManager.CurrentMap.Name), "Griffin", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+				if (result == DialogResult.Yes)
 					this.SaveMap();
+				else if (result == DialogResult.Cancel)
+					e.Cancel = true;
 			}
+		}
+
+		private void btnZoomNone_Click(object sender, EventArgs e)
+		{
+			var camera = MapEditorManager.GameInstance.Engine.SceneProvider.Cameras["camera1"];
+			if (camera == null)
+				return;
+
+			camera.Scale(1f);
+
+			this.btnZoomMedium.Checked = false;
+			this.btnZoomNone.Checked = true;
+			this.btnZoomFar.Checked = false;
+
+			this.UpdateScrollBars();
+		}
+
+		private void btnZoomMedium_Click(object sender, EventArgs e)
+		{
+			var camera = MapEditorManager.GameInstance.Engine.SceneProvider.Cameras["camera1"];
+			if (camera == null)
+				return;
+
+			camera.Scale(0.5f);
+
+			this.btnZoomMedium.Checked = true;
+			this.btnZoomNone.Checked = false;
+			this.btnZoomFar.Checked = false;
+
+			this.UpdateScrollBars();
+		}
+
+		private void btnZoomFar_Click(object sender, EventArgs e)
+		{
+			var camera = MapEditorManager.GameInstance.Engine.SceneProvider.Cameras["camera1"];
+			if (camera == null)
+				return;
+
+			camera.Scale(0.25f);
+
+			this.btnZoomMedium.Checked = false;
+			this.btnZoomNone.Checked = false;
+			this.btnZoomFar.Checked = true;
+
+			this.UpdateScrollBars();
+		}
+
+		void frmMain_MouseWheel(object sender, MouseEventArgs e)
+		{
+			if (!MapEditorManager.IsMapLoaded
+				|| !this.pctSurface.Focused 
+				|| !this.VerticalScroll.Visible)
+				return;
+
+			var camera = MapEditorManager.GameInstance.Engine.SceneProvider.Cameras["camera1"];
+
+			if (camera == null)
+				return;
+
+			int scaledtilesize = (int)((float)MapEditorManager.CurrentMap.TileSize * camera.Zoom);
+			var delta = Math.Abs(e.Delta / 120);
+			int oldvalue = VerticalScroll.Value;
+
+			if (e.Delta < 0)
+			{
+				VerticalScroll.Value = Helpers.Clamp(VerticalScroll.Value + scaledtilesize, VerticalScroll.Minimum, VerticalScroll.Maximum);
+
+				if(VerticalScroll.Value != oldvalue)
+					TileMap_Scroll(VerticalScroll, new ScrollEventArgs(ScrollEventType.SmallDecrement, oldvalue, VerticalScroll.Value, ScrollOrientation.VerticalScroll));
+			}
+			else if (e.Delta > 0)
+			{
+				VerticalScroll.Value = Helpers.Clamp(VerticalScroll.Value - scaledtilesize, VerticalScroll.Minimum, VerticalScroll.Maximum);
+
+				if (VerticalScroll.Value != oldvalue)
+					TileMap_Scroll(VerticalScroll, new ScrollEventArgs(ScrollEventType.SmallIncrement, oldvalue, VerticalScroll.Value, ScrollOrientation.VerticalScroll));
+			}
+		}
+
+		private void pctSurface_Click(object sender, EventArgs e)
+		{
+			this.pctSurface.Focus();
 		}
 	}
 

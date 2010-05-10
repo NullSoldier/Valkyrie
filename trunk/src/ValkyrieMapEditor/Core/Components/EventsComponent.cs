@@ -22,8 +22,8 @@ using Valkyrie.Engine.Core;
 
 namespace ValkyrieMapEditor.Core
 {
-    public class EventsComponent : IEditorComponent
-    {
+	public class EventsComponent : IEditorComponent
+	{
 		public Point SelectedPoint
 		{
 			get { return this.selectedpoint; }
@@ -36,27 +36,27 @@ namespace ValkyrieMapEditor.Core
 			set { this.endselectedpoint = value; }
 		}
 
-		public void LoadContent (GraphicsDevice device, IEngineContext context)
-        {
-            this.EventSprite = Texture2D.FromFile(device, "Graphics/EditorEvent.png");
-            this.SelectionSprite = Texture2D.FromFile(device, "Graphics/EditorSelection.png");
+		public void LoadContent(GraphicsDevice device, IEngineContext context)
+		{
+			this.EventSprite = Texture2D.FromFile(device, "Graphics/EditorEvent.png");
+			this.SelectionSprite = Texture2D.FromFile(device, "Graphics/EditorSelection.png");
 
 			this.context = context;
-        }
+		}
 
-        public void CreateOrEditEvent(Rectangle selectedRect)
-        {
+		public void CreateOrEditEvent(Rectangle selectedRect)
+		{
 			MapEditorManager.IgnoreInput = true;
 
-			var camera = this.context.SceneProvider.GetCamera("camera1");
+			var camera = this.context.SceneProvider.Cameras["camera1"];
 
-            int xOffset = (int)camera.Location.X / 32 + (int)camera.CameraOffset.X;
-            int yOffset = (int)camera.Location.Y / 32 + (int)camera.CameraOffset.Y;
+			int xOffset = (int)camera.Location.X / 32;
+			int yOffset = (int)camera.Location.Y / 32;
 
 			IMapEvent mapevent = this.context.EventProvider.GetMapsEvents(MapEditorManager.CurrentMap.Name).Where(e => e.Rectangle.Intersects(selectedRect)).FirstOrDefault();
 
 			bool newEvent = false;
-			if(mapevent != null)
+			if (mapevent != null)
 			{
 				SelectedPoint = new Point(mapevent.Rectangle.X * 32, mapevent.Rectangle.Y * 32);
 				EndSelectedPoint = new Point((mapevent.Rectangle.X * 32) + ((mapevent.Rectangle.Width - 1) * 32), (mapevent.Rectangle.Y * 32) + ((mapevent.Rectangle.Height - 1) * 32));
@@ -72,81 +72,81 @@ namespace ValkyrieMapEditor.Core
 			DialogResult result = dialog.ShowDialog();
 
 			mapevent = dialog.Event;
-			if(mapevent != null)
+			if (mapevent != null)
 			{
-				if(!newEvent)
-					mapevent.Rectangle = new Rectangle(mapevent.Rectangle.X, mapevent.Rectangle.Y, size.X, size.Y);
+				if (!newEvent)
+					mapevent.Rectangle = new Rectangle(mapevent.Rectangle.X, mapevent.Rectangle.Y, size.IntX, size.IntY);
 				else
-					mapevent.Rectangle = new Rectangle(selectedRect.X, selectedRect.Y, size.X, size.Y);
+					mapevent.Rectangle = new Rectangle(selectedRect.X, selectedRect.Y, size.IntX, size.IntY);
 			}
 
-			if(result == DialogResult.OK)
+			if (result == DialogResult.OK)
 			{
 				this.context.EventProvider.ReferenceSetOrAdd(MapEditorManager.CurrentMap.Name, mapevent);
 				MapEditorManager.OnMapChanged();
 			}
-			else if(result == DialogResult.Abort)
+			else if (result == DialogResult.Abort)
 			{
 				this.context.EventProvider.RemoveEvent(MapEditorManager.CurrentMap.Name, mapevent);
 				MapEditorManager.OnMapChanged();
 			}
 
 			MapEditorManager.IgnoreInput = false;
-        }
+		}
 
-        public void OnMouseDown(object sender, MouseEventArgs ev)
-        {
-			if(MapEditorManager.IgnoreInput || ev.Button != MouseButtons.Left) return;
+		public void OnMouseDown(object sender, MouseEventArgs ev)
+		{
+			if (MapEditorManager.IgnoreInput || ev.Button != MouseButtons.Left) return;
 
-			lock(this.pointlock)
+			lock (this.pointlock)
 			{
 				this.SelectedPoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
 				this.EndSelectedPoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
 			}
-        }
+		}
 
-        public void OnMouseUp(object sender, MouseEventArgs ev)
-        {
-			if(MapEditorManager.IgnoreInput || ev.Button != MouseButtons.Left) return;
+		public void OnMouseUp(object sender, MouseEventArgs ev)
+		{
+			if (MapEditorManager.IgnoreInput || ev.Button != MouseButtons.Left) return;
 
-			lock(this.pointlock)
+			lock (this.pointlock)
 			{
 				this.EndSelectedPoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
 
 				var tmpRect = this.GetSelectionRectangle(this.SelectedPoint, this.EndSelectedPoint);
-				var camera = this.context.SceneProvider.GetCamera("camera1");
+				var camera = this.context.SceneProvider.Cameras["camera1"];
 
-                this.CreateOrEditEvent(new Rectangle((tmpRect.X + ((int)camera.Location.X * -1)) / 32, (tmpRect.Y + ((int)camera.Location.Y * -1)) / 32, tmpRect.Width / 32, tmpRect.Height / 32));
+				this.CreateOrEditEvent(new Rectangle((tmpRect.X + ((int)camera.Location.X * -1)) / 32, (tmpRect.Y + ((int)camera.Location.Y * -1)) / 32, tmpRect.Width / 32, tmpRect.Height / 32));
 
 				this.SelectedPoint = new Point(-1, -1);
 				this.EndSelectedPoint = new Point(-1, -1);
 			}
-        }
+		}
 
-        public void Draw(SpriteBatch spriteBatch)
-        {
-			var camera = this.context.SceneProvider.GetCamera("camera1");
+		public void Draw(SpriteBatch spriteBatch)
+		{
+			var camera = this.context.SceneProvider.Cameras["camera1"];
 
 			// Render all of the events
 			foreach (IMapEvent mapevent in this.context.EventProvider.GetMapsEvents(MapEditorManager.CurrentMap.Name))
 			{
 				// Where on the screen?
-                Point newLoc = new Point((int)camera.Location.X + (int)camera.CameraOffset.X + (mapevent.Rectangle.X * MapEditorManager.CurrentMap.TileSize),
-                     (int)camera.Location.Y + (int)camera.CameraOffset.Y + (mapevent.Rectangle.Y * MapEditorManager.CurrentMap.TileSize));
+				Point newLoc = new Point((int)camera.Location.X + (mapevent.Rectangle.X * MapEditorManager.CurrentMap.TileSize),
+					 (int)camera.Location.Y + (mapevent.Rectangle.Y * MapEditorManager.CurrentMap.TileSize));
 
 				Texture2D border = EditorXNA.CreateSelectRectangleFilled(mapevent.Rectangle.Width * 32, mapevent.Rectangle.Height * 32, new Color(136, 0, 21, 255), new Color(255, 128, 128, 160));
 
 				Rectangle destRectangle = new Rectangle(newLoc.X, newLoc.Y, mapevent.Rectangle.Width * 32, mapevent.Rectangle.Height * 32);
 
-				if(border != null)
+				if (border != null)
 					spriteBatch.Draw(border, destRectangle, new Rectangle(0, 0, border.Width, border.Height), Color.White);
 
 				// If this event is the one we've currently selected
-				if(mapevent == this.currentmapevent)
+				if (mapevent == this.currentmapevent)
 				{
 					Texture2D selection = EditorXNA.CreateSelectRectangle(mapevent.Rectangle.Width * 32, mapevent.Rectangle.Height * 32);
 
-					if(selection != null)
+					if (selection != null)
 						spriteBatch.Draw(selection, destRectangle, new Rectangle(0, 0, border.Width, border.Height), Color.White);
 				}
 
@@ -155,7 +155,7 @@ namespace ValkyrieMapEditor.Core
 
 			// Only if there is no selected event and there is a valid selection.
 			// -1 is used to denote an invalid selection
-			if(this.currentmapevent == null && SelectedPoint.X != -1 && SelectedPoint.Y != -1)
+			if (this.currentmapevent == null && SelectedPoint.X != -1 && SelectedPoint.Y != -1)
 			{
 				var rectangle = this.GetSelectionRectangle(this.SelectedPoint, this.EndSelectedPoint);
 				//rectangle.X += (int)camera.MapOffset.X;
@@ -163,43 +163,43 @@ namespace ValkyrieMapEditor.Core
 
 				Texture2D texture = EditorXNA.CreateSelectRectangle(rectangle.Width, rectangle.Height);
 
-				if(texture == null) // If we couldn't generate a texture use the loaded texture
+				if (texture == null) // If we couldn't generate a texture use the loaded texture
 					texture = this.SelectionSprite;
 
 				spriteBatch.Draw(texture, rectangle, new Rectangle(0, 0, texture.Width, texture.Height), Color.White);
 			}
-        }
+		}
 
-        public void OnSizeChanged(object sender, ScreenResizedEventArgs e)
-        {
-        }
-
-        public void OnScrolled(object sender, ScrollEventArgs e)
-        {
-        }
-
-		public void OnMouseClicked (object sender, MouseEventArgs e)
+		public void OnSizeChanged(object sender, ScreenResizedEventArgs e)
 		{
 		}
 
-		public void OnMouseMove (object sender, MouseEventArgs e)
+		public void OnScrolled(object sender, ScrollEventArgs e)
 		{
 		}
 
-        public void Update(GameTime gameTime)
-        {
-			if(MapEditorManager.IgnoreInput) return;
+		public void OnMouseClicked(object sender, MouseEventArgs e)
+		{
+		}
+
+		public void OnMouseMove(object sender, MouseEventArgs e)
+		{
+		}
+
+		public void Update(GameTime gameTime)
+		{
+			if (MapEditorManager.IgnoreInput) return;
 
 			var mouseState = Mouse.GetState();
 
-			if(mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
+			if (mouseState.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
 			{
-				lock(this.pointlock)
+				lock (this.pointlock)
 				{
 					this.EndSelectedPoint = new Point((mouseState.X / 32) * 32, (mouseState.Y / 32) * 32);
 				}
 			}
-        }
+		}
 
 		private IEngineContext context = null;
 		private Texture2D EventSprite = null;
@@ -209,14 +209,14 @@ namespace ValkyrieMapEditor.Core
 		public Point endselectedpoint = new Point(-1, -1);
 		private object pointlock = new object();
 
-		private Rectangle GetSelectionRectangle (Point spoint, Point epoint)
+		private Rectangle GetSelectionRectangle(Point spoint, Point epoint)
 		{
 			int x = -1;
 			int y = -1;
 			int width = -1;
 			int height = -1;
 
-			if(spoint.X <= epoint.X)
+			if (spoint.X <= epoint.X)
 			{
 				x = spoint.X;
 				width = (epoint.X - spoint.X) + 32;
@@ -227,7 +227,7 @@ namespace ValkyrieMapEditor.Core
 				width = ((spoint.X + 32) - epoint.X);
 			}
 
-			if(spoint.Y <= epoint.Y)
+			if (spoint.Y <= epoint.Y)
 			{
 				y = spoint.Y;
 				height = (epoint.Y - spoint.Y) + 32;
@@ -240,5 +240,5 @@ namespace ValkyrieMapEditor.Core
 
 			return new Rectangle(x, y, width, height);
 		}
-    }
+	}
 }

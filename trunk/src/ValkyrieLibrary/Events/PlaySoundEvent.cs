@@ -52,12 +52,12 @@ namespace Valkyrie.Library.Events
 
 		private void SoundLoaded (SoundLoadedEventArgs ev)
 		{
-			if(ev.Name == this.lastsoundrequested)
-			{
-				var sound = this.context.SoundManager.GetSound (ev.Name);
-				if(sound != null)
-					context.SoundProvider.PlayBGM (sound, ((this.lastloop == "1") ? true : false));
-			}
+			//if(ev.Name == this.lastsoundrequested)
+			//{
+			//	var sound = this.context.SoundManager.GetSound (ev.Name);
+			//	if(sound != null)
+			//		context.SoundProvider.PlayBGM (sound, ((this.lastloop == "1") ? true : false));
+			//}
 		}
 
 		private string lastsoundrequested;

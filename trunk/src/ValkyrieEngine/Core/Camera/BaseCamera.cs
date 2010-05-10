@@ -51,42 +51,40 @@ namespace Valkyrie.Engine
 
         public ScreenPoint Origin
         {
-            get { return this.mapoffset - this.halfscreen; }
-            set { this.mapoffset = value + this.halfscreen; }
-        }
-        
-        public ScreenPoint CameraOffset
-        {
-            get { return this.cameraoffset; }
-            set { this.cameraoffset = value; }
+			get { return mapoffset * -1; }
+            set { mapoffset = value * -1; }
         }
 
         public ScreenPoint Offset
         {
             get
             {
-                ScreenPoint sp = new ScreenPoint(0, 0);
-                sp.X = (int)this.Location.X + (int)this.CameraOffset.X;
-                sp.Y = (int)this.Location.Y + (int)this.CameraOffset.Y;
-                return sp;
+				return new ScreenPoint(
+					(int)mapoffset.X,
+					(int)mapoffset.Y);
             }
         }
 
+		public ScreenPoint Center
+		{
+			get { return this.Origin + this.halfscreen; }
+		}
+
         public Viewport Viewport
         {
-            get { return this.viewport;}
-            set { this.viewport = value; }
+            get { return viewport;}
+            set { viewport = value; }
         }
 
 		public RenderTarget2D Buffer
 		{
-			get { return this.buffer; }
-			set { this.buffer = value; }
+			get { return buffer; }
+			set { buffer = value; }
 		}
 
         public Vector2 CurrentSize
         {
-            get { return Vector2.Multiply(new Vector2(this.screen.Width, this.screen.Height), 1 / zoom); }
+            get { return Vector2.Multiply(new Vector2(screen.Width, screen.Height), 1 / zoom); }
         }
 
         #region Camera Effects
@@ -106,8 +104,8 @@ namespace Valkyrie.Engine
 
         public bool ManualControl
 		{
-			get { return this.manualcontrol; }
-			set { this.manualcontrol = value; }
+			get { return manualcontrol; }
+			set { manualcontrol = value; }
 		}
 
         #region Stack Management
@@ -128,7 +126,6 @@ namespace Valkyrie.Engine
             this.halfscreen = new ScreenPoint(screen.Width / 2, screen.Height / 2);
 
             this.mapoffset = new ScreenPoint(cam.Location.X, cam.Location.Y);
-            this.cameraoffset = new ScreenPoint (cam.CameraOffset.X, cam.CameraOffset.Y);
 		}
 
         #endregion
@@ -142,7 +139,11 @@ namespace Valkyrie.Engine
 
 		public bool CheckIsVisible(Rectangle rect)
 		{
-            return (new Rectangle(Origin.IntX, Origin.IntY, Screen.Width, Screen.Height).Intersects(rect) == true);
+			var extrapolate = new Rectangle (Origin.IntX, Origin.IntY, (int)(Screen.Width / Zoom), (int)(Screen.Height / Zoom));
+
+			return extrapolate.Intersects(rect);
+
+            //return (new Rectangle(Origin.IntX, Origin.IntY, Screen.Width, Screen.Height).Intersects(rect) == true);
 		}
 
 		public void ResizeScreen (Rectangle rectangle)
@@ -154,13 +155,21 @@ namespace Valkyrie.Engine
 		{
 			this.screen = new Rectangle(x, y, width, height);
             this.halfscreen = new ScreenPoint(screen.Width / 2, screen.Height / 2);
+
+			this.Viewport = new Viewport()
+			{
+				X = x,
+				Y = y,
+				Width=width,
+				Height=height
+			};
         }
 
         #region Center Methods
 
-        public void CenterOriginOnPoint(ScreenPoint Point)
+        public void CenterOriginOnPoint(ScreenPoint point)
 		{
-            this.Origin = new ScreenPoint(Point.X * -1, Point.Y * -1);
+            this.Origin = new ScreenPoint(point.X, point.Y);
 		}
 
 		public void CenterOriginOnPoint(int x, int y)
@@ -173,12 +182,12 @@ namespace Valkyrie.Engine
 			this.worldname = Char.WorldName;
 			this.CenterOnPoint(new ScreenPoint(
 										Char.Location.IntX + (Char.CurrentAnimation.FrameRectangle.Width / 2),
-										Char.Location.IntY + (Char.CurrentAnimation.FrameRectangle.Height / 2)));
+										Char.Location.IntY + (Char.CurrentAnimation.FrameRectangle.Height / 2) + 8));
 		}
 
-		public void CenterOnPoint(ScreenPoint Point)
+		public void CenterOnPoint(ScreenPoint point)
 		{
-            this.Location = Point;
+			this.Origin = point - halfscreen;
         }
 
         #endregion
@@ -210,10 +219,9 @@ namespace Valkyrie.Engine
             get
             {
                 return
-                    Matrix.CreateTranslation(new Vector3(-Location.IntX, -Location.IntY, 0)) *
+                    Matrix.CreateTranslation(new Vector3(mapoffset.X, mapoffset.Y, 0)) *
                     Matrix.CreateRotationZ(this.rotate) *
-                    Matrix.CreateScale(this.zoom) *
-                    Matrix.CreateTranslation(new Vector3(Screen.Width * 0.5f, Screen.Height * 0.5f, 0));
+                    Matrix.CreateScale(this.zoom);
             }
         }
 
@@ -279,8 +287,8 @@ namespace Valkyrie.Engine
 
 		public ScreenPoint Location
 		{
-            get { return this.mapoffset;  }
-			set { this.mapoffset = value; }
+            get { return this.Origin;  }
+			set { throw new NotImplementedException(); }
 		}
 
 		public string WorldName

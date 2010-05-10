@@ -35,14 +35,14 @@ namespace Valkyrie.Engine.Providers
 		/// Draw all components of the current SceneProvider
 		/// </summary>
 		/// <param name="spriteBatch">The SpriteBatch to render to.</param>
-		void Draw ();
+		void Draw (RenderFlags flags);
 
 		/// <summary>
 		/// Draw a specific camera
 		/// </summary>
 		/// <param name="spriteBatch">The SpriteBatch to render to.</param>
 		/// <param name="cameraname">The name of the camera to draw.</param>
-		void DrawCamera (string cameraname, bool players);
+		void DrawCamera (string cameraname, RenderFlags flags);
 
 		/// <summary>
 		/// Draw a layer of a specified camera
@@ -72,5 +72,6 @@ namespace Valkyrie.Engine.Providers
 		IPlayerManager<BaseCharacter> Players { get; }
 		ICameraManager<BaseCamera> Cameras { get; }
 		IRendererManager Renderers { get; }
+		IFogRenderer FogRenderer { get; }
 	}
 }

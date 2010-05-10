@@ -33,17 +33,19 @@ namespace Valkyrie.Library.Managers
 
 		public T this[string name]
 		{
-			get { return this.items[name]; }
+			get { return this.GetItem(name); }
 		}
 
 		public T GetItem(string name)
 		{
 			lock (this.items)
 			{
-				if (!this.items.ContainsKey(name))
+				T value;
+
+				if (!items.TryGetValue(name, out value))
 					throw new ArgumentException("Camera not found.");
 
-				return this.items[name];
+				return value;
 			}
 		}
 

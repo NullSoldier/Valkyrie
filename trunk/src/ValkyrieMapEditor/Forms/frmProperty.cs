@@ -16,12 +16,12 @@ using Valkyrie.Engine.Core;
 
 namespace ValkyrieMapEditor
 {
-    public partial class frmProperty : Form
-    {
+	public partial class frmProperty : Form
+	{
 		#region Constructors
 
 		public frmProperty(Map map)
-        {
+		{
 			InitializeComponent();
 
 			this.Map = map;
@@ -29,9 +29,9 @@ namespace ValkyrieMapEditor
 			this.IsNewMap = false;
 
 			this.LoadPropertes(this.IsNewMap);
-        }
+		}
 
-		public frmProperty ()
+		public frmProperty()
 		{
 			this.InitializeComponent();
 
@@ -67,15 +67,15 @@ namespace ValkyrieMapEditor
 		private bool IsNewMap = true;
 
 		private void LoadPropertes(bool newMap)
-        {
-			if(!newMap)
+		{
+			if (!newMap)
 			{
 				this.inName.Text = this.map.Name;
 
 				this.inTileSet.Text = Path.Combine(Environment.CurrentDirectory, Path.Combine(MapEditorManager.GameInstance.Engine.Configuration[EngineConfigurationName.GraphicsRoot], map.TextureName));
 
-				this.inMapWidth.Value = this.map.MapSize.X;
-				this.inMapHeight.Value = this.map.MapSize.Y;
+				this.inMapWidth.Value = this.map.MapSize.IntX;
+				this.inMapHeight.Value = this.map.MapSize.IntY;
 
 				this.inTileSize.Value = this.map.TileSize;
 			}
@@ -87,36 +87,36 @@ namespace ValkyrieMapEditor
 
 				this.inTileSize.Value = 32;
 			}
-        }
+		}
 
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
+		private void btnCancel_Click(object sender, EventArgs e)
+		{
 			this.DialogResult = DialogResult.Cancel;
 			this.Close();
-        }
+		}
 
-        private void btnOk_Click(object sender, EventArgs e)
-        {
+		private void btnOk_Click(object sender, EventArgs e)
+		{
 			if (!ValidateForm())
-			    return;
+				return;
 
 			// Copy it over
 			FileInfo TileSet = new FileInfo(this.inTileSet.Text);
 			string graphicsdir = Path.Combine(Environment.CurrentDirectory, MapEditorManager.GameInstance.Engine.Configuration[EngineConfigurationName.GraphicsRoot]);
-			FileInfo tmp = new FileInfo(graphicsdir);			
+			FileInfo tmp = new FileInfo(graphicsdir);
 
 			if (TileSet.FullName != (tmp.FullName + TileSet.Name))
 			{
-			    try
-			    {
-			        var result = MessageBox.Show("Would you like to copy this tile set to the local directory this will override any previous tilesheets with that name?", "Copy Tileset", MessageBoxButtons.YesNo);
-			        if (result == DialogResult.Yes)
+				try
+				{
+					var result = MessageBox.Show("Would you like to copy this tile set to the local directory this will override any previous tilesheets with that name?", "Copy Tileset", MessageBoxButtons.YesNo);
+					if (result == DialogResult.Yes)
 						TileSet.CopyTo(Path.Combine(graphicsdir, TileSet.Name), true);
-			    }
-			    catch (IOException)
-			    {
-			        MessageBox.Show(String.Format("Could not copy the image {0} to the target directory.", TileSet.Name), "Error", MessageBoxButtons.OK);
-			    }
+				}
+				catch (IOException)
+				{
+					MessageBox.Show(String.Format("Could not copy the image {0} to the target directory.", TileSet.Name), "Error", MessageBoxButtons.OK);
+				}
 			}
 
 			this.map.Name = this.inName.Text;
@@ -125,11 +125,11 @@ namespace ValkyrieMapEditor
 			//if(this.IsNewMap)
 			//	this.Map.MapSize = new MapPoint((int)this.inMapWidth.Value, (int)this.inMapHeight.Value);
 			//else
-				this.NewMapSize = new MapPoint((int)this.inMapWidth.Value, (int)this.inMapHeight.Value);
+			this.NewMapSize = new MapPoint((int)this.inMapWidth.Value, (int)this.inMapHeight.Value);
 
 			this.DialogResult = DialogResult.OK;
 			this.Close();
-        }
+		}
 
 		private bool ValidateForm()
 		{
@@ -177,7 +177,7 @@ namespace ValkyrieMapEditor
 				this.inMapWidth.BackColor = Color.Red;
 				Error = true;
 			}
-			
+
 			if (string.IsNullOrEmpty(this.inMapHeight.Text))
 			{
 				this.inMapHeight.BackColor = Color.Red;
@@ -193,20 +193,20 @@ namespace ValkyrieMapEditor
 			return !(Error);
 		}
 
-        private void btnBrowseTileSet_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog dialog = new OpenFileDialog();
+		private void btnBrowseTileSet_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog dialog = new OpenFileDialog();
 			dialog.Filter = "Compatable Valkyrie Format (*.png)|*.png";
 
-            DialogResult result = dialog.ShowDialog(this);
-			
+			DialogResult result = dialog.ShowDialog(this);
+
 			if (result == DialogResult.Cancel || result == DialogResult.None)
 				return;
 
-            var fileInfo = new FileInfo(dialog.FileName);
+			var fileInfo = new FileInfo(dialog.FileName);
 
-            this.inTileSet.Text = fileInfo.FullName;
-        }
+			this.inTileSet.Text = fileInfo.FullName;
+		}
 
-    }
+	}
 }

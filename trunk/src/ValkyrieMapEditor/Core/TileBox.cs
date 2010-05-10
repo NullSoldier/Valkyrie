@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using ValkyrieMapEditor.Properties;
+using Valkyrie.Library;
 
 namespace ValkyrieMapEditor
 {
@@ -68,12 +69,17 @@ namespace ValkyrieMapEditor
 			}
 			set
 			{
+				if (value.Width <= 0 || value.Height <= 0)
+					throw new ArgumentOutOfRangeException("The width or height cannot be less than 1");
+
 				this.SelectedPoint = new Point(value.X, value.Y);
-				this.EndSelectedPoint = new Point(value.Width + value.X, value.Height + value.Y);
+				this.EndSelectedPoint = new Point(value.Width - 1, value.Height - 1);
+
+				OnTileSelectedChanged();
 			}
 		}
 
-		public Point SelectedPoint
+		private Point SelectedPoint
 		{
 			get { return this.selectionpoint; }
 			set
@@ -83,7 +89,7 @@ namespace ValkyrieMapEditor
 			}
 		}
 
-		public Point EndSelectedPoint
+		private Point EndSelectedPoint
 		{
 			get { return this.endselectionpoint; }
 			set
@@ -103,11 +109,6 @@ namespace ValkyrieMapEditor
 			}
 		}
 
-		private Point tilesize;
-		private Point selectionpoint;
-		private Point endselectionpoint;
-		private bool displaytileselection;
-		
 		public void Initialize()
 		{
 			this.SelectedPoint = new Point(0, 0);
@@ -122,16 +123,26 @@ namespace ValkyrieMapEditor
 			//this.MouseClick += this.MouseClicked;
 		}
 
-		public void Tile_MouseDown(object sender, MouseEventArgs ev)
+		public void SelectTiles (int x, int y, int width, int height)
 		{
-			if (this.Image == null) 
+			this.SelectedRect = new Rectangle(x, y, width, height);
+		}
+
+		private Point tilesize;
+		private Point selectionpoint;
+		private Point endselectionpoint;
+		private bool displaytileselection;
+
+		private void Tile_MouseDown(object sender, MouseEventArgs ev)
+		{
+			if (this.Image == null || ev.Button != MouseButtons.Left) 
                 return;
 
 			this.SelectedPoint = new Point(ev.X / 32, ev.Y / 32);
 			this.EndSelectedPoint = new Point(ev.X / 32, ev.Y / 32);
 		}
 
-		public void Tile_MouseMove(object sender, MouseEventArgs ev)
+		private void Tile_MouseMove(object sender, MouseEventArgs ev)
 		{
 			if (this.Image == null) 
                 return;
@@ -159,34 +170,57 @@ namespace ValkyrieMapEditor
 					this.EndSelectedPoint = new Point(this.EndSelectedPoint.X, this.SelectedPoint.Y - this.MaximumSize.Height);
 				}
 			}
+
+			this.EnforceEdgeLimits();
 		}
 
-		public void Tile_MouseUp(object sender, MouseEventArgs ev)
+		private void EnforceEdgeLimits()
 		{
-			if (this.Image == null) 
+			int maxendx = this.Width / this.tilesize.X;
+			int maxendy = this.Height / this.tilesize.Y;
+
+			int x = this.EndSelectedPoint.X;
+			int y = this.EndSelectedPoint.Y;
+
+			x = x.Clamp(0, maxendx - 1);
+			y = y.Clamp(0, maxendy - 1);
+
+			this.EndSelectedPoint = new Point(x, y);
+		}
+
+		private void Tile_MouseUp(object sender, MouseEventArgs ev)
+		{
+			if (this.Image == null || ev.Button != MouseButtons.Left) 
                 return;
 
 			this.EndSelectedPoint = new Point(ev.X / 32, ev.Y / 32);
 
-			// Call the event to say tile selection has changed
-			Rectangle tileSelection = new Rectangle(this.SelectedRect.X,
-				this.SelectedRect.Y,
-				this.SelectedRect.Width - 1, // Because the width does not start at 0
-				this.SelectedRect.Height - 1);
+			this.EnforceEdgeLimits();
 
-			var handler = this.TileSelectionChanged;
-			
-			if(handler != null)
-				handler(this, new TileSelectionChangedEventArgs(tileSelection));
+			OnTileSelectedChanged();
 		}
 
-		public void MouseClicked(object sender, MouseEventArgs ev)
+		private void MouseClicked(object sender, MouseEventArgs ev)
 		{
 			if (this.Image == null) 
                 return;
 
 			this.SelectedPoint = new Point(ev.X / 32, ev.Y / 32);
 			this.Invalidate();
+		}
+
+		private void OnTileSelectedChanged()
+		{
+			// Call the event to say tile selection has changed
+			Rectangle tileSelection = new Rectangle(this.SelectedRect.X,
+				this.SelectedRect.Y,
+				this.SelectedRect.Width, // Because the width does not start at 0
+				this.SelectedRect.Height);
+
+			var handler = this.TileSelectionChanged;
+
+			if (handler != null)
+				handler(this, new TileSelectionChangedEventArgs(tileSelection));
 		}
 
 		protected override void OnPaint(PaintEventArgs pe)

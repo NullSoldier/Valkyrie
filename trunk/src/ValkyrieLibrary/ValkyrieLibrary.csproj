@@ -116,10 +116,12 @@
     <Compile Include="Managers\ValkyrieGenericManager.cs" />
     <Compile Include="Managers\ValkyriePlayerManager.cs" />
     <Compile Include="Managers\ValkyrieRendererManager.cs" />
+    <Compile Include="Managers\ValkyrieSoundContentManager.cs" />
     <Compile Include="Managers\ValkyrieSoundManager.cs" />
     <Compile Include="Managers\ValkyrieTextureManager.cs" />
     <Compile Include="MovementItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\ValkyrieContentSoundProvider.cs" />
     <Compile Include="Scene\ValkyrieFogRenderer.cs" />
     <Compile Include="Providers\ValkyrieAudioChatReceiver.cs" />
     <Compile Include="Providers\ValkyrieCollisionProvider.cs" />

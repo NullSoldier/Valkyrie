@@ -15,17 +15,18 @@ using Valkyrie.Engine.Core;
 using Valkyrie.Library.Providers;
 using System.Reflection;
 using Valkyrie.Engine.Events;
+using ValkyrieMapEditor.Core.Actions;
 
 namespace ValkyrieMapEditor
 {
-    public static class MapEditorManager
+	public static class MapEditorManager
 	{
 		#region Public Properties
-		
+
 		public static EditorXNA GameInstance
 		{
-			get { return gameinstance; }
-			set { gameinstance = value; }
+			get;
+			set;
 		}
 
 		public static MapLayers CurrentLayer
@@ -48,19 +49,31 @@ namespace ValkyrieMapEditor
 
 		public static Map CurrentMap
 		{
-			get { return currentmap; }
+			get;
+			private set;
+		}
+
+		public static bool IsMapLoaded
+		{
+			get { return (CurrentMap != null); }
+		}
+
+		public static ActionManager ActionManager
+		{
+			get;
+			private set;
 		}
 
 		public static bool IgnoreInput
 		{
-			get { return ignoreinput; }
-			set { ignoreinput = value; }
+			get;
+			set;
 		}
 
 		public static bool NoEvents
 		{
-			get { return noevents; }
-			set { noevents = value; }
+			get;
+			set;
 		}
 
 		public static Rectangle SelectedTilesRectangle
@@ -75,7 +88,7 @@ namespace ValkyrieMapEditor
 			remove { mapchanged -= value; }
 		}
 
-		
+
 		#endregion
 
 		#region Public Methods
@@ -83,7 +96,7 @@ namespace ValkyrieMapEditor
 		public static void OnMapChanged()
 		{
 			var handler = mapchanged;
-			if(handler != null)
+			if (handler != null)
 				handler(null, EventArgs.Empty);
 		}
 
@@ -91,11 +104,11 @@ namespace ValkyrieMapEditor
 		{
 			var map = provider.GetMap(path, MapEditorManager.GameInstance.Engine.EventProvider);
 			map.Texture = GameInstance.Engine.TextureManager.GetTexture(map.TextureName);
-			
+
 			return map;
 		}
 
-		public static void SaveMap (Map map, FileInfo location)
+		public static void SaveMap(Map map, FileInfo location)
 		{
 			XmlDocument doc = new XmlDocument();
 
@@ -121,7 +134,7 @@ namespace ValkyrieMapEditor
 			var underlayer = doc.CreateElement("UnderLayer");
 
 			var underlayerbuilder = new StringBuilder();
-			for(int i = 0; i < map.UnderLayer.Length; i++)
+			for (int i = 0; i < map.UnderLayer.Length; i++)
 			{
 				underlayerbuilder.Append(map.UnderLayer[i]);
 				underlayerbuilder.Append(" ");
@@ -133,7 +146,7 @@ namespace ValkyrieMapEditor
 			var baselayer = doc.CreateElement("BaseLayer");
 
 			var baselayerbuilder = new StringBuilder();
-			for(int i = 0; i < map.BaseLayer.Length; i++)
+			for (int i = 0; i < map.BaseLayer.Length; i++)
 			{
 				baselayerbuilder.Append(map.BaseLayer[i]);
 				baselayerbuilder.Append(" ");
@@ -145,7 +158,7 @@ namespace ValkyrieMapEditor
 			var middlelayer = doc.CreateElement("MiddleLayer");
 
 			var middlelayerbuilder = new StringBuilder();
-			for(int i = 0; i < map.MiddleLayer.Length; i++)
+			for (int i = 0; i < map.MiddleLayer.Length; i++)
 			{
 				middlelayerbuilder.Append(map.MiddleLayer[i]);
 				middlelayerbuilder.Append(" ");
@@ -157,7 +170,7 @@ namespace ValkyrieMapEditor
 			var toplayer = doc.CreateElement("TopLayer");
 
 			var toplayerbuilder = new StringBuilder();
-			for(int i = 0; i < map.TopLayer.Length; i++)
+			for (int i = 0; i < map.TopLayer.Length; i++)
 			{
 				toplayerbuilder.Append(map.TopLayer[i]);
 				toplayerbuilder.Append(" ");
@@ -169,7 +182,7 @@ namespace ValkyrieMapEditor
 			var collisionLayer = doc.CreateElement("CollisionLayer");
 
 			var collisionlayerbuilder = new StringBuilder();
-			for(int i = 0; i < map.CollisionLayer.Length; i++)
+			for (int i = 0; i < map.CollisionLayer.Length; i++)
 			{
 				collisionlayerbuilder.Append(map.CollisionLayer[i]);
 				collisionlayerbuilder.Append(" ");
@@ -177,9 +190,21 @@ namespace ValkyrieMapEditor
 
 			collisionLayer.InnerText = collisionlayerbuilder.ToString();
 
+			// Opaque Layer
+			var opaqueLayer = doc.CreateElement("OpaqueLayer");
+
+			var opaquelayerbuilder = new StringBuilder();
+			for (int i = 0; i < map.OpaqueLayer.Length; i++)
+			{
+				opaquelayerbuilder.Append(map.OpaqueLayer[i]);
+				opaquelayerbuilder.Append(" ");
+			}
+
+			opaqueLayer.InnerText = opaquelayerbuilder.ToString();
+
 			// Events
 			var eventLayer = doc.CreateElement("Events");
-			foreach(IMapEvent mapevent in GameInstance.Engine.EventProvider.GetMapsEvents(map.Name))
+			foreach (IMapEvent mapevent in GameInstance.Engine.EventProvider.GetMapsEvents(map.Name))
 			{
 				eventLayer.AppendChild(EventToXmlNode(mapevent, doc));
 			}
@@ -187,7 +212,7 @@ namespace ValkyrieMapEditor
 			// Animations
 			var animations = doc.CreateElement("AnimatedTiles");
 
-			foreach(var FrameAnimation in map.AnimatedTiles.Values)
+			foreach (var FrameAnimation in map.AnimatedTiles.Values)
 			{
 				var tileNode = doc.CreateElement("AnimatedTile");
 
@@ -220,6 +245,7 @@ namespace ValkyrieMapEditor
 			mapElement.AppendChild(middlelayer);
 			mapElement.AppendChild(toplayer);
 			mapElement.AppendChild(collisionLayer);
+			mapElement.AppendChild(opaqueLayer);
 			mapElement.AppendChild(eventLayer);
 			mapElement.AppendChild(animations);
 
@@ -227,11 +253,14 @@ namespace ValkyrieMapEditor
 			doc.Save(location.FullName);
 		}
 
-		public static void SetCurrentMap (Map map)
+		public static void SetCurrentMap(Map map)
 		{
+			if (map == null)
+				throw new ArgumentNullException("map");
+
 			GameInstance.Engine.WorldManager.ClearWorlds();
 
-			MapEditorManager.currentmap = map;
+			MapEditorManager.CurrentMap = map;
 
 			MapHeader header = new MapHeader(map.Name, new MapPoint(0, 0), string.Empty);
 			header.Map = map;
@@ -240,53 +269,63 @@ namespace ValkyrieMapEditor
 			world.AddMap(header);
 
 			GameInstance.Engine.WorldManager.AddWorld(world);
-			GameInstance.Engine.SceneProvider.GetCameras().FirstOrDefault().Value.CenterOriginOnPoint(0, 0);
+
+			var camera = GameInstance.Engine.SceneProvider.Cameras.GetItems().FirstOrDefault().Value;
+			if (camera != null)
+			{
+				camera.CenterOriginOnPoint(0, 0);
+				camera.CurrentMap = header;
+			}
+				
+			
 		}
 
-		public static Map ApplyMapProperties (Map oldMap)
+		public static Map ApplyMapProperties(Map oldMap)
 		{
 			return MapEditorManager.ResizeMap(oldMap, oldMap.MapSize);
 		}
 
-		public static Map ResizeMap (Map map, MapPoint newsize)
+		public static Map ResizeMap(Map map, MapPoint newsize)
 		{
 			Map newMap = new Map();
 			newMap.Name = map.Name;
 			newMap.TextureName = map.TextureName;
 			newMap.Texture = map.Texture;
 			newMap.TileSize = map.TileSize;
-			foreach(var animation in map.AnimatedTiles)
+			foreach (var animation in map.AnimatedTiles)
 				newMap.AnimatedTiles.Add(animation.Key, animation.Value);
 
 			newMap.MapSize = newsize;
-			newMap.UnderLayer = new int[newsize.X * newsize.Y];
-			newMap.BaseLayer = new int[newsize.X * newsize.Y];
-			newMap.MiddleLayer = new int[newsize.X * newsize.Y];
-			newMap.TopLayer = new int[newsize.X * newsize.Y];
-			newMap.CollisionLayer = new int[newsize.X * newsize.Y];
+			newMap.UnderLayer = new int[newsize.IntX * newsize.IntY];
+			newMap.BaseLayer = new int[newsize.IntX * newsize.IntY];
+			newMap.MiddleLayer = new int[newsize.IntX * newsize.IntY];
+			newMap.TopLayer = new int[newsize.IntX * newsize.IntY];
+			newMap.CollisionLayer = new int[newsize.IntX * newsize.IntY];
+			newMap.OpaqueLayer = new int[newsize.IntX * newsize.IntY];
 
-			for(int i = 0; i < (newMap.MapSize.X * newMap.MapSize.Y); i++)
+			for (int i = 0; i < (newMap.MapSize.X * newMap.MapSize.Y); i++)
 			{
 				newMap.UnderLayer[i] = -1;
 				newMap.BaseLayer[i] = -1;
 				newMap.MiddleLayer[i] = -1;
 				newMap.TopLayer[i] = -1;
 				newMap.CollisionLayer[i] = -1;
+				newMap.OpaqueLayer[i] = -1;
 			}
 
-			for(int y = 0; y < newsize.Y; y++)
+			for (int y = 0; y < newsize.Y; y++)
 			{
-				for(int x = 0; x < newsize.X; x++)
+				for (int x = 0; x < newsize.X; x++)
 				{
 					// If it's outside the Y range always fill with -1
-					if(y >= map.MapSize.Y)
+					if (y >= map.MapSize.Y)
 					{
 						newMap.SetLayerValue(new MapPoint(x, y), MapLayers.UnderLayer, -1);
 						continue;
 					}
 
 					// If it's outside the X range but not the Y range, fill with 0
-					if(x >= map.MapSize.X)
+					if (x >= map.MapSize.X)
 					{
 						newMap.SetLayerValue(new MapPoint(x, y), MapLayers.UnderLayer, -1);
 						continue;
@@ -298,6 +337,7 @@ namespace ValkyrieMapEditor
 					newMap.SetLayerValue(new MapPoint(x, y), MapLayers.MiddleLayer, map.GetLayerValue(new MapPoint(x, y), MapLayers.MiddleLayer));
 					newMap.SetLayerValue(new MapPoint(x, y), MapLayers.TopLayer, map.GetLayerValue(new MapPoint(x, y), MapLayers.TopLayer));
 					newMap.SetLayerValue(new MapPoint(x, y), MapLayers.CollisionLayer, map.GetLayerValue(new MapPoint(x, y), MapLayers.CollisionLayer));
+					newMap.SetLayerValue(new MapPoint(x, y), MapLayers.OpaqueLayer, map.GetLayerValue(new MapPoint(x, y), MapLayers.OpaqueLayer));
 				}
 			}
 
@@ -306,17 +346,13 @@ namespace ValkyrieMapEditor
 
 		#endregion
 
-		private static Map currentmap = null;
-		private static EditorXNA gameinstance = null;
 		private static MapLayers currentlayer = MapLayers.BaseLayer;
 		private static ViewMode viewmode = ViewMode.All;
 		private static Tools tool = Tools.Select;
-		private static Rectangle selectedtilesrectangle = Rectangle.Empty;
-		private static bool ignoreinput = false;
-		private static bool noevents = false;
+		private static Rectangle selectedtilesrectangle = new Rectangle(0, 0, 1, 1);
 		private static event EventHandler mapchanged;
 
-		private static XmlNode EventToXmlNode (IMapEvent mapevent, XmlDocument doc)
+		private static XmlNode EventToXmlNode(IMapEvent mapevent, XmlDocument doc)
 		{
 			XmlElement xmlevent = doc.CreateElement("Event");
 
@@ -338,7 +374,7 @@ namespace ValkyrieMapEditor
 
 			XmlElement parmRoot = doc.CreateElement("Parameters");
 
-			foreach(var parm in mapevent.Parameters)
+			foreach (var parm in mapevent.Parameters)
 			{
 				XmlElement pname = doc.CreateElement("Name");
 				pname.InnerText = parm.Key;
@@ -378,7 +414,7 @@ namespace ValkyrieMapEditor
 		//    }
 		//}
 		#endregion
-    }
+	}
 
 	public enum Tools
 	{
@@ -388,10 +424,15 @@ namespace ValkyrieMapEditor
 		Select
 	}
 
-    public enum ViewMode
-    {
-        All,
-        Below,
-        Dim
-    }
+	public enum ViewMode
+	{
+		All,
+		Below,
+		Dim
+	}
+
+	public class TextureNotFoundException : Exception
+	{
+
+	}
 }

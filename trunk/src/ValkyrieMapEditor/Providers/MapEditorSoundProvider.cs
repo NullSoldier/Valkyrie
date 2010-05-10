@@ -9,8 +9,7 @@ using Valkyrie.Engine;
 
 namespace ValkyrieMapEditor.Providers
 {
-	public class MapEditorSoundProvider
-		: ISoundProvider
+	public class MapEditorSoundProvider : ISoundProvider
 	{
 		public float MasterGainModifier { get; set; }
 		public float SoundGainModifier { get; set; }
@@ -18,12 +17,12 @@ namespace ValkyrieMapEditor.Providers
 		public bool IsMusicEnabled { get; set; }
 		public bool IsSoundEnabled { get; set; }
 
-		public void PlaySound (AudioSource sound, bool loop)
+		public void PlaySound (string sound, bool loop)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public void PlayBGM (AudioSource sound, bool loop)
+		public void PlayBGM (string sound, bool loop)
 		{
 			throw new NotImplementedException ();
 		}

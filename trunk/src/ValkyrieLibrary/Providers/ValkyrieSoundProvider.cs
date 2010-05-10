@@ -15,7 +15,6 @@ using AudioSource = Valkyrie.Engine.Core.Sound.AudioSource;
 namespace Valkyrie.Library.Providers
 {
 	public class ValkyrieSoundProvider
-		: ISoundProvider
 	{
 		public float MasterGainModifier
 		{

@@ -29,5 +29,8 @@ namespace ValkyrieMapEditor.Core
 		Draw,
 		Events,
 		Collsion,
+		Select,
+		Rectangle,
+		Bucket
 	};
 }

@@ -12,28 +12,52 @@ namespace Valkyrie.Library.Providers
 {
 	public class ValkyrieFogRenderer : IFogRenderer
 	{
+		public ValkyrieFogRenderer(Texture2D fogtexture)
+			: this(fogtexture, 0f)
+		{
+		}
+
 		public ValkyrieFogRenderer (Texture2D fogtexture, float opacity)
 		{
 			this.fogtexture = fogtexture;
 			this.opacity = opacity;
 		}
 
+		public float Opacity
+		{
+			get { return this.opacity; }
+			set { this.opacity = value; }
+		}
+
+		public Texture2D Texture
+		{
+			get { return this.fogtexture; }
+			set { this.fogtexture = value; }
+		}
+
 		public void RenderFog(SpriteBatch batch, BaseCamera camera, List<Rectangle> infos, MapPoint rayorigin)
 		{
+			if (infos.Count <= 0)
+				return;
+
+			Vector2 centerorigin = new Vector2()
+			{
+			};
+
 			Rectangle view = new Rectangle(camera.Origin.IntX, camera.Origin.IntY, (int)camera.CurrentSize.X, (int)camera.CurrentSize.Y);
 
 			int tilesize = 32;
 			float NumberOfRays = 270f;
 			float AngleStep = (360f / NumberOfRays);
 
-
 			for (float i = 0; i < 360; i += AngleStep)
 			{
-				Vector2 pos = new Vector2(rayorigin.X * tilesize, rayorigin.Y * tilesize);
-				Vector2 vector = new Vector2((float)Math.Cos(i) * 2, (float)Math.Sin(i) * 2);
+				Vector2 pos = new Vector2(rayorigin.X * tilesize + (tilesize / 2), rayorigin.Y * tilesize + (tilesize / 2));
+				Vector2 vector = new Vector2((float)Math.Cos(i) * 10, (float)Math.Sin(i) * 10);
+				
 				bool addfogpoints = false;
 
-				while (view.Contains((int)pos.X, (int)pos.Y))
+				while (view.Contains((int)pos.X + (int)vector.X, (int)pos.Y + (int)vector.Y))
 				{
 					var worldpoint = this.ScreenSpaceToWorldPoint(pos.X, pos.Y, tilesize);
 

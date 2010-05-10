@@ -123,10 +123,8 @@
 			// inTilePane
 			// 
 			this.inTilePane.DisplayTileSelection = false;
-			this.inTilePane.EndSelectedPoint = new System.Drawing.Point(0, 0);
 			this.inTilePane.Location = new System.Drawing.Point(1, 0);
 			this.inTilePane.Name = "inTilePane";
-			this.inTilePane.SelectedPoint = new System.Drawing.Point(0, 0);
 			this.inTilePane.Size = new System.Drawing.Size(377, 411);
 			this.inTilePane.TabIndex = 0;
 			this.inTilePane.TabStop = false;

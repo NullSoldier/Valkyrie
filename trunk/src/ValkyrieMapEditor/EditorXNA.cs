@@ -25,6 +25,7 @@ using System.Xml;
 using Valkyrie.Library.Providers;
 using Valkyrie.Library.Managers;
 using ValkyrieMapEditor.Providers;
+using ValkyrieMapEditor.Core.Components;
 
 
 namespace ValkyrieMapEditor
@@ -36,7 +37,7 @@ namespace ValkyrieMapEditor
 	{
 		#region Constructors
 
-		public EditorXNA (IntPtr drawSurface, IntPtr drawTilesSurface)
+		public EditorXNA(IntPtr drawSurface, IntPtr drawTilesSurface)
 		{
 			InitializeComponents();
 
@@ -68,8 +69,8 @@ namespace ValkyrieMapEditor
 		{
 			get
 			{
-				if(this.currentcomponent == null)
-					this.currentcomponent = this.componentlist[ComponentID.Draw];
+				if (this.currentcomponent == null)
+					this.currentcomponent = this.componentlist[ComponentID.Select];
 
 				return currentcomponent;
 			}
@@ -81,7 +82,7 @@ namespace ValkyrieMapEditor
 			set { this.mapchanged = value; }
 		}
 
-		public void EnlistEvents (PictureBox pictureBox)
+		public void EnlistEvents(Control pictureBox)
 		{
 			pictureBox.MouseDown += this.MouseDown;
 			pictureBox.MouseUp += this.MouseUp;
@@ -89,10 +90,12 @@ namespace ValkyrieMapEditor
 			pictureBox.MouseClick += this.MouseClicked;
 		}
 
-		public void SwitchToComponent (ComponentID component)
+		public void SwitchToComponent(ComponentID id)
 		{
-			if(this.componentlist.Keys.Contains(component))
-				currentcomponent = this.componentlist[component];
+			IEditorComponent component;
+
+			if (componentlist.TryGetValue(id, out component))
+				currentcomponent = component;
 		}
 
 		#endregion
@@ -104,7 +107,7 @@ namespace ValkyrieMapEditor
 			this.Engine = new ValkyrieEngine(this.LoadEngineConfiguration());
 
 			Mouse.WindowHandle = this.drawSurface;
-			
+
 			base.Initialize();
 		}
 
@@ -117,7 +120,7 @@ namespace ValkyrieMapEditor
 
 			ValkyrieWorldManager worldmanager = new ValkyrieWorldManager(new XMLMapProvider(new Assembly[] { }));
 
-			this.Engine.Load(new ValkyrieSceneProvider(this.GraphicsDevice),
+			this.Engine.Load(new ValkyrieSceneProvider(this.GraphicsDevice, this.spriteBatch, new MapEditorFogRenderer()),
 				new ValkyrieEventProvider(),
 				new ValkyrieNetworkProvider(),
 				new MapEditorSoundProvider(),
@@ -129,9 +132,9 @@ namespace ValkyrieMapEditor
 				new ValkyrieTextureManager(this.Content, this.GraphicsDevice),
 				new ValkyrieSoundManager());
 
-			this.Engine.SceneProvider.AddCamera("camera1", new BaseCamera (this.GraphicsDevice.Viewport.TitleSafeArea) { WorldName = "Default" });
-			this.Engine.SceneProvider.GetCamera("camera1").CenterOriginOnPoint (0, 0);
-			
+			this.Engine.SceneProvider.Cameras.AddItem("camera1", new BaseCamera(this.GraphicsDevice.Viewport.TitleSafeArea) { WorldName = "Default" });
+			this.Engine.SceneProvider.Cameras["camera1"].CenterOriginOnPoint(0, 0);
+
 			this.SelectionSprite = Texture2D.FromFile(this.GraphicsDevice, "Graphics/EditorSelection.png");
 
 			this.Render.LoadContent(this.GraphicsDevice, this.Engine);
@@ -146,7 +149,7 @@ namespace ValkyrieMapEditor
 			this.Engine.Unload();
 		}
 
-		protected override void Update (GameTime gameTime)
+		protected override void Update(GameTime gameTime)
 		{
 			this.Render.Update(gameTime);
 			this.CurrentComponent.Update(gameTime);
@@ -154,17 +157,15 @@ namespace ValkyrieMapEditor
 			base.Update(gameTime);
 		}
 
-		protected override void Draw (GameTime gameTime)
+		protected override void Draw(GameTime gameTime)
 		{
 			this.RenderFPS(gameTime);
 
-			GraphicsDevice.Clear(Color.Gray);
+			GraphicsDevice.Clear(this.clearcolor);
 
 			this.Render.Draw(this.spriteBatch);
 
-			spriteBatch.Begin();
 			this.CurrentComponent.Draw(this.spriteBatch);
-			spriteBatch.End();
 
 			base.Draw(gameTime);
 		}
@@ -221,8 +222,9 @@ namespace ValkyrieMapEditor
 		private IEditorComponent currentcomponent = null;
 		private float deltaFPSTime = 0;
 		private bool mapchanged = false;
+		private Color clearcolor = new Color((byte)160, (byte)160, (byte)160);
 
-		private void InitializeComponents ()
+		private void InitializeComponents()
 		{
 			this.Render = new RenderComponent();
 
@@ -230,6 +232,7 @@ namespace ValkyrieMapEditor
 			this.componentlist.Add(ComponentID.Draw, new DrawComponent());
 			this.componentlist.Add(ComponentID.Events, new EventsComponent());
 			this.componentlist.Add(ComponentID.Collsion, new CollisionComponent());
+			this.componentlist.Add(ComponentID.Select, new SelectComponent());
 		}
 
 		private void RenderFPS(GameTime gameTime)
@@ -238,28 +241,28 @@ namespace ValkyrieMapEditor
 
 			float fps = 1 / elapsed;
 			deltaFPSTime += elapsed;
-			if(deltaFPSTime > 1)
+			if (deltaFPSTime > 1)
 			{
 				Window.Title = "MapEditor  [" + fps.ToString() + " FPS]";
 				deltaFPSTime -= 1;
 			}
 		}
 
-		private void graphics_PreparingDeviceSettings (object sender, PreparingDeviceSettingsEventArgs e)
+		private void graphics_PreparingDeviceSettings(object sender, PreparingDeviceSettingsEventArgs e)
 		{
 			e.GraphicsDeviceInformation.PresentationParameters.DeviceWindowHandle = drawSurface;
 		}
 
-		private void Game_VisibleChanged (object sender, EventArgs e)
+		private void Game_VisibleChanged(object sender, EventArgs e)
 		{
-			if(Control.FromHandle((this.Window.Handle)).Visible == true)
+			if (Control.FromHandle((this.Window.Handle)).Visible == true)
 				Control.FromHandle((this.Window.Handle)).Visible = false;
 		}
 
-		private EngineConfiguration LoadEngineConfiguration ()
+		private EngineConfiguration LoadEngineConfiguration()
 		{
 			FileInfo info = new FileInfo(Path.Combine(Environment.CurrentDirectory, "Data/TileEngineConfig.xml"));
-			if(!info.Exists)
+			if (!info.Exists)
 				throw new FileNotFoundException("Engine config is missing from data directory!");
 
 			XmlDocument doc = new XmlDocument();
@@ -285,7 +288,7 @@ namespace ValkyrieMapEditor
 
 			// Create the rectangle texture, but it will have no color! lets fix that
 			Texture2D rectangleTexture = new Texture2D(EditorXNA.graphicsDevice, width, height, 1, TextureUsage.None, SurfaceFormat.Color);
-		   
+
 			Color[] color = new Color[width * height]; // Set the color to the amount of pixels
 			Color black = new Color(0, 0, 0, 255);
 			Color blacknoalpha = new Color(0, 0, 0, 0);
@@ -308,7 +311,7 @@ namespace ValkyrieMapEditor
 			}
 
 			// Outer four
-			for(int y = 0; y < height; y++)
+			for (int y = 0; y < height; y++)
 				color[0 + (y * width)] = black;
 
 			for (int y = 0; y < height; y++)
@@ -321,7 +324,7 @@ namespace ValkyrieMapEditor
 				color[x + ((height - 1) * width)] = black;
 
 			// Inner four
-			for (int y = limit; y < (height - limit -1); y++)
+			for (int y = limit; y < (height - limit - 1); y++)
 				color[limit + (y * width)] = black;
 
 			for (int y = limit; y < (height - limit); y++)
@@ -337,31 +340,31 @@ namespace ValkyrieMapEditor
 			return rectangleTexture;
 		}
 
-		static public Texture2D CreateSelectRectangleFilled (int width, int height, Color border, Color mainfill)
+		static public Texture2D CreateSelectRectangleFilled(int width, int height, Color border, Color mainfill)
 		{
 			Texture2D texture = new Texture2D(EditorXNA.graphicsDevice, width, height, 1, TextureUsage.None, SurfaceFormat.Color);
 			Color[] color = new Color[width * height];
 
-			for(int i = 0; i < width * height; i++)
+			for (int i = 0; i < width * height; i++)
 				color[i] = mainfill;
 
 			// Outer four
-			for(int y = 0; y < height; y++)
+			for (int y = 0; y < height; y++)
 				color[0 + (y * width)] = border;
 
-			for(int y = 0; y < height; y++)
+			for (int y = 0; y < height; y++)
 				color[width - 1 + (y * width)] = border;
 
-			for(int x = 0; x < width; x++)
+			for (int x = 0; x < width; x++)
 				color[x + (0 * width)] = border;
 
-			for(int x = 0; x < width; x++)
+			for (int x = 0; x < width; x++)
 				color[x + ((height - 1) * width)] = border;
 
 			texture.SetData(color);//set the color data on the texture
 			return texture;
 		}
-		
+
 		#endregion
 	}
 }

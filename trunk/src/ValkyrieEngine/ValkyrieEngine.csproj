@@ -115,6 +115,7 @@
     <Compile Include="Core\Points\ScreenPoint.cs" />
     <Compile Include="Core\Scene\IFogRenderer.cs" />
     <Compile Include="Core\Scene\IRenderer.cs" />
+    <Compile Include="Core\Scene\RenderFlags.cs" />
     <Compile Include="Core\Sound\AudioSource.cs" />
     <Compile Include="IEngineContext.cs" />
     <Compile Include="Managers\ICameraManager.cs" />
@@ -202,4 +203,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>copy /y "$(SolutionDir)\src\Resources" "$(TargetDir)\Maps"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
