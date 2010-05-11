@@ -44,7 +44,7 @@ namespace Valkyrie.Library
 
 		public static ScreenPoint ScreenSpaceToWorldSpace (this BaseCamera self, ScreenPoint point)
 		{
-			return (point + self.Origin) / self.Zoom;
+			return (point / self.Zoom) + self.Origin;
 		}
 	}
 }

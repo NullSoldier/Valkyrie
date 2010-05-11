@@ -512,7 +512,7 @@ namespace ValkyrieMapEditor
 			this.btnUnderLayer.CheckOnClick = true;
 			this.btnUnderLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.btnUnderLayer.Enabled = false;
-			this.btnUnderLayer.Image = global::ValkyrieMapEditor.Properties.Resources.imgUnderlayer;
+			this.btnUnderLayer.Image = global::ValkyrieMapEditor.Properties.Resources.imgUnderLayer;
 			this.btnUnderLayer.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnUnderLayer.Name = "btnUnderLayer";
 			this.btnUnderLayer.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);

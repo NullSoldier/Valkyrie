@@ -95,10 +95,12 @@
     <Compile Include="Core\Actions\User Actions\PlaceTileBatchAction.cs" />
     <Compile Include="Core\Actions\User Actions\PlaceTileAction.cs" />
     <Compile Include="Core\Actions\UserAction.cs" />
+    <Compile Include="Core\Components\BucketComponent.cs" />
     <Compile Include="Core\Components\CollisionComponent.cs" />
     <Compile Include="Core\Components\Helpers.cs" />
     <Compile Include="Core\Components\IEditorComponent.cs" />
     <Compile Include="Core\Components\EventsComponent.cs" />
+    <Compile Include="Core\Components\RectangleComponent.cs" />
     <Compile Include="Core\Components\RenderComponent.cs" />
     <Compile Include="Core\Components\DrawComponent.cs" />
     <Compile Include="Core\Components\SelectComponent.cs" />
@@ -180,6 +182,10 @@
     <None Include="Resources\14.png" />
     <None Include="Resources\11.png" />
     <None Include="Resources\12.png" />
+    <None Include="Resources\icon1.png" />
+    <None Include="Resources\icon2.png" />
+    <None Include="Resources\icon3.png" />
+    <None Include="Resources\icon4.png" />
     <Content Include="System.Data.SQLite.dll" />
     <None Include="Resources\layers.png" />
     <None Include="Resources\shape_handles.png" />

@@ -16,10 +16,19 @@ namespace Valkyrie.Engine.Providers
 	public interface ISceneProvider : IEngineProvider
 	{
 		/// <summary>
-		/// Begins the scene
+		/// Begins the scene with the specified camera
 		/// </summary>
-		void BeginScene();
+		/// <param name="cameraid">The name of the camera to render the scene to.</param>
+		/// <exception cref="ArgumentException">The camera with the name <paramref name="cameraname"/> does not exist.</exception>
+		void BeginScene(string cameraid);
 
+		/// <summary>
+		/// Begins the scene with the specified camera
+		/// </summary>
+		/// <param name="camera">The camera to render the scene to.</param>
+		/// <exception cref="ArgumentNullException">The camera is null.</exception>
+		void BeginScene(BaseCamera camera);
+		
 		/// <summary>
 		/// Ends the scene
 		/// </summary>
@@ -38,20 +47,10 @@ namespace Valkyrie.Engine.Providers
 		void Draw (RenderFlags flags);
 
 		/// <summary>
-		/// Draw a specific camera
+		/// Draw a layer of the current camera
 		/// </summary>
-		/// <param name="spriteBatch">The SpriteBatch to render to.</param>
-		/// <param name="cameraname">The name of the camera to draw.</param>
-		void DrawCamera (string cameraname, RenderFlags flags);
-
-		/// <summary>
-		/// Draw a layer of a specified camera
-		/// </summary>
-		/// <param name="cameraname">The name of the camera to draw.</param>
 		/// <param name="layer">The layer to draw.</param>
-		/// <param name="players">Whether players should be rendered or not.</param>
-		/// <exception cref="ArgumentException">The camera with the name <paramref name="cameraname"/> does not exist.</exception>
-		void DrawCameraLayer (string cameraname, MapLayers layer);
+		void DrawLayer (MapLayers layer);
 
 		/// <summary>
 		/// Draw a specific player.
@@ -60,7 +59,7 @@ namespace Valkyrie.Engine.Providers
 		/// <param name="playername">The name of the player to draw.</param>
 		/// <param name="camera">The camera to draw to.</param>
 		/// <exception cref="ArgumentException">A player with the <paramref name="playername"/> does not exist.</exception>
-		void DrawPlayer (string cameraname, string playername);
+		void DrawPlayer (string playername);
 
 		/// <summary>
 		/// Returns the MapHeader of the players current location

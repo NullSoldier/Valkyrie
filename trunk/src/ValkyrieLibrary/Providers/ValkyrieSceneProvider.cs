@@ -42,13 +42,29 @@ namespace Valkyrie.Library.Providers
 		public IRendererManager Renderers { get { return this.renderers; } }
 		public IFogRenderer FogRenderer { get { return this.fogrenderer; } }
 
-		public void BeginScene()
+		public void BeginScene(string cameraid)
 		{
+			var camera = this.cameras[cameraid];
+			
+			this.BeginScene(camera);
+		}
+
+		public void BeginScene(BaseCamera camera)
+		{
+			Check.NullArgument<BaseCamera>(camera, "camera");
+
+			currentcamera = camera;
+			device.Viewport = currentcamera.Viewport;
+			spritebatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState, currentcamera.TransformMatrix);
+
 			this.isstarted = true;
 		}
 
 		public void EndScene()
 		{
+			currentcamera = null;
+			spritebatch.End();
+
 			this.isstarted = false;
 		}
 
@@ -69,22 +85,21 @@ namespace Valkyrie.Library.Providers
 
 		public void Draw (RenderFlags flags)
 		{
-			this.Cameras.GetItems().Values.ForEach ( c => DrawCamera(spritebatch, c, flags));
+			this.DrawCamera(spritebatch, currentcamera, flags);
 		}
 
-		public void DrawCamera (string cameraname, RenderFlags flags)
+		public void DrawLayer (MapLayers layer)
 		{
-			this.DrawCamera(spritebatch, this.Cameras[cameraname], flags);
+			this.DrawLayerMap (spritebatch, currentcamera, layer);
 		}
 
-		public void DrawCameraLayer (string cameraname, MapLayers layer)
+		public void DrawPlayer (string playername)
 		{
-			this.DrawLayerMap (spritebatch, this.Cameras[cameraname], layer);
-		}
+			var player = this.Players[playername];
 
-		public void DrawPlayer (string cameraname, string playername)
-		{
-			this.DrawPlayer(spritebatch, this.Players[playername], this.Cameras[cameraname]);
+			Check.NullArgument<BaseCharacter>(player, "player");
+
+			this.DrawPlayer(spritebatch, player, currentcamera);
 		}
 
 		/// <summary>
@@ -94,6 +109,8 @@ namespace Valkyrie.Library.Providers
 		/// <returns></returns>
 		public MapHeader GetPositionableLocalMap(BaseCharacter positionable)
 		{
+			Check.NullArgument<BaseCharacter>(positionable, "positionable");
+
 			if (positionable.CurrentMap != null)
 				return positionable.CurrentMap;
 			else
@@ -140,6 +157,7 @@ namespace Valkyrie.Library.Providers
 		private IRendererManager renderers = null;
 		private IFogRenderer fogrenderer = null;
 		private List<Rectangle> lastfoginfos = new List<Rectangle>();
+		private BaseCamera currentcamera = null;
 		private bool isloaded = false;
 		private bool isstarted = false;
 
@@ -205,12 +223,7 @@ namespace Valkyrie.Library.Providers
 
 		private void DrawCamera(SpriteBatch spriteBatch, BaseCamera camera, RenderFlags flags)
 		{
-			device.Viewport = camera.Viewport;
-			device.Clear(Color.Black);
-
-			spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState, camera.TransformMatrix);
 			DrawPass(spriteBatch, camera, flags); // Draw only non opaque
-			spriteBatch.End();
 		}
 
 		private void DrawPass(SpriteBatch spriteBatch, BaseCamera camera, RenderFlags flags)

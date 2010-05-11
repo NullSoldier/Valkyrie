@@ -11,6 +11,7 @@ using Valkyrie.Engine;
 using Valkyrie.Engine.Maps;
 using Valkyrie.Engine.Core;
 using Valkyrie.Engine.Core.Scene;
+using Valkyrie.Engine.Providers;
 
 namespace ValkyrieMapEditor.Core
 {
@@ -29,7 +30,7 @@ namespace ValkyrieMapEditor.Core
 
 			if (!this.isloaded) return;
 
-			if (this.context.SceneProvider.Cameras["camera1"] != null)
+			if (this.context.SceneProvider.Cameras.ContainsKey("camera1"))
 			{
 				var camera = this.context.SceneProvider.Cameras["camera1"];
 				camera.ResizeScreen(camera.Screen.X, camera.Screen.Y, e.Width, e.Height);
@@ -107,30 +108,32 @@ namespace ValkyrieMapEditor.Core
 			if (MapEditorManager.CurrentMap == null)
 				return;
 
+			scene.BeginScene("camera1");
+
 			if (MapEditorManager.ViewMode == ViewMode.All)
 			{
-				this.context.SceneProvider.DrawCamera("camera1", RenderFlags.NoPlayers);
+				scene.Draw(RenderFlags.NoPlayers);
 			}
 			else if (MapEditorManager.ViewMode == ViewMode.Below)
 			{
 				if (MapEditorManager.CurrentLayer == MapLayers.TopLayer)
 				{
-					this.context.SceneProvider.DrawCamera("camera1", RenderFlags.NoPlayers);
+					scene.Draw(RenderFlags.NoPlayers);
 				}
 				else if (MapEditorManager.CurrentLayer == MapLayers.MiddleLayer)
 				{
-					this.context.SceneProvider.DrawCameraLayer("camera1", MapLayers.UnderLayer);
-					this.context.SceneProvider.DrawCameraLayer("camera1", MapLayers.BaseLayer);
-					this.context.SceneProvider.DrawCameraLayer("camera1", MapLayers.MiddleLayer);
+					scene.DrawLayer(MapLayers.UnderLayer);
+					scene.DrawLayer(MapLayers.BaseLayer);
+					scene.DrawLayer(MapLayers.MiddleLayer);
 				}
 				else if (MapEditorManager.CurrentLayer == MapLayers.BaseLayer)
 				{
-					this.context.SceneProvider.DrawCameraLayer("camera1", MapLayers.UnderLayer);
-					this.context.SceneProvider.DrawCameraLayer("camera1", MapLayers.BaseLayer);
+					scene.DrawLayer(MapLayers.UnderLayer);
+					scene.DrawLayer(MapLayers.BaseLayer);
 				}
 				else
 				{
-					this.context.SceneProvider.DrawCameraLayer("camera1", MapLayers.UnderLayer);
+					scene.DrawLayer(MapLayers.UnderLayer);
 				}
 			}
 			else
@@ -141,25 +144,27 @@ namespace ValkyrieMapEditor.Core
 				switch (MapEditorManager.CurrentLayer)
 				{
 					case MapLayers.UnderLayer:
-						this.context.SceneProvider.DrawCameraLayer("camera1", MapLayers.UnderLayer);
+						scene.DrawLayer(MapLayers.UnderLayer);
 						break;
 
 					case MapLayers.BaseLayer:
-						this.context.SceneProvider.DrawCameraLayer("camera1", MapLayers.BaseLayer);
+						scene.DrawLayer(MapLayers.BaseLayer);
 						break;
 
 					case MapLayers.MiddleLayer:
-						this.context.SceneProvider.DrawCameraLayer("camera1", MapLayers.MiddleLayer);
+						scene.DrawLayer(MapLayers.MiddleLayer);
 						break;
 
 					case MapLayers.TopLayer:
-						this.context.SceneProvider.DrawCameraLayer("camera1", MapLayers.TopLayer);
+						scene.DrawLayer(MapLayers.TopLayer);
 						break;
 
 					default:
 						break;
 				}
 			}
+
+			this.context.SceneProvider.EndScene();
 		}
 
 		public void Update(GameTime gameTime)
@@ -169,11 +174,13 @@ namespace ValkyrieMapEditor.Core
 		public void LoadContent(GraphicsDevice graphicsDevice, IEngineContext context)
 		{
 			this.context = context;
+			this.scene = context.SceneProvider;
 
 			this.isloaded = true;
 		}
 
 		private bool isloaded = false;
 		private IEngineContext context = null;
+		private ISceneProvider scene = null;
 	}
 }

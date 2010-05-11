@@ -163,6 +163,8 @@ namespace Valkyrie.Engine
 				Width=width,
 				Height=height
 			};
+
+			this.buffer = new RenderTarget2D(device, Screen.Width, Screen.Height, 1, SurfaceFormat.Color);
         }
 
         #region Center Methods

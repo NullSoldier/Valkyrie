@@ -221,9 +221,9 @@ namespace ValkyrieMapEditor.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap imgUnderlayer {
+        internal static System.Drawing.Bitmap imgUnderLayer {
             get {
-                object obj = ResourceManager.GetObject("imgUnderlayer", resourceCulture);
+                object obj = ResourceManager.GetObject("imgUnderLayer", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

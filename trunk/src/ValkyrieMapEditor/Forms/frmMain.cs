@@ -530,6 +530,12 @@ namespace ValkyrieMapEditor
 
 			if (Reset && this.VerticalScroll.Visible)
 				this.VerticalScroll.Value = 0;
+
+			if(!this.HorizontalScroll.Visible)
+				this.UpdateMapScroll();
+
+			if(!this.VerticalScroll.Visible)
+				this.UpdateMapScroll();
 		}
 
 		private void SaveMap()
@@ -721,6 +727,16 @@ namespace ValkyrieMapEditor
 				if (VerticalScroll.Value != oldvalue)
 					TileMap_Scroll(VerticalScroll, new ScrollEventArgs(ScrollEventType.SmallIncrement, oldvalue, VerticalScroll.Value, ScrollOrientation.VerticalScroll));
 			}
+		}
+
+		private void UpdateMapScroll()
+		{
+			var camera = MapEditorManager.GameInstance.Engine.SceneProvider.Cameras["camera1"];
+			
+			if (camera == null)
+				return;
+
+			camera.CenterOriginOnPoint(0, 0);
 		}
 
 		private void pctSurface_Click(object sender, EventArgs e)

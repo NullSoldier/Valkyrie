@@ -5,118 +5,195 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using System.Windows.Forms;
 using Valkyrie.Engine;
+using Valkyrie.Engine.Core;
+using Valkyrie.Library;
+using Valkyrie.Engine.Maps;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework;
 
 
 namespace ValkyrieMapEditor.Core.Components
 {
-	class RectangleComponent : IEditorComponent
+	public class RectangleComponent : IEditorComponent
 	{
-		#region IEditorComponent Members
-
 		public void OnSizeChanged(object sender, ScreenResizedEventArgs e)
 		{
-			throw new NotImplementedException();
 		}
 
 		public void OnScrolled(object sender, ScrollEventArgs e)
 		{
-			throw new NotImplementedException();
 		}
 
 		public void OnMouseDown(object sender, MouseEventArgs ev)
 		{
-			throw new NotImplementedException();
+			if (!MapEditorManager.IsMapLoaded
+				|| MapEditorManager.IgnoreInput
+				|| ev.Button != MouseButtons.Left)
+				return;
+
+			var camera = MapEditorManager.GameInstance.Engine.SceneProvider.Cameras["camera1"];
+			var map = MapEditorManager.CurrentMap;
+
+			if (!ComponentHelpers.PointInBounds(camera, ev.X, ev.Y) || camera == null)
+				return;
+
+			// Start selecting
+			this.startpoint = camera.ScreenSpaceToWorldSpace(new ScreenPoint(ev.X, ev.Y)).ToMapPoint();
+			this.startpoint = this.ConstrainPoint(map, this.startpoint);
+			this.endpoint = new MapPoint(startpoint.X, startpoint.Y);
+
+			this.isselecting = true;
+			this.startedinwindow = true;
 		}
 
 		public void OnMouseMove(object sender, MouseEventArgs ev)
 		{
-			throw new NotImplementedException();
 		}
 
 		public void OnMouseUp(object sender, MouseEventArgs ev)
 		{
-			lock (this.pointlock)
-			{
-				if (ev.Button == MouseButtons.Left)
-					this.startpoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
-			}
+			var rect = ComponentHelpers.GetSelectionRectangleTiles (this.startpoint.ToPoint(), this.endpoint.ToPoint());
+			this.PlotRectangleChunk(rect);
 
-			lock (this.pointlock)
-			{
-				if (this.startpoint == this.GetNegativeOne()) return;
+			this.startpoint = this.GetNegativeOne();
+			this.endpoint = this.GetNegativeOne();
 
-				this.endpoint = new Point((ev.X / 32) * 32, (ev.Y / 32) * 32);
-
-				Rectangle selectrect = this.GetSelectionRectangle(this.startpoint, this.endpoint);
-
-				// Process
-				int xtile = 0;
-				int ytile = 0;
-				var camera = MapEditorManager.GameInstance.Engine.SceneProvider.Cameras["camera1"];
-
-				for (int y = 0; y < selectrect.Height / 32; y++)
-				{
-					for (int x = 0; x < selectrect.Width / 32; x++)
-					{
-						// Figure out location on map
-						// Set it to proper tile
-						MapPoint tileLocation = new MapPoint((selectrect.X - (int)camera.Offset.IntX) / 32, (selectrect.Y - (int)camera.Offset.IntY) / 32);
-						MapPoint tilesheetPoint = new MapPoint(MapEditorManager.SelectedTilesRectangle.X + xtile, MapEditorManager.SelectedTilesRectangle.Y + ytile);
-						MapPoint point = new MapPoint(tileLocation.X + x, tileLocation.Y + y);
-
-						if (point.X < MapEditorManager.CurrentMap.MapSize.X && point.Y < MapEditorManager.CurrentMap.MapSize.Y)
-							MapEditorManager.CurrentMap.SetLayerValue(point, MapEditorManager.CurrentLayer, MapEditorManager.CurrentMap.GetTileSetValue(tilesheetPoint));
-
-						xtile++;
-						if (xtile > MapEditorManager.SelectedTilesRectangle.Width)
-							xtile = 0;
-					}
-
-					ytile++;
-					if (ytile > MapEditorManager.SelectedTilesRectangle.Height)
-						ytile = 0;
-				}
-
-				this.endpoint = this.GetNegativeOne();
-				this.startpoint = this.GetNegativeOne();
-
-				MapEditorManager.OnMapChanged();
-			}
+			this.isselecting = false;
+			this.startedinwindow = false;
 		}
 
 		public void OnMouseClicked(object sender, MouseEventArgs ev)
 		{
-			throw new NotImplementedException();
 		}
 
 		public void Draw(SpriteBatch spriteBatch)
 		{
-			lock (this.pointlock)
-			{
-				#region Rectangle
-				if (startpoint != this.GetNegativeOne())
-				{
-					pos = this.GetSelectionRectangle(this.startpoint, this.endpoint);
-					newLoc = new Point(pos.X, pos.Y);
-					selectbox = EditorXNA.CreateSelectRectangle(pos.Width, pos.Height);
-				}
-				#endregion
-			}
+			if (!MapEditorManager.IsMapLoaded
+				|| MapEditorManager.IgnoreInput
+				|| !isselecting)
+				return;
+
+			var camera = this.context.SceneProvider.Cameras["camera1"];
+			var mouse = Mouse.GetState();
+			var map = MapEditorManager.CurrentMap;
+
+			if (!ComponentHelpers.PointInBounds(camera, mouse.X, mouse.Y) || camera == null)
+				return;
+
+			var rect = ComponentHelpers.GetSelectionRectangle(startpoint.ToScreenPoint().ToPoint(), endpoint.ToScreenPoint().ToPoint());
+
+			this.PlotSelectionRect(spriteBatch, camera, rect);
 		}
 
-		public void Update(Microsoft.Xna.Framework.GameTime gameTime)
+		public void Update(GameTime gameTime)
 		{
-			lock (this.pointlock)
+			if (!MapEditorManager.IsMapLoaded
+				|| MapEditorManager.IgnoreInput
+				|| !startedinwindow)
+				return;
+
+			var mouse = Mouse.GetState();
+			var camera = MapEditorManager.GameInstance.Engine.SceneProvider.Cameras["camera1"];
+			var map = MapEditorManager.CurrentMap;
+
+			if (camera == null
+				|| map == null)
+				return;
+
+			if (isselecting && mouse.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
 			{
-				this.endpoint = new Point((mouseState.X / 32) * 32, (mouseState.Y / 32) * 32);
+				this.endpoint = camera.ScreenSpaceToWorldSpace(new ScreenPoint(mouse.X, mouse.Y)).ToMapPoint();
+				this.endpoint = this.ConstrainPoint(map, this.endpoint);
 			}
 		}
 
 		public void LoadContent(GraphicsDevice graphicsDevice, IEngineContext context)
 		{
-			throw new NotImplementedException();
+			this.context = context;
+
+			this.startpoint = GetNegativeOne();
+			this.endpoint = GetNegativeOne();
 		}
 
-		#endregion
+		private IEngineContext context;
+		private MapPoint startpoint;
+		private MapPoint endpoint;
+		private bool startedinwindow = false;
+		private bool isselecting = false;
+		private Color bordercolor = new Color(93, 134, 212, 255);
+		private Color fillcolor = new Color(160, 190, 234, 100);
+
+		private MapPoint GetNegativeOne()
+		{
+			return new MapPoint(-1, -1);
+		}
+
+		private MapPoint ConstrainPoint(Map map, MapPoint mpoint)
+		{
+			mpoint.IntX = mpoint.IntX.Clamp(0, map.MapSize.IntX - 1);
+			mpoint.IntY = mpoint.IntY.Clamp(0, map.MapSize.IntY - 1);
+
+			return mpoint;
+		}
+
+		/// <summary>
+		/// Plots a chunk of tiles within a specified rectangle
+		/// </summary>
+		/// <param name="rect">The MapPoint based selection rectangle</param>
+		private void PlotRectangleChunk(Rectangle rect)
+		{
+			var camera = this.context.SceneProvider.Cameras["camera1"];
+			var map = MapEditorManager.CurrentMap;
+			var tilerect = MapEditorManager.SelectedTilesRectangle;
+
+			var plotstart = new MapPoint(rect.X, rect.Y);
+
+			// Keep track of where in the tile sheet we are
+			int tilex = 0;
+			int totalx = 0;
+			int tiley = 0;
+
+			for (int i = 0; i < rect.Width * rect.Height; i++)
+			{
+				int y = (i / rect.Width);
+				int x = (i - (y * rect.Width));
+
+				MapPoint tilepoint = new MapPoint(plotstart.X + x, plotstart.Y + y);
+				MapPoint sheetpoint = new MapPoint(tilerect.X + tilex, tilerect.Y + tiley);
+
+				if (ComponentHelpers.PointInMap(map, tilepoint))
+					map.SetLayerValue(tilepoint, MapEditorManager.CurrentLayer, map.GetTileSetValue(sheetpoint));
+
+				tilex++;
+				totalx++;
+				if (tilex >= tilerect.Width || totalx >= rect.Width)
+				{
+					if (totalx >= rect.Width)
+					{
+						tiley++;
+						
+						totalx = 0;
+						tilex = 0;
+					}
+
+					tilex = 0;
+				}
+
+				if (tiley >= tilerect.Height)
+					tiley = 0;
+			}
+
+			MapEditorManager.OnMapChanged();
+		}
+
+		private void PlotSelectionRect(SpriteBatch spritebatch, BaseCamera camera, Rectangle rect)
+		{
+			var selecttexture = EditorXNA.CreateSelectRectangle(rect.Width, rect.Height);
+			var startplot = new Vector2(rect.X, rect.Y);
+
+			spritebatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState, camera.TransformMatrix);
+			spritebatch.Draw(selecttexture, startplot, Color.White);
+			spritebatch.End();
+		}
 	}
 }

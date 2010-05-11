@@ -131,9 +131,10 @@ namespace ValkyrieMapEditor
 				worldmanager,
 				new ValkyrieTextureManager(this.Content, this.GraphicsDevice),
 				new ValkyrieSoundManager());
-
+			
 			this.Engine.SceneProvider.Cameras.AddItem("camera1", new BaseCamera(this.GraphicsDevice.Viewport.TitleSafeArea) { WorldName = "Default" });
 			this.Engine.SceneProvider.Cameras["camera1"].CenterOriginOnPoint(0, 0);
+			this.Engine.SceneProvider.Cameras["camera1"].Load(this.GraphicsDevice);
 
 			this.SelectionSprite = Texture2D.FromFile(this.GraphicsDevice, "Graphics/EditorSelection.png");
 
@@ -233,6 +234,8 @@ namespace ValkyrieMapEditor
 			this.componentlist.Add(ComponentID.Events, new EventsComponent());
 			this.componentlist.Add(ComponentID.Collsion, new CollisionComponent());
 			this.componentlist.Add(ComponentID.Select, new SelectComponent());
+			this.componentlist.Add(ComponentID.Rectangle, new RectangleComponent());
+			this.componentlist.Add(ComponentID.Bucket, new BucketComponent());
 		}
 
 		private void RenderFPS(GameTime gameTime)

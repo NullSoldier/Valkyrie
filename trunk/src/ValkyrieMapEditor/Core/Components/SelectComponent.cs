@@ -53,13 +53,14 @@ namespace ValkyrieMapEditor.Core.Components
 				var region = ComponentHelpers.GetSelectionRectangle(this.startpoint.ToScreenPoint().ToPoint(), this.endpoint.ToScreenPoint().ToPoint());
 				var mapregion = new Rectangle(region.X / 32, region.Y / 32, (region.Width / 32) - 1, (region.Height / 32) - 1);
 				var camera = MapEditorManager.GameInstance.Engine.SceneProvider.Cameras["camera1"];
+				var map = MapEditorManager.CurrentMap;
 
 				if (camera == null)
 					return;
 
 				Grabbable grabbable = new Grabbable(mapregion)
 				{
-					Texture = this.GetSelectionTexture(camera, mapregion)
+					Texture = this.GetSelectionTexture(camera, map, mapregion)
 				};
 
 				this.grabbables.Add(grabbable);
@@ -123,6 +124,7 @@ namespace ValkyrieMapEditor.Core.Components
 				// Start selecting
 				this.startpoint = camera.ScreenSpaceToWorldSpace(new ScreenPoint(ev.X, ev.Y)).ToMapPoint();
 				this.startpoint = this.ConstrainPoint(map, this.startpoint);
+				this.endpoint = new MapPoint(startpoint.X, startpoint.Y);
 
 				this.isselecting = true;
 			}
@@ -134,10 +136,12 @@ namespace ValkyrieMapEditor.Core.Components
 				return;
 
 			var camera = MapEditorManager.GameInstance.Engine.SceneProvider.Cameras["camera1"];
-			
+
 			if(!MapEditorManager.IsMapLoaded || camera == null)
 				return;
 
+			var map = MapEditorManager.CurrentMap;
+			
 			if (this.isselecting)
 			{
 				var rect = ComponentHelpers.GetSelectionRectangle(startpoint.ToScreenPoint().ToPoint(), endpoint.ToScreenPoint().ToPoint()); // map rect
@@ -146,10 +150,14 @@ namespace ValkyrieMapEditor.Core.Components
 
 			foreach (Grabbable grab in grabbables)
 			{
-				var rect = ComponentHelpers.GetSelectionRectangle(grab.GetStartPoint().ToScreenPoint().ToPoint(), grab.GetEndPoint().ToScreenPoint().ToPoint());
+				var scaledtilesize = (int)(map.TileSize * camera.Zoom);
 
-				spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState, camera.TransformMatrix);
-				spriteBatch.Draw(grab.Texture, new Vector2(rect.X, rect.Y), Color.White);
+				var rect = ComponentHelpers.GetSelectionRectangle(grab.GetStartPoint().ToScreenPoint().ToPoint(), grab.GetEndPoint().ToScreenPoint().ToPoint());
+				var loc = new Vector2((rect.X * camera.Zoom) + camera.Offset.X, (rect.Y * camera.Zoom) + camera.Offset.Y);
+
+				spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState);
+				//spriteBatch.Draw(grab.Texture, new Vector2(rect.X * camera.Zoom, rect.Y * camera.Zoom), Color.White);
+				spriteBatch.Draw(grab.Texture, loc, null, Color.White, 0f, Vector2.Zero, camera.Zoom, SpriteEffects.None, 0f);
 				spriteBatch.End();
 
 				this.PlotSelectionRect(spriteBatch, camera, rect);
@@ -233,19 +241,34 @@ namespace ValkyrieMapEditor.Core.Components
 			return mpoint;
 		}
 
-		private Texture2D GetSelectionTexture(BaseCamera camera, Rectangle rect)
+		private Texture2D GetSelectionTexture(BaseCamera camera, Map map, Rectangle rect)
 		{
-			Texture2D texture = new Texture2D(this.device, rect.Width, rect.Height);
+			float oldzoom = camera.Zoom;
+			camera.Scale(1);
+
+			int scaledtilesize = (int)(map.TileSize * camera.Zoom);
+
+			Rectangle getrect = new Rectangle((rect.X * scaledtilesize) + camera.Origin.IntX,
+										(rect.Y * scaledtilesize) + camera.Origin.IntY,
+										(rect.Width * scaledtilesize) + scaledtilesize,
+										(rect.Height * scaledtilesize) + scaledtilesize);
+			
+			getrect.Width = Helpers.Clamp(getrect.Width, 0, camera.Screen.Width - getrect.X);
+			getrect.Height = Helpers.Clamp(getrect.Height, 0, camera.Screen.Height - getrect.Y);
+
+			Texture2D texture = new Texture2D(this.device, getrect.Width, getrect.Height);
 
 			device.SetRenderTarget(0, camera.Buffer);
-			context.SceneProvider.BeginScene();
-			context.SceneProvider.Draw(RenderFlags.None);
+			context.SceneProvider.BeginScene(camera);
+			context.SceneProvider.Draw(RenderFlags.NoPlayers & RenderFlags.NoFog);
 			context.SceneProvider.EndScene();
 			device.SetRenderTarget(0, null);
 
-			Color[] data = new Color[rect.Width * rect.Height];
-			camera.Buffer.GetTexture().GetData<Color>(1, rect, data, 0, data.Length);
-			texture.SetData<Color>(data);
+			camera.Scale(oldzoom);
+
+			Color[] data = new Color[getrect.Width * getrect.Height];
+			camera.Buffer.GetTexture().GetData<Color> (0, getrect, data, 0, data.Length);
+			texture.SetData<Color> (data);
 
 			return texture;
 		}
