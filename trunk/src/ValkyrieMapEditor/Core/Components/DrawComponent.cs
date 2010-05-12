@@ -23,6 +23,14 @@ namespace ValkyrieMapEditor.Core
 
 		}
 
+		public void OnComponentActivated()
+		{
+		}
+
+		public void OnComponentDeactivated()
+		{
+		}
+
 		public void OnSizeChanged(object sender, ScreenResizedEventArgs e) { }
 
 		public void OnScrolled(object sender, ScrollEventArgs e) { }

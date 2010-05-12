@@ -22,6 +22,8 @@ namespace ValkyrieMapEditor.Core
         void Update(GameTime gameTime);
 
 		void LoadContent (GraphicsDevice graphicsDevice, IEngineContext context);
+		void OnComponentActivated();
+		void OnComponentDeactivated();
     }
 
 	public enum ComponentID

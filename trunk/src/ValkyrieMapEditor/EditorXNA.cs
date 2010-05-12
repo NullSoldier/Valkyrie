@@ -95,7 +95,11 @@ namespace ValkyrieMapEditor
 			IEditorComponent component;
 
 			if (componentlist.TryGetValue(id, out component))
+			{
+				currentcomponent.OnComponentDeactivated();
 				currentcomponent = component;
+				currentcomponent.OnComponentActivated();
+			}
 		}
 
 		#endregion

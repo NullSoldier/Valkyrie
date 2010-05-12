@@ -66,6 +66,14 @@ namespace ValkyrieMapEditor.Core.Components
 		{
 		}
 
+		public void OnComponentActivated()
+		{
+		}
+
+		public void OnComponentDeactivated()
+		{
+		}
+
 		public void Draw(SpriteBatch spriteBatch)
 		{
 			if (!MapEditorManager.IsMapLoaded

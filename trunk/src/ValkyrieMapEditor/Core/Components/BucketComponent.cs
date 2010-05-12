@@ -92,6 +92,14 @@ namespace ValkyrieMapEditor.Core.Components
 			this.context = context;
 		}
 
+		public void OnComponentActivated()
+		{
+		}
+
+		public void OnComponentDeactivated()
+		{
+		}
+
 		private IEngineContext context;
 
 		/// <summary>

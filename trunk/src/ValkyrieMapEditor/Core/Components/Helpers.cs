@@ -11,16 +11,21 @@ namespace ValkyrieMapEditor.Core.Components
 {
 	public static class ComponentHelpers
 	{
-		public static bool PointInMap(Map map, MapPoint point)
+		public static bool PointInMap(Map map, MapPoint mpoint)
 		{
-			return (point.X >= 0
-				&& point.Y >= 0
-				&& point.X < map.MapSize.X
-				&& point.Y < map.MapSize.Y);
+			Check.NullArgument<Map>(map, "map");
+			Check.NullArgument<MapPoint>(mpoint, "mpoint");
+
+			return (mpoint.X >= 0
+				&& mpoint.Y >= 0
+				&& mpoint.X < map.MapSize.X
+				&& mpoint.Y < map.MapSize.Y);
 		}
 
 		public static bool PointInBounds(BaseCamera camera, int x, int y)
 		{
+			Check.NullArgument<BaseCamera>(camera, "camera");
+
 			return (x >= 0
 				&& y >= 0
 				&& x <= camera.Screen.Width

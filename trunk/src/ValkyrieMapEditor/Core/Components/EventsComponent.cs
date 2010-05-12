@@ -44,6 +44,14 @@ namespace ValkyrieMapEditor.Core
 			this.context = context;
 		}
 
+		public void OnComponentActivated()
+		{
+		}
+
+		public void OnComponentDeactivated()
+		{
+		}
+
 		public void CreateOrEditEvent(Rectangle selectedRect)
 		{
 			MapEditorManager.IgnoreInput = true;

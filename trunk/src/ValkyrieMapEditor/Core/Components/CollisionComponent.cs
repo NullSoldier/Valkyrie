@@ -67,6 +67,14 @@ namespace ValkyrieMapEditor.Core
 			}
 		}
 
+		public void OnComponentActivated()
+		{
+		}
+
+		public void OnComponentDeactivated()
+		{
+		}
+
 		public void Draw(SpriteBatch spriteBatch)
 		{
 			for (int y = 0; y < MapEditorManager.CurrentMap.MapSize.Y; y++)
@@ -91,7 +99,6 @@ namespace ValkyrieMapEditor.Core
 
 		public void Update(GameTime gameTime)
 		{
-
 		}
 
 		private IEngineContext context = null;

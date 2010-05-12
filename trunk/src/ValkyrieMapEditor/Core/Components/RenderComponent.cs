@@ -22,11 +22,20 @@ namespace ValkyrieMapEditor.Core
 
 		}
 
+		public void OnComponentActivated()
+		{
+		}
+
+		public void OnComponentDeactivated()
+		{
+		}
+
 		public void OnSizeChanged(object sender, ScreenResizedEventArgs e)
 		{
 			EditorXNA.graphics.PreferredBackBufferWidth = e.Width;
 			EditorXNA.graphics.PreferredBackBufferHeight = e.Height;
 			EditorXNA.graphics.ApplyChanges();
+			// Throws exception
 
 			if (!this.isloaded) return;
 

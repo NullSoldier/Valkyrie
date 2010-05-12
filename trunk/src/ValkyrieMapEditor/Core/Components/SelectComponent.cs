@@ -16,6 +16,24 @@ namespace ValkyrieMapEditor.Core.Components
 {
 	public class SelectComponent : IEditorComponent
 	{
+		public void OnComponentActivated()
+		{
+		}
+
+		public void OnComponentDeactivated()
+		{
+			var map = MapEditorManager.CurrentMap;
+
+			if (currentgrabed != null && map != null)
+				this.PutDownGrabbable(currentgrabed, map);
+
+			this.grabbables.Clear();
+			this.currentgrabed = null;
+			this.isgrabbing = false;
+			this.isselecting = false;
+			this.startedinwindow = false;
+		}
+
 		public void OnSizeChanged(object sender, ScreenResizedEventArgs e)
 		{
 		}
@@ -58,12 +76,10 @@ namespace ValkyrieMapEditor.Core.Components
 				if (camera == null)
 					return;
 
-				Grabbable grabbable = new Grabbable(mapregion)
-				{
-					Texture = this.GetSelectionTexture(camera, map, mapregion)
-				};
-
+				var grabbable = this.CreateGrabbable(mapregion, map, true);
 				this.grabbables.Add(grabbable);
+
+				this.currentgrabed = grabbable;
 
 				this.isselecting = false;
 			}
@@ -97,8 +113,10 @@ namespace ValkyrieMapEditor.Core.Components
 			bool ingrabbed = this.IsGrabbableAtPoint(grabpointmap);
 
 			// We are grabbing and we clicked somewhere out of the grab region
-			if (this.isgrabbing && !ingrabbed)
+			if (currentgrabed != null && !ingrabbed)
 			{
+				this.PutDownGrabbable(currentgrabed, map);
+
 				this.grabbables.Clear();
 				this.currentgrabed = null;
 
@@ -114,9 +132,13 @@ namespace ValkyrieMapEditor.Core.Components
 
 				this.isgrabbing = true;
 			}
+			
 			// We aren't grabbing and we don't click in any grabbable regions
-			else
+			if(!this.isgrabbing && !ingrabbed)
 			{
+				if(currentgrabed != null)
+					this.PutDownGrabbable(currentgrabed, map);
+
 				this.grabbables.Clear();
 				this.currentgrabed = null;
 				this.isgrabbing = false;
@@ -150,16 +172,9 @@ namespace ValkyrieMapEditor.Core.Components
 
 			foreach (Grabbable grab in grabbables)
 			{
-				var scaledtilesize = (int)(map.TileSize * camera.Zoom);
-
 				var rect = ComponentHelpers.GetSelectionRectangle(grab.GetStartPoint().ToScreenPoint().ToPoint(), grab.GetEndPoint().ToScreenPoint().ToPoint());
-				var loc = new Vector2((rect.X * camera.Zoom) + camera.Offset.X, (rect.Y * camera.Zoom) + camera.Offset.Y);
 
-				spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState);
-				//spriteBatch.Draw(grab.Texture, new Vector2(rect.X * camera.Zoom, rect.Y * camera.Zoom), Color.White);
-				spriteBatch.Draw(grab.Texture, loc, null, Color.White, 0f, Vector2.Zero, camera.Zoom, SpriteEffects.None, 0f);
-				spriteBatch.End();
-
+				this.DrawGrabbable(spriteBatch, camera, map, grab);
 				this.PlotSelectionRect(spriteBatch, camera, rect);
 			}
 
@@ -220,11 +235,27 @@ namespace ValkyrieMapEditor.Core.Components
 		
 		private Grabbable GetGrabbableAtPoint(MapPoint mpoint)
 		{
+			Check.NullArgument<MapPoint>(mpoint, "mpoint");
+
 			return this.grabbables.Where(g => g.ContainsPoint(mpoint)).FirstOrDefault();
+		}
+
+		private MapPoint ConstrainPoint(Map map, MapPoint mpoint)
+		{
+			Check.NullArgument<Map>(map, "map");
+			Check.NullArgument<MapPoint>(mpoint, "mpoint");
+
+			mpoint.IntX = mpoint.IntX.Clamp(0, map.MapSize.IntX - 1);
+			mpoint.IntY = mpoint.IntY.Clamp(0, map.MapSize.IntY - 1);
+
+			return mpoint;
 		}
 
 		private void PlotSelectionRect(SpriteBatch spritebatch, BaseCamera camera, Rectangle rect)
 		{
+			Check.NullArgument<SpriteBatch>(spritebatch, "spritebatch");
+			Check.NullArgument<BaseCamera>(camera, "camera");
+
 			var selecttexture = EditorXNA.CreateSelectRectangleFilled(rect.Width, rect.Height, bordercolor, fillcolor);
 			var startplot = new Vector2(rect.X, rect.Y);
 
@@ -233,44 +264,113 @@ namespace ValkyrieMapEditor.Core.Components
 			spritebatch.End();
 		}
 
-		private MapPoint ConstrainPoint(Map map, MapPoint mpoint)
+		private void DrawGrabbable (SpriteBatch spritebatch, BaseCamera camera, Map map, Grabbable grabbable)
 		{
-			mpoint.IntX = mpoint.IntX.Clamp(0, map.MapSize.IntX - 1);
-			mpoint.IntY = mpoint.IntY.Clamp(0, map.MapSize.IntY - 1);
+			Check.NullArgument<SpriteBatch>(spritebatch, "spritebatch");
+			Check.NullArgument<BaseCamera>(camera, "camera");
+			Check.NullArgument<Map>(map, "map");
+			Check.NullArgument<Grabbable>(grabbable, "grabbable");
 
-			return mpoint;
+			var startpoint = grabbable.GetStartPoint();
+
+			spritebatch.Begin( SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState, camera.TransformMatrix);
+			foreach (var tile in grabbable.Tiles)
+			{
+				Rectangle destrect = new Rectangle((startpoint.IntX + tile.Offset.IntX ) * map.TileSize, (startpoint.IntY + tile.Offset.IntY) * map.TileSize, map.TileSize, map.TileSize);
+				MapPoint mappoint = new MapPoint(startpoint.IntX + tile.Offset.IntX, startpoint.IntY + tile.Offset.IntY);
+
+				if (!ComponentHelpers.PointInMap(map, mappoint))
+					continue;
+
+				PlotLayerTile(spritebatch, map, destrect, tile.Layer1);
+				PlotLayerTile(spritebatch, map, destrect, tile.Layer2);
+				PlotLayerTile(spritebatch, map, destrect, tile.Layer3);
+				PlotLayerTile(spritebatch, map, destrect, tile.Layer4);
+				
+			}
+			spritebatch.End();
 		}
 
-		private Texture2D GetSelectionTexture(BaseCamera camera, Map map, Rectangle rect)
+		private void PlotLayerTile(SpriteBatch spritebatch, Map map, Rectangle destrect, int tilevalue)
 		{
-			float oldzoom = camera.Zoom;
-			camera.Scale(1);
+			Check.NullArgument<SpriteBatch>(spritebatch, "spritebatch");
+			Check.NullArgument<Map>(map, "map");
 
-			int scaledtilesize = (int)(map.TileSize * camera.Zoom);
+			Rectangle sourcerect = this.GetSourceRect(map, tilevalue);
+				
+			spritebatch.Draw (map.Texture, destrect, sourcerect, Color.White);
+		}
 
-			Rectangle getrect = new Rectangle((rect.X * scaledtilesize) + camera.Origin.IntX,
-										(rect.Y * scaledtilesize) + camera.Origin.IntY,
-										(rect.Width * scaledtilesize) + scaledtilesize,
-										(rect.Height * scaledtilesize) + scaledtilesize);
-			
-			getrect.Width = Helpers.Clamp(getrect.Width, 0, camera.Screen.Width - getrect.X);
-			getrect.Height = Helpers.Clamp(getrect.Height, 0, camera.Screen.Height - getrect.Y);
+		private Rectangle GetSourceRect(Map map, int value)
+		{
+			Check.NullArgument<Map>(map, "map");
 
-			Texture2D texture = new Texture2D(this.device, getrect.Width, getrect.Height);
+			return new Rectangle(
+					(value % map.TilesPerRow) * map.TileSize,
+					(value / map.TilesPerRow) * map.TileSize,
+					map.TileSize - 1, map.TileSize - 1);
+		}
 
-			device.SetRenderTarget(0, camera.Buffer);
-			context.SceneProvider.BeginScene(camera);
-			context.SceneProvider.Draw(RenderFlags.NoPlayers & RenderFlags.NoFog);
-			context.SceneProvider.EndScene();
-			device.SetRenderTarget(0, null);
+		private Grabbable CreateGrabbable(Rectangle maprect, Map map, bool clearout)
+		{
+			Check.NullArgument<Map>(map, "map");
 
-			camera.Scale(oldzoom);
+			Grabbable grab = new Grabbable(maprect);
 
-			Color[] data = new Color[getrect.Width * getrect.Height];
-			camera.Buffer.GetTexture().GetData<Color> (0, getrect, data, 0, data.Length);
-			texture.SetData<Color> (data);
+			int width = maprect.Width + 1;
+			int height = maprect.Height + 1;
 
-			return texture;
+			for (int x = 0; x < width; x++)
+			{
+				for (int y = 0; y < height; y++)
+				{
+					var mappoint = new MapPoint(x + maprect.X, y + maprect.Y);
+
+					if (!ComponentHelpers.PointInMap(map, mappoint))
+						continue;
+
+					GrabbedTile tile = new GrabbedTile(new MapPoint(x, y))
+					{
+						Layer1 = map.GetLayerValue(mappoint, MapLayers.UnderLayer),
+						Layer2 = map.GetLayerValue(mappoint, MapLayers.BaseLayer),
+						Layer3 = map.GetLayerValue(mappoint, MapLayers.MiddleLayer),
+						Layer4 = map.GetLayerValue(mappoint, MapLayers.TopLayer)
+					};
+
+					if (clearout)
+					{
+						map.SetLayerValue(mappoint, MapLayers.UnderLayer, -1);
+						map.SetLayerValue(mappoint, MapLayers.BaseLayer, -1);
+						map.SetLayerValue(mappoint, MapLayers.MiddleLayer, -1);
+						map.SetLayerValue(mappoint, MapLayers.TopLayer, -1);
+					}
+
+					grab.Tiles.Add(tile);
+				}
+			}
+
+			return grab;
+		}
+
+		private void PutDownGrabbable(Grabbable grabbable, Map map)
+		{
+			Check.NullArgument<Grabbable>(grabbable, "grabbable");
+			Check.NullArgument<Map>(map, "map");
+
+			var startpoint = grabbable.GetStartPoint();
+
+			foreach (var tile in grabbable.Tiles)
+			{
+				var mappoint = new MapPoint(startpoint.X + tile.Offset.X, startpoint.Y + tile.Offset.Y);
+
+				if (!ComponentHelpers.PointInMap(map, mappoint))
+					continue;
+
+				map.SetLayerValue(mappoint, MapLayers.UnderLayer, tile.Layer1);
+				map.SetLayerValue(mappoint, MapLayers.BaseLayer, tile.Layer2);
+				map.SetLayerValue(mappoint, MapLayers.MiddleLayer, tile.Layer3);
+				map.SetLayerValue(mappoint, MapLayers.TopLayer, tile.Layer4);
+			}
 		}
 	}
 
@@ -288,12 +388,6 @@ namespace ValkyrieMapEditor.Core.Components
 		}
 
 		public List<GrabbedTile> Tiles
-		{
-			get;
-			set;
-		}
-
-		public Texture2D Texture
 		{
 			get;
 			set;

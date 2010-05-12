@@ -100,7 +100,6 @@
     <Compile Include="Core\Characters\IMovable.cs" />
     <Compile Include="Core\Characters\IPositionable.cs" />
     <Compile Include="Core\Characters\Direction.cs" />
-    <Compile Include="Core\Check.cs" />
     <Compile Include="Core\Events\ActivationTypes.cs" />
     <Compile Include="Core\Events\BaseMapEvent.cs" />
     <Compile Include="Core\Events\IMapEvent.cs" />

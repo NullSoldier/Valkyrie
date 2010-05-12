@@ -32,7 +32,6 @@ namespace ValkyrieMapEditor
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-			this.pctTileSurface = new ValkyrieMapEditor.TileBox();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.btnMapProperties = new System.Windows.Forms.Button();
 			this.lstSettings = new System.Windows.Forms.ListView();
@@ -82,13 +81,13 @@ namespace ValkyrieMapEditor
 			this.btnZoomNone = new System.Windows.Forms.ToolStripButton();
 			this.btnZoomMedium = new System.Windows.Forms.ToolStripButton();
 			this.btnZoomFar = new System.Windows.Forms.ToolStripButton();
+			this.pctTileSurface = new ValkyrieMapEditor.TileBox();
 			this.splitContainer.Panel1.SuspendLayout();
 			this.splitContainer.Panel2.SuspendLayout();
 			this.splitContainer.SuspendLayout();
 			this.splitContainer2.Panel1.SuspendLayout();
 			this.splitContainer2.Panel2.SuspendLayout();
 			this.splitContainer2.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).BeginInit();
 			this.splitContainer3.Panel1.SuspendLayout();
 			this.splitContainer3.Panel2.SuspendLayout();
 			this.splitContainer3.SuspendLayout();
@@ -97,6 +96,7 @@ namespace ValkyrieMapEditor
 			this.footerStatus.SuspendLayout();
 			this.menuStrip.SuspendLayout();
 			this.toolStripTools.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// splitContainer
@@ -143,17 +143,6 @@ namespace ValkyrieMapEditor
 			this.splitContainer2.SplitterDistance = 441;
 			this.splitContainer2.SplitterWidth = 5;
 			this.splitContainer2.TabIndex = 0;
-			// 
-			// pctTileSurface
-			// 
-			this.pctTileSurface.DisplayTileSelection = true;
-			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
-			this.pctTileSurface.Name = "pctTileSurface";
-			this.pctTileSurface.SelectedRect = new System.Drawing.Rectangle(0, 0, 13, 13);
-			this.pctTileSurface.Size = new System.Drawing.Size(173, 134);
-			this.pctTileSurface.TabIndex = 0;
-			this.pctTileSurface.TabStop = false;
-			this.pctTileSurface.TileSize = new System.Drawing.Point(0, 0);
 			// 
 			// splitContainer3
 			// 
@@ -263,12 +252,12 @@ namespace ValkyrieMapEditor
 			// 
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
 			this.toolStripSeparator2.Padding = new System.Windows.Forms.Padding(20);
-			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 26);
 			// 
 			// toolStripSeparator3
 			// 
 			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+			this.toolStripSeparator3.Size = new System.Drawing.Size(6, 26);
 			// 
 			// footerStatus
 			// 
@@ -318,14 +307,14 @@ namespace ValkyrieMapEditor
 			this.toolProject.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.toolProject.Name = "toolProject";
 			this.toolProject.ShowDropDownArrow = false;
-			this.toolProject.Size = new System.Drawing.Size(48, 19);
-			this.toolProject.Text = "Project";
+			this.toolProject.Size = new System.Drawing.Size(29, 19);
+			this.toolProject.Text = "File";
 			// 
 			// toolNew
 			// 
 			this.toolNew.Image = global::ValkyrieMapEditor.Properties.Resources.imgPage;
 			this.toolNew.Name = "toolNew";
-			this.toolNew.Size = new System.Drawing.Size(114, 22);
+			this.toolNew.Size = new System.Drawing.Size(152, 22);
 			this.toolNew.Text = "New";
 			this.toolNew.Click += new System.EventHandler(this.toolNew_Click);
 			// 
@@ -333,7 +322,7 @@ namespace ValkyrieMapEditor
 			// 
 			this.toolOpen.Image = global::ValkyrieMapEditor.Properties.Resources.imgOpen;
 			this.toolOpen.Name = "toolOpen";
-			this.toolOpen.Size = new System.Drawing.Size(114, 22);
+			this.toolOpen.Size = new System.Drawing.Size(152, 22);
 			this.toolOpen.Text = "Open";
 			this.toolOpen.Click += new System.EventHandler(this.toolOpen_Click);
 			// 
@@ -342,7 +331,7 @@ namespace ValkyrieMapEditor
 			this.toolSave.Enabled = false;
 			this.toolSave.Image = global::ValkyrieMapEditor.Properties.Resources.imgSave;
 			this.toolSave.Name = "toolSave";
-			this.toolSave.Size = new System.Drawing.Size(114, 22);
+			this.toolSave.Size = new System.Drawing.Size(152, 22);
 			this.toolSave.Text = "Save";
 			this.toolSave.Click += new System.EventHandler(this.toolSave_Click);
 			// 
@@ -351,7 +340,7 @@ namespace ValkyrieMapEditor
 			this.toolSaveAs.Enabled = false;
 			this.toolSaveAs.Image = global::ValkyrieMapEditor.Properties.Resources.imgSaveAs;
 			this.toolSaveAs.Name = "toolSaveAs";
-			this.toolSaveAs.Size = new System.Drawing.Size(114, 22);
+			this.toolSaveAs.Size = new System.Drawing.Size(152, 22);
 			this.toolSaveAs.Text = "Save As";
 			this.toolSaveAs.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
 			// 
@@ -359,7 +348,7 @@ namespace ValkyrieMapEditor
 			// 
 			this.toolClose.Image = global::ValkyrieMapEditor.Properties.Resources.imgExit;
 			this.toolClose.Name = "toolClose";
-			this.toolClose.Size = new System.Drawing.Size(114, 22);
+			this.toolClose.Size = new System.Drawing.Size(152, 22);
 			this.toolClose.Text = "Exit";
 			this.toolClose.Click += new System.EventHandler(this.toolClose_Click);
 			// 
@@ -469,7 +458,7 @@ namespace ValkyrieMapEditor
             this.btnZoomFar});
 			this.toolStripTools.Location = new System.Drawing.Point(0, 26);
 			this.toolStripTools.Name = "toolStripTools";
-			this.toolStripTools.Size = new System.Drawing.Size(1008, 25);
+			this.toolStripTools.Size = new System.Drawing.Size(1008, 26);
 			this.toolStripTools.TabIndex = 3;
 			this.toolStripTools.Text = "toolStrip1";
 			// 
@@ -480,7 +469,7 @@ namespace ValkyrieMapEditor
 			this.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnNew.Name = "btnNew";
 			this.btnNew.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnNew.Size = new System.Drawing.Size(34, 22);
+			this.btnNew.Size = new System.Drawing.Size(34, 23);
 			this.btnNew.Text = "New Map";
 			this.btnNew.Click += new System.EventHandler(this.toolNew_Click);
 			// 
@@ -491,7 +480,7 @@ namespace ValkyrieMapEditor
 			this.btnOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnOpen.Name = "btnOpen";
 			this.btnOpen.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnOpen.Size = new System.Drawing.Size(34, 22);
+			this.btnOpen.Size = new System.Drawing.Size(34, 23);
 			this.btnOpen.Text = "Open Map";
 			this.btnOpen.Click += new System.EventHandler(this.toolOpen_Click);
 			// 
@@ -503,7 +492,7 @@ namespace ValkyrieMapEditor
 			this.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnSave.Size = new System.Drawing.Size(34, 22);
+			this.btnSave.Size = new System.Drawing.Size(34, 23);
 			this.btnSave.Text = "Save Map";
 			this.btnSave.Click += new System.EventHandler(this.toolSave_Click);
 			// 
@@ -513,10 +502,11 @@ namespace ValkyrieMapEditor
 			this.btnUnderLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.btnUnderLayer.Enabled = false;
 			this.btnUnderLayer.Image = global::ValkyrieMapEditor.Properties.Resources.imgUnderLayer;
+			this.btnUnderLayer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this.btnUnderLayer.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnUnderLayer.Name = "btnUnderLayer";
 			this.btnUnderLayer.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnUnderLayer.Size = new System.Drawing.Size(34, 22);
+			this.btnUnderLayer.Size = new System.Drawing.Size(34, 23);
 			this.btnUnderLayer.Text = "Under Layer";
 			this.btnUnderLayer.Click += new System.EventHandler(this.btnUnderLayer_Click);
 			// 
@@ -527,10 +517,11 @@ namespace ValkyrieMapEditor
 			this.btnBaseLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.btnBaseLayer.Enabled = false;
 			this.btnBaseLayer.Image = global::ValkyrieMapEditor.Properties.Resources.imgBaseLayer;
+			this.btnBaseLayer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this.btnBaseLayer.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnBaseLayer.Name = "btnBaseLayer";
 			this.btnBaseLayer.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnBaseLayer.Size = new System.Drawing.Size(34, 22);
+			this.btnBaseLayer.Size = new System.Drawing.Size(34, 23);
 			this.btnBaseLayer.Text = "Base Layer";
 			this.btnBaseLayer.Click += new System.EventHandler(this.btnBaseLayer_Click);
 			// 
@@ -539,10 +530,11 @@ namespace ValkyrieMapEditor
 			this.btnMiddleLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.btnMiddleLayer.Enabled = false;
 			this.btnMiddleLayer.Image = global::ValkyrieMapEditor.Properties.Resources.imgMiddleLayer;
+			this.btnMiddleLayer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this.btnMiddleLayer.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnMiddleLayer.Name = "btnMiddleLayer";
 			this.btnMiddleLayer.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnMiddleLayer.Size = new System.Drawing.Size(34, 22);
+			this.btnMiddleLayer.Size = new System.Drawing.Size(34, 23);
 			this.btnMiddleLayer.Text = "Middle Layer";
 			this.btnMiddleLayer.Click += new System.EventHandler(this.btnMiddleLayer_Click);
 			// 
@@ -551,10 +543,11 @@ namespace ValkyrieMapEditor
 			this.btnTopLayer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.btnTopLayer.Enabled = false;
 			this.btnTopLayer.Image = global::ValkyrieMapEditor.Properties.Resources.imgTopLayer;
+			this.btnTopLayer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this.btnTopLayer.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnTopLayer.Name = "btnTopLayer";
 			this.btnTopLayer.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnTopLayer.Size = new System.Drawing.Size(34, 22);
+			this.btnTopLayer.Size = new System.Drawing.Size(34, 23);
 			this.btnTopLayer.Text = "Top Layer";
 			this.btnTopLayer.Click += new System.EventHandler(this.btnTopLayer_Click);
 			// 
@@ -566,7 +559,7 @@ namespace ValkyrieMapEditor
 			this.btnHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnHelp.Name = "btnHelp";
 			this.btnHelp.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnHelp.Size = new System.Drawing.Size(34, 22);
+			this.btnHelp.Size = new System.Drawing.Size(34, 23);
 			this.btnHelp.Text = "Help";
 			this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
 			// 
@@ -578,7 +571,7 @@ namespace ValkyrieMapEditor
 			this.btnCollisionLayer.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnCollisionLayer.Name = "btnCollisionLayer";
 			this.btnCollisionLayer.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnCollisionLayer.Size = new System.Drawing.Size(34, 22);
+			this.btnCollisionLayer.Size = new System.Drawing.Size(34, 23);
 			this.btnCollisionLayer.Text = "Collison Layer";
 			this.btnCollisionLayer.Click += new System.EventHandler(this.btnCollisionLayer_Click);
 			// 
@@ -592,7 +585,7 @@ namespace ValkyrieMapEditor
 			this.btnSelection.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnSelection.Name = "btnSelection";
 			this.btnSelection.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnSelection.Size = new System.Drawing.Size(34, 22);
+			this.btnSelection.Size = new System.Drawing.Size(34, 23);
 			this.btnSelection.Text = "Selection";
 			this.btnSelection.Click += new System.EventHandler(this.btnSelection_Click);
 			// 
@@ -604,7 +597,7 @@ namespace ValkyrieMapEditor
 			this.btnPencil.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnPencil.Name = "btnPencil";
 			this.btnPencil.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnPencil.Size = new System.Drawing.Size(34, 22);
+			this.btnPencil.Size = new System.Drawing.Size(34, 23);
 			this.btnPencil.Text = "Pencil";
 			this.btnPencil.Click += new System.EventHandler(this.btnPencil_Click);
 			// 
@@ -616,7 +609,7 @@ namespace ValkyrieMapEditor
 			this.btnRect.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnRect.Name = "btnRect";
 			this.btnRect.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnRect.Size = new System.Drawing.Size(34, 22);
+			this.btnRect.Size = new System.Drawing.Size(34, 23);
 			this.btnRect.Text = "Rectangle";
 			this.btnRect.Click += new System.EventHandler(this.btnRect_Click);
 			// 
@@ -628,7 +621,7 @@ namespace ValkyrieMapEditor
 			this.btnFill.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnFill.Name = "btnFill";
 			this.btnFill.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnFill.Size = new System.Drawing.Size(34, 22);
+			this.btnFill.Size = new System.Drawing.Size(34, 23);
 			this.btnFill.Text = "Fill";
 			this.btnFill.Click += new System.EventHandler(this.btnFill_Click);
 			// 
@@ -640,14 +633,14 @@ namespace ValkyrieMapEditor
 			this.btnEvent.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnEvent.Name = "btnEvent";
 			this.btnEvent.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnEvent.Size = new System.Drawing.Size(34, 22);
+			this.btnEvent.Size = new System.Drawing.Size(34, 23);
 			this.btnEvent.Text = "Event Mode";
 			this.btnEvent.Click += new System.EventHandler(this.btnEvent_Click);
 			// 
 			// toolStripSeparator4
 			// 
 			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+			this.toolStripSeparator4.Size = new System.Drawing.Size(6, 26);
 			// 
 			// btnZoomNone
 			// 
@@ -659,7 +652,7 @@ namespace ValkyrieMapEditor
 			this.btnZoomNone.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnZoomNone.Name = "btnZoomNone";
 			this.btnZoomNone.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnZoomNone.Size = new System.Drawing.Size(34, 22);
+			this.btnZoomNone.Size = new System.Drawing.Size(34, 23);
 			this.btnZoomNone.Text = "No Zoom";
 			this.btnZoomNone.Click += new System.EventHandler(this.btnZoomNone_Click);
 			// 
@@ -671,7 +664,7 @@ namespace ValkyrieMapEditor
 			this.btnZoomMedium.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnZoomMedium.Name = "btnZoomMedium";
 			this.btnZoomMedium.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnZoomMedium.Size = new System.Drawing.Size(34, 22);
+			this.btnZoomMedium.Size = new System.Drawing.Size(34, 23);
 			this.btnZoomMedium.Text = "Medium Zoom";
 			this.btnZoomMedium.Click += new System.EventHandler(this.btnZoomMedium_Click);
 			// 
@@ -683,9 +676,20 @@ namespace ValkyrieMapEditor
 			this.btnZoomFar.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnZoomFar.Name = "btnZoomFar";
 			this.btnZoomFar.Padding = new System.Windows.Forms.Padding(7, 0, 7, 0);
-			this.btnZoomFar.Size = new System.Drawing.Size(34, 22);
+			this.btnZoomFar.Size = new System.Drawing.Size(34, 23);
 			this.btnZoomFar.Text = "Far Zoom";
 			this.btnZoomFar.Click += new System.EventHandler(this.btnZoomFar_Click);
+			// 
+			// pctTileSurface
+			// 
+			this.pctTileSurface.DisplayTileSelection = true;
+			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
+			this.pctTileSurface.Name = "pctTileSurface";
+			this.pctTileSurface.SelectedRect = new System.Drawing.Rectangle(0, 0, 13, 13);
+			this.pctTileSurface.Size = new System.Drawing.Size(173, 134);
+			this.pctTileSurface.TabIndex = 0;
+			this.pctTileSurface.TabStop = false;
+			this.pctTileSurface.TileSize = new System.Drawing.Point(0, 0);
 			// 
 			// frmMain
 			// 
@@ -713,7 +717,6 @@ namespace ValkyrieMapEditor
 			this.splitContainer2.Panel1.ResumeLayout(false);
 			this.splitContainer2.Panel2.ResumeLayout(false);
 			this.splitContainer2.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).EndInit();
 			this.splitContainer3.Panel1.ResumeLayout(false);
 			this.splitContainer3.Panel2.ResumeLayout(false);
 			this.splitContainer3.ResumeLayout(false);
@@ -725,6 +728,7 @@ namespace ValkyrieMapEditor
 			this.menuStrip.PerformLayout();
 			this.toolStripTools.ResumeLayout(false);
 			this.toolStripTools.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
