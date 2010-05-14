@@ -97,7 +97,9 @@ namespace ValkyrieMapEditor
 
 			if (componentlist.TryGetValue(id, out component))
 			{
-				currentcomponent.OnComponentDeactivated();
+				if(currentcomponent != null)
+					currentcomponent.OnComponentDeactivated();
+
 				currentcomponent = component;
 				currentcomponent.OnComponentActivated();
 			}
@@ -243,7 +245,7 @@ namespace ValkyrieMapEditor
 			this.componentlist.Add(ComponentID.Collsion, new CollisionComponent());
 			this.componentlist.Add(ComponentID.Select, new SelectComponent());
 			this.componentlist.Add(ComponentID.Rectangle, new RectangleComponent());
-			this.componentlist.Add(ComponentID.Bucket, new BucketComponent());
+			this.componentlist.Add(ComponentID.Bucket, new BucketComponent());			
 		}
 
 		private void RenderFPS(GameTime gameTime)

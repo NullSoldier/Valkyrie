@@ -20,6 +20,7 @@ using Valkyrie.Engine.Maps;
 using Valkyrie.Library.Providers;
 using Valkyrie.Engine;
 using Valkyrie.Engine.Events;
+using Valkyrie.Engine.Core.Exceptions;
 
 namespace ValkyrieMapEditor
 {
@@ -84,10 +85,23 @@ namespace ValkyrieMapEditor
 			return pctTileSurface.Handle;
 		}
 
+		public void LoadEngineManager()
+		{
+			if (subscribedevents) return;
+
+			MapEditorManager.MapChanged += this.frmMain_MapChanged;
+			MapEditorManager.ActionManager.UndoUsed += ActionManager_Changed;
+			MapEditorManager.ActionManager.RedoUsed += ActionManager_Changed;
+			MapEditorManager.ActionManager.ActionPerformed += ActionManager_Changed;
+
+			subscribedevents = true;
+		}
+
 		#endregion
 
 		private bool mapchanged = false;
 		private FileInfo currentmaplocation = null;
+		private bool subscribedevents = false;
 
 		#region UI Events
 
@@ -95,8 +109,6 @@ namespace ValkyrieMapEditor
 		{
 			this.lblVersion.Text = String.Format("Version: {0}", Assembly.GetExecutingAssembly().GetName().Version.ToString());
 			frmMain.EventHandlerTypes = this.LoadImplementers();
-
-			MapEditorManager.MapChanged += this.frmMain_MapChanged;
 
 			// Do this last
 			var handler = this.ScreenResized;
@@ -131,7 +143,9 @@ namespace ValkyrieMapEditor
 			if (result == DialogResult.Cancel)
 				return;
 
+			
 			this.LoadMap(new FileInfo(openDialog.FileName));
+			
 
 			MapEditorManager.IgnoreInput = false;
 		}
@@ -388,7 +402,36 @@ namespace ValkyrieMapEditor
 			MapEditorManager.GameInstance.Engine.TextureManager.ClearCache();
 			MapEditorManager.GameInstance.Engine.EventProvider.ClearEvents();
 
-			Map map = MapEditorManager.LoadMap(MapLocation.FullName, new GriffinMapProvider(this.GetAssemblies()));
+			// Start loading map
+			Map map = null;
+			FileInfo textureinfo = null;
+			while (true)
+			{
+				try
+				{
+					map = MapEditorManager.LoadMap(MapLocation.FullName, new GriffinMapProvider(this.GetAssemblies()), textureinfo);
+				}
+				catch (TextureNotFoundException ex)
+				{
+					// If the texture wasn't found
+					MessageBox.Show("The spritesheet was not found, please locate the sprite sheet to use now.", "Load Map", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					textureinfo = this.RelocateTileSheet();
+
+					// If we couldn't find the texture or canceled
+					if (textureinfo == null)
+					{
+						map = null;
+						break;
+					}
+				}
+
+				break;
+			}
+
+
+			// If the map failed to load
+			if (map == null)
+				MessageBox.Show("Unable to load map", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
 			this.Text = String.Format("{0} - {1}",
 				MapLocation.Name.Substring(0, MapLocation.Name.Length - MapLocation.Extension.Length).Replace('_', ' '),
@@ -409,6 +452,31 @@ namespace ValkyrieMapEditor
 			this.pctTileSurface.SelectTiles(0, 0, 1, 1);
 
 			MapEditorManager.SetCurrentMap(map);
+
+			this.LoadEngineManager();
+		}
+
+		private FileInfo RelocateTileSheet()
+		{
+			OpenFileDialog dialog = new OpenFileDialog();
+			dialog.Filter = "";
+			dialog.CheckFileExists = true;
+			dialog.CheckPathExists = true;
+
+			var result = dialog.ShowDialog();
+			if(result == DialogResult.Cancel)
+				return null;
+
+			var info = new FileInfo(dialog.FileName);
+			var graphicsdir = Path.Combine(Environment.CurrentDirectory, MapEditorManager.GameInstance.Engine.Configuration[EngineConfigurationName.GraphicsRoot]);
+
+			if(info.Exists)
+			{
+				try { info.CopyTo(Path.Combine(graphicsdir, info.Name), true); }
+				catch (IOException) { }
+			}
+
+			return new FileInfo(dialog.FileName);
 		}
 
 		private void DisplayTileSheet(Map map)
@@ -795,6 +863,17 @@ namespace ValkyrieMapEditor
 			if (!MapEditorManager.IsMapLoaded) return;
 
 			MapEditorManager.ActionManager.RedoAction();
+		}
+
+		private void ActionManager_Changed (object sender, EventArgs e)
+		{
+			this.UpdateActionUI();
+		}
+
+		private void UpdateActionUI()
+		{
+			this.btnUndo.Enabled = MapEditorManager.ActionManager.ContainsUndoActions;
+			this.btnRedo.Enabled = MapEditorManager.ActionManager.ContainsRedoActions;
 		}
 	}
 

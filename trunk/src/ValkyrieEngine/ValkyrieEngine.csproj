@@ -103,6 +103,7 @@
     <Compile Include="Core\Events\ActivationTypes.cs" />
     <Compile Include="Core\Events\BaseMapEvent.cs" />
     <Compile Include="Core\Events\IMapEvent.cs" />
+    <Compile Include="Core\Exceptions\TextureNotFoundException.cs" />
     <Compile Include="Core\Input\KeybindController.cs" />
     <Compile Include="Core\Input\KeyDef.cs" />
     <Compile Include="Core\Maps\Map.cs" />

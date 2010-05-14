@@ -7,6 +7,7 @@ using System.IO;
 using Microsoft.Xna.Framework.Content;
 using Valkyrie.Library.Core;
 using Valkyrie.Engine;
+using Valkyrie.Engine.Core.Exceptions;
 
 namespace Valkyrie.Library.Managers
 {
@@ -43,6 +44,11 @@ namespace Valkyrie.Library.Managers
 
 		public void AddTexture (string FileName)
 		{
+			var path = Path.Combine(TextureRoot, FileName);
+
+			if (!File.Exists(path))
+				throw new TextureNotFoundException();
+
 			Texture2D newTexture = Texture2D.FromFile(this.Device, Path.Combine(TextureRoot, FileName));
 
 			this.AddTexture(FileName, newTexture);

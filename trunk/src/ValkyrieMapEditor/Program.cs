@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 using ValkyrieMapEditor.Core;
+using ValkyrieMapEditor.Core.Actions;
 
 namespace ValkyrieMapEditor
 {

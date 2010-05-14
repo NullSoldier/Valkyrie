@@ -32,6 +32,7 @@ namespace ValkyrieMapEditor
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
 			this.splitContainer = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.pctTileSurface = new ValkyrieMapEditor.TileBox();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.btnMapProperties = new System.Windows.Forms.Button();
 			this.lstSettings = new System.Windows.Forms.ListView();
@@ -89,13 +90,13 @@ namespace ValkyrieMapEditor
 			this.btnZoomNone = new System.Windows.Forms.ToolStripButton();
 			this.btnZoomMedium = new System.Windows.Forms.ToolStripButton();
 			this.btnZoomFar = new System.Windows.Forms.ToolStripButton();
-			this.pctTileSurface = new ValkyrieMapEditor.TileBox();
 			this.splitContainer.Panel1.SuspendLayout();
 			this.splitContainer.Panel2.SuspendLayout();
 			this.splitContainer.SuspendLayout();
 			this.splitContainer2.Panel1.SuspendLayout();
 			this.splitContainer2.Panel2.SuspendLayout();
 			this.splitContainer2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).BeginInit();
 			this.splitContainer3.Panel1.SuspendLayout();
 			this.splitContainer3.Panel2.SuspendLayout();
 			this.splitContainer3.SuspendLayout();
@@ -104,7 +105,6 @@ namespace ValkyrieMapEditor
 			this.footerStatus.SuspendLayout();
 			this.menuStrip.SuspendLayout();
 			this.toolStripTools.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// splitContainer
@@ -151,6 +151,17 @@ namespace ValkyrieMapEditor
 			this.splitContainer2.SplitterDistance = 441;
 			this.splitContainer2.SplitterWidth = 5;
 			this.splitContainer2.TabIndex = 0;
+			// 
+			// pctTileSurface
+			// 
+			this.pctTileSurface.DisplayTileSelection = true;
+			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
+			this.pctTileSurface.Name = "pctTileSurface";
+			this.pctTileSurface.SelectedRect = new System.Drawing.Rectangle(0, 0, 13, 13);
+			this.pctTileSurface.Size = new System.Drawing.Size(173, 134);
+			this.pctTileSurface.TabIndex = 0;
+			this.pctTileSurface.TabStop = false;
+			this.pctTileSurface.TileSize = new System.Drawing.Point(0, 0);
 			// 
 			// splitContainer3
 			// 
@@ -564,6 +575,7 @@ namespace ValkyrieMapEditor
 			// btnUndo
 			// 
 			this.btnUndo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnUndo.Enabled = false;
 			this.btnUndo.Image = global::ValkyrieMapEditor.Properties.Resources.imgUndo;
 			this.btnUndo.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnUndo.Name = "btnUndo";
@@ -575,6 +587,7 @@ namespace ValkyrieMapEditor
 			// btnRedo
 			// 
 			this.btnRedo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnRedo.Enabled = false;
 			this.btnRedo.Image = global::ValkyrieMapEditor.Properties.Resources.imgRedo;
 			this.btnRedo.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnRedo.Name = "btnRedo";
@@ -772,17 +785,6 @@ namespace ValkyrieMapEditor
 			this.btnZoomFar.Text = "Far Zoom";
 			this.btnZoomFar.Click += new System.EventHandler(this.btnZoomFar_Click);
 			// 
-			// pctTileSurface
-			// 
-			this.pctTileSurface.DisplayTileSelection = true;
-			this.pctTileSurface.Location = new System.Drawing.Point(-2, 0);
-			this.pctTileSurface.Name = "pctTileSurface";
-			this.pctTileSurface.SelectedRect = new System.Drawing.Rectangle(0, 0, 13, 13);
-			this.pctTileSurface.Size = new System.Drawing.Size(173, 134);
-			this.pctTileSurface.TabIndex = 0;
-			this.pctTileSurface.TabStop = false;
-			this.pctTileSurface.TileSize = new System.Drawing.Point(0, 0);
-			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -811,6 +813,7 @@ namespace ValkyrieMapEditor
 			this.splitContainer2.Panel1.ResumeLayout(false);
 			this.splitContainer2.Panel2.ResumeLayout(false);
 			this.splitContainer2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).EndInit();
 			this.splitContainer3.Panel1.ResumeLayout(false);
 			this.splitContainer3.Panel2.ResumeLayout(false);
 			this.splitContainer3.ResumeLayout(false);
@@ -822,7 +825,6 @@ namespace ValkyrieMapEditor
 			this.menuStrip.PerformLayout();
 			this.toolStripTools.ResumeLayout(false);
 			this.toolStripTools.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.pctTileSurface)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

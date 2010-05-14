@@ -100,10 +100,10 @@ namespace ValkyrieMapEditor
 				handler(null, EventArgs.Empty);
 		}
 
-		public static Map LoadMap(string path, IMapProvider provider)
+		public static Map LoadMap(string path, IMapProvider provider, FileInfo textureinfo)
 		{
 			var map = provider.GetMap(path, MapEditorManager.GameInstance.Engine.EventProvider);
-			map.Texture = GameInstance.Engine.TextureManager.GetTexture(map.TextureName);
+			map.Texture = GameInstance.Engine.TextureManager.GetTexture((textureinfo == null) ? map.TextureName : textureinfo.Name);
 
 			return map;
 		}
@@ -413,10 +413,5 @@ namespace ValkyrieMapEditor
 		All,
 		Below,
 		Dim
-	}
-
-	public class TextureNotFoundException : Exception
-	{
-
 	}
 }

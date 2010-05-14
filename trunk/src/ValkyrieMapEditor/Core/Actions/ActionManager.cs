@@ -16,17 +16,30 @@ namespace ValkyrieMapEditor.Core.Actions
 			this.context = context;
 		}
 
+		public event EventHandler UndoUsed;
+		public event EventHandler RedoUsed;
+		public event EventHandler ActionPerformed;
+
+		public bool ContainsUndoActions { get { return undo.Count > 0; } }
+		public bool ContainsRedoActions { get { return redo.Count > 0; } }
+
 		public void PerformAction(IUserAction action)
 		{
 			action.Do (context);
 
 			AddNoPerform(action);
+
+			var handler = ActionPerformed;
+			if (handler != null) handler(this, EventArgs.Empty);
 		}
 
 		public void AddNoPerform(IUserAction action)
 		{
 			redo.Clear();
 			undo.Push(action);
+
+			var handler = ActionPerformed;
+			if (handler != null) handler(this, EventArgs.Empty);
 		}
 
 		public void UndoAction()
@@ -38,14 +51,23 @@ namespace ValkyrieMapEditor.Core.Actions
 
 			action.Undo(context);
 			redo.Push(action);
+
+			var handler = UndoUsed;
+			if (handler != null) handler(this, EventArgs.Empty);
 		}
 
 		public void RedoAction()
 		{
+			if (redo.Count <= 0)
+				return;
+
 			var action = redo.Pop();
 
 			action.Redo(context);
 			undo.Push(action);
+
+			var handler = RedoUsed;
+			if (handler != null) handler(this, EventArgs.Empty);
 		}
 
 		public void Reset()
