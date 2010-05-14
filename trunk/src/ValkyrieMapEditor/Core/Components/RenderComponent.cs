@@ -30,6 +30,22 @@ namespace ValkyrieMapEditor.Core
 		{
 		}
 
+		public void OnCut()
+		{
+		}
+
+		public void OnCopy()
+		{
+		}
+
+		public void OnPaste()
+		{
+		}
+
+		public void OnDelete()
+		{
+		}
+
 		public void OnSizeChanged(object sender, ScreenResizedEventArgs e)
 		{
 			EditorXNA.graphics.PreferredBackBufferWidth = e.Width;

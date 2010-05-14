@@ -61,7 +61,7 @@ namespace ValkyrieMapEditor
 		public static ActionManager ActionManager
 		{
 			get;
-			private set;
+			set;
 		}
 
 		public static bool IgnoreInput
@@ -276,8 +276,8 @@ namespace ValkyrieMapEditor
 				camera.CenterOriginOnPoint(0, 0);
 				camera.CurrentMap = header;
 			}
-				
-			
+
+			ActionManager.Reset();			
 		}
 
 		public static Map ApplyMapProperties(Map oldMap)
@@ -398,22 +398,6 @@ namespace ValkyrieMapEditor
 
 			return xmlevent;
 		}
-
-		#region OldGarbage
-		//public static Point MouseLocation
-		//{
-		//    get
-		//    {
-		//        lock(MapEditorManager.MouseLock)
-		//            return MapEditorManager.mouselocation;
-		//    }
-		//    set
-		//    {
-		//        lock(MapEditorManager.MouseLock)
-		//            MapEditorManager.mouselocation = value;
-		//    }
-		//}
-		#endregion
 	}
 
 	public enum Tools

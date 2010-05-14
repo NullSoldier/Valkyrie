@@ -52,6 +52,22 @@ namespace ValkyrieMapEditor.Core
 		{
 		}
 
+		public void OnCut()
+		{
+		}
+
+		public void OnCopy()
+		{
+		}
+
+		public void OnPaste()
+		{
+		}
+
+		public void OnDelete()
+		{
+		}
+
 		public void CreateOrEditEvent(Rectangle selectedRect)
 		{
 			MapEditorManager.IgnoreInput = true;

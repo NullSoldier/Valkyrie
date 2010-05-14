@@ -11,6 +11,7 @@ using Valkyrie.Library;
 using Valkyrie.Engine.Core;
 using Valkyrie.Engine.Maps;
 using Valkyrie.Engine.Core.Scene;
+using ValkyrieMapEditor.Core.Actions;
 
 namespace ValkyrieMapEditor.Core.Components
 {
@@ -34,6 +35,22 @@ namespace ValkyrieMapEditor.Core.Components
 			this.startedinwindow = false;
 		}
 
+		public void OnCut()
+		{
+		}
+
+		public void OnCopy()
+		{
+		}
+
+		public void OnPaste()
+		{
+		}
+
+		public void OnDelete()
+		{
+		}
+
 		public void OnSizeChanged(object sender, ScreenResizedEventArgs e)
 		{
 		}
@@ -48,6 +65,7 @@ namespace ValkyrieMapEditor.Core.Components
 				return;
 
 			var camera = MapEditorManager.GameInstance.Engine.SceneProvider.Cameras["camera1"];
+			var map = MapEditorManager.CurrentMap;
 
 			if (camera == null || !ComponentHelpers.PointInBounds(camera, ev.X, ev.Y))
 				return;
@@ -55,8 +73,12 @@ namespace ValkyrieMapEditor.Core.Components
 			if (this.isgrabbing && this.currentgrabed != null)
 			{
 				var mappoint = camera.ScreenSpaceToWorldSpace(new ScreenPoint(ev.X, ev.Y)).ToMapPoint();
+				var newpoint = mappoint - this.graboffset;
+				
+				this.currentgrabed.Move(newpoint);
 
-				this.currentgrabed.Move(mappoint - this.graboffset);
+				// If we moved for the first time, add an undo
+				this.GrabbableMoveClearAction(currentgrabed, newpoint, map);
 			}
 		}
 
@@ -315,10 +337,12 @@ namespace ValkyrieMapEditor.Core.Components
 		{
 			Check.NullArgument<Map>(map, "map");
 
-			Grabbable grab = new Grabbable(maprect);
+			Grabbable grab = new Grabbable(maprect, true);
 
 			int width = maprect.Width + 1;
 			int height = maprect.Height + 1;
+
+			ActionBatchAction<PlaceTileAction> batchaction = new ActionBatchAction<PlaceTileAction>();
 
 			for (int x = 0; x < width; x++)
 			{
@@ -337,14 +361,6 @@ namespace ValkyrieMapEditor.Core.Components
 						Layer4 = map.GetLayerValue(mappoint, MapLayers.TopLayer)
 					};
 
-					if (clearout)
-					{
-						map.SetLayerValue(mappoint, MapLayers.UnderLayer, -1);
-						map.SetLayerValue(mappoint, MapLayers.BaseLayer, -1);
-						map.SetLayerValue(mappoint, MapLayers.MiddleLayer, -1);
-						map.SetLayerValue(mappoint, MapLayers.TopLayer, -1);
-					}
-
 					grab.Tiles.Add(tile);
 				}
 			}
@@ -359,6 +375,8 @@ namespace ValkyrieMapEditor.Core.Components
 
 			var startpoint = grabbable.GetStartPoint();
 
+			ActionBatchAction<PlaceTileAction> batchaction = new ActionBatchAction<PlaceTileAction>();
+
 			foreach (var tile in grabbable.Tiles)
 			{
 				var mappoint = new MapPoint(startpoint.X + tile.Offset.X, startpoint.Y + tile.Offset.Y);
@@ -366,28 +384,87 @@ namespace ValkyrieMapEditor.Core.Components
 				if (!ComponentHelpers.PointInMap(map, mappoint))
 					continue;
 
-				map.SetLayerValue(mappoint, MapLayers.UnderLayer, tile.Layer1);
-				map.SetLayerValue(mappoint, MapLayers.BaseLayer, tile.Layer2);
-				map.SetLayerValue(mappoint, MapLayers.MiddleLayer, tile.Layer3);
-				map.SetLayerValue(mappoint, MapLayers.TopLayer, tile.Layer4);
+				batchaction.Add(new PlaceTileAction(mappoint.IntX, mappoint.IntY, MapLayers.UnderLayer, tile.Layer1));
+				batchaction.Add(new PlaceTileAction(mappoint.IntX, mappoint.IntY, MapLayers.BaseLayer, tile.Layer2));
+				batchaction.Add(new PlaceTileAction(mappoint.IntX, mappoint.IntY, MapLayers.MiddleLayer, tile.Layer3));
+				batchaction.Add(new PlaceTileAction(mappoint.IntX, mappoint.IntY, MapLayers.TopLayer, tile.Layer4));
+			}
+
+			if (grabbable.CreatePoint != grabbable.GetStartPoint())
+			{
+				MapEditorManager.ActionManager.PerformAction(batchaction);
+				batchaction.AddRange(grabbable.MoveClearActions.Actions);
+			}
+			else
+				batchaction.Do(context);
+		}
+
+		private void GrabbableMoveClearAction(Grabbable g, MapPoint point, Map map)
+		{
+			// We moved, we haven't cleared, and we should clear tiles under our starting point
+			if (point != g.CreatePoint && g.ClearOnMove && !g.Cleared)
+			{
+				ActionBatchAction<PlaceTileAction> batchaction = new ActionBatchAction<PlaceTileAction>();
+
+				foreach (var tile in g.Tiles)
+				{
+					var original = new MapPoint(g.CreatePoint.X + tile.Offset.X, g.CreatePoint.Y + tile.Offset.Y);
+
+					batchaction.Add(new PlaceTileAction(original.IntX, original.IntY, MapLayers.UnderLayer, -1));
+					batchaction.Add(new PlaceTileAction(original.IntX, original.IntY, MapLayers.BaseLayer, -1));
+					batchaction.Add(new PlaceTileAction(original.IntX, original.IntY, MapLayers.MiddleLayer, -1));
+					batchaction.Add(new PlaceTileAction(original.IntX, original.IntY, MapLayers.TopLayer, -1));
+				}
+
+				batchaction.Do(context);
+				g.MoveClearActions = batchaction;
+
+				g.Cleared = true;
 			}
 		}
 	}
 
 	public class Grabbable
 	{
-		public Grabbable(int x, int y, int width, int height)
-			: this (new Rectangle(x, y, width, height))
+		public Grabbable(int x, int y, int width, int height, bool clearonmove)
+			: this (new Rectangle(x, y, width, height), clearonmove)
 		{
 		}
 
-		public Grabbable(Rectangle rect)
+		public Grabbable(Rectangle rect, bool clearonmove)
 		{
 			this.rect = rect;
+			this.CreatePoint = new MapPoint(rect.X, rect.Y);
 			this.Tiles = new List<GrabbedTile>();
+			this.MoveClearActions = new ActionBatchAction<PlaceTileAction>();
+			this.ClearOnMove = clearonmove;
+		}
+
+		public ActionBatchAction<PlaceTileAction> MoveClearActions
+		{
+			get;
+			set;
 		}
 
 		public List<GrabbedTile> Tiles
+		{
+			get;
+			set;
+		}
+
+		public MapPoint CreatePoint
+		{
+			get;
+			private set;
+		}
+
+		public bool ClearOnMove
+		{
+			get;
+			private set;
+		}
+
+		public bool Cleared
 		{
 			get;
 			set;

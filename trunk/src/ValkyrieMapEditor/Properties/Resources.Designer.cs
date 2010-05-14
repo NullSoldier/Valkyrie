@@ -116,6 +116,34 @@ namespace ValkyrieMapEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap imgCopy {
+            get {
+                object obj = ResourceManager.GetObject("imgCopy", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap imgCut {
+            get {
+                object obj = ResourceManager.GetObject("imgCut", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap imgDelete {
+            get {
+                object obj = ResourceManager.GetObject("imgDelete", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap imgDelete2 {
+            get {
+                object obj = ResourceManager.GetObject("imgDelete2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap imgExit {
             get {
                 object obj = ResourceManager.GetObject("imgExit", resourceCulture);
@@ -179,6 +207,13 @@ namespace ValkyrieMapEditor.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap imgPaste {
+            get {
+                object obj = ResourceManager.GetObject("imgPaste", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap imgPencil {
             get {
                 object obj = ResourceManager.GetObject("imgPencil", resourceCulture);
@@ -189,6 +224,13 @@ namespace ValkyrieMapEditor.Properties {
         internal static System.Drawing.Bitmap imgRectangle {
             get {
                 object obj = ResourceManager.GetObject("imgRectangle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap imgRedo {
+            get {
+                object obj = ResourceManager.GetObject("imgRedo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -224,6 +266,13 @@ namespace ValkyrieMapEditor.Properties {
         internal static System.Drawing.Bitmap imgUnderLayer {
             get {
                 object obj = ResourceManager.GetObject("imgUnderLayer", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap imgUndo {
+            get {
+                object obj = ResourceManager.GetObject("imgUndo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

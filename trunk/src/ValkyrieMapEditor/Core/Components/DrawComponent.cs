@@ -13,6 +13,7 @@ using Valkyrie.Engine;
 using Valkyrie.Engine.Core;
 using Valkyrie.Engine.Maps;
 using ValkyrieMapEditor.Core.Components;
+using ValkyrieMapEditor.Core.Actions;
 
 namespace ValkyrieMapEditor.Core
 {
@@ -31,6 +32,22 @@ namespace ValkyrieMapEditor.Core
 		{
 		}
 
+		public void OnCut()
+		{
+		}
+
+		public void OnCopy()
+		{
+		}
+
+		public void OnPaste()
+		{
+		}
+
+		public void OnDelete()
+		{
+		}
+
 		public void OnSizeChanged(object sender, ScreenResizedEventArgs e) { }
 
 		public void OnScrolled(object sender, ScrollEventArgs e) { }
@@ -43,15 +60,33 @@ namespace ValkyrieMapEditor.Core
 				return;
 
 			if (ComponentHelpers.PointInBounds(camera, ev.X, ev.Y))
+			{
 				startedinwindow = true;
+				actionbuffer = new ActionBatchAction<PlaceTileAction>();
+			}
+
 		}
 
 		public void OnMouseMove(object sender, MouseEventArgs ev)
 		{
+			var camera = this.context.SceneProvider.Cameras["camera1"];
+
+			if (camera == null)
+				return;
+
+			var mpoint = camera.ScreenSpaceToWorldSpace(new ScreenPoint(ev.X, ev.Y)).ToMapPoint();
+			// Should we be able to place more tiles?
+			if (mpoint != lastmousepoint)
+				movecooldown = false;
 		}
 
 		public void OnMouseUp(object sender, MouseEventArgs ev)
 		{
+			if (!startedinwindow) return;
+
+			MapEditorManager.ActionManager.AddNoPerform(actionbuffer);
+			actionbuffer = null;
+
 			startedinwindow = false;
 		}
 
@@ -88,14 +123,20 @@ namespace ValkyrieMapEditor.Core
 		public void Update(GameTime gameTime)
 		{
 			var mouse = Mouse.GetState();
+			var camera = this.context.SceneProvider.Cameras["camera1"];
 
 			if (mouse.LeftButton != Microsoft.Xna.Framework.Input.ButtonState.Pressed
 				|| MapEditorManager.IgnoreInput
 				|| !MapEditorManager.IsMapLoaded
-				|| !startedinwindow)
+				|| !startedinwindow
+				|| movecooldown
+				|| camera == null)
 				return;
 
-			this.PlotTiles(mouse.X, mouse.Y);
+			this.PlotTiles(camera, mouse.X, mouse.Y);
+
+			lastmousepoint = camera.ScreenSpaceToWorldSpace(new ScreenPoint(mouse.X, mouse.Y)).ToMapPoint();
+			movecooldown = true;
 		}
 
 		public void LoadContent(GraphicsDevice graphicsDevice, IEngineContext context)
@@ -105,10 +146,12 @@ namespace ValkyrieMapEditor.Core
 
 		private IEngineContext context = null;
 		private bool startedinwindow = false;
+		private bool movecooldown = false;
+		private MapPoint lastmousepoint = new MapPoint(-1, -1);
+		private ActionBatchAction<PlaceTileAction> actionbuffer = new ActionBatchAction<PlaceTileAction>();
 
-		private void PlotTiles(int mousex, int mousey)
+		private void PlotTiles(BaseCamera camera, int mousex, int mousey)
 		{
-			var camera = this.context.SceneProvider.Cameras["camera1"];
 			var map = MapEditorManager.CurrentMap;
 			var rect = MapEditorManager.SelectedTilesRectangle;
 
@@ -126,8 +169,11 @@ namespace ValkyrieMapEditor.Core
 				MapPoint sheetpoint = new MapPoint(rect.X + x, rect.Y + y);
 
 				if (ComponentHelpers.PointInMap(map, tilepoint))
-					map.SetLayerValue(tilepoint, MapEditorManager.CurrentLayer, map.GetTileSetValue(sheetpoint));
-
+				{
+					var action = new PlaceTileAction(tilepoint.IntX, tilepoint.IntY, MapEditorManager.CurrentLayer, map.GetTileSetValue(sheetpoint));
+					action.Do(context);
+					actionbuffer.Add(action);
+				}
 			}
 
 			MapEditorManager.OnMapChanged();

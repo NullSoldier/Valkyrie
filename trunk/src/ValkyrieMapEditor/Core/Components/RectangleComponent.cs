@@ -10,6 +10,7 @@ using Valkyrie.Library;
 using Valkyrie.Engine.Maps;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
+using ValkyrieMapEditor.Core.Actions;
 
 
 namespace ValkyrieMapEditor.Core.Components
@@ -71,6 +72,22 @@ namespace ValkyrieMapEditor.Core.Components
 		}
 
 		public void OnComponentDeactivated()
+		{
+		}
+
+		public void OnCut()
+		{
+		}
+
+		public void OnCopy()
+		{
+		}
+
+		public void OnPaste()
+		{
+		}
+
+		public void OnDelete()
 		{
 		}
 
@@ -153,8 +170,9 @@ namespace ValkyrieMapEditor.Core.Components
 			var camera = this.context.SceneProvider.Cameras["camera1"];
 			var map = MapEditorManager.CurrentMap;
 			var tilerect = MapEditorManager.SelectedTilesRectangle;
-
 			var plotstart = new MapPoint(rect.X, rect.Y);
+
+			ActionBatchAction<PlaceTileAction> batchactions = new ActionBatchAction<PlaceTileAction>();
 
 			// Keep track of where in the tile sheet we are
 			int tilex = 0;
@@ -170,7 +188,9 @@ namespace ValkyrieMapEditor.Core.Components
 				MapPoint sheetpoint = new MapPoint(tilerect.X + tilex, tilerect.Y + tiley);
 
 				if (ComponentHelpers.PointInMap(map, tilepoint))
-					map.SetLayerValue(tilepoint, MapEditorManager.CurrentLayer, map.GetTileSetValue(sheetpoint));
+				{
+					batchactions.Add(new PlaceTileAction(tilepoint.IntX, tilepoint.IntY,MapEditorManager.CurrentLayer,map.GetTileSetValue(sheetpoint)));
+				}
 
 				tilex++;
 				totalx++;
@@ -191,6 +211,7 @@ namespace ValkyrieMapEditor.Core.Components
 					tiley = 0;
 			}
 
+			MapEditorManager.ActionManager.PerformAction(batchactions);
 			MapEditorManager.OnMapChanged();
 		}
 

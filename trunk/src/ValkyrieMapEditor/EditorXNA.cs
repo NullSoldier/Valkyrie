@@ -26,6 +26,7 @@ using Valkyrie.Library.Providers;
 using Valkyrie.Library.Managers;
 using ValkyrieMapEditor.Providers;
 using ValkyrieMapEditor.Core.Components;
+using ValkyrieMapEditor.Core.Actions;
 
 
 namespace ValkyrieMapEditor
@@ -147,6 +148,9 @@ namespace ValkyrieMapEditor
 			{
 				component.Value.LoadContent(this.GraphicsDevice, this.Engine);
 			}
+			this.SwitchToComponent(ComponentID.Select);
+
+			MapEditorManager.ActionManager = new ActionManager(Engine);
 		}
 
 		protected override void UnloadContent()

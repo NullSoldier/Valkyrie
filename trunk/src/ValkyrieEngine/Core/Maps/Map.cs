@@ -101,59 +101,69 @@ namespace Valkyrie.Engine.Maps
 				anim.Update(gameTime);
 		}
 
-        public int GetLayerValue(MapPoint point, MapLayers layer)
+		public int GetLayerValue(MapPoint point, MapLayers layer)
 		{
-			if (point.X < 0 || (point.X >= this.MapSize.X) || point.Y < 0 || (point.Y >= this.MapSize.Y))
+			return this.GetLayerValue (point.IntX, point.IntY, layer);
+		}
+
+        public int GetLayerValue(int x, int y, MapLayers layer)
+		{
+			if (x < 0 || (x >= this.MapSize.X) || y < 0 || (y >= this.MapSize.Y))
                 return -2; // throw new ArgumentOutOfRangeException("point");
 
             switch (layer)
             {
                 default:
 				case MapLayers.UnderLayer:
-					return this.UnderLayer[(int)(point.Y * this.MapSize.X + point.X)];
+					return this.UnderLayer[(int)(y * this.MapSize.X + x)];
 
                 case MapLayers.BaseLayer:
-                    return this.BaseLayer[(int)(point.Y * this.MapSize.X + point.X)];
+                    return this.BaseLayer[(int)(y * this.MapSize.X + x)];
 
                 case MapLayers.MiddleLayer:
-                    return this.MiddleLayer[(int)(point.Y * this.MapSize.X + point.X)];
+                    return this.MiddleLayer[(int)(y * this.MapSize.X + x)];
 
                 case MapLayers.TopLayer: 
-                    return this.TopLayer[(int)(point.Y * this.MapSize.X + point.X)];
+                    return this.TopLayer[(int)(y * this.MapSize.X + x)];
 
                 case MapLayers.CollisionLayer: 
-                    return this.CollisionLayer[(int)(point.Y * this.MapSize.X + point.X)];
+                    return this.CollisionLayer[(int)(y * this.MapSize.X + x)];
 
 				case MapLayers.OpaqueLayer:
-					return this.OpaqueLayer[(int)(point.Y * this.MapSize.X + point.X)];
+					return this.OpaqueLayer[(int)(y * this.MapSize.X + x)];
             }
 		}
-       
-        public void SetLayerValue(MapPoint point,  MapLayers layer, int value)
+
+		public void SetLayerValue(MapPoint point, MapLayers layer, int value)
+		{
+			this.SetLayerValue(point.IntX, point.IntY, layer, value);
+		}
+
+        public void SetLayerValue(int x, int y,  MapLayers layer, int value)
         {
-            if (point.X < 0 || (point.X > this.MapSize.X) || point.Y < 0 || (point.Y > this.MapSize.Y))
+            if (x < 0 || (x > this.MapSize.X) || y < 0 || (y > this.MapSize.Y))
                 throw new ArgumentOutOfRangeException("point");
 
             switch (layer)
             {
                 default:
 				case MapLayers.UnderLayer:
-					this.UnderLayer[(int)(point.Y * this.MapSize.X + point.X)] = value; break;
+					this.UnderLayer[(int)(y * this.MapSize.X + x)] = value; break;
 
                 case MapLayers.BaseLayer: 
-                    this.BaseLayer[(int)(point.Y * this.MapSize.X + point.X)] = value; break;
+                    this.BaseLayer[(int)(y * this.MapSize.X + x)] = value; break;
 
                 case MapLayers.MiddleLayer:
-                    this.MiddleLayer[(int)(point.Y * this.MapSize.X + point.X)] = value; break;
+                    this.MiddleLayer[(int)(y * this.MapSize.X + x)] = value; break;
 
                 case MapLayers.TopLayer: 
-                    this.TopLayer[(int)(point.Y * this.MapSize.X + point.X)] = value; break;
+                    this.TopLayer[(int)(y * this.MapSize.X + x)] = value; break;
 
                 case MapLayers.CollisionLayer:
-                    this.CollisionLayer[(int)(point.Y * this.MapSize.X + point.X)] = value; break;
+                    this.CollisionLayer[(int)(y * this.MapSize.X + x)] = value; break;
 
 				case MapLayers.OpaqueLayer:
-					this.OpaqueLayer[(int)(point.Y * this.MapSize.X + point.X)] = value; break;
+					this.OpaqueLayer[(int)(y * this.MapSize.X + x)] = value; break;
             }
         }
 

@@ -92,7 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Actions\ActionManager.cs" />
-    <Compile Include="Core\Actions\User Actions\PlaceTileBatchAction.cs" />
+    <Compile Include="Core\Actions\User Actions\ActionBatchAction.cs" />
     <Compile Include="Core\Actions\User Actions\PlaceTileAction.cs" />
     <Compile Include="Core\Actions\UserAction.cs" />
     <Compile Include="Core\Components\BucketComponent.cs" />
@@ -186,6 +186,13 @@
     <None Include="Resources\icon2.png" />
     <None Include="Resources\icon3.png" />
     <None Include="Resources\icon4.png" />
+    <None Include="Resources\cut.png" />
+    <None Include="Resources\paste_plain.png" />
+    <None Include="Resources\delete.png" />
+    <None Include="Resources\cross.png" />
+    <None Include="Resources\page_copy.png" />
+    <None Include="Resources\arrow_redo.png" />
+    <None Include="Resources\arrow_undo.png" />
     <Content Include="System.Data.SQLite.dll" />
     <None Include="Resources\layers.png" />
     <None Include="Resources\shape_handles.png" />

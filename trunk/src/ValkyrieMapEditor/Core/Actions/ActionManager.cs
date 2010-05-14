@@ -10,6 +10,9 @@ namespace ValkyrieMapEditor.Core.Actions
 	{
 		public ActionManager(IEngineContext context)
 		{
+			undo = new Stack<IUserAction>();
+			redo = new Stack<IUserAction>();
+
 			this.context = context;
 		}
 
@@ -17,31 +20,42 @@ namespace ValkyrieMapEditor.Core.Actions
 		{
 			action.Do (context);
 
-			Redo.Clear();
-			Undo.Push(action);
+			AddNoPerform(action);
+		}
+
+		public void AddNoPerform(IUserAction action)
+		{
+			redo.Clear();
+			undo.Push(action);
 		}
 
 		public void UndoAction()
 		{
-			if (Undo.Count < 0) 
+			if (undo.Count <= 0) 
 				return;
 
-			var action = Undo.Pop();
+			var action = undo.Pop();
 
 			action.Undo(context);
-			Redo.Push(action);
+			redo.Push(action);
 		}
 
 		public void RedoAction()
 		{
-			var action = Redo.Pop();
+			var action = redo.Pop();
 
 			action.Redo(context);
-			Undo.Push(action);
+			undo.Push(action);
 		}
 
-		private Stack<IUserAction> Redo;
-		private Stack<IUserAction> Undo;
+		public void Reset()
+		{
+			this.redo.Clear();
+			this.undo.Clear();
+		}
+
+		private Stack<IUserAction> redo;
+		private Stack<IUserAction> undo;
 		private IEngineContext context;
 	}
 }

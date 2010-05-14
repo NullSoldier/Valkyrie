@@ -75,6 +75,22 @@ namespace ValkyrieMapEditor.Core
 		{
 		}
 
+		public void OnCut()
+		{
+		}
+
+		public void OnCopy()
+		{
+		}
+
+		public void OnPaste()
+		{
+		}
+
+		public void OnDelete()
+		{
+		}
+
 		public void Draw(SpriteBatch spriteBatch)
 		{
 			for (int y = 0; y < MapEditorManager.CurrentMap.MapSize.Y; y++)

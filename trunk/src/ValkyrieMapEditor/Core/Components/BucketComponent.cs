@@ -10,6 +10,7 @@ using Valkyrie.Library;
 using Valkyrie.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using ValkyrieMapEditor.Core.Actions;
 
 namespace ValkyrieMapEditor.Core.Components
 {
@@ -42,6 +43,9 @@ namespace ValkyrieMapEditor.Core.Components
 			int newvalue = MapEditorManager.CurrentMap.GetTileSetValue(tilesheetPoint);
 
 			this.FloodFill (map, MapEditorManager.CurrentLayer, mappoint.IntX, mappoint.IntY, oldvalue, newvalue);
+
+			MapEditorManager.ActionManager.AddNoPerform(new ActionBatchAction<PlaceTileAction> (tmpactions));
+			tmpactions.Clear();
 
 			MapEditorManager.OnMapChanged();
 		}
@@ -100,7 +104,24 @@ namespace ValkyrieMapEditor.Core.Components
 		{
 		}
 
+		public void OnCut()
+		{
+		}
+
+		public void OnCopy()
+		{
+		}
+
+		public void OnPaste()
+		{
+		}
+
+		public void OnDelete()
+		{
+		}
+
 		private IEngineContext context;
+		private List<PlaceTileAction> tmpactions = new List<PlaceTileAction>();
 
 		/// <summary>
 		/// Performs a flood fill beginning on the target square
@@ -118,7 +139,9 @@ namespace ValkyrieMapEditor.Core.Components
 			if (value != oldtileid || value == newtileid)
 				return;
 
-			map.SetLayerValue(new MapPoint(x, y), layer, newtileid);
+			var action = new PlaceTileAction(x, y, layer, newtileid);
+			action.Do(context);
+			tmpactions.Add(action);
 
 			if (x + 1 < MapEditorManager.CurrentMap.MapSize.X)
 				this.FloodFill(map, layer, x + 1, y, oldtileid, newtileid);

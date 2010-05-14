@@ -743,6 +743,59 @@ namespace ValkyrieMapEditor
 		{
 			this.pctSurface.Focus();
 		}
+
+		private void btnUndo_Click(object sender, EventArgs e)
+		{
+			this.Undo();
+		}
+
+		private void btnRedo_Click(object sender, EventArgs e)
+		{
+			this.Redo();
+		}
+
+		private bool undocooldown = false;
+		private bool redocooldown = false;
+
+		protected override void OnKeyDown(KeyEventArgs e)
+		{
+			if (!undocooldown && e.Control && e.KeyCode == Keys.Z)
+			{
+				this.Undo();
+				undocooldown = true;
+			}
+			else if (!redocooldown && e.Control && e.KeyCode == Keys.Y)
+			{
+				this.Redo();
+				redocooldown = true;
+			}
+
+			base.OnKeyDown(e);
+		}
+
+		protected override void OnKeyUp(KeyEventArgs e)
+		{
+			if (e.Control && e.KeyCode == Keys.Z)
+				undocooldown = false;
+			else if(e.Control && e.KeyCode == Keys.Y)
+				redocooldown = false;
+
+			base.OnKeyUp(e);
+		}
+
+		private void Undo()
+		{
+			if (!MapEditorManager.IsMapLoaded) return;
+
+			MapEditorManager.ActionManager.UndoAction();
+		}
+
+		private void Redo()
+		{
+			if (!MapEditorManager.IsMapLoaded) return;
+
+			MapEditorManager.ActionManager.RedoAction();
+		}
 	}
 
 	#region EventArgs
