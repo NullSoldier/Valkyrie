@@ -87,13 +87,15 @@ namespace ValkyrieMapEditor
 
 		public void LoadEngineManager()
 		{
+			this.btnSelection_Click(this, EventArgs.Empty);
+
 			if (subscribedevents) return;
 
 			MapEditorManager.MapChanged += this.frmMain_MapChanged;
 			MapEditorManager.ActionManager.UndoUsed += ActionManager_Changed;
 			MapEditorManager.ActionManager.RedoUsed += ActionManager_Changed;
 			MapEditorManager.ActionManager.ActionPerformed += ActionManager_Changed;
-
+			
 			subscribedevents = true;
 		}
 
@@ -649,6 +651,8 @@ namespace ValkyrieMapEditor
 			this.btnSelection.Checked = false;
 			this.btnEvent.Checked = false;
 
+			this.UpdateToolsUI(this.btnSelection.Checked);
+
 			MapEditorManager.CurrentTool = Tools.Rectangle;
 			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Rectangle);
 		}
@@ -661,6 +665,8 @@ namespace ValkyrieMapEditor
 			this.btnRect.Checked = false;
 			this.btnSelection.Checked = false;
 			this.btnEvent.Checked = false;
+
+			this.UpdateToolsUI(this.btnSelection.Checked);
 
 			MapEditorManager.CurrentTool = Tools.Pencil;
 			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Draw);
@@ -675,6 +681,8 @@ namespace ValkyrieMapEditor
 			this.btnSelection.Checked = false;
 			this.btnEvent.Checked = false;
 
+			this.UpdateToolsUI(this.btnSelection.Checked);
+
 			MapEditorManager.CurrentTool = Tools.Bucket;
 			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Bucket);
 		}
@@ -687,6 +695,8 @@ namespace ValkyrieMapEditor
 			this.btnRect.Checked = false;
 			this.btnFill.Checked = false;
 			this.btnEvent.Checked = false;
+			
+			this.UpdateToolsUI(this.btnSelection.Checked);
 
 			MapEditorManager.CurrentTool = Tools.Select;
 			MapEditorManager.GameInstance.SwitchToComponent(ComponentID.Select);
@@ -874,6 +884,14 @@ namespace ValkyrieMapEditor
 		{
 			this.btnUndo.Enabled = MapEditorManager.ActionManager.ContainsUndoActions;
 			this.btnRedo.Enabled = MapEditorManager.ActionManager.ContainsRedoActions;
+		}
+
+		private void UpdateToolsUI(bool enable)
+		{
+			this.btnCut.Enabled = enable;
+			this.btnCopy.Enabled = enable;
+			this.btnPaste.Enabled = enable;
+			this.btnDelete.Enabled = enable;
 		}
 	}
 

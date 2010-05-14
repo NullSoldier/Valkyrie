@@ -150,7 +150,6 @@ namespace ValkyrieMapEditor
 			{
 				component.Value.LoadContent(this.GraphicsDevice, this.Engine);
 			}
-			this.SwitchToComponent(ComponentID.Select);
 
 			MapEditorManager.ActionManager = new ActionManager(Engine);
 		}
