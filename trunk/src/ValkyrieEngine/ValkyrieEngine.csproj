@@ -62,7 +62,7 @@
   <ItemGroup>
     <Reference Include="Cadenza, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Cadenza.dll</HintPath>
+      <HintPath>.\Cadenza.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=3.1.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d" />
@@ -126,6 +126,7 @@
     <Compile Include="Managers\IWorldManager.cs" />
     <Compile Include="Managers\ITextureManager.cs" />
     <Compile Include="Modules\IModule.cs" />
+    <Compile Include="Modules\ModuleNotLoadedException.cs" />
     <Compile Include="Providers\ICollisionProvider.cs" />
     <Compile Include="Providers\IMovementProvider.cs" />
     <Compile Include="Providers\IVoiceChatProvider.cs" />
@@ -204,6 +205,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>copy /y "$(SolutionDir)\src\Resources" "$(TargetDir)\Maps"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
