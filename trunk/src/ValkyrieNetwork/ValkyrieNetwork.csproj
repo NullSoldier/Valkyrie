@@ -59,9 +59,8 @@
     <OutputPath>bin\x86\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Cadenza, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Cadenza.dll</HintPath>
+    <Reference Include="Cadenza">
+      <HintPath>.\Cadenza.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
