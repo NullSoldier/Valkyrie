@@ -84,6 +84,11 @@ namespace Valkyrie.Messages
 			private set;
 		}
 
+        public static void LoadMessageTypesFromAssembly (Assembly assembly)
+        {
+            MessageBase.LoadMessageTypes (assembly);
+        }
+
 		static MessageBase ()
 		{
 #if NOEMIT
@@ -124,7 +129,7 @@ namespace Valkyrie.Messages
 
 #else
 
-			MessageBase.LoadMessageTypes (Assembly.GetExecutingAssembly ());
+			//MessageBase.LoadMessageTypes (Assembly.GetAssembly(typeof(new ConnectMessage()));
 
 #endif
 		}
