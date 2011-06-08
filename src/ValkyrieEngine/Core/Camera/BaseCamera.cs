@@ -134,7 +134,7 @@ namespace Valkyrie.Engine
 		{
 			this.device = device;
 
-			this.buffer = new RenderTarget2D(device, Screen.Width, Screen.Height, 1, SurfaceFormat.Color);
+			this.buffer = new RenderTarget2D(device, Screen.Width, Screen.Height);
 		}
 
 		public bool CheckIsVisible(Rectangle rect)
@@ -164,7 +164,7 @@ namespace Valkyrie.Engine
 				Height=height
 			};
 
-			this.buffer = new RenderTarget2D(device, Screen.Width, Screen.Height, 1, SurfaceFormat.Color);
+			this.buffer = new RenderTarget2D(device, Screen.Width, Screen.Height);
         }
 
         #region Center Methods

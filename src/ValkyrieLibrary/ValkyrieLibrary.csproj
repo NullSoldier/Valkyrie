@@ -65,6 +65,9 @@
     <XnaCompressContent>True</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Cadenza">
+      <HintPath>..\lib\Cadenza.dll</HintPath>
+    </Reference>
     <Reference Include="Gablarski">
       <HintPath>..\lib\Gablarski.dll</HintPath>
     </Reference>

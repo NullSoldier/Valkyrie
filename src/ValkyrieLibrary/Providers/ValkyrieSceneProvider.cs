@@ -55,7 +55,7 @@ namespace Valkyrie.Library.Providers
 
 			currentcamera = camera;
 			device.Viewport = currentcamera.Viewport;
-			spritebatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState, currentcamera.TransformMatrix);
+			spritebatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullCounterClockwise,  null, currentcamera.TransformMatrix);
 
 			this.isstarted = true;
 		}

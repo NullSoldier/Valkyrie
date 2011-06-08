@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Valkyrie.Engine.Providers;
 using Valkyrie.Engine.Core.Sound;
-using Gablarski.OpenAL;
 using Microsoft.Xna.Framework;
 using Valkyrie.Engine;
 using Microsoft.Xna.Framework.Audio;

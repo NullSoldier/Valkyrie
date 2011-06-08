@@ -49,7 +49,7 @@ namespace Valkyrie.Library.Managers
 			if (!File.Exists(path))
 				throw new TextureNotFoundException();
 
-			Texture2D newTexture = Texture2D.FromFile(this.Device, Path.Combine(TextureRoot, FileName));
+			Texture2D newTexture = Texture2D.FromStream (this.Device, new FileInfo(Path.Combine(TextureRoot, FileName)).OpenRead());
 
 			this.AddTexture(FileName, newTexture);
 		}
