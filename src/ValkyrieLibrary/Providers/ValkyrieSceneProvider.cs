@@ -97,9 +97,24 @@ namespace Valkyrie.Library.Providers
 		{
 			var player = this.Players[playername];
 
-			Check.NullArgument<BaseCharacter>(player, "player");
+			this.DrawPlayer (player);
+		}
 
-			this.DrawPlayer(spritebatch, player, currentcamera);
+		public void DrawPlayer(BaseCharacter player)
+		{
+			Check.NullArgument (player, "player");
+
+			if (!player.IsVisible)
+				return;
+
+			Vector2 location = new Vector2 ();
+			location.X = player.Location.X;// +(32 / 2) - (player.CurrentAnimation.FrameRectangle.Width / 2);
+			location.Y = player.Location.Y + 32 - player.CurrentAnimation.FrameRectangle.Height;
+
+			spritebatch.Draw (player.Sprite, location, player.CurrentAnimation.FrameRectangle, Color.White);
+
+			//if(this.FogRenderer.Texture != null)
+			//	spriteBatch.Draw(this.FogRenderer.Texture, new Rectangle((int)location.X, (int)location.Y, 32, 32), Color.White);
 		}
 
 		/// <summary>
@@ -247,7 +262,7 @@ namespace Valkyrie.Library.Providers
 				if ((flags & RenderFlags.NoPlayers) != RenderFlags.NoPlayers)
 				{
 					foreach (BaseCharacter player in this.Players.GetItems().Values)
-						this.DrawPlayer(spriteBatch, player, camera);
+						this.DrawPlayer (player);
 				}
 
 				this.renderers[MapLayers.MiddleLayer].ForEach(r => r.Draw(spriteBatch));
@@ -311,21 +326,6 @@ namespace Valkyrie.Library.Providers
 					spriteBatch.Draw(currentMap.Texture, des, sourceRectangle, tint);
 				}
 			}
-		}
-
-		private void DrawPlayer(SpriteBatch spriteBatch, BaseCharacter player, BaseCamera camera)
-		{
-			if (!player.IsVisible)
-				return;
-
-			Vector2 location = new Vector2();
-			location.X = player.Location.X;// +(32 / 2) - (player.CurrentAnimation.FrameRectangle.Width / 2);
-			location.Y = player.Location.Y + 32 - player.CurrentAnimation.FrameRectangle.Height;
-
-			spriteBatch.Draw(player.Sprite, location, player.CurrentAnimation.FrameRectangle, Color.White);
-
-			//if(this.FogRenderer.Texture != null)
-			//	spriteBatch.Draw(this.FogRenderer.Texture, new Rectangle((int)location.X, (int)location.Y, 32, 32), Color.White);
 		}
 
 		#endregion

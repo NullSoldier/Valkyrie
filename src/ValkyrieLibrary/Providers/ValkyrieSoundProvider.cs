@@ -12,6 +12,7 @@ using AudioSource = Valkyrie.Engine.Core.Sound.AudioSource;
 namespace Valkyrie.Library.Providers
 {
 	public class ValkyrieSoundProvider
+		: ISoundProvider
 	{
 		public float MasterGainModifier
 		{
@@ -43,14 +44,14 @@ namespace Valkyrie.Library.Providers
 			set;
 		}
 
-		public void PlaySound (AudioSource sound, bool loop)
+		public void PlaySound(string sound, bool loop)
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException ();
 		}
 
-		public void PlayBGM (AudioSource sound, bool loop)
+		public void PlayBGM(string sound, bool loop)
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException ();
 		}
 
 		public void StopBGM ()

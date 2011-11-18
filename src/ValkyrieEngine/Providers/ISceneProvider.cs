@@ -53,13 +53,18 @@ namespace Valkyrie.Engine.Providers
 		void DrawLayer (MapLayers layer);
 
 		/// <summary>
-		/// Draw a specific player.
+		/// Draw a specific player by name
 		/// </summary>
-		/// <param name="spriteBatch">The SpriteBatch to render to.</param>
 		/// <param name="playername">The name of the player to draw.</param>
-		/// <param name="camera">The camera to draw to.</param>
 		/// <exception cref="ArgumentException">A player with the <paramref name="playername"/> does not exist.</exception>
 		void DrawPlayer (string playername);
+
+		/// <summary>
+		/// Draw a specific player by instance
+		/// </summary>
+		/// <param name="player">The player to render.</param>
+		/// <exception cref="ArgumentNullException"><paramref name="player"/> is null.</exception>
+		void DrawPlayer(BaseCharacter player);
 
 		/// <summary>
 		/// Returns the MapHeader of the players current location
